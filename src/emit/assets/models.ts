@@ -1,8 +1,8 @@
-import { encodeId, IdInput, NormalizedId, prefix } from '../../common/id.js'
-import CustomEmitter from '../custom.js'
-import { Model } from '../../schema/assets/model.js'
-import { ClearableEmitter } from '../index.js'
 import { Acceptor } from '@pssbletrngle/pack-resolver'
+import { encodeId, IdInput, NormalizedId, prefix, suffix } from '../../common/id.js'
+import { Model } from '../../schema/assets/model.js'
+import CustomEmitter from '../custom.js'
+import { ClearableEmitter } from '../index.js'
 
 export interface ModelRules {
    add(id: IdInput, blockstate: Model): NormalizedId
@@ -58,22 +58,25 @@ export default class ModelEmitter implements ModelRules, ClearableEmitter {
    }
 
    cog(id: IdInput, large: boolean, texture = prefix(id, 'block/')) {
-      if (large) {
-         return this.add(id, {
-            parent: 'create:block/large_cogwheel',
-            textures: {
-               '4': texture,
-               particle: texture,
-            },
-         })
-      } else {
-         return this.add(id, {
-            parent: 'create:block/cogwheel',
-            textures: {
-               '1_2': texture,
-               particle: texture,
-            },
-         })
-      }
+      const suffixes = ['', '_shaftless']
+      return suffixes.map(it => {
+         if (large) {
+            return this.add(suffix(id, it), {
+               parent: 'create:block/large_cogwheel' + it,
+               textures: {
+                  '4': texture,
+                  particle: texture,
+               },
+            })
+         } else {
+            return this.add(suffix(id, it), {
+               parent: 'create:block/cogwheel' + it,
+               textures: {
+                  '1_2': texture,
+                  particle: texture,
+               },
+            })
+         }
+      })[0]
    }
 }
