@@ -74,6 +74,8 @@ export function generateStubTypes(outputDirectory: string) {
             type StubId = ${stubIdType}
 
             export type RegistryId = StubId
+
+            export type CreativeModeTabId = StubId
             
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             export type InferIds<T extends RegistryId> = StubId

@@ -13,6 +13,7 @@ import LootTableEmitter, { LootRules } from '../emit/data/loot.js'
 import RecipeEmitter, { RecipeRules } from '../emit/data/recipe.js'
 import TagEmitter, { TagEmitterOptions, TagRules } from '../emit/data/tags.js'
 import { ClearableEmitter } from '../emit/index.js'
+import PolytoneTabsEmitter, { PolytoneTabs } from '../emit/polytoneTabs.js'
 import { Logger } from '../logger.js'
 import Loader, { AcceptorWithLoader } from './index.js'
 import LangLoader from './lang.js'
@@ -64,6 +65,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
       )
    )
    readonly lang: LangRules = this.registerEmitter(new LangEmitter(this.langLoader))
+   readonly tabs: PolytoneTabs = this.registerEmitter(new PolytoneTabsEmitter(() => this.activeRegistryLookup))
    readonly blacklist: BlacklistRules = this.registerEmitter(
       new BlacklistEmitter(this.logger, this.tagLoader, () => this.activeRegistryLookup, this.options)
    )

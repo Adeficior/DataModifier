@@ -24,13 +24,13 @@ type RegistryIdInput<T extends RegistryId> = InferIds<T> | RegExp
 
 export default class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
    private hidden: NormalizedId[] = []
-   private hideModes: HideMode[]
+   private readonly hideModes: HideMode[]
 
    constructor(
       private readonly logger: Logger,
       private readonly tags: TagRegistryHolder,
       private readonly lookup: () => RegistryLookup,
-      private options: BlacklistOptions
+      options: BlacklistOptions
    ) {
       this.hideModes = arrayOrSelf(options.hideFrom)
    }
