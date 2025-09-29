@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { encodeId } from '../src/index.js'
 import createTestAcceptor from './mock/TestAcceptor.js'
 import setupLoader from './shared/loaderSetup.js'
 
@@ -72,12 +73,13 @@ describe('create new tabs', () => {
    it('emits and mergers csv', async () => {
       const acceptor = createTestAcceptor()
 
-      loader.tabs.create('something:test_tab')
+      const id = loader.tabs.create('something:test_tab')
       loader.tabs.create('something:another_tab')
       loader.tabs.create('minecraft:more_blocks')
 
       await loader.emit(acceptor)
 
+      expect(encodeId(id)).toMatch('something:test_tab')
       expect(acceptor.at('assets/something/polytone/creative_tabs.csv')).toMatchSnapshot('tab csv 1 for something')
       expect(acceptor.at('assets/minecraft/polytone/creative_tabs.csv')).toMatchSnapshot('tab csv for minecraft')
    })

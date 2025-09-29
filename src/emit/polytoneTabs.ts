@@ -21,7 +21,7 @@ export interface PolytoneTabs {
       items: IdInput<ItemId>[],
       options?: AddOptions
    ): void
-   create(id: IdInput): void
+   create(id: IdInput): CreativeModeTabId
 }
 
 interface ItemsMatchPredicate {
@@ -100,11 +100,11 @@ export default class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitt
       })
    }
 
-   create(id: IdInput): void {
+   create(id: IdInput) {
       const lookup = this.lookup()
-      lookup.addCustom('minecraft:creative_mode_tab', id)
       const { namespace, path } = createId(id)
       this.tabs.merge({ namespace, path: 'tab' }, [path], (a, b) => uniq([...a, ...b]))
+      return lookup.addCustom('minecraft:creative_mode_tab', id)
    }
 
    private forEach(
