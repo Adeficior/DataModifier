@@ -18,6 +18,7 @@ interface TabModifications {
 
 interface TabOptions {
    file?: IdInput
+   mods?: string[]
 }
 
 interface TabOptionsWithAfter extends TabOptions {
@@ -66,6 +67,7 @@ export interface PolytoneTabModifier extends TabModifications {
    targets: NormalizedId<CreativeModeTabId>[]
    removals?: PolytonePredicate[]
    additions?: AdditionEntry[]
+   require_mods?: string[]
 }
 
 function translateModifications({
@@ -195,6 +197,7 @@ export default class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitt
          const file = options.file ?? target
          const entry: PolytoneTabModifier = {
             targets: [encodeId(target)],
+            require_mods: options.mods,
             ...modifier,
          }
          this.entries.merge(file, entry, mergeModifiers)
