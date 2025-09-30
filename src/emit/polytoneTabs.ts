@@ -97,7 +97,7 @@ function mergeModifiers(a: PolytoneTabModifier, b: PolytoneTabModifier): Polyton
 }
 
 function translateOptions(options: AddOptions = {}): Partial<AdditionEntry> {
-   if ('before' in options) {
+   if ('before' in options && options.before) {
       return {
          before: true,
          predicate: {
@@ -105,7 +105,7 @@ function translateOptions(options: AddOptions = {}): Partial<AdditionEntry> {
             type: 'items_match',
          },
       }
-   } else if ('after' in options) {
+   } else if ('after' in options && options.after) {
       return {
          before: false,
          predicate: {
