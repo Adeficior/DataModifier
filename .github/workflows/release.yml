@@ -1,7 +1,7 @@
 name: Release
 on:
    release:
-      types: [created]
+      types: [published]
 
 jobs:
    release:
@@ -9,7 +9,7 @@ jobs:
          contents: read
          packages: write
 
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-latest
       steps:
          - uses: actions/checkout@v3
 
