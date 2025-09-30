@@ -19,6 +19,7 @@ function idTemplate(type: string, values: string[]) {
 }
 
 function inferRegistryTemplate(keys: IdInput[]) {
+   if (keys.length === 0) throw new Error('no registry found')
    return `
         export type InferIds<T extends RegistryId> = {
             ${keys.map(it => `'${encodeId(it)}': ${idType(createId(it))}Id`).join('\n')}

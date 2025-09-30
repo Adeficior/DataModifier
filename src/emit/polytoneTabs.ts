@@ -6,6 +6,16 @@ import RegistryLookup from '../loader/registry/index.js'
 import CustomEmitter from './custom.js'
 import { ClearableEmitter } from './index.js'
 
+interface TabModifications {
+   icon?: IdInput<ItemId>
+   can_scroll?: boolean
+   show_title?: boolean
+   search_bar?: boolean
+   before_tabs?: IdInput<CreativeModeTabId>[]
+   after_tabs?: IdInput<CreativeModeTabId>[]
+   name?: string
+}
+
 interface TabOptions {
    file?: IdInput
 }
@@ -31,7 +41,8 @@ export interface PolytoneTabs {
       items: IdInput<ItemId>[],
       options?: AddOptions
    ): void
-   create(id: IdInput): CreativeModeTabId
+   create(id: IdInput, options?: TabModifications): CreativeModeTabId
+   modify(id: IdInput, options: TabModifications): void
 }
 
 interface ItemsMatchPredicate {
@@ -48,16 +59,35 @@ interface AdditionEntry {
    predicate?: PolytonePredicate
 }
 
-export interface PolytoneTabModifier {
+export interface PolytoneTabModifier extends TabModifications {
+   icon?: NormalizedId<ItemId>
+   before_tabs?: NormalizedId<CreativeModeTabId>[]
+   after_tabs?: NormalizedId<CreativeModeTabId>[]
    targets: NormalizedId<CreativeModeTabId>[]
    removals?: PolytonePredicate[]
    additions?: AdditionEntry[]
+}
+
+function translateModifications({
+   icon,
+   after_tabs,
+   before_tabs,
+   ...modifications
+}: TabModifications): Omit<PolytoneTabModifier, 'targets'> {
+   return {
+      ...modifications,
+      before_tabs: arrayOrSelf(before_tabs).map(encodeId),
+      after_tabs: arrayOrSelf(after_tabs).map(encodeId),
+      icon: icon !== undefined ? encodeId(icon) : undefined,
+   }
 }
 
 function mergeModifiers(a: PolytoneTabModifier, b: PolytoneTabModifier): PolytoneTabModifier {
    const diff = difference(a.targets, b.targets)
    if (diff.length) throw new Error('trying to merge modifiers with different targets')
    return {
+      ...a,
+      ...b,
       targets: uniq([...a.targets, ...b.targets]),
       additions: [...(a.additions ?? []), ...(b.additions ?? [])],
       removals: [...(a.removals ?? []), ...(b.removals ?? [])],
@@ -135,11 +165,25 @@ export default class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitt
       )
    }
 
-   create(id: IdInput) {
+   create(id: IdInput, modifications: TabModifications = {}) {
       const lookup = this.lookup()
       const { namespace, path } = createId(id)
       this.tabs.merge({ namespace, path: 'tab' }, [path], (a, b) => uniq([...a, ...b]))
+      if (Object.keys(modifications).length) {
+         this.modify(id, modifications)
+      }
       return lookup.addCustom('minecraft:creative_mode_tab', id)
+   }
+
+   modify(id: IdInput, modifications: TabModifications) {
+      this.entries.merge(
+         id,
+         {
+            ...translateModifications(modifications),
+            targets: [encodeId(id)],
+         },
+         mergeModifiers
+      )
    }
 
    private forEach(
