@@ -47,6 +47,27 @@ describe('creates addition entries', () => {
          'addition modifier with after predicate'
       )
    })
+
+   it('uses custom file name', async () => {
+      const acceptor = createTestAcceptor()
+
+      loader.tabs.add('something:test_tab', ['minecraft:diamond'], { file: 'other:id' })
+
+      await loader.emit(acceptor)
+
+      expect(acceptor.at('assets/something/polytone/creative_tab_modifiers/test_tab.json')).toBeNull()
+      expect(acceptor.at('assets/other/polytone/creative_tab_modifiers/id.json')).toMatchSnapshot(
+         'removal modifier with custom file name'
+      )
+   })
+
+   it('fails trying to merge modifiers with different targets', () => {
+      loader.tabs.add('something:test_tab', ['minecraft:diamond'], { file: 'other:id' })
+
+      expect(() =>
+         loader.tabs.add('something:another_tab', ['minecraft:diamond_chestplate'], { file: 'other:id' })
+      ).toThrow('trying to merge modifiers with different targets')
+   })
 })
 
 describe('create removal entries', () => {
@@ -65,6 +86,19 @@ describe('create removal entries', () => {
       )
       expect(acceptor.at('assets/example/polytone/creative_tab_modifiers/food.json')).toMatchSnapshot(
          'removal modifier 1'
+      )
+   })
+
+   it('uses custom file name', async () => {
+      const acceptor = createTestAcceptor()
+
+      loader.tabs.remove('something:test_tab', ['minecraft:diamond'], { file: 'other:id' })
+
+      await loader.emit(acceptor)
+
+      expect(acceptor.at('assets/something/polytone/creative_tab_modifiers/test_tab.json')).toBeNull()
+      expect(acceptor.at('assets/other/polytone/creative_tab_modifiers/id.json')).toMatchSnapshot(
+         'removal modifier with custom file name'
       )
    })
 })

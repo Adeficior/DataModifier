@@ -6,16 +6,26 @@ import RegistryLookup from '../loader/registry/index.js'
 import CustomEmitter from './custom.js'
 import { ClearableEmitter } from './index.js'
 
-type AddOptions =
-   | {
-        after: IdInput<ItemId>
-     }
-   | {
-        before: IdInput<ItemId>
-     }
+interface TabOptions {
+   file?: IdInput
+}
+
+interface TabOptionsWithAfter extends TabOptions {
+   after: IdInput<ItemId>
+}
+
+interface TabOptionsWithBefore extends TabOptions {
+   before: IdInput<ItemId>
+}
+
+type AddOptions = TabOptionsWithAfter | TabOptionsWithBefore | TabOptions
 
 export interface PolytoneTabs {
-   remove(tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[], items: IdInput<ItemId>[]): void
+   remove(
+      tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
+      items: IdInput<ItemId>[],
+      options?: TabOptions
+   ): void
    add(
       tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
       items: IdInput<ItemId>[],
@@ -54,16 +64,25 @@ function mergeModifiers(a: PolytoneTabModifier, b: PolytoneTabModifier): Polyton
    }
 }
 
-function translateOptions(options?: AddOptions): Partial<AdditionEntry> {
-   if (!options) return {}
-   const before = 'before' in options
-   const item = before ? options.before : options.after
-   return {
-      before,
-      predicate: {
-         items: [encodeId(item)],
-         type: 'items_match',
-      },
+function translateOptions(options: AddOptions = {}): Partial<AdditionEntry> {
+   if ('before' in options) {
+      return {
+         before: true,
+         predicate: {
+            items: [encodeId(options.before)],
+            type: 'items_match',
+         },
+      }
+   } else if ('after' in options) {
+      return {
+         before: false,
+         predicate: {
+            items: [encodeId(options.after)],
+            type: 'items_match',
+         },
+      }
+   } else {
+      return {}
    }
 }
 
@@ -88,16 +107,32 @@ export default class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitt
       await Promise.all([this.entries.emit(acceptor), this.tabs.emit(acceptor)])
    }
 
-   remove(tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[], items: IdInput<ItemId>[]) {
-      this.forEach(tab, {
-         removals: [{ type: 'items_match', items: items.map(encodeId) }],
-      })
+   remove(
+      tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
+      items: IdInput<ItemId>[],
+      options: TabOptions = {}
+   ) {
+      this.forEach(
+         tab,
+         {
+            removals: [{ type: 'items_match', items: items.map(encodeId) }],
+         },
+         options
+      )
    }
 
-   add(tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[], items: IdInput<ItemId>[], options?: AddOptions) {
-      this.forEach(tab, {
-         additions: [{ items: items.map(encodeId), ...translateOptions(options) }],
-      })
+   add(
+      tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
+      items: IdInput<ItemId>[],
+      options: AddOptions = {}
+   ) {
+      this.forEach(
+         tab,
+         {
+            additions: [{ items: items.map(encodeId), ...translateOptions(options) }],
+         },
+         options
+      )
    }
 
    create(id: IdInput) {
@@ -109,14 +144,16 @@ export default class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitt
 
    private forEach(
       tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
-      modifier: Omit<PolytoneTabModifier, 'targets'>
+      modifier: Omit<PolytoneTabModifier, 'targets'>,
+      options: TabOptions
    ) {
       arrayOrSelf(tab).forEach(target => {
+         const file = options.file ?? target
          const entry: PolytoneTabModifier = {
             targets: [encodeId(target)],
             ...modifier,
          }
-         this.entries.merge(target, entry, mergeModifiers)
+         this.entries.merge(file, entry, mergeModifiers)
       })
    }
 }

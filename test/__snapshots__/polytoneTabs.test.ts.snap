@@ -24,6 +24,14 @@ exports[`create removal entries > resolves filter correctly > removal modifier 2
 "
 `;
 
+exports[`create removal entries > uses custom file name > removal modifier with custom file name 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "removals": [{ "type": "items_match", "items": ["minecraft:diamond"] }]
+}
+"
+`;
+
 exports[`creates addition entries > adds after predicate > addition modifier with after predicate 1`] = `
 "{
   "targets": ["example:tab"],
@@ -64,6 +72,14 @@ exports[`creates addition entries > emits per tab key > addition modifier 2 1`] 
 "{
   "targets": ["something:test_tab"],
   "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
+}
+"
+`;
+
+exports[`creates addition entries > uses custom file name > removal modifier with custom file name 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "additions": [{ "items": ["minecraft:diamond"] }]
 }
 "
 `;
