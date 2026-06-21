@@ -1,0 +1,36 @@
+# <meta>
+#    <source>@pssbletrngle/github-meta-generator</source>
+#    <version>1.0.97</version>
+#    <timestamp>2026-06-21T19:29:08.770Z</timestamp>
+#    <hash>2dfe5bb465e530db</hash>
+# </meta>
+
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run tests
+        run: bun run test:ci
