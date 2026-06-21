@@ -2,11 +2,12 @@
 //    <source>@pssbletrngle/github-meta-generator</source>
 //    <version>1.0.98</version>
 //    <timestamp>2026-06-21T20:01:51.400Z</timestamp>
-//    <hash>a3f8c60a7e5da92</hash>
+//    <hash>29e5f62cade606c5</hash>
 // </meta>
 
 {
   "compilerOptions": {
+    "composite": true,
     // Environment setup & latest features
     "lib": ["ESNext"],
     "target": "ESNext",
@@ -30,13 +31,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "declaration": true,
     "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "rootDir": "."
   },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "./tsconfig.test.json"
-    }
-  ]
+  "include": ["test"]
 }
