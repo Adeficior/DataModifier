@@ -1,14 +1,15 @@
-import { Id } from '../common/id.js'
-import { Acceptor } from '@pssbletrngle/pack-resolver'
+import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Id } from "../common/id.js";
 
 export interface RegistryProvider<T> {
-   forEach(consumer: (recipe: T, id: Id) => void): void
+  forEach(consumer: (recipe: T, id: Id) => void): void;
+  forEachAsync(consumer: (recipe: T, id: Id) => Promise<void>): Promise<void>;
 }
 
-export type PathProvider = (id: Id) => string
+export type PathProvider = (id: Id) => string;
 
 export interface ClearableEmitter {
-   clear(): void
+  clear(): void;
 
-   emit(acceptor: Acceptor): Promise<void>
+  emit(acceptor: Acceptor): Promise<void>;
 }

@@ -1,38 +1,47 @@
-import { createId, encodeId, Id, IdInput, NormalizedId } from './id.js'
+import type { Id, IdInput, NormalizedId } from "./id.js";
+import { createId, encodeId } from "./id.js";
 
 export default class Registry<TEntry, TId extends string = string> {
-   private readonly entries = new Map<NormalizedId<TId>, TEntry>
+  private readonly entries = new Map<NormalizedId<TId>, TEntry>();
 
-   set(key: IdInput<TId>, value: TEntry) {
-      this.entries.set(encodeId(key), value)
-   }
+  set(key: IdInput<TId>, value: TEntry) {
+    this.entries.set(encodeId(key), value);
+  }
 
-   get(key: IdInput<TId>) {
-      return this.entries.get(encodeId(key))
-   }
+  get(key: IdInput<TId>) {
+    return this.entries.get(encodeId(key));
+  }
 
-   getOrPut(key: IdInput<TId>, defaultValue: () => TEntry) {
-      const existing = this.get(key)
-      if (existing) return existing
+  getOrPut(key: IdInput<TId>, defaultValue: () => TEntry) {
+    const existing = this.get(key);
+    if (existing) return existing;
 
-      const created = defaultValue()
-      this.set(key, created)
-      return created
-   }
+    const created = defaultValue();
+    this.set(key, created);
+    return created;
+  }
 
-   forEach(consumer: (value: TEntry, key: Id) => void) {
-      this.entries.forEach((value, key) => consumer(value, createId(key)))
-   }
+  forEach(consumer: (value: TEntry, key: Id) => void) {
+    this.entries.forEach((value, key) => consumer(value, createId(key)));
+  }
 
-   clear() {
-      this.entries.clear()
-   }
+  async forEachAsync(
+    consumer: (value: TEntry, key: Id) => Promise<void>,
+  ): Promise<void> {
+    const promises: Promise<void>[] = [];
+    this.forEach((...args) => promises.push(consumer(...args)));
+    await Promise.all(promises);
+  }
 
-   keys() {
-      return  [...this.entries.keys()]
-   }
+  clear() {
+    this.entries.clear();
+  }
 
-   has(key: IdInput<TId>) {
-      return this.entries.has(encodeId(key))
-   }
+  keys() {
+    return [...this.entries.keys()];
+  }
+
+  has(key: IdInput<TId>) {
+    return this.entries.has(encodeId(key));
+  }
 }

@@ -1,77 +1,86 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import { camelCase } from 'lodash-es'
-import { join, resolve } from 'path'
-import { format } from 'prettier'
-import { Id, IdInput, createId, encodeId } from '../../common/id.js'
-import RegistryLookup from '../../loader/registry/index.js'
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { camelCase } from "lodash-es";
+import { join, resolve } from "path";
+import { format } from "prettier";
+import type { Id, IdInput } from "../../common/id.js";
+import { createId, encodeId } from "../../common/id.js";
+import type RegistryLookup from "../../loader/registry/index.js";
 
-const module = '@pssbletrngle/data-modifier/generated'
+const module = "@adeficior/data-modifier/generated";
 
 function idType(id: Id) {
-   const cased = camelCase(id.path.replaceAll('/', ' '))
-   return cased.charAt(0).toUpperCase() + cased.substring(1)
+  const cased = camelCase(id.path.replaceAll("/", " "));
+  return cased.charAt(0).toUpperCase() + cased.substring(1);
 }
 
 function idTemplate(type: string, values: string[]) {
-   return `
-        export type ${type}Id = ${values.map(it => `'${it}'`).join(' | ')}
-   `
+  return `
+        export type ${type}Id = ${values.map((it) => `'${it}'`).join(" | ")}
+   `;
 }
 
 function inferRegistryTemplate(keys: IdInput[]) {
-   if (keys.length === 0) throw new Error('no registry found')
-   return `
+  if (keys.length === 0) throw new Error("no registry found");
+  return `
         export type InferIds<T extends RegistryId> = {
-            ${keys.map(it => `'${encodeId(it)}': ${idType(createId(it))}Id`).join('\n')}
+            ${keys
+              .map((it) => `'${encodeId(it)}': ${idType(createId(it))}Id`)
+              .join("\n")}
         }[T]
-      `
+      `;
 }
 
 function moduleTemplate(...content: string[]) {
-   const replaced = `
+  const replaced = `
         declare module '${module}' {
-            ${content.join('\n\n')}
-        }`
+            ${content.join("\n\n")}
+        }`;
 
-   return format(replaced, { parser: 'typescript' })
+  return format(replaced, { parser: "typescript" });
 }
 
 function createTypesDirectory(base: string) {
-   const dir = resolve(base, '@types', 'generated')
-   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
-   return dir
+  const dir = resolve(base, "@types", "generated");
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  return dir;
 }
 
-export function generateRegistryTypes(lookup: RegistryLookup, outputDirectory: string) {
-   const typesDirectory = createTypesDirectory(outputDirectory)
+export async function generateRegistryTypes(
+  lookup: RegistryLookup,
+  outputDirectory: string,
+) {
+  const typesDirectory = createTypesDirectory(outputDirectory);
 
-   const registryBlock = idTemplate('Registry', lookup.registries())
-   const inferIdBlock = inferRegistryTemplate(lookup.registries())
+  const registryBlock = idTemplate("Registry", lookup.registries());
+  const inferIdBlock = inferRegistryTemplate(lookup.registries());
 
-   const idBlocks = lookup
-      .registries()
-      .map(createId)
-      .filter(it => it.namespace === 'minecraft')
-      .map(id => {
-         const keys = [...lookup.keys(id)!].sort()
-         const type = idType(id)
-         return idTemplate(type, keys)
-      })
+  const idBlocks = lookup
+    .registries()
+    .map(createId)
+    .filter((it) => it.namespace === "minecraft")
+    .map((id) => {
+      const keys = [...lookup.keys(id)!].sort();
+      const type = idType(id);
+      return idTemplate(type, keys);
+    });
 
-   writeFileSync(join(typesDirectory, 'index.d.ts'), moduleTemplate(registryBlock, ...idBlocks, inferIdBlock))
+  writeFileSync(
+    join(typesDirectory, "index.d.ts"),
+    await moduleTemplate(registryBlock, ...idBlocks, inferIdBlock),
+  );
 }
 
-export function generateStubTypes(outputDirectory: string) {
-   const typesDirectory = createTypesDirectory(outputDirectory)
-   const registryStub = resolve(typesDirectory, 'index.d.ts')
+export async function generateStubTypes(outputDirectory: string) {
+  const typesDirectory = createTypesDirectory(outputDirectory);
+  const registryStub = resolve(typesDirectory, "index.d.ts");
 
-   const stubIdType = '`${string}:${string}`'
+  const stubIdType = "`${string}:${string}`";
 
-   writeFileSync(
-      registryStub,
-      format(
-         `
-         declare module '@pssbletrngle/data-modifier/generated' {
+  writeFileSync(
+    registryStub,
+    await format(
+      `
+         declare module '@adeficior/data-modifier/generated' {
             type StubId = ${stubIdType}
 
             export type RegistryId = StubId
@@ -91,7 +100,7 @@ export function generateStubTypes(outputDirectory: string) {
 
             export type EntityTypeId = StubId
          }`,
-         { parser: 'typescript' }
-      )
-   )
+      { parser: "typescript" },
+    ),
+  );
 }

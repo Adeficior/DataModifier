@@ -1,29 +1,30 @@
-import RegistryLookup from './index.js'
-import { encodeId, IdInput, NormalizedId } from '../../common/id.js'
-import { RegistryId } from '@pssbletrngle/data-modifier/generated'
+import type { RegistryId } from "@adeficior/data-modifier/generated";
+import type { IdInput, NormalizedId } from "../../common/id.js";
+import { encodeId } from "../../common/id.js";
+import type RegistryLookup from "./index.js";
 
 export default class EmptyRegistryLookup implements RegistryLookup {
-   isKnown(): boolean {
-      return false
-   }
+  isKnown(): boolean {
+    return false;
+  }
 
-   registries(): NormalizedId<RegistryId>[] {
-      return []
-   }
+  registries(): NormalizedId<RegistryId>[] {
+    return [];
+  }
 
-   keys() {
-      return undefined
-   }
+  keys() {
+    return undefined;
+  }
 
-   validate() {
-      // Nothing done
-   }
+  validate() {
+    // Nothing done
+  }
 
-   validateEntry() {
-      // Nothing done
-   }
+  validateEntry() {
+    // Nothing done
+  }
 
-   addCustom(key: RegistryId, id: IdInput) {
-      return encodeId(id)
-   }
+  addCustom(key: RegistryId, id: IdInput) {
+    return encodeId(id);
+  }
 }

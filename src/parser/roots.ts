@@ -1,10 +1,10 @@
+export type { RootRitualRecipeDefinition } from "./recipe/roots/ritual.js";
 export {
-   RootRitualRecipe,
-   RootRitualRecipeDefinition,
-   default as RootRitualRecipeParser,
-} from './recipe/roots/ritual.js'
+  RootRitualRecipe,
+  default as RootRitualRecipeParser,
+} from "./recipe/roots/ritual.js";
+export type { RootComponentRecipeDefinition } from "./recipe/roots/component.js";
 export {
-   RootComponentRecipe,
-   RootComponentRecipeDefinition,
-   default as RootComponentRecipeParser,
-} from './recipe/roots/component.js'
+  RootComponentRecipe,
+  default as RootComponentRecipeParser,
+} from "./recipe/roots/component.js";

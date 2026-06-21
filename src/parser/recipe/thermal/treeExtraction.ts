@@ -1,68 +1,73 @@
-import RecipeParser, { Recipe, Replacer } from '../index.js'
-import { Ingredient, IngredientInput } from '../../../common/ingredient.js'
-import { RecipeDefinition } from '../../../schema/data/recipe.js'
-import { ResultInput } from '../../../common/result.js'
-import { IllegalShapeError } from '../../../error.js'
+import type { Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+import type {
+  Ingredient,
+  IngredientInput,
+} from "../../../common/ingredient.js";
+import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+import type { ResultInput } from "../../../common/result.js";
+import { IllegalShapeError } from "../../../error.js";
 
-type ExtractionBlockInput = string
+type ExtractionBlockInput = string;
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &
-   Readonly<{
-      leaves: ExtractionBlockInput
-      trunk: ExtractionBlockInput
-      result: ResultInput
-   }>
+  Readonly<{
+    leaves: ExtractionBlockInput;
+    trunk: ExtractionBlockInput;
+    result: ResultInput;
+  }>;
 
 function blockToIngredient(input: ExtractionBlockInput): Ingredient {
-   if (typeof input !== 'string') throw new IllegalShapeError('unknown block input shape', input)
-   return {
-      block: input,
-   }
+  if (typeof input !== "string")
+    throw new IllegalShapeError("unknown block input shape", input);
+  return {
+    block: input,
+  };
 }
 
 function ingredientToBlock(input: IngredientInput): ExtractionBlockInput {
-   if (input && typeof input === 'object') {
-      if ('block' in input) return input.block
-   }
-   throw new IllegalShapeError('unknown block input shape', input)
+  if (input && typeof input === "object") {
+    if ("block" in input) return input.block;
+  }
+  throw new IllegalShapeError("unknown block input shape", input);
 }
 
 export class TreeExtractionRecipe extends Recipe<TreeExtractionRecipeDefinition> {
-   private readonly trunk
-   private readonly leaves
+  private readonly trunk;
+  private readonly leaves;
 
-   constructor(definition: TreeExtractionRecipeDefinition) {
-      super(definition)
-      this.trunk = blockToIngredient(definition.trunk)
-      this.leaves = blockToIngredient(definition.leaves)
-   }
+  constructor(definition: TreeExtractionRecipeDefinition) {
+    super(definition);
+    this.trunk = blockToIngredient(definition.trunk);
+    this.leaves = blockToIngredient(definition.leaves);
+  }
 
-   getIngredients(): IngredientInput[] {
-      return [this.trunk, this.leaves]
-   }
+  getIngredients(): IngredientInput[] {
+    return [this.trunk, this.leaves];
+  }
 
-   getResults(): ResultInput[] {
-      return []
-   }
+  getResults(): ResultInput[] {
+    return [];
+  }
 
-   replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-      return new TreeExtractionRecipe({
-         ...this.definition,
-         leaves: ingredientToBlock(replace(this.leaves)),
-         trunk: ingredientToBlock(replace(this.trunk)),
-      })
-   }
+  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+    return new TreeExtractionRecipe({
+      ...this.definition,
+      leaves: ingredientToBlock(replace(this.leaves)),
+      trunk: ingredientToBlock(replace(this.trunk)),
+    });
+  }
 
-   replaceResult(): TreeExtractionRecipe {
-      return new TreeExtractionRecipe(this.definition)
-   }
+  replaceResult(): TreeExtractionRecipe {
+    return new TreeExtractionRecipe(this.definition);
+  }
 }
 
 export default class TreeExtractionRecipeParser extends RecipeParser<
-   TreeExtractionRecipeDefinition,
-   TreeExtractionRecipe
+  TreeExtractionRecipeDefinition,
+  TreeExtractionRecipe
 > {
-   create(definition: TreeExtractionRecipeDefinition): TreeExtractionRecipe {
-      return new TreeExtractionRecipe(definition)
-   }
+  create(definition: TreeExtractionRecipeDefinition): TreeExtractionRecipe {
+    return new TreeExtractionRecipe(definition);
+  }
 }

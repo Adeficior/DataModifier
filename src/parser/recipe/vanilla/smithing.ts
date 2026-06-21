@@ -1,42 +1,49 @@
-import RecipeParser, { Recipe, Replacer } from '../index.js'
-import { Ingredient, IngredientInput } from '../../../common/ingredient.js'
-import { RecipeDefinition } from '../../../schema/data/recipe.js'
-import { Result, ResultInput } from '../../../common/result.js'
+import type { Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+import type {
+  Ingredient,
+  IngredientInput,
+} from "../../../common/ingredient.js";
+import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+import type { Result, ResultInput } from "../../../common/result.js";
 
 export type SmithingRecipeDefinition = RecipeDefinition &
-   Readonly<{
-      base: Ingredient
-      addition: Ingredient
-      result: Result
-   }>
+  Readonly<{
+    base: Ingredient;
+    addition: Ingredient;
+    result: Result;
+  }>;
 
 export class SmithingRecipe extends Recipe<SmithingRecipeDefinition> {
-   getIngredients(): IngredientInput[] {
-      return [this.definition.base, this.definition.addition]
-   }
+  getIngredients(): IngredientInput[] {
+    return [this.definition.base, this.definition.addition];
+  }
 
-   getResults(): ResultInput[] {
-      return [this.definition.result]
-   }
+  getResults(): ResultInput[] {
+    return [this.definition.result];
+  }
 
-   replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-      return new SmithingRecipe({
-         ...this.definition,
-         base: replace(this.definition.base),
-         addition: replace(this.definition.addition),
-      })
-   }
+  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+    return new SmithingRecipe({
+      ...this.definition,
+      base: replace(this.definition.base),
+      addition: replace(this.definition.addition),
+    });
+  }
 
-   replaceResult(replace: Replacer<Result>): Recipe {
-      return new SmithingRecipe({
-         ...this.definition,
-         result: replace(this.definition.result),
-      })
-   }
+  replaceResult(replace: Replacer<Result>): Recipe {
+    return new SmithingRecipe({
+      ...this.definition,
+      result: replace(this.definition.result),
+    });
+  }
 }
 
-export default class SmithingParser extends RecipeParser<SmithingRecipeDefinition, SmithingRecipe> {
-   create(definition: SmithingRecipeDefinition): SmithingRecipe {
-      return new SmithingRecipe(definition)
-   }
+export default class SmithingParser extends RecipeParser<
+  SmithingRecipeDefinition,
+  SmithingRecipe
+> {
+  create(definition: SmithingRecipeDefinition): SmithingRecipe {
+    return new SmithingRecipe(definition);
+  }
 }

@@ -1,29 +1,33 @@
-import { Options } from '@pssbletrngle/pack-resolver'
-import { PackLoader } from '../../src/index.js'
-import { PackLoaderOptions } from '../../src/loader/pack.js'
-import createTestLogger from '../mock/TestLogger.js'
-import createTestResolver from '../mock/TestResolver.js'
+import type { Options } from "@adeficior/pack-resolver";
+import { PackLoader } from "../../src/index.js";
+import type { PackLoaderOptions } from "../../src/loader/pack.js";
+import createTestLogger from "../mock/TestLogger.js";
+import createTestResolver from "../mock/TestResolver.js";
 
 export default function setupLoader(
-   { load = true, packFormat = 15, ...options }: Partial<Options & PackLoaderOptions> & { load?: boolean } = {},
-   block?: (loader: PackLoader) => void
+  {
+    load = true,
+    packFormat = 15,
+    ...options
+  }: Partial<Options & PackLoaderOptions> & { load?: boolean } = {},
+  block?: (loader: PackLoader) => void,
 ) {
-   const logger = createTestLogger()
-   const loader = new PackLoader(logger, { ...options, packFormat })
+  const logger = createTestLogger();
+  const loader = new PackLoader(logger, { ...options, packFormat });
 
-   block?.(loader)
+  block?.(loader);
 
-   if (load) {
-      beforeAll(async () => {
-         const resolver = createTestResolver(options)
-         await loader.loadFrom(resolver)
-      }, 15_0000)
-   }
+  if (load) {
+    beforeAll(async () => {
+      const resolver = createTestResolver(options);
+      await loader.loadFrom(resolver);
+    }, 15_0000);
+  }
 
-   afterEach(() => {
-      loader.clear()
-      logger.reset()
-   })
+  afterEach(() => {
+    loader.clear();
+    logger.reset();
+  });
 
-   return { loader, logger }
+  return { loader, logger };
 }

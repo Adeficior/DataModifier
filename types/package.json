@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "name": "@adeficior/data-modifier/generated",
+  "type": "module",
+  "types": "./generated.d.ts"
+}

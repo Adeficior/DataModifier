@@ -1,5 +1,1 @@
-[
-  "minecraft:debug",
-  "minecraft:flat",
-  "minecraft:noise"
-]
+["minecraft:debug", "minecraft:flat", "minecraft:noise"]

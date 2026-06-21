@@ -1,5 +1,5 @@
-import zod from 'zod'
+import zod from "zod";
 
-export const LangSchema = zod.record(zod.string(), zod.string())
+export const LangSchema = zod.record(zod.string(), zod.string());
 
-export type LangDefinition = zod.infer<typeof LangSchema>
+export type LangDefinition = zod.infer<typeof LangSchema>;

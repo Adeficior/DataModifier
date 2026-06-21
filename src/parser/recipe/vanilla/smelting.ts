@@ -1,41 +1,48 @@
-import RecipeParser, { Recipe, Replacer } from '../index.js'
-import { Ingredient, IngredientInput } from '../../../common/ingredient.js'
-import { RecipeDefinition } from '../../../schema/data/recipe.js'
-import { Result, ResultInput } from '../../../common/result.js'
+import type { Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+import type {
+  Ingredient,
+  IngredientInput,
+} from "../../../common/ingredient.js";
+import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+import type { Result, ResultInput } from "../../../common/result.js";
 
 export type SmeltingRecipeDefinition = RecipeDefinition &
-   Readonly<{
-      ingredient: Ingredient
-      result: Result
-      experience?: number
-   }>
+  Readonly<{
+    ingredient: Ingredient;
+    result: Result;
+    experience?: number;
+  }>;
 
 export class SmeltingRecipe extends Recipe<SmeltingRecipeDefinition> {
-   getIngredients(): IngredientInput[] {
-      return [this.definition.ingredient]
-   }
+  getIngredients(): IngredientInput[] {
+    return [this.definition.ingredient];
+  }
 
-   getResults(): ResultInput[] {
-      return [this.definition.result]
-   }
+  getResults(): ResultInput[] {
+    return [this.definition.result];
+  }
 
-   replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-      return new SmeltingRecipe({
-         ...this.definition,
-         ingredient: replace(this.definition.ingredient),
-      })
-   }
+  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+    return new SmeltingRecipe({
+      ...this.definition,
+      ingredient: replace(this.definition.ingredient),
+    });
+  }
 
-   replaceResult(replace: Replacer<Result>): Recipe {
-      return new SmeltingRecipe({
-         ...this.definition,
-         result: replace(this.definition.result),
-      })
-   }
+  replaceResult(replace: Replacer<Result>): Recipe {
+    return new SmeltingRecipe({
+      ...this.definition,
+      result: replace(this.definition.result),
+    });
+  }
 }
 
-export default class SmeltingParser extends RecipeParser<SmeltingRecipeDefinition, SmeltingRecipe> {
-   create(definition: SmeltingRecipeDefinition): SmeltingRecipe {
-      return new SmeltingRecipe(definition)
-   }
+export default class SmeltingParser extends RecipeParser<
+  SmeltingRecipeDefinition,
+  SmeltingRecipe
+> {
+  create(definition: SmeltingRecipeDefinition): SmeltingRecipe {
+    return new SmeltingRecipe(definition);
+  }
 }

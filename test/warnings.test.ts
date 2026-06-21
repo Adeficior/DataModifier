@@ -1,18 +1,28 @@
-import { describe, expect, it } from 'vitest'
-import createTestAcceptor from './mock/TestAcceptor.js'
-import setupLoader from './shared/loaderSetup.js'
+import { describe, expect, it } from "bun:test";
+import createTestAcceptor from "./mock/TestAcceptor.js";
+import setupLoader from "./shared/loaderSetup.js";
 
-const { logger, loader } = setupLoader({ include: ['data/*/recipes/**/*.json'], from: 'test/resources/failing' })
+const { logger, loader } = setupLoader({
+  include: ["data/*/recipes/**/*.json"],
+  from: "test/resources/failing",
+});
 
-describe('tests regarding error logging', () => {
-   it('warns about incorrect result shape only once', async () => {
-      const acceptor = createTestAcceptor()
+describe("tests regarding error logging", () => {
+  it("warns about incorrect result shape only once", async () => {
+    const acceptor = createTestAcceptor();
 
-      loader.recipes.replaceResult('minecraft:stone', { item: 'minecraft:deepslate' })
-      loader.recipes.replaceResult('minecraft:stone', { item: 'minecraft:obsidian' })
+    loader.recipes.replaceResult("minecraft:stone", {
+      item: "minecraft:deepslate",
+    });
+    loader.recipes.replaceResult("minecraft:stone", {
+      item: "minecraft:obsidian",
+    });
 
-      await loader.emit(acceptor)
+    await loader.emit(acceptor);
 
-      expect(logger.warn).toHaveBeenCalledWith(`data/example/recipes/incorrectResult.json -> unknown result shape`, 120)
-   })
-})
+    expect(logger.warn).toHaveBeenCalledWith(
+      `data/example/recipes/incorrectResult.json -> unknown result shape`,
+      120,
+    );
+  });
+});

@@ -1,184 +1,220 @@
-import { RecipeSerializerId } from '@pssbletrngle/data-modifier/generated'
-import { Acceptor, exists } from '@pssbletrngle/pack-resolver'
-import { encodeId, Id, IdInput, NormalizedId } from '../../common/id.js'
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import type { Acceptor } from "@adeficior/pack-resolver";
+import { exists } from "@adeficior/pack-resolver";
+import type { Id, IdInput, NormalizedId } from "../../common/id.js";
+import { encodeId } from "../../common/id.js";
+import type {
+  CommonTest,
+  Ingredient,
+  IngredientInput,
+  IngredientTest,
+  Predicate,
+} from "../../common/ingredient.js";
 import {
-   CommonTest,
-   createIngredient,
-   Ingredient,
-   IngredientInput,
-   IngredientTest,
-   Predicate,
-   resolveIngredientTest,
-} from '../../common/ingredient.js'
-import { resolveIDTest } from '../../common/predicates.js'
-import { createResult, Result, ResultInput } from '../../common/result.js'
-import RegistryLookup from '../../loader/registry/index.js'
-import { TagRegistryHolder } from '../../loader/tags.js'
-import { Logger } from '../../logger.js'
-import { createReplacer, Recipe, Replacer } from '../../parser/recipe/index.js'
-import { RecipeDefinition } from '../../schema/data/recipe.js'
-import CustomEmitter from '../custom.js'
-import { ClearableEmitter, RegistryProvider } from '../index.js'
-import { Modifier } from '../rule/index.js'
-import RecipeRule from '../rule/recipe.js'
-import RuledEmitter from '../ruled.js'
+  createIngredient,
+  resolveIngredientTest,
+} from "../../common/ingredient.js";
+import { resolveIDTest } from "../../common/predicates.js";
+import type { Result, ResultInput } from "../../common/result.js";
+import { createResult } from "../../common/result.js";
+import type RegistryLookup from "../../loader/registry/index.js";
+import type { TagRegistryHolder } from "../../loader/tags.js";
+import type { Logger } from "../../logger.js";
+import type { Replacer } from "../../parser/recipe/index.js";
+import { createReplacer, Recipe } from "../../parser/recipe/index.js";
+import type { RecipeDefinition } from "../../schema/data/recipe.js";
+import CustomEmitter from "../custom.js";
+import type { ClearableEmitter, RegistryProvider } from "../index.js";
+import type { Modifier } from "../rule/index.js";
+import RecipeRule from "../rule/recipe.js";
+import RuledEmitter from "../ruled.js";
 
 export type RecipeTest = Readonly<{
-   id?: CommonTest<NormalizedId>
-   type?: CommonTest<NormalizedId<RecipeSerializerId>>
-   namespace?: string
-   output?: IngredientTest
-   input?: IngredientTest
-   optional?: boolean
-}>
+  id?: CommonTest<NormalizedId>;
+  type?: CommonTest<NormalizedId<RecipeSerializerId>>;
+  namespace?: string;
+  output?: IngredientTest;
+  input?: IngredientTest;
+  optional?: boolean;
+}>;
 
 export interface RecipeRules {
-   resolveIngredientTest(test?: IngredientTest): Predicate<IngredientInput>
+  resolveIngredientTest(test?: IngredientTest): Predicate<IngredientInput>;
 
-   replaceResult(test: IngredientTest, value: Result, additionalTests?: RecipeTest): void
+  replaceResult(
+    test: IngredientTest,
+    value: Result,
+    additionalTests?: RecipeTest,
+  ): void;
 
-   replaceIngredient(test: IngredientTest, value: Ingredient, additionalTests?: RecipeTest): void
+  replaceIngredient(
+    test: IngredientTest,
+    value: Ingredient,
+    additionalTests?: RecipeTest,
+  ): void;
 
-   add<TDefinition extends RecipeDefinition, TRecipe extends Recipe<TDefinition>>(
-      id: IdInput,
-      value: TDefinition | TRecipe
-   ): void
+  add<
+    TDefinition extends RecipeDefinition,
+    TRecipe extends Recipe<TDefinition>,
+  >(
+    id: IdInput,
+    value: TDefinition | TRecipe,
+  ): void;
 
-   remove(test: RecipeTest): void
+  remove(test: RecipeTest): void;
 }
 
 export const EMPTY_RECIPE: RecipeDefinition = {
-   type: 'noop',
-   conditions: [
-      {
-         type: 'forge:false',
+  type: "noop",
+  conditions: [
+    {
+      type: "forge:false",
+    },
+  ],
+  "fabric:load_conditions": [
+    {
+      condition: "fabric:not",
+      value: {
+        condition: "fabric:all_mods_loaded",
+        values: ["minecraft"],
       },
-   ],
-   'fabric:load_conditions': [
-      {
-         condition: 'fabric:not',
-         value: {
-            condition: 'fabric:all_mods_loaded',
-            values: ['minecraft'],
-         },
-      },
-   ],
-}
+    },
+  ],
+};
 
 export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
-   private readonly custom = new CustomEmitter<RecipeDefinition>(it => this.recipePath(it))
+  private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>
+    this.recipePath(it),
+  );
 
-   private readonly ruled = new RuledEmitter<Recipe, RecipeRule>(
+  private readonly ruled: RuledEmitter<Recipe, RecipeRule>;
+
+  constructor(
+    private readonly logger: Logger,
+    private readonly registry: RegistryProvider<Recipe>,
+    private readonly tags: TagRegistryHolder,
+    private readonly lookup: () => RegistryLookup,
+    private readonly packFormat: number,
+  ) {
+    this.ruled = new RuledEmitter<Recipe, RecipeRule>(
       this.logger,
       this.registry,
-      id => this.recipePath(id),
+      (id) => this.recipePath(id),
       EMPTY_RECIPE,
-      id => this.custom.has(id)
-   )
+      (id) => this.custom.has(id),
+    );
+  }
 
-   constructor(
-      private readonly logger: Logger,
-      private readonly registry: RegistryProvider<Recipe>,
-      private readonly tags: TagRegistryHolder,
-      private readonly lookup: () => RegistryLookup,
-      private readonly packFormat: number
-   ) {}
+  private recipePath(id: Id) {
+    const folder = this.packFormat > 44 ? "recipe" : "recipes";
+    return `data/${id.namespace}/${folder}/${id.path}.json`;
+  }
 
-   private recipePath(id: Id) {
-      const folder = this.packFormat > 44 ? 'recipe' : 'recipes'
-      return `data/${id.namespace}/${folder}/${id.path}.json`
-   }
+  async emit(acceptor: Acceptor) {
+    await Promise.all([this.ruled.emit(acceptor), this.custom.emit(acceptor)]);
+  }
 
-   async emit(acceptor: Acceptor) {
-      await Promise.all([this.ruled.emit(acceptor), this.custom.emit(acceptor)])
-   }
+  resolveIngredientTest(test?: IngredientTest) {
+    if (!test) return () => true;
+    return resolveIngredientTest(test, this.tags, this.lookup());
+  }
 
-   resolveIngredientTest(test?: IngredientTest) {
-      if (!test) return () => true
-      return resolveIngredientTest(test, this.tags, this.lookup())
-   }
+  private resolveRecipeTest(test: RecipeTest) {
+    const id: Predicate<Id>[] = [];
+    const type: Predicate<Id>[] = [];
+    const ingredient: Predicate<IngredientInput>[] = [];
+    const result: Predicate<IngredientInput>[] = [];
 
-   private resolveRecipeTest(test: RecipeTest) {
-      const id: Predicate<Id>[] = []
-      const type: Predicate<Id>[] = []
-      const ingredient: Predicate<IngredientInput>[] = []
-      const result: Predicate<IngredientInput>[] = []
+    if (test.id) id.push(resolveIDTest(test.id));
+    if (test.type) type.push(resolveIDTest(test.type));
+    if (test.namespace) id.push((id) => id.namespace === test.namespace);
+    if (test.output) result.push(this.resolveIngredientTest(test.output));
+    if (test.input) ingredient.push(this.resolveIngredientTest(test.input));
 
-      if (test.id) id.push(resolveIDTest(test.id))
-      if (test.type) type.push(resolveIDTest(test.type))
-      if (test.namespace) id.push(id => id.namespace === test.namespace)
-      if (test.output) result.push(this.resolveIngredientTest(test.output))
-      if (test.input) ingredient.push(this.resolveIngredientTest(test.input))
+    return { id, type, ingredient, result };
+  }
 
-      return { id, type, ingredient, result }
-   }
+  add<
+    TDefinition extends RecipeDefinition,
+    TRecipe extends Recipe<TDefinition>,
+  >(id: IdInput, value: TDefinition | TRecipe) {
+    if (this.custom.has(id))
+      this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
+    if (value instanceof Recipe) this.custom.add(id, value.toJSON());
+    else this.custom.add(id, value);
+  }
 
-   add<TDefinition extends RecipeDefinition, TRecipe extends Recipe<TDefinition>>(
-      id: IdInput,
-      value: TDefinition | TRecipe
-   ) {
-      if (this.custom.has(id)) this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`)
-      if (value instanceof Recipe) this.custom.add(id, value.toJSON())
-      else this.custom.add(id, value)
-   }
+  private addRule(
+    shape: unknown[],
+    modifier: Modifier<Recipe>,
+    recipeTest: RecipeTest = {},
+    ingredientTests: {
+      ingredient?: Predicate<IngredientInput>;
+      result?: Predicate<IngredientInput>;
+    } = {},
+  ) {
+    const recipePredicates = this.resolveRecipeTest(recipeTest ?? {});
 
-   private addRule(
-      shape: unknown[],
-      modifier: Modifier<Recipe>,
-      recipeTest: RecipeTest = {},
-      ingredientTests: { ingredient?: Predicate<IngredientInput>; result?: Predicate<IngredientInput> } = {}
-   ) {
-      const recipePredicates = this.resolveRecipeTest(recipeTest ?? {})
+    this.ruled.addRule(
+      new RecipeRule(
+        shape,
+        recipePredicates.id,
+        recipePredicates.type,
+        [ingredientTests.ingredient, ...recipePredicates.ingredient].filter(
+          exists,
+        ),
+        [ingredientTests.result, ...recipePredicates.result].filter(exists),
+        modifier,
+      ),
+      recipeTest.optional !== true,
+    );
+  }
 
-      this.ruled.addRule(
-         new RecipeRule(
-            shape,
-            recipePredicates.id,
-            recipePredicates.type,
-            [ingredientTests.ingredient, ...recipePredicates.ingredient].filter(exists),
-            [ingredientTests.result, ...recipePredicates.result].filter(exists),
-            modifier
-         ),
-         recipeTest.optional !== true
-      )
-   }
+  remove(test: RecipeTest) {
+    this.addRule([test], () => null, test);
+  }
 
-   remove(test: RecipeTest) {
-      this.addRule([test], () => null, test)
-   }
+  replaceResult(
+    test: IngredientTest,
+    value: ResultInput,
+    additionalTest?: RecipeTest,
+  ) {
+    const predicate = this.resolveIngredientTest(test);
 
-   replaceResult(test: IngredientTest, value: ResultInput, additionalTest?: RecipeTest) {
-      const predicate = this.resolveIngredientTest(test)
+    createResult(value, this.lookup());
+    const replacer = createReplacer<ResultInput>(predicate, value);
+    const replace: Replacer<Result> = (it) => createResult(replacer(it));
 
-      createResult(value, this.lookup())
-      const replacer = createReplacer<ResultInput>(predicate, value)
-      const replace: Replacer<Result> = it => createResult(replacer(it))
+    this.addRule(
+      ["replace result", test, "with", value, additionalTest],
+      (recipe) => recipe.replaceResult(replace),
+      additionalTest,
+      { result: predicate },
+    );
+  }
 
-      this.addRule(
-         ['replace result', test, 'with', value, additionalTest],
-         recipe => recipe.replaceResult(replace),
-         additionalTest,
-         { result: predicate }
-      )
-   }
+  replaceIngredient(
+    test: IngredientTest,
+    value: IngredientInput,
+    additionalTest?: RecipeTest,
+  ) {
+    const predicate = this.resolveIngredientTest(test);
 
-   replaceIngredient(test: IngredientTest, value: IngredientInput, additionalTest?: RecipeTest) {
-      const predicate = this.resolveIngredientTest(test)
+    createIngredient(value, this.lookup());
+    const replacer = createReplacer<IngredientInput>(predicate, value);
+    const replace: Replacer<Ingredient> = (it) =>
+      createIngredient(replacer(it));
 
-      createIngredient(value, this.lookup())
-      const replacer = createReplacer<IngredientInput>(predicate, value)
-      const replace: Replacer<Ingredient> = it => createIngredient(replacer(it))
+    this.addRule(
+      ["replace ingredient", test, "with", value, additionalTest],
+      (recipe) => recipe.replaceIngredient(replace),
+      additionalTest,
+      { ingredient: predicate },
+    );
+  }
 
-      this.addRule(
-         ['replace ingredient', test, 'with', value, additionalTest],
-         recipe => recipe.replaceIngredient(replace),
-         additionalTest,
-         { ingredient: predicate }
-      )
-   }
-
-   clear() {
-      this.custom.clear()
-      this.ruled.clear()
-   }
+  clear() {
+    this.custom.clear();
+    this.ruled.clear();
+  }
 }

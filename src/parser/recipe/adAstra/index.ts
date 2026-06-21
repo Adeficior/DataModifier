@@ -1,6 +1,6 @@
-import { Ingredient } from '../../../common/ingredient.js'
+import type { Ingredient } from "../../../common/ingredient.js";
 
 export type WrappedIngredient = {
-   ingredient: Ingredient
-   count?: number
-}
+  ingredient: Ingredient;
+  count?: number;
+};

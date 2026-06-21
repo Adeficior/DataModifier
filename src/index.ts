@@ -1,40 +1,91 @@
-export { default as PackLoader } from './loader/pack.js'
-export { TagRegistry, TagRegistryHolder } from './loader/tags.js'
-export { RegistryProvider, ClearableEmitter } from './emit/index.js'
-export { TagRules } from './emit/data/tags.js'
-export { RecipeRules, EMPTY_RECIPE } from './emit/data/recipe.js'
-export { default as CustomEmitter } from './emit/custom.js'
-export { default as RuledEmitter } from './emit/ruled.js'
-export { LootRules, EMPTY_LOOT_TABLE, EMPTY_LOOT_MODIFIER } from './emit/data/loot.js'
-export { BlockstateRules } from './emit/assets/blockstates.js'
-export { ModelRules, ModelRulesGroup } from './emit/assets/models.js'
-export { BlockDefinitionRules, BlockDefinitionOptions } from './emit/content/blockDefinition.js'
-export { BlockDefinitionRulesWithoutId } from './emit/content/innerBlockDefinition.js'
-export { ItemDefinitionRules, ItemDefinitionOptions } from './emit/content/itemDefinition.js'
-export { LootItemInput } from './parser/lootTable.js'
-export { UnknownRegistryEntry, IllegalShapeError } from './error.js'
 export {
-   IngredientInput,
-   Predicate,
-   IngredientTest,
-   Ingredient,
-   ItemTag,
-   CommonTest,
-   BlockTag,
-   FluidTag,
-   ItemIngredient,
-   FluidIngredient,
-   BlockIngredient,
-   createIngredient,
-} from './common/ingredient.js'
-export { TagInput, Id, IdInput, NormalizedId, encodeId, createId, prefix, suffix } from './common/id.js'
-export { default as Registry } from './common/registry.js'
-export { Block, ItemStack, FluidStack, createResult, ResultInput, Result } from './common/result.js'
-export { default as createLogger, Logger, createSilentLogger, wrapLogMethods } from './logger.js'
-export { RecipeDefinition, FabricCondition, ForgeCondition } from './schema/data/recipe.js'
-export { TagEntry, TagDefinition } from './schema/data/tag.js'
-export { EmptyLootEntry, LootEntry, LootTable, LootPool, LootModifier } from './schema/data/loot.js'
-export { Model } from './schema/assets/model.js'
-export { Blockstate } from './schema/assets/blockstate.js'
-export { BlockItemDefinition, ItemDefinition, ItemProperties, Rarity } from './schema/content/itemDefinition.js'
-export { BlockDefinition, CogBlockDefinition, BlockProperties } from './schema/content/blockDefinition.js'
+  createId,
+  encodeId,
+  prefix,
+  suffix,
+  type Id,
+  type IdInput,
+  type NormalizedId,
+  type TagInput,
+} from "./common/id.js";
+export { createIngredient } from "./common/ingredient.js";
+export type {
+  BlockIngredient,
+  BlockTag,
+  CommonTest,
+  FluidIngredient,
+  FluidTag,
+  Ingredient,
+  IngredientInput,
+  IngredientTest,
+  ItemIngredient,
+  ItemTag,
+  Predicate,
+} from "./common/ingredient.js";
+export { default as Registry } from "./common/registry.js";
+export { createResult } from "./common/result.js";
+export type {
+  Block,
+  FluidStack,
+  ItemStack,
+  Result,
+  ResultInput,
+} from "./common/result.js";
+export type { BlockstateRules } from "./emit/assets/blockstates.js";
+export type { ModelRules, ModelRulesGroup } from "./emit/assets/models.js";
+export type {
+  BlockDefinitionOptions,
+  BlockDefinitionRules,
+} from "./emit/content/blockDefinition.js";
+export type { BlockDefinitionRulesWithoutId } from "./emit/content/innerBlockDefinition.js";
+export type {
+  ItemDefinitionOptions,
+  ItemDefinitionRules,
+} from "./emit/content/itemDefinition.js";
+export { default as CustomEmitter } from "./emit/custom.js";
+export {
+  EMPTY_LOOT_MODIFIER,
+  EMPTY_LOOT_TABLE,
+  type LootRules,
+} from "./emit/data/loot.js";
+export { EMPTY_RECIPE } from "./emit/data/recipe.js";
+export type { RecipeRules } from "./emit/data/recipe.js";
+export type { TagRules } from "./emit/data/tags.js";
+export type { ClearableEmitter, RegistryProvider } from "./emit/index.js";
+export { default as RuledEmitter } from "./emit/ruled.js";
+export { IllegalShapeError, UnknownRegistryEntry } from "./error.js";
+export { default as PackLoader } from "./loader/pack.js";
+export type { TagRegistry, TagRegistryHolder } from "./loader/tags.js";
+export {
+  default as createLogger,
+  createSilentLogger,
+  wrapLogMethods,
+} from "./logger.js";
+export type { Logger } from "./logger.js";
+export type { LootItemInput } from "./parser/lootTable.js";
+export type { Blockstate } from "./schema/assets/blockstate.js";
+export type { Model } from "./schema/assets/model.js";
+export type {
+  BlockDefinition,
+  BlockProperties,
+  CogBlockDefinition,
+} from "./schema/content/blockDefinition.js";
+export type {
+  BlockItemDefinition,
+  ItemDefinition,
+  ItemProperties,
+  Rarity,
+} from "./schema/content/itemDefinition.js";
+export { EmptyLootEntry } from "./schema/data/loot.js";
+export type {
+  LootEntry,
+  LootModifier,
+  LootPool,
+  LootTable,
+} from "./schema/data/loot.js";
+export type {
+  FabricCondition,
+  ForgeCondition,
+  RecipeDefinition,
+} from "./schema/data/recipe.js";
+export type { TagDefinition, TagEntry } from "./schema/data/tag.js";
