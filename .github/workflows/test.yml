@@ -1,8 +1,8 @@
 # <meta>
 #    <source>@pssbletrngle/github-meta-generator</source>
-#    <version>1.0.98</version>
-#    <timestamp>2026-06-21T20:01:51.399Z</timestamp>
-#    <hash>2dfe5bb465e530db</hash>
+#    <version>1.0.99</version>
+#    <timestamp>2026-06-22T07:13:07.339Z</timestamp>
+#    <hash>fb4929d01e21b567</hash>
 # </meta>
 
 name: Test
@@ -25,6 +25,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          lfs: true
+          submodules: true
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2

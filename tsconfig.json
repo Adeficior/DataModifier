@@ -1,8 +1,8 @@
 // <meta>
 //    <source>@pssbletrngle/github-meta-generator</source>
-//    <version>1.0.98</version>
-//    <timestamp>2026-06-21T20:01:51.400Z</timestamp>
-//    <hash>a3f8c60a7e5da92</hash>
+//    <version>1.0.99</version>
+//    <timestamp>2026-06-22T07:13:07.339Z</timestamp>
+//    <hash>9f8a55a0a115b535</hash>
 // </meta>
 
 {
@@ -27,16 +27,7 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "./tsconfig.test.json"
-    }
-  ]
+  "include": ["src", "test"]
 }
