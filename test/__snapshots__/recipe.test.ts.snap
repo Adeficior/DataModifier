@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`recipe ingredient replacement > replaces ingredients > modified compass recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients: modified compass recipe 1`] = `
 {
   "key": {
     "#": {
@@ -22,7 +22,7 @@ exports[`recipe ingredient replacement > replaces ingredients > modified compass
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients > modified piston recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients: modified piston recipe 1`] = `
 {
   "key": {
     "#": {
@@ -50,7 +50,7 @@ exports[`recipe ingredient replacement > replaces ingredients > modified piston 
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients > recipes including redstone as an ingredient 1`] = `
+exports[`recipe ingredient replacement replaces ingredients: recipes including redstone as an ingredient 1`] = `
 [
   "data/botania/recipes/brew/speed.json",
   "data/botania/recipes/brew/weak_regeneration.json",
@@ -94,7 +94,7 @@ exports[`recipe ingredient replacement > replaces ingredients > recipes includin
 ]
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients in create recipes > modified create:raw_zinc recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:raw_zinc recipe 1`] = `
 {
   "ingredients": [
     {
@@ -115,7 +115,7 @@ exports[`recipe ingredient replacement > replaces ingredients in create recipes 
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients in create recipes > modified create:raw_zinc_block recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:raw_zinc_block recipe 1`] = `
 {
   "key": {
     "C": {
@@ -134,7 +134,7 @@ exports[`recipe ingredient replacement > replaces ingredients in create recipes 
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients in create recipes > modified create:zinc_ingot_from_raw_ore recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:zinc_ingot_from_raw_ore recipe 1`] = `
 {
   "cookingtime": 100,
   "experience": 0.7,
@@ -146,7 +146,7 @@ exports[`recipe ingredient replacement > replaces ingredients in create recipes 
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients in create recipes > modified create:zinc_ingot_from_raw_ore recipe 2`] = `
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:zinc_ingot_from_raw_ore recipe 2`] = `
 {
   "cookingtime": 200,
   "experience": 0.7,
@@ -158,7 +158,7 @@ exports[`recipe ingredient replacement > replaces ingredients in create recipes 
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients with additional input filter > modified note_block recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients with additional input filter: modified note_block recipe 1`] = `
 {
   "key": {
     "#": {
@@ -180,7 +180,7 @@ exports[`recipe ingredient replacement > replaces ingredients with additional in
 }
 `;
 
-exports[`recipe ingredient replacement > replaces ingredients with additional input filter > modified piston recipe 1`] = `
+exports[`recipe ingredient replacement replaces ingredients with additional input filter: modified piston recipe 1`] = `
 {
   "key": {
     "#": {

@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create new tabs > emits and mergers csv > tab csv 1 for something 1`] = `"test_tab,another_tab"`;
+exports[`create new tabs emits and mergers csv: tab csv 1 for something 1`] = `"test_tab,another_tab"`;
 
-exports[`create new tabs > emits and mergers csv > tab csv for minecraft 1`] = `"more_blocks"`;
+exports[`create new tabs emits and mergers csv: tab csv for minecraft 1`] = `"more_blocks"`;
 
-exports[`create removal entries > resolves filter correctly > removal modifier 1 1`] = `
+exports[`create removal entries resolves filter correctly: removal modifier 1 1`] = `
 "{
   "targets": ["example:food"],
   "removals": [
@@ -14,7 +14,7 @@ exports[`create removal entries > resolves filter correctly > removal modifier 1
 "
 `;
 
-exports[`create removal entries > resolves filter correctly > removal modifier 2 1`] = `
+exports[`create removal entries resolves filter correctly: removal modifier 2 1`] = `
 "{
   "targets": ["something:test_tab"],
   "removals": [
@@ -24,7 +24,7 @@ exports[`create removal entries > resolves filter correctly > removal modifier 2
 "
 `;
 
-exports[`create removal entries > uses custom file name > removal modifier with custom file name 1`] = `
+exports[`create removal entries uses custom file name: removal modifier with custom file name 1`] = `
 "{
   "targets": ["something:test_tab"],
   "removals": [{ "type": "items_match", "items": ["minecraft:diamond"] }]
@@ -32,7 +32,7 @@ exports[`create removal entries > uses custom file name > removal modifier with 
 "
 `;
 
-exports[`creates addition entries > adds after predicate > addition modifier with after predicate 1`] = `
+exports[`creates addition entries adds after predicate: addition modifier with after predicate 1`] = `
 "{
   "targets": ["example:tab"],
   "additions": [
@@ -46,7 +46,7 @@ exports[`creates addition entries > adds after predicate > addition modifier wit
 "
 `;
 
-exports[`creates addition entries > adds before predicate > addition modifier with after predicate 1`] = `
+exports[`creates addition entries adds before predicate: addition modifier with after predicate 1`] = `
 "{
   "targets": ["example:tab"],
   "additions": [
@@ -60,7 +60,7 @@ exports[`creates addition entries > adds before predicate > addition modifier wi
 "
 `;
 
-exports[`creates addition entries > emits per tab key > addition modifier 1 1`] = `
+exports[`creates addition entries emits per tab key: addition modifier 1 1`] = `
 "{
   "targets": ["example:food"],
   "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
@@ -68,7 +68,7 @@ exports[`creates addition entries > emits per tab key > addition modifier 1 1`] 
 "
 `;
 
-exports[`creates addition entries > emits per tab key > addition modifier 2 1`] = `
+exports[`creates addition entries emits per tab key: addition modifier 2 1`] = `
 "{
   "targets": ["something:test_tab"],
   "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
@@ -76,7 +76,7 @@ exports[`creates addition entries > emits per tab key > addition modifier 2 1`] 
 "
 `;
 
-exports[`creates addition entries > uses custom file name > removal modifier with custom file name 1`] = `
+exports[`creates addition entries uses custom file name: removal modifier with custom file name 1`] = `
 "{
   "targets": ["something:test_tab"],
   "additions": [{ "items": ["minecraft:diamond"] }]
