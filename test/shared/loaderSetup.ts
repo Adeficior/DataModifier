@@ -1,5 +1,5 @@
+import type { Options } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import type { Options } from "@pssbletrngle/pack-resolver";
 import { afterEach, beforeAll } from "bun:test";
 import { PackLoader } from "../../src/index.js";
 import type { PackLoaderOptions } from "../../src/loader/pack.js";
