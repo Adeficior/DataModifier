@@ -1,4 +1,3 @@
-export type { Logger } from "@adeficior/pack-resolver";
 export {
   createId,
   encodeId,
