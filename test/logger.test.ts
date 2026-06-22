@@ -1,15 +1,11 @@
-import { afterAll, describe, expect, it, vi } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 import chalk from "chalk";
 import { createLogger } from "../src/index.js";
 
-const logMock = vi.spyOn(console, "log");
-const warnMock = vi.spyOn(console, "warn");
-const errorMock = vi.spyOn(console, "error");
-
-afterAll(() => {
-  logMock.mockReset();
-  warnMock.mockReset();
-  errorMock.mockReset();
+beforeEach(() => {
+  console.info = mock();
+  console.warn = mock();
+  console.error = mock();
 });
 
 describe("tests regarding the logger", () => {
@@ -21,9 +17,9 @@ describe("tests regarding the logger", () => {
     logger.warn("Some Warning");
     logger.error("An Error Occured", error);
 
-    expect(logMock).toHaveBeenCalledWith(chalk.green("Info Test"));
-    expect(warnMock).toHaveBeenCalledWith(chalk.yellow("Some Warning"));
-    expect(errorMock).toHaveBeenCalledWith(
+    expect(console.info).toHaveBeenCalledWith(chalk.green("Info Test"));
+    expect(console.warn).toHaveBeenCalledWith(chalk.yellow("Some Warning"));
+    expect(console.error).toHaveBeenCalledWith(
       chalk.red("An Error Occured"),
       error,
     );
@@ -43,11 +39,11 @@ describe("tests regarding the logger", () => {
 
     logger.info("After");
 
-    expect(logMock).toHaveBeenCalledWith(chalk.green("Before"));
-    expect(logMock).toHaveBeenCalledWith(chalk.green("After"));
-    expect(logMock).toHaveBeenCalledWith(chalk.green("   Info Test"));
-    expect(warnMock).toHaveBeenCalledWith(chalk.yellow("   Some Warning"));
-    expect(errorMock).toHaveBeenCalledWith(
+    expect(console.info).toHaveBeenCalledWith(chalk.green("Before"));
+    expect(console.info).toHaveBeenCalledWith(chalk.green("After"));
+    expect(console.info).toHaveBeenCalledWith(chalk.green("   Info Test"));
+    expect(console.warn).toHaveBeenCalledWith(chalk.yellow("   Some Warning"));
+    expect(console.error).toHaveBeenCalledWith(
       chalk.red("   An Error Occured"),
       error,
     );
@@ -61,11 +57,13 @@ describe("tests regarding the logger", () => {
     logger.warn("Some Warning");
     logger.error("An Error Occured", error);
 
-    expect(logMock).toHaveBeenCalledWith(chalk.green("prefix -> Info Test"));
-    expect(warnMock).toHaveBeenCalledWith(
+    expect(console.info).toHaveBeenCalledWith(
+      chalk.green("prefix -> Info Test"),
+    );
+    expect(console.warn).toHaveBeenCalledWith(
       chalk.yellow("prefix -> Some Warning"),
     );
-    expect(errorMock).toHaveBeenCalledWith(
+    expect(console.error).toHaveBeenCalledWith(
       chalk.red("prefix -> An Error Occured"),
       error,
     );

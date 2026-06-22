@@ -94,6 +94,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
           return { ...it, required: false };
         });
       }
+
       return [it];
     });
   }

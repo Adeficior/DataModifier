@@ -30,7 +30,9 @@ export default class RegistryDumpLoader implements RegistryLookup {
 
   private readonly accept: AcceptorWithLoader = (logger, path, content) => {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
-    if (!match?.groups) return false;
+    if (!match?.groups) {
+      return false;
+    }
 
     const { registry } = match.groups as { registry: string };
 

@@ -4,20 +4,17 @@
 //    <timestamp>2026-06-22T07:13:07.339Z</timestamp>
 //    <hash>9f8a55a0a115b535</hash>
 // </meta>
+
 {
   "compilerOptions": {
     // Environment setup & latest features
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
-    "types": [
-      "bun"
-    ],
+    "types": ["bun"],
     // Bundler mode
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
@@ -32,12 +29,5 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": [
-    "src"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.test.json"
-    }
-  ]
+  "include": ["src", "test"]
 }

@@ -78,7 +78,7 @@
       "typescript": "^5"
    },
    "dependencies": {
-      "@adeficior/pack-resolver": "^2.0.0-rc.12",
+      "@adeficior/pack-resolver": "^2.0.0-rc.16",
       "@pssbletrngle/resource-merger": "^1.2.4",
       "@types/command-line-usage": "^5.0.4",
       "@types/minimatch": "^3.0.5",

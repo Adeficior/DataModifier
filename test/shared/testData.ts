@@ -1,4 +1,8 @@
-import type { IResolver, Options } from "@adeficior/pack-resolver";
+import {
+  createResolver,
+  type IResolver,
+  type Options,
+} from "@adeficior/pack-resolver";
 import { createTestResolver } from "@adeficior/pack-resolver/testing";
 
 export function createTestDataResolver(
@@ -11,5 +15,8 @@ export function createTestDataResolver(
 }
 
 export function createDumpResolver(): IResolver {
-  return createTestResolver("dump");
+  return createResolver({
+    from: "test/resources/dump",
+    silent: true,
+  });
 }

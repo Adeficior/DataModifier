@@ -43,7 +43,7 @@ export default function createLogger(): Logger {
     /* eslint-disable no-console */
     error: (msg, ...args) => console.error(chalk.red(msg), ...args),
     warn: (msg, ...args) => console.warn(chalk.yellow(msg), ...args),
-    info: (msg, ...args) => console.log(chalk.green(msg), ...args),
+    info: (msg, ...args) => console.info(chalk.green(msg), ...args),
     /* eslint-enable no-console */
   });
 }
