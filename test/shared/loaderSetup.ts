@@ -1,14 +1,14 @@
 import type { Options } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { afterEach, beforeAll } from "bun:test";
-import { PackLoader } from "../../src/index.js";
+import { packFormatOf, PackLoader } from "../../src/index.js";
 import type { PackLoaderOptions } from "../../src/loader/pack.js";
 import { createTestDataResolver } from "./testData.js";
 
 export default function setupLoader(
   {
     load = true,
-    packFormat = 15,
+    packFormat = packFormatOf("1.20.1"),
     ...options
   }: Partial<Options & PackLoaderOptions> & { load?: boolean } = {},
   block?: (loader: PackLoader) => void,

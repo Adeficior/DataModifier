@@ -56,6 +56,7 @@ export { default as RuledEmitter } from "./emit/ruled.js";
 export { IllegalShapeError, UnknownRegistryEntry } from "./error.js";
 export { default as PackLoader } from "./loader/pack.js";
 export type { TagRegistry, TagRegistryHolder } from "./loader/tags.js";
+export * from "./packFormat.js";
 export type { LootItemInput } from "./parser/lootTable.js";
 export type { Blockstate } from "./schema/assets/blockstate.js";
 export type { Model } from "./schema/assets/model.js";

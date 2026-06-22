@@ -31,6 +31,7 @@ import TagEmitter from "../emit/data/tags.js";
 import type { ClearableEmitter } from "../emit/index.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
+import type { SemVerInput } from "../packFormat.js";
 import type Loader from "./index.js";
 import type { AcceptorWithLoader } from "./index.js";
 import LangLoader from "./lang.js";
@@ -43,7 +44,7 @@ import type RegistryLookup from "./registry/index.js";
 import TagsLoader from "./tags.js";
 
 export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
-  packFormat: number;
+  packFormat: SemVerInput;
 }
 
 export default class PackLoader implements Loader, ClearableEmitter {

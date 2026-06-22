@@ -19,6 +19,7 @@ import type { Result, ResultInput } from "../../common/result.js";
 import { createResult } from "../../common/result.js";
 import type RegistryLookup from "../../loader/registry/index.js";
 import type { TagRegistryHolder } from "../../loader/tags.js";
+import { isAtLeastVersion, type SemVerInput } from "../../packFormat.js";
 import type { Replacer } from "../../parser/recipe/index.js";
 import { createReplacer, Recipe } from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
@@ -93,7 +94,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     private readonly registry: RegistryProvider<Recipe>,
     private readonly tags: TagRegistryHolder,
     private readonly lookup: () => RegistryLookup,
-    private readonly packFormat: number,
+    private readonly packFormat: SemVerInput,
   ) {
     this.ruled = new RuledEmitter<Recipe, RecipeRule>(
       this.logger,
@@ -105,7 +106,9 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   private recipePath(id: Id) {
-    const folder = this.packFormat > 44 ? "recipe" : "recipes";
+    const folder = isAtLeastVersion(this.packFormat, "44")
+      ? "recipe"
+      : "recipes";
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 

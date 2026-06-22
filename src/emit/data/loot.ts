@@ -11,6 +11,7 @@ import { resolveIngredientTest } from "../../common/ingredient.js";
 import { resolveIDTest } from "../../common/predicates.js";
 import type RegistryLookup from "../../loader/registry/index.js";
 import type { TagRegistryHolder } from "../../loader/tags.js";
+import { isAtLeastVersion, type SemVerInput } from "../../packFormat.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
 import { createLootEntry, replaceItemInTable } from "../../parser/lootTable.js";
 import type { LootModifier, LootTable } from "../../schema/data/loot.js";
@@ -69,7 +70,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     private readonly lootTables: RegistryProvider<LootTable>,
     private readonly tags: TagRegistryHolder,
     private readonly lookup: () => RegistryLookup,
-    private readonly packFormat: number,
+    private readonly packFormat: SemVerInput,
   ) {
     this.ruled = new RuledEmitter<LootTable, LootTableRule>(
       this.logger,
@@ -81,7 +82,9 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   private tablePath(id: Id) {
-    const folder = this.packFormat > 44 ? "loot_table" : "loot_tables";
+    const folder = isAtLeastVersion(this.packFormat, "44")
+      ? "loot_table"
+      : "loot_tables";
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 

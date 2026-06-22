@@ -307,6 +307,8 @@ export default class RecipeLoader
     TDefinition extends RecipeDefinition,
     TRecipe extends Recipe<TDefinition>,
   >(logger: Logger, definition: TDefinition): TRecipe | null {
+    if (!definition.type)
+      throw new IllegalShapeError(`no recipe type set`, definition);
     const parser = this.recipeParsers.get(encodeId(definition.type));
 
     if (!("type" in definition))
