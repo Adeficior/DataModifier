@@ -3,23 +3,19 @@ import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
-import type {
-  CommonTest,
-  Ingredient,
-  IngredientInput,
-  IngredientTest,
-  Predicate,
-} from "../../common/ingredient.js";
+import type { IngredientTest } from "../../common/ingredient/filter.js";
+import resolveIngredientTest from "../../common/ingredient/filter.js";
+import type { Ingredient } from "../../common/ingredient/index.js";
+import type { IngredientInput } from "../../common/ingredient/input.js";
 import {
-  createIngredient,
-  resolveIngredientTest,
-} from "../../common/ingredient.js";
-import { resolveIDTest } from "../../common/predicates.js";
-import type { Result, ResultInput } from "../../common/result.js";
-import { createResult } from "../../common/result.js";
-import type RegistryLookup from "../../loader/registry/index.js";
-import type { TagRegistryHolder } from "../../loader/tags.js";
-import { isAtLeastVersion, type SemVerInput } from "../../packFormat.js";
+  resolveIDTest,
+  type CommonTest,
+  type Predicate,
+} from "../../common/predicates.js";
+import type { Result } from "../../common/result/index.js";
+import type { ResultInput } from "../../common/result/input.js";
+import type { PackContext } from "../../loader/context.js";
+import { isAtLeastVersion } from "../../packFormat.js";
 import type { Replacer } from "../../parser/recipe/index.js";
 import { createReplacer, Recipe } from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
@@ -39,8 +35,6 @@ export type RecipeTest = Readonly<{
 }>;
 
 export interface RecipeRules {
-  resolveIngredientTest(test?: IngredientTest): Predicate<IngredientInput>;
-
   replaceResult(
     test: IngredientTest,
     value: Result,
@@ -92,9 +86,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   constructor(
     private readonly logger: Logger,
     private readonly registry: RegistryProvider<Recipe>,
-    private readonly tags: TagRegistryHolder,
-    private readonly lookup: () => RegistryLookup,
-    private readonly packFormat: SemVerInput,
+    private readonly context: PackContext,
   ) {
     this.ruled = new RuledEmitter<Recipe, RecipeRule>(
       this.logger,
@@ -106,7 +98,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   private recipePath(id: Id) {
-    const folder = isAtLeastVersion(this.packFormat, "44")
+    const folder = isAtLeastVersion(this.context.packFormat, "44")
       ? "recipe"
       : "recipes";
     return `data/${id.namespace}/${folder}/${id.path}.json`;
@@ -118,7 +110,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
   resolveIngredientTest(test?: IngredientTest) {
     if (!test) return () => true;
-    return resolveIngredientTest(test, this.tags, this.lookup());
+    return resolveIngredientTest(test, this.context);
   }
 
   private resolveRecipeTest(test: RecipeTest) {
@@ -183,9 +175,12 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.resolveIngredientTest(test);
 
-    createResult(value, this.lookup());
+    // TODO check why this is here
+    const result = this.context.results.create(value);
+
     const replacer = createReplacer<ResultInput>(predicate, value);
-    const replace: Replacer<Result> = (it) => createResult(replacer(it));
+    const replace: Replacer<Result> = (it) =>
+      this.context.results.create(replacer(it));
 
     this.addRule(
       ["replace result", test, "with", value, additionalTest],
@@ -202,10 +197,12 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.resolveIngredientTest(test);
 
-    createIngredient(value, this.lookup());
+    // TODO check why this is here
+    const result = this.context.ingredients.create(value);
+
     const replacer = createReplacer<IngredientInput>(predicate, value);
     const replace: Replacer<Ingredient> = (it) =>
-      createIngredient(replacer(it));
+      this.context.ingredients.create(replacer(it));
 
     this.addRule(
       ["replace ingredient", test, "with", value, additionalTest],

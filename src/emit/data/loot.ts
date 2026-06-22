@@ -1,17 +1,16 @@
 import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId, prefix } from "../../common/id.js";
-import type {
-  CommonTest,
-  IngredientInput,
-  IngredientTest,
-  Predicate,
-} from "../../common/ingredient.js";
-import { resolveIngredientTest } from "../../common/ingredient.js";
-import { resolveIDTest } from "../../common/predicates.js";
-import type RegistryLookup from "../../loader/registry/index.js";
-import type { TagRegistryHolder } from "../../loader/tags.js";
-import { isAtLeastVersion, type SemVerInput } from "../../packFormat.js";
+import type { IngredientTest } from "../../common/ingredient/filter.js";
+import resolveIngredientTest from "../../common/ingredient/filter.js";
+import type { IngredientInput } from "../../common/ingredient/input.js";
+import {
+  resolveIDTest,
+  type CommonTest,
+  type Predicate,
+} from "../../common/predicates.js";
+import type { PackContext } from "../../loader/context.js";
+import { isAtLeastVersion } from "../../packFormat.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
 import { createLootEntry, replaceItemInTable } from "../../parser/lootTable.js";
 import type { LootModifier, LootTable } from "../../schema/data/loot.js";
@@ -68,9 +67,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   constructor(
     private readonly logger: Logger,
     private readonly lootTables: RegistryProvider<LootTable>,
-    private readonly tags: TagRegistryHolder,
-    private readonly lookup: () => RegistryLookup,
-    private readonly packFormat: SemVerInput,
+    private readonly context: PackContext,
   ) {
     this.ruled = new RuledEmitter<LootTable, LootTableRule>(
       this.logger,
@@ -82,7 +79,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   private tablePath(id: Id) {
-    const folder = isAtLeastVersion(this.packFormat, "44")
+    const folder = isAtLeastVersion(this.context.packFormat, "44")
       ? "loot_table"
       : "loot_tables";
     return `data/${id.namespace}/${folder}/${id.path}.json`;
@@ -107,7 +104,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   resolveIngredientTest(test: IngredientTest) {
-    return resolveIngredientTest(test, this.tags, this.lookup());
+    return resolveIngredientTest(test, this.context);
   }
 
   private resolveLootTableTest(test: LootTableTest) {
@@ -145,7 +142,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     const outputPredicate = this.resolveIngredientTest(from);
     const replacer = replaceItemInTable(
       outputPredicate,
-      createLootEntry(to, this.lookup()),
+      createLootEntry(to, this.context.lookup),
     );
     this.ruled.addRule(
       new LootTableRule(

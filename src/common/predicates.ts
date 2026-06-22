@@ -3,7 +3,9 @@ import type { Logger } from "@adeficior/pack-resolver";
 import type { TagRegistry } from "../loader/tags.js";
 import type { IdInput, NormalizedId, TagInput } from "./id.js";
 import { encodeId } from "./id.js";
-import type { CommonTest, Predicate } from "./ingredient.js";
+
+export type Predicate<T> = (value: T, logger?: Logger) => boolean;
+export type CommonTest<T> = RegExp | Predicate<T> | T;
 
 export function resolveCommonTest<TEntry, TId extends string>(
   test: CommonTest<TId>,

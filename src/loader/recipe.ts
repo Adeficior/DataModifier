@@ -1,7 +1,5 @@
 import type { Logger } from "@adeficior/pack-resolver";
 import { encodeId } from "../common/id.js";
-import { createIngredient } from "../common/ingredient.js";
-import { createResult } from "../common/result.js";
 import { IllegalShapeError } from "../error.js";
 import { ShapelessRecipeParser } from "../parser/index.js";
 import FluidConversionRecipeParser from "../parser/recipe/adAstra/conversion.js";

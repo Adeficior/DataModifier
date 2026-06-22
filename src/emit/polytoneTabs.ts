@@ -140,7 +140,7 @@ export default class PolytoneTabsEmitter
     (it) => it.join(","),
   );
 
-  constructor(private readonly lookup: () => RegistryLookup) {}
+  constructor(private readonly lookup: RegistryLookup) {}
 
   clear(): void {
     this.entries.clear();
@@ -182,7 +182,6 @@ export default class PolytoneTabsEmitter
   }
 
   create(id: IdInput, modifications: TabModifications = {}) {
-    const lookup = this.lookup();
     const { namespace, path } = createId(id);
     this.tabs.merge({ namespace, path: "tab" }, [path], (a, b) =>
       uniq([...a, ...b]),
@@ -190,7 +189,7 @@ export default class PolytoneTabsEmitter
     if (Object.keys(modifications).length) {
       this.modify(id, modifications);
     }
-    return lookup.addCustom("minecraft:creative_mode_tab", id);
+    return this.lookup.addCustom("minecraft:creative_mode_tab", id);
   }
 
   modify(id: IdInput, modifications: TabModifications) {

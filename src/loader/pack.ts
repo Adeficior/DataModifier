@@ -6,10 +6,15 @@ import type {
   ResolverInfo,
 } from "@adeficior/pack-resolver";
 import match from "minimatch";
-import type { IngredientInput, IngredientTest } from "../common/ingredient.js";
-import { createIngredient } from "../common/ingredient.js";
-import type { ResultInput } from "../common/result.js";
-import { createResult } from "../common/result.js";
+import resolveIngredientTest, {
+  type IngredientTest,
+} from "../common/ingredient/filter.js";
+import type { Ingredient } from "../common/ingredient/index.js";
+import type { IngredientInput } from "../common/ingredient/input.js";
+import IngredientSerializer from "../common/ingredient/serializer.js";
+import type { Result } from "../common/result/index.js";
+import type { ResultInput } from "../common/result/input.js";
+import ResultSerializer from "../common/result/serializer.js";
 import type { BlockstateRules } from "../emit/assets/blockstates.js";
 import BlockstateEmitter from "../emit/assets/blockstates.js";
 import type { LangRules } from "../emit/assets/lang.js";
@@ -32,6 +37,7 @@ import type { ClearableEmitter } from "../emit/index.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
 import type { SemVerInput } from "../packFormat.js";
+import type { PackContext } from "./context.js";
 import type Loader from "./index.js";
 import type { AcceptorWithLoader } from "./index.js";
 import LangLoader from "./lang.js";
@@ -39,8 +45,8 @@ import LootTableLoader from "./loot.js";
 import type { RecipeLoaderAccessor } from "./recipe.js";
 import RecipeLoader from "./recipe.js";
 import RegistryDumpLoader from "./registry/dump.js";
-import EmptyRegistryLookup from "./registry/empty.js";
 import type RegistryLookup from "./registry/index.js";
+import WrappedRegistryLookup from "./registry/wrapped.js";
 import TagsLoader from "./tags.js";
 
 export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
@@ -48,7 +54,7 @@ export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
 }
 
 export default class PackLoader implements Loader, ClearableEmitter {
-  private activeRegistryLookup: RegistryLookup = new EmptyRegistryLookup();
+  private readonly lookup = new WrappedRegistryLookup();
 
   private readonly emitters: ClearableEmitter[] = [];
 
@@ -61,7 +67,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   private readonly itemDefinition: ItemDefinitionRules;
   private readonly blockDefinition: BlockDefinitionRules;
 
-  private readonly tagLoader = new TagsLoader(() => this.activeRegistryLookup);
+  private readonly tagLoader: TagsLoader;
   private readonly recipesLoader = new RecipeLoader();
   private readonly lootLoader = new LootTableLoader();
   private readonly langLoader = new LangLoader();
@@ -74,47 +80,50 @@ export default class PackLoader implements Loader, ClearableEmitter {
     items: this.registerEmitter(new ModelEmitter("item")),
   };
 
+  private readonly results: ResultSerializer;
+  private readonly ingredients: IngredientSerializer;
+
+  private readonly acceptors: Record<string, AcceptorWithLoader>;
+  private readonly context: PackContext;
+
   constructor(
     readonly logger: Logger,
     options: PackLoaderOptions,
   ) {
+    this.tagLoader = new TagsLoader(this.lookup);
+
     this.tags = this.registerEmitter(
       new TagEmitter(logger, this.tagLoader, options),
     );
 
+    this.results = new ResultSerializer(options.packFormat, this.lookup);
+    this.ingredients = new IngredientSerializer(
+      options.packFormat,
+      this.lookup,
+    );
+
+    this.context = {
+      tags: this.tagLoader,
+      ingredients: this.ingredients,
+      results: this.results,
+      lookup: this.lookup,
+      packFormat: options.packFormat,
+    };
+
     this.recipes = this.registerEmitter(
-      new RecipeEmitter(
-        logger,
-        this.recipesLoader,
-        this.tagLoader,
-        () => this.activeRegistryLookup,
-        options.packFormat,
-      ),
+      new RecipeEmitter(logger, this.recipesLoader, this.context),
     );
 
     this.loot = this.registerEmitter(
-      new LootTableEmitter(
-        logger,
-        this.lootLoader,
-        this.tagLoader,
-        () => this.activeRegistryLookup,
-        options.packFormat,
-      ),
+      new LootTableEmitter(logger, this.lootLoader, this.context),
     );
 
     this.lang = this.registerEmitter(new LangEmitter(this.langLoader));
 
-    this.tabs = this.registerEmitter(
-      new PolytoneTabsEmitter(() => this.activeRegistryLookup),
-    );
+    this.tabs = this.registerEmitter(new PolytoneTabsEmitter(this.lookup));
 
     this.blacklist = this.registerEmitter(
-      new BlacklistEmitter(
-        logger,
-        this.tagLoader,
-        () => this.activeRegistryLookup,
-        options,
-      ),
+      new BlacklistEmitter(logger, this.context, options),
     );
 
     this.itemDefinition = this.registerEmitter(
@@ -128,6 +137,15 @@ export default class PackLoader implements Loader, ClearableEmitter {
         this.loot,
       ),
     );
+
+    this.acceptors = {
+      "data/*/tags/**/*.json": this.tagLoader.accept,
+      "data/*/recipes/**/*.json": this.recipesLoader.accept,
+      "data/*/recipe/**/*.json": this.recipesLoader.accept,
+      "data/*/loot_tables/**/*.json": this.lootLoader.accept,
+      "data/*/loot_table/**/*.json": this.lootLoader.accept,
+      "assets/*/lang/*.json": this.langLoader.accept,
+    };
   }
 
   registerEmitter<T extends ClearableEmitter>(emitter: T): T {
@@ -158,29 +176,20 @@ export default class PackLoader implements Loader, ClearableEmitter {
   }
 
   get registries(): RegistryLookup {
-    return this.activeRegistryLookup;
+    return this.lookup;
   }
 
-  createResult(input: ResultInput) {
-    return createResult(input, this.activeRegistryLookup);
+  createResult(input: ResultInput): Result {
+    return this.results.create(input);
   }
 
-  createIngredient(input: IngredientInput) {
-    return createIngredient(input, this.activeRegistryLookup);
+  createIngredient(input: IngredientInput): Ingredient {
+    return this.ingredients.create(input);
   }
 
   resolveIngredientTest(test: IngredientTest) {
-    return this.recipes.resolveIngredientTest(test);
+    return resolveIngredientTest(test, this.context);
   }
-
-  private acceptors: Record<string, AcceptorWithLoader> = {
-    "data/*/tags/**/*.json": this.tagLoader.accept,
-    "data/*/recipes/**/*.json": this.recipesLoader.accept,
-    "data/*/recipe/**/*.json": this.recipesLoader.accept,
-    "data/*/loot_tables/**/*.json": this.lootLoader.accept,
-    "data/*/loot_table/**/*.json": this.lootLoader.accept,
-    "assets/*/lang/*.json": this.langLoader.accept,
-  };
 
   private loadInternal(resolver: IResolver, logger: Logger) {
     return resolver.extract((path, content) => {
@@ -211,7 +220,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   async loadRegistryDump(resolver: IResolver) {
     const registryDumpLoader = new RegistryDumpLoader(this.logger);
     await registryDumpLoader.extract(resolver);
-    this.activeRegistryLookup = registryDumpLoader;
+    this.lookup.set(registryDumpLoader);
   }
 
   private freeze() {
@@ -220,7 +229,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
 
   clear() {
     this.recipesLoader.clear();
-    this.activeRegistryLookup = new EmptyRegistryLookup();
+    this.lookup.reset();
 
     this.emitters.forEach((it) => it.clear());
   }

@@ -8,29 +8,7 @@ export {
   type NormalizedId,
   type TagInput,
 } from "./common/id.js";
-export { createIngredient } from "./common/ingredient.js";
-export type {
-  BlockIngredient,
-  BlockTag,
-  CommonTest,
-  FluidIngredient,
-  FluidTag,
-  Ingredient,
-  IngredientInput,
-  IngredientTest,
-  ItemIngredient,
-  ItemTag,
-  Predicate,
-} from "./common/ingredient.js";
 export { default as Registry } from "./common/registry.js";
-export { createResult } from "./common/result.js";
-export type {
-  Block,
-  FluidStack,
-  ItemStack,
-  Result,
-  ResultInput,
-} from "./common/result.js";
 export type { BlockstateRules } from "./emit/assets/blockstates.js";
 export type { ModelRules, ModelRulesGroup } from "./emit/assets/models.js";
 export type {

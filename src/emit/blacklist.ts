@@ -4,14 +4,16 @@ import { arrayOrSelf } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
 import { encodeId } from "../common/id.js";
-import type { IngredientTest } from "../common/ingredient.js";
+
+import type { IngredientTest } from "../common/ingredient/filter.js";
+import resolveIngredientTest from "../common/ingredient/filter.js";
 import {
-  createIngredient,
-  resolveIngredientTest,
-} from "../common/ingredient.js";
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+} from "../common/ingredient/index.js";
 import { IllegalShapeError } from "../error.js";
-import type RegistryLookup from "../loader/registry/index.js";
-import type { TagRegistryHolder } from "../loader/tags.js";
+import type { PackContext } from "../loader/context.js";
 import { toJson } from "../textHelper.js";
 import type { ClearableEmitter } from "./index.js";
 
@@ -38,8 +40,7 @@ export default class BlacklistEmitter
 
   constructor(
     private readonly logger: Logger,
-    private readonly tags: TagRegistryHolder,
-    private readonly lookup: () => RegistryLookup,
+    private readonly context: PackContext,
     options: BlacklistOptions,
   ) {
     this.hideModes = arrayOrSelf(options.hideFrom);
@@ -52,14 +53,13 @@ export default class BlacklistEmitter
   }
 
   hideEntry<T extends RegistryId>(type: T, ...entries: RegistryIdInput<T>[]) {
-    const lookup = this.lookup();
     const ids = entries
       .flatMap((entry) => {
         if (typeof entry === "string") {
-          lookup.validateEntry(type, entry);
+          this.context.lookup.validateEntry(type, entry);
           return [entry];
         } else {
-          const keys = lookup.keys(type);
+          const keys = this.context.lookup.keys(type);
           if (!keys)
             throw new Error(
               `cannot hide using regex/predicates, registry ${encodeId(
@@ -75,12 +75,12 @@ export default class BlacklistEmitter
   }
 
   private filterIds(test: IngredientTest) {
-    const keys = this.lookup().keys("minecraft:item");
+    const keys = this.context.lookup.keys("minecraft:item");
     if (!keys)
       throw new Error(
         "you can only use regex/predicates to blacklist items if a registry dump is loaded",
       );
-    const predicate = resolveIngredientTest(test, this.tags, this.lookup());
+    const predicate = resolveIngredientTest(test, this.context);
 
     return [...keys.keys()].filter((it) => predicate(it, this.logger));
   }
@@ -90,15 +90,20 @@ export default class BlacklistEmitter
       return this.filterIds(input);
     }
 
-    const ingredient = createIngredient(input, this.lookup());
+    const ingredient = this.context.ingredients.create(input);
 
     if (Array.isArray(ingredient)) {
       return ingredient.flatMap((it) => this.resolveIds(it));
     }
 
-    if ("item" in ingredient) return [ingredient.item];
-    if ("fluid" in ingredient) return [ingredient.fluid];
-    if ("block" in ingredient) return [ingredient.block];
+    // TODO common super class?
+    if (
+      ingredient instanceof BlockIngredient ||
+      ingredient instanceof FluidIngredient ||
+      ingredient instanceof ItemIngredient
+    ) {
+      return [encodeId(ingredient.id)];
+    }
 
     throw new IllegalShapeError("illegal blacklist entry", input);
   }

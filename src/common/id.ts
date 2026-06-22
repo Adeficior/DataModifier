@@ -21,6 +21,12 @@ export const IdSchema = zod
   .string()
   .regex(/^([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)
   .describe("Valid ID");
+
+export const TagSchema = zod
+  .string()
+  .regex(/^#([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)
+  .describe("Valid Tag-ID") as zod.ZodType<`#${string}`>;
+
 export const IdOrTagSchema = zod
   .string()
   .regex(/^#?([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)

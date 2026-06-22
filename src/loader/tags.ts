@@ -118,7 +118,7 @@ export default class TagsLoader implements TagRegistryHolder {
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
 
-  constructor(private readonly lookup: () => RegistryLookup) {
+  constructor(private readonly lookup: RegistryLookup) {
     this.registerRegistry("minecraft:item", "items");
     this.registerRegistry("minecraft:block", "blocks");
     this.registerRegistry("minecraft:fluid", "fluids");

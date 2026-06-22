@@ -3,7 +3,6 @@ import type { IResolver, Logger } from "@adeficior/pack-resolver";
 import zod from "zod";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
-import type { Ingredient } from "../../common/ingredient.js";
 import Registry from "../../common/registry.js";
 import { tryCatching, UnknownRegistryEntry } from "../../error.js";
 import type { AcceptorWithLoader } from "../index.js";
@@ -79,19 +78,6 @@ export default class RegistryDumpLoader implements RegistryLookup {
       registry,
       normalizedId,
     );
-  }
-
-  validate(ingredient: Ingredient) {
-    if (Array.isArray(ingredient)) {
-      ingredient.forEach((it) => this.validate(it));
-    }
-
-    if ("item" in ingredient)
-      this.validateEntry("minecraft:item", ingredient.item);
-    if ("block" in ingredient)
-      this.validateEntry("minecraft:block", ingredient.block);
-    if ("fluid" in ingredient)
-      this.validateEntry("minecraft:fluid", ingredient.fluid);
   }
 
   addCustom(key: RegistryId, input: IdInput) {

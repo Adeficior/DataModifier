@@ -1,16 +1,18 @@
 import type { Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
-import type {
-  BlockIngredient,
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import { createIngredient } from "../../../common/ingredient.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+
 import { encodeId } from "../../../common/id.js";
-import type { Block, Result, ResultInput } from "../../../common/result.js";
-import { createResult } from "../../../common/result.js";
+import {
+  BlockIngredient,
+  BlockTagIngredient,
+} from "../../../common/ingredient/index.js";
+import type { IngredientInput } from "../../../common/ingredient/input.js";
+import type IngredientSerializer from "../../../common/ingredient/serializer.js";
+import { BlockResult } from "../../../common/result/index.js";
+import type { ResultInput } from "../../../common/result/input.js";
+import type ResultSerializer from "../../../common/result/serializer.js";
 import { IllegalShapeError } from "../../../error.js";
+import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 
 export type BlockOutput =
   | string
@@ -37,29 +39,35 @@ export type OrechidRecipeDefinition = RecipeDefinition &
     weight?: number;
   }>;
 
-export function createBlockInput(input: IngredientInput): BlockInput | null {
-  const ingredient = createIngredient(input);
+export function createBlockInput(
+  ingredients: IngredientSerializer,
+  input: IngredientInput,
+): BlockInput | null {
+  const ingredient = ingredients.create(input);
 
-  if ("block" in ingredient)
+  if (ingredient instanceof BlockIngredient)
     return {
       type: "block",
-      block: ingredient.block,
+      block: encodeId(ingredient.id),
     };
 
-  if ("blockTag" in ingredient)
+  if (ingredient instanceof BlockTagIngredient)
     return {
       type: "tag",
-      tag: ingredient.blockTag,
+      tag: encodeId(ingredient.tag),
     };
 
   return null;
 }
 
-export function createBlockOutput(input: ResultInput): BlockOutput | null {
-  const result = createResult(input);
-  if ("block" in result)
+export function createBlockOutput(
+  results: ResultSerializer,
+  input: ResultInput,
+): BlockOutput | null {
+  const result = results.create(input);
+  if (result instanceof BlockResult)
     return {
-      name: result.block,
+      name: encodeId(result.id),
     };
 
   return null;
