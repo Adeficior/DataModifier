@@ -1,11 +1,12 @@
 // <meta>
 //    <source>@pssbletrngle/github-meta-generator</source>
-//    <version>1.0.100</version>
-//    <timestamp>2026-06-22T09:00:10.020Z</timestamp>
-//    <hash>9f8a55a0a115b535</hash>
+//    <version>1.0.103</version>
+//    <timestamp>2026-06-22T12:17:23.026Z</timestamp>
+//    <hash>aeeca0d24e4825a1</hash>
 // </meta>
 
 {
+  "extends": "./tsconfig.extensions.json",
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],
