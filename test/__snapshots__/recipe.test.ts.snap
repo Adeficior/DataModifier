@@ -207,9 +207,3 @@ exports[`recipe ingredient replacement > replaces ingredients with additional in
   "type": "minecraft:crafting_shaped",
 }
 `;
-
-exports[`recipe ingredient replacement replaces ingredients: modified piston recipe 1`] = `null`;
-
-exports[`recipe ingredient replacement replaces ingredients: modified compass recipe 1`] = `null`;
-
-exports[`recipe ingredient replacement replaces ingredients: recipes including redstone as an ingredient 1`] = `[]`;

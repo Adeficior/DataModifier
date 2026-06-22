@@ -109,23 +109,3 @@ exports[`replacing translation entries > respects keepCase option > kept case va
   "item.minecraft.dark_oak_boat": "Mahagony Boat",
 }
 `;
-
-exports[`replacing translation entries replaces using string value: replaced diorite values 1`] = `null`;
-
-exports[`replacing translation entries replaces requires the case to match: replaced matched case values 1`] = `null`;
-
-exports[`replacing translation entries emits custom values: custom values 1`] = `
-{
-  "item.minecraft.diamond": "Sapphire",
-  "something.else": "The Value",
-}
-`;
-
-exports[`replacing translation entries emits custom values together with replaced values: custom values 1`] = `
-{
-  "item.minecraft.diamond": "Sapphire",
-  "something.else": "The Value",
-}
-`;
-
-exports[`replacing translation entries respects keepCase option: kept case values 1`] = `null`;
