@@ -130,7 +130,7 @@ export default class BlacklistEmitter
         "Cannot use polytone output without creative mod tab registry",
       );
 
-    const content = toJson({
+    const content = await toJson({
       targets: [...tabs.values()],
       removals: [
         {

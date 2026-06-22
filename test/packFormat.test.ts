@@ -1,6 +1,6 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { EMPTY_LOOT_TABLE, EMPTY_RECIPE } from "../src/index.js";
-import createTestAcceptor from "./mock/TestAcceptor.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { loader } = setupLoader({ packFormat: 45 });

@@ -1,9 +1,9 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import type { RecipeTest } from "../src/emit/data/recipe.js";
 import { EMPTY_RECIPE } from "../src/emit/data/recipe.js";
 import type { NormalizedId } from "../src/index.js";
 import type { ShapedRecipeDefinition } from "../src/parser/recipe/vanilla/shaped.js";
-import createTestAcceptor from "./mock/TestAcceptor.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({ include: ["data/**/*.json"] });

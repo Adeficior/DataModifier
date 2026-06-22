@@ -12,7 +12,7 @@ export function resolveCommonTest<TEntry, TId extends string>(
 ): Predicate<TEntry> {
   if (typeof test === "function") {
     return (entry, logger) =>
-      resolve(entry, logger).some((id) => test(id, logger));
+      resolve(entry, logger).some((id) => test(id as TId, logger));
   } else if (test instanceof RegExp) {
     return (ingredient, logger) => {
       return resolve(ingredient, logger).some((it) => test.test(it));

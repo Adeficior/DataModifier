@@ -59,7 +59,7 @@ export class ForgeConditionalRecipe extends Recipe<ForgeConditionalRecipeDefinit
     );
   }
 
-  getTypes() {
+  override getTypes() {
     return this.definition.recipes.map((it) => it.recipe.type);
   }
 }

@@ -32,7 +32,7 @@ export default class RegistryDumpLoader implements RegistryLookup {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
     if (!match?.groups) return false;
 
-    const { registry } = match.groups;
+    const { registry } = match.groups as { registry: string };
 
     const grouped = logger.group(path);
 
@@ -44,8 +44,6 @@ export default class RegistryDumpLoader implements RegistryLookup {
 
     const set = this.registryOf(registry);
     parsed.map(encodeId).forEach((id) => set.add(id));
-
-    return true;
   };
 
   registries(): NormalizedId<RegistryId>[] {

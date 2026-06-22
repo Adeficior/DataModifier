@@ -1,7 +1,7 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import type { Ingredient } from "../src/index.js";
-import createTestAcceptor from "./mock/TestAcceptor.js";
-import { createDumpResolver } from "./mock/TestResolver.js";
+import { createDumpResolver } from "./shared/dumpResolver.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { loader } = setupLoader({ load: false, hideFrom: ["jei"] });

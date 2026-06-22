@@ -1,6 +1,6 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { encodeId } from "../src/index.js";
-import createTestAcceptor from "./mock/TestAcceptor.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { loader } = setupLoader({ load: false, hideFrom: ["polytone"] });

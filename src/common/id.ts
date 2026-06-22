@@ -8,7 +8,12 @@ export type Id = Readonly<{
 
 export type IdInput<T extends string = string> = T | Id;
 
-export type NormalizedId<T extends string = string> = `${string}:${string}` & T;
+export type NormalizedId<T extends string = string> =
+  T extends `${string}:${string}`
+    ? T
+    : T extends `#${infer R}`
+      ? `#${string}:${R}`
+      : `${string}:${T}`;
 
 export type TagInput = IdInput<`#${string}`>;
 

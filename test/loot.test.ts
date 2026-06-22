@@ -1,7 +1,7 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
 import { EMPTY_LOOT_TABLE } from "../src/emit/data/loot.js";
 import { LootEntrySchema, LootTableSchema } from "../src/schema/data/loot.js";
-import createTestAcceptor from "./mock/TestAcceptor.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({

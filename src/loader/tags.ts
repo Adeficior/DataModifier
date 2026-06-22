@@ -164,8 +164,6 @@ export default class TagsLoader implements TagRegistryHolder {
     const parsed: TagDefinition = fromJson(content.toString());
     const id = encodeId(info) as TagInput;
     info.registry.load(id, parsed);
-
-    return true;
   };
 
   freeze() {

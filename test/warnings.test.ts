@@ -1,5 +1,5 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import createTestAcceptor from "./mock/TestAcceptor.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({

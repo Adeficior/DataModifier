@@ -61,7 +61,5 @@ export abstract class JsonLoader<T> implements RegistryProvider<T> {
     if (!parsed) return false;
 
     this.registry.set(id, parsed);
-
-    return true;
   };
 }

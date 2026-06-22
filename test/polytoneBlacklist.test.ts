@@ -1,6 +1,6 @@
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { beforeEach, describe, expect, it } from "bun:test";
-import createTestAcceptor from "./mock/TestAcceptor.js";
-import { createDumpResolver } from "./mock/TestResolver.js";
+import { createDumpResolver } from "./shared/dumpResolver.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { loader } = setupLoader({ load: false, hideFrom: ["polytone"] });

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 import { createIngredient, createResult } from "../src/index.js";
-import { createDumpResolver } from "./mock/TestResolver.js";
+import { createDumpResolver } from "./shared/dumpResolver.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({ load: false });
