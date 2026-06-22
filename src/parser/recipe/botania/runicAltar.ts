@@ -1,48 +1,33 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import RecipeParser, { type RecipeParseContext } from "../index.js";
+import { ManyToOneRecipe } from "../manyToOne.js";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: Ingredient[];
-    output: Result;
+    ingredients: unknown[];
+    output: unknown;
     mana: number;
   }>;
 
-export class RunicAltarRecipe extends Recipe<RunicAltarRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return this.definition.ingredients;
-  }
-
-  getResults(): ResultInput[] {
-    return [this.definition.output];
-  }
-
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new RunicAltarRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map(replace),
-    });
-  }
-
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new RunicAltarRecipe({
-      ...this.definition,
-      output: replace(this.definition.output),
-    });
+export class RunicAltarRecipe extends ManyToOneRecipe {
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<RunicAltarRecipeDefinition> {
+    const { result, ...rest } = super.serialize(context);
+    return { ...rest, output: result };
   }
 }
 
-export default class RunicAltarRecipeParser extends RecipeParser<
+export class RunicAltarRecipeParser extends RecipeParser<
   RunicAltarRecipeDefinition,
   RunicAltarRecipe
 > {
-  create(definition: RunicAltarRecipeDefinition): RunicAltarRecipe {
-    return new RunicAltarRecipe(definition);
+  deserialize(
+    definition: RunicAltarRecipeDefinition,
+    context: RecipeParseContext,
+  ): RunicAltarRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    const result = context.results.create(definition.output);
+    return new RunicAltarRecipe(definition, ingredients, result);
   }
 }

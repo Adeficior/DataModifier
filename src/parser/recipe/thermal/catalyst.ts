@@ -1,15 +1,11 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type ThermalCatalystRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredient: Ingredient;
+    ingredient: unknown;
     primary_mod?: number;
     secondary_mod?: number;
     energy_mod?: number;
@@ -17,32 +13,47 @@ export type ThermalCatalystRecipeDefinition = RecipeDefinition &
     use_chance?: number;
   }>;
 
-export class ThermalCatalystRecipe extends Recipe<ThermalCatalystRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.ingredient];
+export class ThermalCatalystRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
+  getIngredients() {
+    return [this.ingredient];
+  }
+
+  getResults() {
     return [];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ThermalCatalystRecipe({
-      ...this.definition,
-      ingredient: replace(this.definition.ingredient),
-    });
+  override replace(ingredientReplacer: Replacer<Ingredient>): Recipe {
+    return new ThermalCatalystRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+    );
   }
 
-  replaceResult(): ThermalCatalystRecipe {
-    return new ThermalCatalystRecipe(this.definition);
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ThermalCatalystRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(this.ingredient),
+    };
   }
 }
 
-export default class ThermalCatalystRecipeParser extends RecipeParser<
+export class ThermalCatalystRecipeParser extends RecipeParser<
   ThermalCatalystRecipeDefinition,
   ThermalCatalystRecipe
 > {
-  create(definition: ThermalCatalystRecipeDefinition): ThermalCatalystRecipe {
-    return new ThermalCatalystRecipe(definition);
+  deserialize(
+    definition: ThermalCatalystRecipeDefinition,
+    context: RecipeParseContext,
+  ): ThermalCatalystRecipe {
+    const ingredient = context.ingredients.create(definition.ingredient);
+    return new ThermalCatalystRecipe(definition, ingredient);
   }
 }

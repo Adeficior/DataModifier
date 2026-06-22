@@ -1,3 +1,4 @@
+import { mapValues } from "lodash-es";
 import z from "zod";
 import {
   BlockIngredient,
@@ -7,11 +8,16 @@ import {
   Ingredient,
   ItemIngredient,
   ItemTagIngredient,
+  ListIngredient,
 } from ".";
 import { IllegalShapeError } from "../../error";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
-import { IdSchema, TagSchema } from "../id";
+import {
+  IngredientMap,
+  type IngredientMapInput,
+} from "../../parser/recipe/ingredientMap";
+import { IdSchema } from "../id";
 
 interface VersionedDeserializer {
   deserialize(input: Record<string, unknown>): Ingredient | null;
@@ -20,15 +26,15 @@ interface VersionedDeserializer {
 class OldDeserializer implements VersionedDeserializer {
   private readonly schemas = {
     itemTag: z.object({
-      tag: TagSchema,
+      tag: IdSchema,
       count: z.number().optional(),
     }),
     fluidTag: z.object({
-      fluidTag: TagSchema,
+      fluidTag: IdSchema,
       amount: z.number(),
     }),
     blockTag: z.object({
-      blockTag: TagSchema,
+      blockTag: IdSchema,
       weight: z.number().optional(),
     }),
     itemStack: z.object({
@@ -93,6 +99,10 @@ export default class IngredientSerializer {
     return ingredient.toJSON(this.packFormat);
   }
 
+  serializeList(ingredients: Ingredient[]) {
+    return ingredients.map((it) => this.serialize(it));
+  }
+
   private deserialize(input: unknown): Ingredient {
     if (input instanceof Ingredient) return input;
 
@@ -101,6 +111,10 @@ export default class IngredientSerializer {
     if (typeof input === "string") {
       this.lookup.validateEntry("minecraft:item", input);
       return new ItemIngredient(input);
+    }
+
+    if (Array.isArray(input)) {
+      return new ListIngredient(input.map((it) => this.deserialize(it)));
     }
 
     if (typeof input === "object") {
@@ -113,9 +127,23 @@ export default class IngredientSerializer {
     throw new IllegalShapeError(`unknown ingredient shape`, input);
   }
 
+  // TODO rename deserialize
   create(input: unknown) {
     const deserialized = this.deserialize(input);
     deserialized.validate(this.lookup);
     return deserialized;
+  }
+
+  validated<T extends Ingredient>(ingredient: T): T {
+    ingredient.validate(this.lookup);
+    return ingredient;
+  }
+
+  createList(input: unknown[]) {
+    return input.map((it) => this.create(it));
+  }
+
+  ingredientMap(input: IngredientMapInput) {
+    return new IngredientMap(mapValues(input, (it) => this.create(it)));
   }
 }

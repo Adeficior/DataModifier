@@ -17,6 +17,6 @@ export function createTestDataResolver(
 export function createDumpResolver(): IResolver {
   return createResolver({
     from: "test/resources/dump",
-    silent: true,
+    logger: false,
   });
 }

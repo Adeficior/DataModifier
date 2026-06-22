@@ -1,11 +1,8 @@
-import type { InlineRecipeParser, Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -14,54 +11,54 @@ export type GogWrapperRecipeDefinition = RecipeDefinition &
     gog: RecipeDefinition;
   }>;
 
-export class GogWrapperRecipe extends Recipe<GogWrapperRecipeDefinition> {
+export class GogWrapperRecipe extends Recipe {
   constructor(
-    definition: Omit<GogWrapperRecipeDefinition, "base" | "gog">,
+    definition: RecipeDefinition,
     private readonly base: Recipe,
     private readonly gog: Recipe,
   ) {
-    super({
-      ...definition,
-      base: base.toJSON(),
-      gog: gog.toJSON(),
-    });
+    super(definition);
   }
 
-  getIngredients(): IngredientInput[] {
+  getIngredients() {
     return [...this.base.getIngredients(), ...this.gog.getIngredients()];
   }
 
-  getResults(): ResultInput[] {
+  getResults() {
     return [...this.base.getResults(), ...this.gog.getResults()];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
     return new GogWrapperRecipe(
       this.definition,
-      this.base.replaceIngredient(replace),
-      this.gog.replaceIngredient(replace),
+      this.base.replace(ingredientReplacer, resultReplacer),
+      this.gog.replace(ingredientReplacer, resultReplacer),
     );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new GogWrapperRecipe(
-      this.definition,
-      this.base.replaceResult(replace),
-      this.gog.replaceResult(replace),
-    );
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<GogWrapperRecipeDefinition> {
+    return {
+      base: context.recipes.serialize(this.base),
+      gog: context.recipes.serialize(this.gog),
+    };
   }
 }
 
-export default class GogWrapperRecipeParser extends RecipeParser<
+export class GogWrapperRecipeParser extends RecipeParser<
   GogWrapperRecipeDefinition,
   GogWrapperRecipe
 > {
-  create(
+  deserialize(
     definition: GogWrapperRecipeDefinition,
-    parser: InlineRecipeParser,
+    context: RecipeParseContext,
   ): GogWrapperRecipe {
-    const base = parser(definition.base);
-    const gog = parser(definition.gog);
+    const base = context.recipes.deserialize(definition.base);
+    const gog = context.recipes.deserialize(definition.gog);
     return new GogWrapperRecipe(definition, base, gog);
   }
 }

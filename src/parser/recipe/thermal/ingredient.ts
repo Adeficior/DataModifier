@@ -1,73 +1,71 @@
-import { omit } from "lodash-es";
-import zod from "zod";
-import type {
-  FluidTag,
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import { createIngredient, ItemTagSchema } from "../../../common/ingredient.js";
-import { ItemStackSchema } from "../../../common/result.js";
+import z from "zod";
+import { encodeId, IdSchema } from "../../../common/id.js";
+import {
+  FluidTagIngredient,
+  ItemIngredient,
+  ItemTagIngredient,
+  type Ingredient,
+} from "../../../common/ingredient/index.js";
+import type IngredientSerializer from "../../../common/ingredient/serializer.js";
 import { IllegalShapeError } from "../../../error.js";
 
-const ThermalFluidTagSchema = zod.object({
-  fluid_tag: zod.string(),
-  amount: zod.number(),
+const ThermalFluidTagSchema = z.object({
+  fluid_tag: z.string(),
+  amount: z.number(),
 });
 
-type ThermalFluidTag = zod.infer<typeof ThermalFluidTagSchema>;
+const ThermalItemEntry = z.object({
+  item: IdSchema,
+});
 
-type ThermalItemList = Readonly<{
-  value: ThermalIngredientInput[];
-  count?: number;
-}>;
+const ThermalTagEntry = z.object({
+  tag: IdSchema,
+});
 
-export type ThermalIngredientInput =
-  | Exclude<IngredientInput, FluidTag>
-  | ThermalFluidTag
-  | ThermalItemList;
+const ThermalIngredientEntry = ThermalItemEntry.or(ThermalTagEntry);
+const ThermalIngredientList = z.object({
+  value: z.array(ThermalIngredientEntry),
+  count: z.number(),
+});
 
-function fromThermalList(input: ThermalItemList): Ingredient {
-  return input.value.map((it) => {
-    if (it && typeof it === "object") {
-      if ("item" in it)
-        return { ...ItemStackSchema.parse(it), count: input.count };
-      if ("tag" in it)
-        return { ...ItemTagSchema.parse(it), count: input.count };
-    }
-    throw new IllegalShapeError(
-      "thermal array ingredients may only be of type item/itemtag",
-      it,
-    );
-  });
-}
+type ThermalFluidTag = z.infer<typeof ThermalFluidTagSchema>;
 
-export function fromThermalIngredient(
-  input: ThermalIngredientInput,
-): Ingredient {
+// TODO serialize this?
+// type ThermalItemList = z.infer<typeof ThermalIngredientList>;
+
+export function createThermalIngredients(
+  ingredients: IngredientSerializer,
+  input: unknown,
+): Ingredient[] {
   if (input && typeof input === "object") {
-    if ("value" in input) return fromThermalList(input);
-
-    if ("fluid_tag" in input) {
-      return { ...omit(input, "fluid_tag"), fluidTag: input.fluid_tag };
-    }
-  }
-
-  return createIngredient(input);
-}
-
-export function toThermalIngredient(
-  input: IngredientInput,
-): ThermalIngredientInput {
-  const resolved = createIngredient(input);
-
-  if (typeof resolved === "object") {
-    if ("fluidTag" in resolved) {
-      return ThermalFluidTagSchema.parse({
-        ...omit(resolved, "fluidTag"),
-        fluid_tag: resolved.fluidTag,
+    if ("value" in input) {
+      const parsed = ThermalIngredientList.parse(input);
+      return parsed.value.map((it) => {
+        if ("item" in it) return new ItemIngredient(it.item, parsed.count);
+        if ("tag" in it) return new ItemTagIngredient(it.tag, parsed.count);
+        throw new IllegalShapeError("unknown ingredient list entry shape", it);
       });
     }
+
+    if ("fluid_tag" in input) {
+      const parsed = ThermalFluidTagSchema.parse(input);
+      return [new FluidTagIngredient(parsed.fluid_tag, parsed.amount)];
+    }
   }
 
-  return resolved;
+  return [ingredients.create(input)];
+}
+
+export function serializeThermalIngredient(
+  ingredients: IngredientSerializer,
+  ingredient: Ingredient,
+): unknown {
+  if (ingredient instanceof FluidTagIngredient) {
+    return {
+      fluid_tag: encodeId(ingredient.tag),
+      amount: ingredient.amount,
+    } satisfies ThermalFluidTag;
+  }
+
+  return ingredients.serialize(ingredient);
 }

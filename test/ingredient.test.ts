@@ -8,6 +8,11 @@ import {
   ItemIngredient,
   ItemTagIngredient,
 } from "../src/common/ingredient/index.js";
+import {
+  BlockResult,
+  FluidResult,
+  ItemResult,
+} from "../src/common/result/index.js";
 import { tryCatching } from "../src/error.js";
 import { encodeId } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
@@ -16,9 +21,6 @@ const { logger, loader } = setupLoader({ include: ["data/*/tags/**/*.json"] });
 
 // @ts-expect-error private
 const { ingredients, results } = loader;
-
-// TODO add constants somewhere
-const FLUID_AMOUNT = 1000;
 
 describe("tests regarding ingredient/result shapes", () => {
   it("warns about unknown ingredient shape", async () => {
@@ -51,20 +53,21 @@ describe("tests regarding ingredient/result shapes", () => {
   it("does not encounter any unknown ingredient shapes", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipes.replaceIngredient("minecraft:coal", {
-      item: "minecraft:diamond",
-    });
     loader.recipes.replaceIngredient(
-      { item: "minecraft:coal" },
-      { item: "minecraft:diamond" },
+      "minecraft:coal",
+      new ItemIngredient("minecraft:diamond"),
     );
     loader.recipes.replaceIngredient(
-      { fluid: "minecraft:water" },
-      { item: "minecraft:lava" },
+      new ItemIngredient("minecraft:coal"),
+      new ItemIngredient("minecraft:diamond"),
     );
     loader.recipes.replaceIngredient(
-      { block: "minecraft:coal_block" },
-      { item: "minecraft:diamond_block" },
+      new FluidIngredient("minecraft:water"),
+      new ItemIngredient("minecraft:lava"),
+    );
+    loader.recipes.replaceIngredient(
+      new BlockIngredient("minecraft:coal_block"),
+      new ItemIngredient("minecraft:diamond_block"),
     );
 
     await loader.emit(acceptor);
@@ -75,20 +78,21 @@ describe("tests regarding ingredient/result shapes", () => {
   it("does not encounter any unknown result shapes", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipes.replaceResult("minecraft:coal", {
-      item: "minecraft:diamond",
-    });
     loader.recipes.replaceResult(
-      { item: "minecraft:coal" },
-      { item: "minecraft:diamond" },
+      "minecraft:coal",
+      new ItemResult("minecraft:diamond"),
     );
     loader.recipes.replaceResult(
-      { fluid: "minecraft:water" },
-      { item: "minecraft:lava" },
+      new ItemResult("minecraft:coal"),
+      new ItemResult("minecraft:diamond"),
     );
     loader.recipes.replaceResult(
-      { block: "minecraft:coal_block" },
-      { item: "minecraft:diamond_block" },
+      new FluidResult("minecraft:water"),
+      new ItemResult("minecraft:lava"),
+    );
+    loader.recipes.replaceResult(
+      new BlockResult("minecraft:coal_block"),
+      new ItemResult("minecraft:diamond_block"),
     );
 
     await loader.emit(acceptor);
@@ -101,53 +105,51 @@ describe("ingredient tests applying to items", () => {
   it("matches ingredients using regex", () => {
     const predicate = loader.resolveIngredientTest(/.+:spruce_.+/);
 
-    expect(predicate(new ItemIngredient("minecraft:spruce_log"))).toBeTruthy();
-    expect(predicate(new ItemIngredient("spruce_fence"))).toBeTruthy();
-    expect(
-      predicate(new ItemIngredient("a-mod:spruce_something")),
-    ).toBeTruthy();
+    expect(predicate(new ItemIngredient("minecraft:spruce_log"))).toBeTrue();
+    expect(predicate(new ItemIngredient("spruce_fence"))).toBeTrue();
+    expect(predicate(new ItemIngredient("a-mod:spruce_something"))).toBeTrue();
     expect(
       predicate(new ItemTagIngredient("minecraft:spruce_wood")),
-    ).toBeTruthy();
+    ).toBeTrue();
 
     expect(
       predicate(new ItemIngredient("minecraft:stripped_spruce_log")),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("something:else"))).toBeFalsy();
+    ).toBeFalse();
+    expect(predicate(new ItemIngredient("something:else"))).toBeFalse();
     expect(
       predicate(new ItemTagIngredient("minecraft:stripped_spruce_wood")),
-    ).toBeFalsy();
+    ).toBeFalse();
   });
 
   it("matches ingredients using item id", () => {
     const predicate = loader.resolveIngredientTest("minecraft:obsidian");
 
-    expect(predicate(new ItemIngredient("minecraft:obsidian"))).toBeTruthy();
+    expect(predicate(new ItemIngredient("minecraft:obsidian"))).toBeTrue();
 
     expect(
       predicate(new ItemIngredient("minecraft:obsidian_pillar")),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("example:obsidian"))).toBeFalsy();
-    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalsy();
-    expect(predicate(new ItemTagIngredient("minecraft:obsidian"))).toBeFalsy();
+    ).toBeFalse();
+    expect(predicate(new ItemIngredient("example:obsidian"))).toBeFalse();
+    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalse();
+    expect(predicate(new ItemTagIngredient("minecraft:obsidian"))).toBeFalse();
     expect(
       predicate(new ItemTagIngredient("minecraft:mineable/pickaxe")),
-    ).toBeFalsy();
+    ).toBeFalse();
   });
 
   it("matches ingredients using item tag", () => {
     const predicate = loader.resolveIngredientTest("#minecraft:logs");
 
-    expect(predicate(new ItemIngredient("minecraft:oak_log"))).toBeTruthy();
-    expect(predicate(new ItemIngredient("stripped_birch_log"))).toBeTruthy();
+    expect(predicate(new ItemIngredient("minecraft:oak_log"))).toBeTrue();
+    expect(predicate(new ItemIngredient("stripped_birch_log"))).toBeTrue();
     expect(
       predicate(new ItemTagIngredient("minecraft:logs_that_burn")),
-    ).toBeTruthy();
+    ).toBeTrue();
 
-    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalsy();
+    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalse();
     expect(
       predicate(new ItemTagIngredient("minecraft:mineable/axe")),
-    ).toBeFalsy();
+    ).toBeFalse();
   });
 
   it("matches ingredients using item ingredient", () => {
@@ -155,13 +157,11 @@ describe("ingredient tests applying to items", () => {
       new ItemTagIngredient("minecraft:piglin_loved"),
     );
 
-    expect(
-      predicate(new ItemIngredient("minecraft:golden_sword")),
-    ).toBeTruthy();
-    expect(predicate(new ItemIngredient("golden_apple"))).toBeTruthy();
+    expect(predicate(new ItemIngredient("minecraft:golden_sword"))).toBeTrue();
+    expect(predicate(new ItemIngredient("golden_apple"))).toBeTrue();
 
-    expect(predicate(new ItemIngredient("minecraft:ice"))).toBeFalsy();
-    expect(predicate(new ItemIngredient("blackstone"))).toBeFalsy();
+    expect(predicate(new ItemIngredient("minecraft:ice"))).toBeFalse();
+    expect(predicate(new ItemIngredient("blackstone"))).toBeFalse();
   });
 
   it("matches ingredients using tag ingredient", () => {
@@ -171,58 +171,44 @@ describe("ingredient tests applying to items", () => {
 
     expect(
       predicate(new ItemIngredient("minecraft:mangrove_leaves")),
-    ).toBeTruthy();
-    expect(predicate(new ItemIngredient("mangrove_leaves"))).toBeTruthy();
+    ).toBeTrue();
+    expect(predicate(new ItemIngredient("mangrove_leaves"))).toBeTrue();
 
     expect(
       predicate(new ItemIngredient("minecraft:mangrove_sapling")),
-    ).toBeFalsy();
+    ).toBeFalse();
   });
 });
 
 describe("ingredient tests applying to fluids", () => {
   it("matches fluid ingredients", () => {
     const predicate = loader.resolveIngredientTest(
-      new FluidIngredient("minecraft:water", FLUID_AMOUNT),
+      new FluidIngredient("minecraft:water"),
     );
 
-    expect(
-      predicate(new FluidIngredient("minecraft:water", FLUID_AMOUNT)),
-    ).toBeTruthy();
+    expect(predicate(new FluidIngredient("minecraft:water"))).toBeTrue();
 
-    expect(
-      predicate(new FluidIngredient("minecraft:lava", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalsy();
-    expect(
-      predicate(new FluidTagIngredient("minecraft:water", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalsy();
+    expect(predicate(new FluidIngredient("minecraft:lava"))).toBeFalse();
+    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalse();
+    expect(predicate(new FluidTagIngredient("minecraft:water"))).toBeFalse();
+    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalse();
   });
 
   it("matches fluid ingredients using tag", () => {
     const predicate = loader.resolveIngredientTest(
-      new FluidTagIngredient("minecraft:water", FLUID_AMOUNT),
+      new FluidTagIngredient("minecraft:water"),
     );
 
+    expect(predicate(new FluidIngredient("minecraft:water"))).toBeTrue();
     expect(
-      predicate(new FluidIngredient("minecraft:water", FLUID_AMOUNT)),
-    ).toBeTruthy();
-    expect(
-      predicate(new FluidIngredient("minecraft:flowing_water", FLUID_AMOUNT)),
-    ).toBeTruthy();
-    expect(
-      predicate(new FluidTagIngredient("minecraft:water", FLUID_AMOUNT)),
-    ).toBeTruthy();
+      predicate(new FluidIngredient("minecraft:flowing_water")),
+    ).toBeTrue();
+    expect(predicate(new FluidTagIngredient("minecraft:water"))).toBeTrue();
 
-    expect(
-      predicate(new FluidIngredient("minecraft:lava", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(
-      predicate(new FluidTagIngredient("minecraft:lava", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalsy();
-    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalsy();
+    expect(predicate(new FluidIngredient("minecraft:lava"))).toBeFalse();
+    expect(predicate(new FluidTagIngredient("minecraft:lava"))).toBeFalse();
+    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalse();
+    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalse();
   });
 });
 
@@ -232,16 +218,12 @@ describe("ingredient tests applying to blocks", () => {
       new BlockIngredient("minecraft:water"),
     );
 
-    expect(predicate(new BlockIngredient("minecraft:water"))).toBeTruthy();
+    expect(predicate(new BlockIngredient("minecraft:water"))).toBeTrue();
 
-    expect(
-      predicate(new FluidIngredient("minecraft:lava", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalsy();
-    expect(
-      predicate(new FluidTagIngredient("minecraft:water", FLUID_AMOUNT)),
-    ).toBeFalsy();
-    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalsy();
+    expect(predicate(new FluidIngredient("minecraft:lava"))).toBeFalse();
+    expect(predicate(new ItemIngredient("minecraft:water"))).toBeFalse();
+    expect(predicate(new FluidTagIngredient("minecraft:water"))).toBeFalse();
+    expect(predicate(new ItemTagIngredient("minecraft:water"))).toBeFalse();
   });
 
   it("matches block ingredients using tag", () => {
@@ -249,33 +231,31 @@ describe("ingredient tests applying to blocks", () => {
       new BlockTagIngredient("minecraft:base_stone_overworld"),
     );
 
-    expect(predicate(new BlockIngredient("minecraft:stone"))).toBeTruthy();
-    expect(predicate(new BlockIngredient("minecraft:andesite"))).toBeTruthy();
+    expect(predicate(new BlockIngredient("minecraft:stone"))).toBeTrue();
+    expect(predicate(new BlockIngredient("minecraft:andesite"))).toBeTrue();
     expect(
       predicate(new BlockTagIngredient("minecraft:base_stone_overworld")),
-    ).toBeTruthy();
+    ).toBeTrue();
 
-    expect(predicate(new BlockIngredient("minecraft:obsidian"))).toBeFalsy();
-    expect(
-      predicate(new FluidIngredient("minecraft:stone", FLUID_AMOUNT)),
-    ).toBeFalsy();
+    expect(predicate(new BlockIngredient("minecraft:obsidian"))).toBeFalse();
+    expect(predicate(new FluidIngredient("minecraft:stone"))).toBeFalse();
     expect(
       predicate(new BlockTagIngredient("minecraft:mineable/pickaxe")),
-    ).toBeFalsy();
-    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalsy();
-    expect(predicate(new ItemTagIngredient("minecraft:stone"))).toBeFalsy();
+    ).toBeFalse();
+    expect(predicate(new ItemIngredient("minecraft:stone"))).toBeFalse();
+    expect(predicate(new ItemTagIngredient("minecraft:stone"))).toBeFalse();
   });
 });
 
 it("matches nested ingredients in array", () => {
   const predicate = loader.resolveIngredientTest("#minecraft:logs");
 
-  expect(predicate(["minecraft:stone", "minecraft:oak_log"])).toBeTruthy();
+  expect(predicate(["minecraft:stone", "minecraft:oak_log"])).toBeTrue();
   expect(
     predicate(["minecraft:stone", "#minecraft:logs_that_burn"]),
-  ).toBeTruthy();
+  ).toBeTrue();
 
-  expect(predicate(["minecraft:obsidian", "minecraft:netherrack"])).toBeFalsy();
+  expect(predicate(["minecraft:obsidian", "minecraft:netherrack"])).toBeFalse();
 });
 
 it("matches ingredients using predicate", () => {
@@ -286,11 +266,11 @@ it("matches ingredients using predicate", () => {
     return false;
   });
 
-  expect(predicate(new ItemIngredient("minecraft:red_wool"))).toBeTruthy();
-  expect(predicate(new ItemIngredient("green_wool"))).toBeTruthy();
-  expect(predicate(new ItemTagIngredient("example:stone_tools"))).toBeTruthy();
+  expect(predicate(new ItemIngredient("minecraft:red_wool"))).toBeTrue();
+  expect(predicate(new ItemIngredient("green_wool"))).toBeTrue();
+  expect(predicate(new ItemTagIngredient("example:stone_tools"))).toBeTrue();
 
-  expect(predicate(new ItemIngredient("minecraft:stone_pickaxe"))).toBeFalsy();
-  expect(predicate(new ItemIngredient("stone_pickaxe"))).toBeFalsy();
-  expect(predicate(new ItemTagIngredient("minecraft:pink_wool"))).toBeFalsy();
+  expect(predicate(new ItemIngredient("minecraft:stone_pickaxe"))).toBeFalse();
+  expect(predicate(new ItemIngredient("stone_pickaxe"))).toBeFalse();
+  expect(predicate(new ItemTagIngredient("minecraft:pink_wool"))).toBeFalse();
 });

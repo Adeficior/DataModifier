@@ -60,6 +60,10 @@ export default class ResultSerializer {
     return result.toJSON(this.packFormat);
   }
 
+  serializeList(results: Result[]) {
+    return results.map((it) => this.serialize(it));
+  }
+
   private deserialize(input: unknown): Result {
     if (input instanceof Result) return input;
 
@@ -84,5 +88,14 @@ export default class ResultSerializer {
     const deserialized = this.deserialize(input);
     deserialized.validate(this.lookup);
     return deserialized;
+  }
+
+  validated<T extends Result>(result: T): T {
+    result.validate(this.lookup);
+    return result;
+  }
+
+  createList(input: unknown[]) {
+    return input.map((it) => this.create(it));
   }
 }

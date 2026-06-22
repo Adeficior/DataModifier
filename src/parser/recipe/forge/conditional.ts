@@ -1,10 +1,7 @@
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { InlineRecipeParser, Replacer } from "../index.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 type WithConditions<T> = {
@@ -17,50 +14,48 @@ export type ForgeConditionalRecipeDefinition = RecipeDefinition &
     recipes: WithConditions<RecipeDefinition>[];
   }>;
 
-export class ForgeConditionalRecipe extends Recipe<ForgeConditionalRecipeDefinition> {
+export class ForgeConditionalRecipe extends Recipe {
   constructor(
-    definition: Omit<ForgeConditionalRecipeDefinition, "recipes">,
+    definition: RecipeDefinition,
     private readonly recipes: WithConditions<Recipe>[],
   ) {
-    super({
-      ...definition,
-      recipes: recipes.map((it) => ({
-        conditions: it.conditions,
-        recipe: it.recipe.toJSON(),
-      })),
-    });
+    super(definition);
   }
 
-  getIngredients(): IngredientInput[] {
+  getIngredients() {
     return this.recipes.flatMap((it) => it.recipe.getIngredients());
   }
 
-  getResults(): ResultInput[] {
+  getResults() {
     return this.recipes.flatMap((it) => it.recipe.getResults());
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
     return new ForgeConditionalRecipe(
       this.definition,
       this.recipes.map((it) => ({
         ...it,
-        recipe: it.recipe.replaceIngredient(replace),
+        recipe: it.recipe.replace(ingredientReplacer, resultReplacer),
       })),
     );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ForgeConditionalRecipe(
-      this.definition,
-      this.recipes.map((it) => ({
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ForgeConditionalRecipeDefinition> {
+    return {
+      recipes: this.recipes.map((it) => ({
         ...it,
-        recipe: it.recipe.replaceResult(replace),
+        recipe: context.recipes.serialize(it.recipe),
       })),
-    );
+    };
   }
 
   override getTypes() {
-    return this.definition.recipes.map((it) => it.recipe.type);
+    return this.recipes.flatMap((it) => it.recipe.getTypes());
   }
 }
 
@@ -68,13 +63,13 @@ export default class ForgeConditionalRecipeParser extends RecipeParser<
   ForgeConditionalRecipeDefinition,
   ForgeConditionalRecipe
 > {
-  create(
+  override deserialize(
     definition: ForgeConditionalRecipeDefinition,
-    parser: InlineRecipeParser,
+    context: RecipeParseContext,
   ): ForgeConditionalRecipe {
     const recipes = definition.recipes.map<WithConditions<Recipe>>((it) => ({
       conditions: it.conditions,
-      recipe: parser(it.recipe),
+      recipe: context.recipes.deserialize(it.recipe),
     }));
 
     return new ForgeConditionalRecipe(definition, recipes);

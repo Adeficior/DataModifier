@@ -1,5 +1,10 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { beforeEach, describe, expect, it } from "bun:test";
+import {
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+} from "../src/common/ingredient/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 import { createDumpResolver } from "./shared/testData.js";
 
@@ -25,9 +30,12 @@ describe("blacklist tests", () => {
     const acceptor = createTestAcceptor();
 
     loader.blacklist.hide("minecraft:stone");
-    loader.blacklist.hide({ fluid: "water" });
-    loader.blacklist.hide({ block: "water" });
-    loader.blacklist.hide([{ item: "ice" }, { fluid: "minecraft:lava" }]);
+    loader.blacklist.hide(new FluidIngredient("water"));
+    loader.blacklist.hide(new BlockIngredient("water"));
+    loader.blacklist.hide([
+      new ItemIngredient("ice"),
+      new FluidIngredient("minecraft:lava"),
+    ]);
 
     await loader.emit(acceptor);
 

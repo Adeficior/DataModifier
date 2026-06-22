@@ -1,11 +1,8 @@
-import type { InlineRecipeParser, Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -13,49 +10,50 @@ export type NbtWrapperRecipeDefinition = RecipeDefinition &
     recipe: RecipeDefinition;
   }>;
 
-export class NbtWrapperRecipe extends Recipe<NbtWrapperRecipeDefinition> {
+export class NbtWrapperRecipe extends Recipe {
   constructor(
-    definition: Omit<NbtWrapperRecipeDefinition, "recipe">,
+    definition: RecipeDefinition,
     private readonly recipe: Recipe,
   ) {
-    super({
-      ...definition,
-      recipe: recipe.toJSON(),
-    });
+    super(definition);
   }
 
-  getIngredients(): IngredientInput[] {
+  getIngredients() {
     return this.recipe.getIngredients();
   }
 
-  getResults(): ResultInput[] {
+  getResults() {
     return this.recipe.getResults();
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ): Recipe {
     return new NbtWrapperRecipe(
       this.definition,
-      this.recipe.replaceIngredient(replace),
+      this.recipe.replace(ingredientReplacer, resultReplacer),
     );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new NbtWrapperRecipe(
-      this.definition,
-      this.recipe.replaceResult(replace),
-    );
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<NbtWrapperRecipeDefinition> {
+    return {
+      recipe: context.recipes.serialize(this.recipe),
+    };
   }
 }
 
-export default class NbtWrapperRecipeParser extends RecipeParser<
+export class NbtWrapperRecipeParser extends RecipeParser<
   NbtWrapperRecipeDefinition,
   NbtWrapperRecipe
 > {
-  create(
+  deserialize(
     definition: NbtWrapperRecipeDefinition,
-    parser: InlineRecipeParser,
+    context: RecipeParseContext,
   ): NbtWrapperRecipe {
-    const recipe = parser(definition.recipe);
+    const recipe = context.recipes.deserialize(definition.recipe);
     return new NbtWrapperRecipe(definition, recipe);
   }
 }

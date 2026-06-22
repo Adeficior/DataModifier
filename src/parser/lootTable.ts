@@ -1,42 +1,43 @@
+import { encodeId } from "../common/id.js";
+import {
+  ItemIngredient,
+  ItemTagIngredient,
+  type Ingredient,
+  type ItemLikeIngredient,
+} from "../common/ingredient/index.js";
+import type { Predicate } from "../common/predicates.js";
+import { ItemResult } from "../common/result/index.js";
+import type RegistryLookup from "../loader/registry/index.js";
 import type {
   LootEntry,
   LootEntryBase,
   LootTable,
 } from "../schema/data/loot.js";
 import { extendLootEntry } from "../schema/data/loot.js";
-import { IllegalShapeError } from "../error.js";
-import type {
-  IngredientInput,
-  ItemIngredient,
-  Predicate,
-} from "../common/ingredient.js";
-import type RegistryLookup from "../loader/registry/index.js";
 
-export type LootItemInput = ItemIngredient | LootEntry;
+export type LootItemInput = ItemLikeIngredient | ItemResult | LootEntry;
 
 function createUnvalidatedLootEntry(input: LootItemInput): LootEntry {
-  if (input && typeof input === "object") {
-    if ("type" in input) return extendLootEntry(input);
-
-    if ("tag" in input)
-      return {
-        type: "minecraft:tag",
-        name: input.tag,
-      };
-
-    if ("item" in input)
-      return {
-        type: "minecraft:item",
-        name: input.item,
-      };
+  if (input instanceof ItemIngredient || input instanceof ItemResult) {
+    return {
+      type: "minecraft:item",
+      name: encodeId(input.id),
+    };
   }
 
-  throw new IllegalShapeError("unknown loot entry input", input);
+  if (input instanceof ItemTagIngredient) {
+    return {
+      type: "minecraft:tag",
+      name: encodeId(input.tag),
+    };
+  }
+
+  return extendLootEntry(input);
 }
 
 function validateLootEntry(entry: LootEntry, lookup: RegistryLookup) {
-  if (entry.type === "minecraft:item") lookup?.validate({ item: entry.name });
-  if (entry.type === "minecraft:tag") lookup?.validate({ tag: entry.name });
+  if (entry.type === "minecraft:item")
+    lookup.validateEntry("minecraft:item", entry.name);
   if (entry.type === "minecraft:alternatives") {
     entry.children.forEach((it) =>
       validateLootEntry(extendLootEntry(it), lookup),
@@ -46,17 +47,16 @@ function validateLootEntry(entry: LootEntry, lookup: RegistryLookup) {
 
 export function createLootEntry(
   input: LootItemInput,
-  lookup?: RegistryLookup,
+  lookup: RegistryLookup,
 ): LootEntry {
   const unvalidated = createUnvalidatedLootEntry(input);
-  if (lookup) validateLootEntry(unvalidated, lookup);
+  validateLootEntry(unvalidated, lookup);
   return unvalidated;
 }
 
-export function replaceItemInEntry(
-  predicate: Predicate<IngredientInput>,
-  to: LootEntry,
-) {
+// TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
+
+function replaceItemInEntry(predicate: Predicate<Ingredient>, to: LootEntry) {
   const replace = (base: LootEntryBase): LootEntry => {
     const entry = extendLootEntry(base);
     const shared: Omit<LootEntryBase, "type"> = {
@@ -71,10 +71,14 @@ export function replaceItemInEntry(
         };
 
       case "minecraft:item":
-        return predicate({ item: entry.name }) ? { ...shared, ...to } : entry;
+        return predicate(new ItemIngredient(entry.name))
+          ? { ...shared, ...to }
+          : entry;
 
       case "minecraft:tag":
-        return predicate({ tag: entry.name }) ? { ...shared, ...to } : entry;
+        return predicate(new ItemTagIngredient(entry.name))
+          ? { ...shared, ...to }
+          : entry;
 
       default:
         return entry;
@@ -85,7 +89,7 @@ export function replaceItemInEntry(
 }
 
 export function replaceItemInTable(
-  predicate: Predicate<IngredientInput>,
+  predicate: Predicate<Ingredient>,
   to: LootEntry,
 ) {
   const replaceEntry = replaceItemInEntry(predicate, to);

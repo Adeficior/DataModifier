@@ -12,11 +12,13 @@ import {
   type CommonTest,
   type Predicate,
 } from "../../common/predicates.js";
+import type { ResultTest } from "../../common/result/filter.js";
+import resolveResultTest from "../../common/result/filter.js";
 import type { Result } from "../../common/result/index.js";
 import type { ResultInput } from "../../common/result/input.js";
 import type { PackContext } from "../../loader/context.js";
 import { isAtLeastVersion } from "../../packFormat.js";
-import type { Replacer } from "../../parser/recipe/index.js";
+import type { RecipeSerializer, Replacer } from "../../parser/recipe/index.js";
 import { createReplacer, Recipe } from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 import CustomEmitter from "../custom.js";
@@ -29,31 +31,26 @@ export type RecipeTest = Readonly<{
   id?: CommonTest<NormalizedId>;
   type?: CommonTest<NormalizedId<RecipeSerializerId>>;
   namespace?: string;
-  output?: IngredientTest;
+  output?: ResultTest;
   input?: IngredientTest;
+  // TODO not sure if I want to even keep this?
   optional?: boolean;
 }>;
 
 export interface RecipeRules {
   replaceResult(
-    test: IngredientTest,
-    value: Result,
+    test: ResultTest,
+    value: ResultInput,
     additionalTests?: RecipeTest,
   ): void;
 
   replaceIngredient(
     test: IngredientTest,
-    value: Ingredient,
+    value: IngredientInput,
     additionalTests?: RecipeTest,
   ): void;
 
-  add<
-    TDefinition extends RecipeDefinition,
-    TRecipe extends Recipe<TDefinition>,
-  >(
-    id: IdInput,
-    value: TDefinition | TRecipe,
-  ): void;
+  add(id: IdInput, value: RecipeDefinition | Recipe): void;
 
   remove(test: RecipeTest): void;
 }
@@ -87,12 +84,14 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     private readonly logger: Logger,
     private readonly registry: RegistryProvider<Recipe>,
     private readonly context: PackContext,
+    private readonly serializer: RecipeSerializer,
   ) {
     this.ruled = new RuledEmitter<Recipe, RecipeRule>(
       this.logger,
       this.registry,
       (id) => this.recipePath(id),
       EMPTY_RECIPE,
+      (it) => this.serializer.serialize(it),
       (id) => this.custom.has(id),
     );
   }
@@ -113,28 +112,31 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     return resolveIngredientTest(test, this.context);
   }
 
+  resolveResultTest(test?: ResultTest) {
+    if (!test) return () => true;
+    return resolveResultTest(test, this.context);
+  }
+
   private resolveRecipeTest(test: RecipeTest) {
     const id: Predicate<Id>[] = [];
     const type: Predicate<Id>[] = [];
     const ingredient: Predicate<IngredientInput>[] = [];
-    const result: Predicate<IngredientInput>[] = [];
+    const result: Predicate<ResultInput>[] = [];
 
     if (test.id) id.push(resolveIDTest(test.id));
     if (test.type) type.push(resolveIDTest(test.type));
     if (test.namespace) id.push((id) => id.namespace === test.namespace);
-    if (test.output) result.push(this.resolveIngredientTest(test.output));
+    if (test.output) result.push(this.resolveResultTest(test.output));
     if (test.input) ingredient.push(this.resolveIngredientTest(test.input));
 
     return { id, type, ingredient, result };
   }
 
-  add<
-    TDefinition extends RecipeDefinition,
-    TRecipe extends Recipe<TDefinition>,
-  >(id: IdInput, value: TDefinition | TRecipe) {
+  add(id: IdInput, value: RecipeDefinition | Recipe) {
     if (this.custom.has(id))
       this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
-    if (value instanceof Recipe) this.custom.add(id, value.toJSON());
+    if (value instanceof Recipe)
+      this.custom.add(id, this.serializer.serialize(value));
     else this.custom.add(id, value);
   }
 
@@ -144,7 +146,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     recipeTest: RecipeTest = {},
     ingredientTests: {
       ingredient?: Predicate<IngredientInput>;
-      result?: Predicate<IngredientInput>;
+      result?: Predicate<ResultInput>;
     } = {},
   ) {
     const recipePredicates = this.resolveRecipeTest(recipeTest ?? {});
@@ -169,14 +171,13 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   replaceResult(
-    test: IngredientTest,
-    value: ResultInput,
+    test: ResultTest,
+    input: ResultInput,
     additionalTest?: RecipeTest,
   ) {
-    const predicate = this.resolveIngredientTest(test);
+    const predicate = this.resolveResultTest(test);
 
-    // TODO check why this is here
-    const result = this.context.results.create(value);
+    const value = this.context.results.create(input);
 
     const replacer = createReplacer<ResultInput>(predicate, value);
     const replace: Replacer<Result> = (it) =>
@@ -192,13 +193,12 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
   replaceIngredient(
     test: IngredientTest,
-    value: IngredientInput,
+    input: IngredientInput,
     additionalTest?: RecipeTest,
   ) {
     const predicate = this.resolveIngredientTest(test);
 
-    // TODO check why this is here
-    const result = this.context.ingredients.create(value);
+    const value = this.context.ingredients.create(input);
 
     const replacer = createReplacer<IngredientInput>(predicate, value);
     const replace: Replacer<Ingredient> = (it) =>

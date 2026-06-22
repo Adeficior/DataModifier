@@ -1,71 +1,89 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import z from "zod";
+import { encodeId, IdSchema } from "../../../common/id.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type IngredientSerializer from "../../../common/ingredient/serializer.js";
+import { ItemResult, type Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import RecipeParser, {
+  Recipe,
+  type RecipeParseContext,
+  type Replacer,
+} from "../index.js";
+import { OneToOneRecipe } from "../oneToOne.js";
 
-export type IdResult = {
-  id: string;
-  count?: number;
-};
+// TODO this will also be the new item format, can re-use that
+const IdResultSchema = z.object({
+  id: IdSchema,
+  count: z.number().optional(),
+});
 
-export function fromIdResult({ id, ...result }: IdResult): Result {
-  return {
-    item: id,
-    ...result,
-  };
+function deserializeIdResult(
+  ingredients: IngredientSerializer,
+  input: unknown,
+): ItemResult {
+  const { id, count } = IdResultSchema.parse(input);
+  return ingredients.validated(new ItemResult(id, count));
 }
 
-export function toIdResult(result: Result): IdResult | null {
-  if ("item" in result)
-    return {
-      id: result.item,
-      count: result.count,
-    };
-
-  return null;
+function serializeIdResult(result: ItemResult): unknown {
+  const { id, count } = result;
+  return { id: encodeId(id), count };
 }
 
 export type InputOutputRecipeDefinition = RecipeDefinition &
   Readonly<{
-    input: Ingredient;
-    output: IdResult;
+    input: unknown;
+    output: unknown;
   }>;
 
-export class InputOutputRecipe extends Recipe<InputOutputRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.input];
+export class InputOutputRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    protected readonly ingredient: Ingredient,
+    protected readonly result: ItemResult,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.output].map(fromIdResult);
+  getIngredients() {
+    return [this.ingredient];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new InputOutputRecipe({
-      ...this.definition,
-      input: replace(this.definition.input),
-    });
+  getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new InputOutputRecipe({
-      ...this.definition,
-      output:
-        toIdResult(replace(fromIdResult(this.definition.output))) ??
-        this.definition.output,
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new OneToOneRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+      resultReplacer(this.result),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<InputOutputRecipeDefinition> {
+    return {
+      input: context.ingredients.serialize(this.ingredient),
+      output: serializeIdResult(this.result),
+    };
   }
 }
 
-export default class InputOutputRecipeParser extends RecipeParser<
+export class InputOutputRecipeParser extends RecipeParser<
   InputOutputRecipeDefinition,
   InputOutputRecipe
 > {
-  create(definition: InputOutputRecipeDefinition): InputOutputRecipe {
-    return new InputOutputRecipe(definition);
+  deserialize(
+    definition: InputOutputRecipeDefinition,
+    context: RecipeParseContext,
+  ): InputOutputRecipe {
+    const ingredient = context.ingredients.create(definition.input);
+    const result = deserializeIdResult(context.ingredients, definition.output);
+    return new InputOutputRecipe(definition, ingredient, result);
   }
 }

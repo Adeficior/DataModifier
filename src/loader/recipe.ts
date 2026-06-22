@@ -1,44 +1,55 @@
 import type { Logger } from "@adeficior/pack-resolver";
 import { encodeId } from "../common/id.js";
 import { IllegalShapeError } from "../error.js";
-import { ShapelessRecipeParser } from "../parser/index.js";
-import FluidConversionRecipeParser from "../parser/recipe/adAstra/conversion.js";
-import HammeringRecipeParser from "../parser/recipe/adAstra/hammering.js";
-import InputOutputRecipeParser from "../parser/recipe/adAstra/inputOutput.js";
-import NasaWorkbenchRecipeParser from "../parser/recipe/adAstra/nasaWorkbench.js";
-import SpaceStationRecipeParser from "../parser/recipe/adAstra/spaceStation.js";
-import ApothecaryRecipeParser from "../parser/recipe/botania/apothecary.js";
-import BrewRecipeParser from "../parser/recipe/botania/brew.js";
-import ElvenTradeRecipeParser from "../parser/recipe/botania/elvenTrade.js";
-import GogWrapperRecipeParser from "../parser/recipe/botania/gogWrapper.js";
-import ManaInfusionRecipeParser from "../parser/recipe/botania/manaInfusion.js";
-import NbtWrapperRecipeParser from "../parser/recipe/botania/nbtWrapper.js";
-import OrechidRecipeParser from "../parser/recipe/botania/orechid.js";
-import PureDaisyRecipeParser from "../parser/recipe/botania/pureDaisy.js";
-import RunicAltarRecipeParser from "../parser/recipe/botania/runicAltar.js";
-import TerraPlateRecipeParser from "../parser/recipe/botania/terraPlate.js";
-import AssemblyRecipeParser from "../parser/recipe/create/assembly.js";
-import CreateProcessingRecipeParser from "../parser/recipe/create/processing.js";
+
+import {
+  FluidConversionRecipeParser,
+  HammeringRecipeParser,
+  InputOutputRecipeParser,
+  NasaWorkbenchRecipeParser,
+  SpaceStationRecipeParser,
+} from "../parser/adAstra.js";
+import {
+  ApothecaryRecipeParser,
+  BrewRecipeParser,
+  ElvenTradeRecipeParser,
+  GogWrapperRecipeParser,
+  ManaInfusionRecipeParser,
+  NbtWrapperRecipeParser,
+  OrechidRecipeParser,
+  PureDaisyRecipeParser,
+  RunicAltarRecipeParser,
+  TerraPlateRecipeParser,
+} from "../parser/botania.js";
+import {
+  AssemblyRecipeParser,
+  CreateProcessingRecipeParser,
+} from "../parser/create.js";
+import {
+  GrindstonePolishingParser,
+  ShapedParser,
+  ShapelessParser,
+  SmeltingParser,
+  SmithingParser,
+  StonecuttingParser,
+} from "../parser/index.js";
 import CookingRecipeParser from "../parser/recipe/farmersdelight/cooking.js";
 import CuttingRecipeParser from "../parser/recipe/farmersdelight/cutting.js";
 import ForgeConditionalRecipeParser from "../parser/recipe/forge/conditional.js";
-import IgnoredRecipe from "../parser/recipe/ignored.js";
 import type RecipeParser from "../parser/recipe/index.js";
-import type { Recipe } from "../parser/recipe/index.js";
-import QuarkExclusionRecipeParser from "../parser/recipe/quark/exclusion.js";
-import RootComponentRecipeParser from "../parser/recipe/roots/component.js";
-import RootRitualRecipeParser from "../parser/recipe/roots/ritual.js";
-import GrindstonePolishingParser from "../parser/recipe/sullys/polishing.js";
-import ThermalCatalystRecipeParser from "../parser/recipe/thermal/catalyst.js";
-import ThermalFuelRecipeParser from "../parser/recipe/thermal/fuel.js";
-import ThermalRecipeParser from "../parser/recipe/thermal/index.js";
-import TreeExtractionRecipeParser from "../parser/recipe/thermal/treeExtraction.js";
-import ShapedParser from "../parser/recipe/vanilla/shaped.js";
-import ShapelessParser from "../parser/recipe/vanilla/shapeless.js";
-import SmeltingParser from "../parser/recipe/vanilla/smelting.js";
-import SmithingParser from "../parser/recipe/vanilla/smithing.js";
-import StonecuttingParser from "../parser/recipe/vanilla/stonecutting.js";
+import type { Recipe, RecipeSerializer } from "../parser/recipe/index.js";
+import {
+  RootComponentRecipeParser,
+  RootRitualRecipeParser,
+} from "../parser/roots.js";
+import {
+  ThermalCatalystRecipeParser,
+  ThermalFuelRecipeParser,
+  ThermalRecipeParser,
+  TreeExtractionRecipeParser,
+} from "../parser/thermal.js";
 import type { RecipeDefinition } from "../schema/data/recipe.js";
+import type { PackContext } from "./context.js";
 import { JsonLoader } from "./index.js";
 
 export interface RecipeLoaderAccessor {
@@ -62,7 +73,9 @@ export default class RecipeLoader
   private readonly ignoredRecipeTypes = new Set<string>();
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
 
-  constructor() {
+  constructor(
+    private readonly serializers: Pick<PackContext, "results" | "ingredients">,
+  ) {
     super();
 
     this.registerParser("minecraft:crafting_shaped", new ShapedParser());
@@ -234,10 +247,9 @@ export default class RecipeLoader
       new SpaceStationRecipeParser(),
     );
 
-    this.registerParser("quark:exclusion", new QuarkExclusionRecipeParser());
     this.registerParser(
       "patchouli:shapeless_book_recipe",
-      new ShapelessRecipeParser(),
+      new ShapelessParser(),
     );
 
     this.registerParser("cofh_core:crafting_shaped_potion", new ShapedParser());
@@ -293,6 +305,7 @@ export default class RecipeLoader
     this.ignoreType("immersiveengineering:mineral_mix");
   }
 
+  // TODO this does not make sense
   ignoreType(recipeType: string) {
     this.ignoredRecipeTypes.add(recipeType);
   }
@@ -301,39 +314,64 @@ export default class RecipeLoader
     return [...this._unknownRecipeTypes.values()];
   }
 
-  parse<
-    TDefinition extends RecipeDefinition,
-    TRecipe extends Recipe<TDefinition>,
-  >(logger: Logger, definition: TDefinition): TRecipe | null {
+  private recipeParseContext(logger: Logger) {
+    const recipes = this.serializer(logger);
+    return { ...this.serializers, recipes };
+  }
+
+  // TODO pass logger to deserialize/serialize?
+  serializer(logger: Logger): RecipeSerializer {
+    const recipes: RecipeSerializer = {
+      deserialize: (it) => {
+        const deserialized = this.parse(logger, it);
+        if (deserialized) return deserialized;
+        // TODO no error here?
+        throw new IllegalShapeError("unable to deserialize recipe", it);
+      },
+      serialize: (recipe) => {
+        const context = this.recipeParseContext(logger);
+        return {
+          ...recipe.definition,
+          ...recipe.serialize(context),
+        };
+      },
+    };
+
+    return recipes;
+  }
+
+  parse(logger: Logger, definition: RecipeDefinition): Recipe | null {
     if (!definition.type)
       throw new IllegalShapeError(`no recipe type set`, definition);
     const parser = this.recipeParsers.get(encodeId(definition.type));
 
     if (!("type" in definition))
       throw new IllegalShapeError("recipe type missing");
-    if (Object.keys(definition).length <= 1) return null;
+
     if (this.ignoredRecipeTypes.has(definition.type)) return null;
 
     if (!parser) {
       if (!this._unknownRecipeTypes.has(definition.type)) {
         this._unknownRecipeTypes.set(definition.type, definition);
+
         throw new IllegalShapeError(
           `unknown recipe type: '${definition.type}'`,
           definition,
         );
       }
+
       return null;
     }
 
-    const parsed = parser.create(definition, (it) => {
-      const parsed = this.parse(logger, it);
-      if (parsed) return parsed;
-      return new IgnoredRecipe(it);
-    }) as TRecipe;
+    const parsed = parser.deserialize(
+      definition,
+      this.recipeParseContext(logger),
+    );
 
     // Catch warnings early
-    parsed.getResults().forEach((it) => createResult(it));
-    parsed.getIngredients().forEach((it) => createIngredient(it));
+    // TODO not really needed anymore
+    // parsed.getResults().forEach((it) => createResult(it));
+    // parsed.getIngredients().forEach((it) => createIngredient(it));
 
     return parsed;
   }

@@ -10,6 +10,7 @@ export default class RuledEmitter<TEntry, TRule extends Rule<TEntry>> {
     private readonly provider: RegistryProvider<TEntry>,
     private readonly pathProvider: PathProvider,
     private readonly emptyValue: unknown,
+    private readonly serialize: (entry: TEntry) => unknown,
     private readonly shouldSkip: (id: Id) => boolean = () => true,
   ) {}
 
@@ -49,7 +50,9 @@ export default class RuledEmitter<TEntry, TRule extends Rule<TEntry>> {
         recipe,
       );
 
-      acceptor(path, await toJson(modified ?? this.emptyValue));
+      const serialized = modified ? this.serialize(modified) : this.emptyValue;
+
+      acceptor(path, await toJson(serialized));
     });
 
     missingRules.forEach((rule) => {

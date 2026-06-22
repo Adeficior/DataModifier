@@ -1,3 +1,5 @@
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
+
 export type ForgeCondition = Readonly<{
   type: string;
   [key: string]: unknown;
@@ -8,7 +10,8 @@ export type FabricCondition = Readonly<{
 }>;
 
 export type RecipeDefinition = Readonly<{
-  type: string;
+  type: RecipeSerializerId;
+  // TODO add neoforge conditions
   conditions?: ForgeCondition[];
   "fabric:load_conditions"?: FabricCondition[];
 }>;

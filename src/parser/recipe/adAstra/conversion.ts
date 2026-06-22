@@ -1,55 +1,78 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import { encodeId } from "../../../common/id.js";
+import {
+  FluidIngredient,
+  type Ingredient,
+} from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
+import { FluidResult } from "../../../common/result/index.js";
+import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{
-    input: Ingredient;
+    input: unknown;
     output: string;
   }>;
 
-export class FluidConversionRecipe extends Recipe<FluidConversionRecipeDefinition> {
-  private readonly output: Result;
-
-  constructor(definition: FluidConversionRecipeDefinition) {
+export class FluidConversionRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+    private readonly result: Result,
+  ) {
     super(definition);
-    this.output = { fluid: this.definition.output };
   }
 
-  getIngredients(): IngredientInput[] {
-    return [this.definition.input];
+  getIngredients() {
+    return [this.ingredient];
   }
 
-  getResults(): ResultInput[] {
-    return [this.output];
+  getResults() {
+    return [this.result];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new FluidConversionRecipe({
-      ...this.definition,
-      input: replace(this.definition.input),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new FluidConversionRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+      resultReplacer(this.result),
+    );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    const replaced = replace(this.output);
-    return new FluidConversionRecipe({
-      ...this.definition,
-      output: "fluid" in replaced ? replaced.fluid : this.definition.output,
-    });
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<FluidConversionRecipeDefinition> {
+    if (!(this.result instanceof FluidIngredient)) {
+      throw new IllegalShapeError(
+        "fluid conversion output must be a fluid result",
+        this.result,
+      );
+    }
+
+    return {
+      input: context.ingredients.serialize(this.ingredient),
+      output: encodeId(this.result.id),
+    };
   }
 }
 
-export default class FluidConversionRecipeParser extends RecipeParser<
+export class FluidConversionRecipeParser extends RecipeParser<
   FluidConversionRecipeDefinition,
   FluidConversionRecipe
 > {
-  create(definition: FluidConversionRecipeDefinition): FluidConversionRecipe {
-    return new FluidConversionRecipe(definition);
+  deserialize(
+    definition: FluidConversionRecipeDefinition,
+    context: RecipeParseContext,
+  ): FluidConversionRecipe {
+    const ingredient = context.ingredients.create(definition.input);
+    const result = context.results.validated(
+      new FluidResult(definition.output, -1),
+    );
+    return new FluidConversionRecipe(definition, ingredient, result);
   }
 }

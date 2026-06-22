@@ -1,49 +1,68 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type SmithingRecipeDefinition = RecipeDefinition &
   Readonly<{
-    base: Ingredient;
-    addition: Ingredient;
-    result: Result;
+    base: unknown;
+    addition: unknown;
+    result: unknown;
   }>;
 
-export class SmithingRecipe extends Recipe<SmithingRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.base, this.definition.addition];
+export class SmithingRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly base: Ingredient,
+    private readonly addition: Ingredient,
+    private readonly result: Result,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.result];
+  getIngredients() {
+    return [this.base, this.addition];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new SmithingRecipe({
-      ...this.definition,
-      base: replace(this.definition.base),
-      addition: replace(this.definition.addition),
-    });
+  getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new SmithingRecipe({
-      ...this.definition,
-      result: replace(this.definition.result),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new SmithingRecipe(
+      this.definition,
+      ingredientReplacer(this.base),
+      ingredientReplacer(this.addition),
+      resultReplacer(this.result),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<SmithingRecipeDefinition> {
+    return {
+      base: context.ingredients.serialize(this.base),
+      addition: context.ingredients.serialize(this.addition),
+      result: context.results.serialize(this.result),
+    };
   }
 }
 
-export default class SmithingParser extends RecipeParser<
+export class SmithingParser extends RecipeParser<
   SmithingRecipeDefinition,
   SmithingRecipe
 > {
-  create(definition: SmithingRecipeDefinition): SmithingRecipe {
-    return new SmithingRecipe(definition);
+  deserialize(
+    definition: SmithingRecipeDefinition,
+    context: RecipeParseContext,
+  ): SmithingRecipe {
+    const base = context.ingredients.create(definition.base);
+    const addition = context.ingredients.create(definition.addition);
+    const result = context.results.create(definition.result);
+    return new SmithingRecipe(definition, base, addition, result);
   }
 }

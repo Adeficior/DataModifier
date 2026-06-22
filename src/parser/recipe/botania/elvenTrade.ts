@@ -1,48 +1,33 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import RecipeParser, { type RecipeParseContext } from "../index.js";
+import { ManyToManyRecipe } from "../manyToMany.js";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: Ingredient[];
-    output: Result[];
+    ingredients: unknown[];
+    output: unknown[];
     mana?: number;
   }>;
 
-export class ElvenTradeRecipe extends Recipe<ElvenTradeRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return this.definition.ingredients;
-  }
-
-  getResults(): ResultInput[] {
-    return this.definition.output;
-  }
-
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ElvenTradeRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map(replace),
-    });
-  }
-
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ElvenTradeRecipe({
-      ...this.definition,
-      output: this.definition.output.map(replace),
-    });
+export class ElvenTradeRecipe extends ManyToManyRecipe {
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ElvenTradeRecipeDefinition> {
+    const { results, ...rest } = super.serialize(context);
+    return { ...rest, output: results };
   }
 }
 
-export default class ElvenTradeRecipeParser extends RecipeParser<
+export class ElvenTradeRecipeParser extends RecipeParser<
   ElvenTradeRecipeDefinition,
   ElvenTradeRecipe
 > {
-  create(definition: ElvenTradeRecipeDefinition): ElvenTradeRecipe {
-    return new ElvenTradeRecipe(definition);
+  deserialize(
+    definition: ElvenTradeRecipeDefinition,
+    context: RecipeParseContext,
+  ): ElvenTradeRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    const results = context.results.createList(definition.output);
+    return new ElvenTradeRecipe(definition, ingredients, results);
   }
 }

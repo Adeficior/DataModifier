@@ -74,6 +74,8 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
       this.lootTables,
       (id) => this.tablePath(id),
       EMPTY_LOOT_TABLE,
+      // TODO also add value object here?
+      (it) => it,
       (id) => this.customTables.has(id),
     );
   }

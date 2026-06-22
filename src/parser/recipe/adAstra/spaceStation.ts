@@ -1,48 +1,84 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import { omit } from "lodash-es";
+import z from "zod";
+import {
+  ItemIngredient,
+  ItemTagIngredient,
+  type Ingredient,
+} from "../../../common/ingredient/index.js";
+import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
-import type { WrappedIngredient } from "./index.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+
+const WrappedIngredientSchema = z.object({
+  ingredient: z.record(z.string(), z.unknown()),
+  count: z.number().optional(),
+});
 
 export type SpaceStationRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: WrappedIngredient[];
-    mana?: number;
+    ingredients: unknown[];
+    dimension: string;
+    structure: string;
   }>;
 
-export class SpaceStationRecipe extends Recipe<SpaceStationRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return this.definition.ingredients.map((it) => it.ingredient);
+export class SpaceStationRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: Ingredient[],
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
+  getIngredients() {
+    return this.ingredients;
+  }
+
+  getResults() {
     return [];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new SpaceStationRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map((it) => ({
-        ...it,
-        ingredient: replace(it.ingredient),
-      })),
-    });
+  replace(ingredientReplacer: Replacer<Ingredient>) {
+    return new SpaceStationRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+    );
   }
 
-  replaceResult(): Recipe {
-    return new SpaceStationRecipe(this.definition);
+  serialize(
+    context: RecipeParseContext,
+  ): Partial<SpaceStationRecipeDefinition> {
+    return {
+      ingredients: context.ingredients
+        .serializeList(this.ingredients)
+        .map((it) => {
+          if (it instanceof ItemIngredient || it instanceof ItemTagIngredient) {
+            return { ingredient: omit(it, "count"), count: it.count };
+          }
+
+          throw new IllegalShapeError(
+            "space station ingredient needs to be a form of item",
+            it,
+          );
+        }),
+    };
   }
 }
 
-export default class SpaceStationRecipeParser extends RecipeParser<
+export class SpaceStationRecipeParser extends RecipeParser<
   SpaceStationRecipeDefinition,
   SpaceStationRecipe
 > {
-  create(definition: SpaceStationRecipeDefinition): SpaceStationRecipe {
-    return new SpaceStationRecipe(definition);
+  deserialize(
+    definition: SpaceStationRecipeDefinition,
+    context: RecipeParseContext,
+  ): SpaceStationRecipe {
+    const ingredients = context.ingredients.createList(
+      definition.ingredients
+        .map((it) => WrappedIngredientSchema.parse(it))
+        .map((it) => ({ ...it.ingredient, count: it.count })),
+    );
+
+    return new SpaceStationRecipe(definition, ingredients);
   }
 }

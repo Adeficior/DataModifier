@@ -1,49 +1,71 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import RecipeParser, {
+  Recipe,
+  type RecipeParseContext,
+  type Replacer,
+} from "../index.js";
 
 export type ApothecaryRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: Ingredient[];
-    output: Result;
-    reagent: Ingredient;
+    ingredients: unknown[];
+    output: unknown;
+    reagent: unknown;
   }>;
 
-export class ApothecaryRecipe extends Recipe<ApothecaryRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [...this.definition.ingredients, this.definition.reagent];
+export class ApothecaryRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    protected readonly ingredients: Ingredient[],
+    protected readonly result: Result,
+    protected readonly reagent: Ingredient,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.output];
+  override getIngredients() {
+    return [...this.ingredients, this.reagent];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ApothecaryRecipe({
-      ...this.definition,
-      reagent: replace(this.definition.reagent),
-      ingredients: this.definition.ingredients.map(replace),
-    });
+  override getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ApothecaryRecipe({
-      ...this.definition,
-      output: replace(this.definition.output),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new ApothecaryRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+      resultReplacer(this.result),
+      ingredientReplacer(this.reagent),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ApothecaryRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+      output: context.results.serialize(this.result),
+      reagent: context.ingredients.serialize(this.reagent),
+    };
   }
 }
 
-export default class ApothecaryRecipeParser extends RecipeParser<
+export class ApothecaryRecipeParser extends RecipeParser<
   ApothecaryRecipeDefinition,
   ApothecaryRecipe
 > {
-  create(definition: ApothecaryRecipeDefinition): ApothecaryRecipe {
-    return new ApothecaryRecipe(definition);
+  deserialize(
+    definition: ApothecaryRecipeDefinition,
+    context: RecipeParseContext,
+  ): ApothecaryRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    const result = context.results.create(definition.output);
+    const reagent = context.ingredients.create(definition.ingredients);
+    return new ApothecaryRecipe(definition, ingredients, result, reagent);
   }
 }

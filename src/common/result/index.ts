@@ -7,10 +7,11 @@ import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
 import { encodeId, type IdInput } from "../id";
 import type { Serializable } from "../serializable";
+import { BUCKET } from "../units";
 
 export abstract class Result implements Serializable {
   validate(_?: RegistryLookup): void {}
-  abstract toJSON(packFormat: SemVerInput): unknown;
+  abstract toJSON(packFormat: SemVerInput): Record<string, unknown>;
 }
 
 export class ItemResult extends Result {
@@ -22,8 +23,9 @@ export class ItemResult extends Result {
     super();
   }
 
-  toJSON(_packFormat: SemVerInput): unknown {
-    const { count, chance } = this;
+  toJSON(_packFormat: SemVerInput) {
+    const { chance } = this;
+    const count = this.count === 1 ? undefined : this.count;
     const id = encodeId(this.id);
     return { item: id, count, chance };
   }
@@ -36,13 +38,13 @@ export class ItemResult extends Result {
 export class FluidResult extends Result {
   constructor(
     public readonly id: IdInput<FluidId>,
-    public readonly amount: number,
+    public readonly amount: number = BUCKET,
     public readonly chance?: number,
   ) {
     super();
   }
 
-  toJSON(_packFormat: SemVerInput): unknown {
+  toJSON(_packFormat: SemVerInput) {
     const { amount, chance } = this;
     const id = encodeId(this.id);
     return { fluid: id, amount, chance };
@@ -58,7 +60,7 @@ export class BlockResult extends Result {
     super();
   }
 
-  toJSON(_packFormat: SemVerInput): unknown {
+  toJSON(_packFormat: SemVerInput) {
     const id = encodeId(this.id);
     return { block: id };
   }

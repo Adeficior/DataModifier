@@ -68,7 +68,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   private readonly blockDefinition: BlockDefinitionRules;
 
   private readonly tagLoader: TagsLoader;
-  private readonly recipesLoader = new RecipeLoader();
+  private readonly recipesLoader: RecipeLoader;
   private readonly lootLoader = new LootTableLoader();
   private readonly langLoader = new LangLoader();
   readonly blockstates: BlockstateRules = this.registerEmitter(
@@ -110,8 +110,15 @@ export default class PackLoader implements Loader, ClearableEmitter {
       packFormat: options.packFormat,
     };
 
+    this.recipesLoader = new RecipeLoader(this.context);
+
     this.recipes = this.registerEmitter(
-      new RecipeEmitter(logger, this.recipesLoader, this.context),
+      new RecipeEmitter(
+        logger,
+        this.recipesLoader,
+        this.context,
+        this.recipesLoader.serializer(this.logger),
+      ),
     );
 
     this.loot = this.registerEmitter(
@@ -179,10 +186,12 @@ export default class PackLoader implements Loader, ClearableEmitter {
     return this.lookup;
   }
 
+  //  TODO what do I even need this for?
   createResult(input: ResultInput): Result {
     return this.results.create(input);
   }
 
+  //  TODO what do I even need this for?
   createIngredient(input: IngredientInput): Ingredient {
     return this.ingredients.create(input);
   }

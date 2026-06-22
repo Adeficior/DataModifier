@@ -1,49 +1,65 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import { mapValues } from "lodash-es";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+import type { IngredientMap, IngredientMapInput } from "../ingredientMap.js";
 
 export type ShapedRecipeDefinition = RecipeDefinition &
   Readonly<{
-    key: Record<string, Ingredient>;
+    key: IngredientMapInput;
     pattern: string[];
-    result: Result;
+    result: unknown;
   }>;
 
-export class ShapedRecipe extends Recipe<ShapedRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return Object.values(this.definition.key);
+export class ShapedRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: IngredientMap,
+    private readonly result: Result,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.result];
+  getIngredients() {
+    return this.ingredients.list();
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ShapedRecipe({
-      ...this.definition,
-      key: mapValues(this.definition.key, replace),
-    });
+  getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ShapedRecipe({
-      ...this.definition,
-      result: replace(this.definition.result),
-    });
+  replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new ShapedRecipe(
+      this.definition,
+      this.ingredients.replace(ingredientReplacer),
+      resultReplacer(this.result),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ShapedRecipeDefinition> {
+    return {
+      key: this.ingredients.serialize(context),
+      result: context.results.serialize(this.result),
+    };
   }
 }
 
-export default class ShapedParser extends RecipeParser<
+export class ShapedParser extends RecipeParser<
   ShapedRecipeDefinition,
   ShapedRecipe
 > {
-  create(definition: ShapedRecipeDefinition): ShapedRecipe {
-    return new ShapedRecipe(definition);
+  deserialize(
+    definition: ShapedRecipeDefinition,
+    context: RecipeParseContext,
+  ): ShapedRecipe {
+    const ingredients = context.ingredients.ingredientMap(definition.key);
+    const result = context.results.create(definition.result);
+    return new ShapedRecipe(definition, ingredients, result);
   }
 }

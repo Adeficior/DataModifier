@@ -1,15 +1,23 @@
 import type { Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import type { Id } from "../../common/id.js";
-import type { IngredientInput, Predicate } from "../../common/ingredient.js";
+import {
+  ItemIngredient,
+  ItemTagIngredient,
+  type Ingredient,
+} from "../../common/ingredient/index.js";
+import type { IngredientInput } from "../../common/ingredient/input.js";
+import type { Predicate } from "../../common/predicates.js";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
 import { extendLootEntry } from "../../schema/data/loot.js";
 import type { Modifier } from "./index.js";
 import Rule from "./index.js";
 
+// TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
+
 function entryMatches(
   logger: Logger,
-  test: Predicate<IngredientInput>,
+  test: Predicate<Ingredient>,
   base: LootEntryBase,
 ): boolean {
   try {
@@ -18,9 +26,9 @@ function entryMatches(
       case "minecraft:alternatives":
         return entry.children.some((it) => entryMatches(logger, test, it));
       case "minecraft:item":
-        return test({ item: entry.name }, logger);
+        return test(new ItemIngredient(entry.name), logger);
       case "minecraft:tag":
-        return test({ tag: entry.name }, logger);
+        return test(new ItemTagIngredient(entry.name), logger);
       default:
         return false;
     }

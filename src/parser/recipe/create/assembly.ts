@@ -1,75 +1,88 @@
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Replacer } from "../index.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
-import type { CreateProcessingRecipeDefinition } from "./processing.js";
-import { CreateProcessingRecipe } from "./processing.js";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredient: Ingredient;
-    transitionalItem: Ingredient;
-    results: Result[];
+    ingredient: unknown;
+    transitionalItem: unknown;
+    results: unknown[];
     loops?: number;
-    sequence: CreateProcessingRecipeDefinition[];
+    sequence: RecipeDefinition[];
   }>;
 
-export class AssemblyRecipe extends Recipe<AssemblyRecipeDefinition> {
-  private readonly sequence: CreateProcessingRecipe[];
-
+export class AssemblyRecipe extends Recipe {
   constructor(
-    protected override readonly definition: AssemblyRecipeDefinition,
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+    private readonly transitionalItem: Ingredient,
+    private readonly results: Result[],
+    private readonly sequence: Recipe[],
   ) {
     super(definition);
-    this.sequence = this.definition.sequence.map(
-      (it) => new CreateProcessingRecipe(it),
-    );
   }
 
-  getIngredients(): IngredientInput[] {
+  getIngredients() {
     return [
-      this.definition.ingredient,
-      this.definition.transitionalItem,
+      this.ingredient,
+      this.transitionalItem,
       ...this.sequence.flatMap((it) => it.getIngredients()),
     ];
   }
 
-  getResults(): ResultInput[] {
-    return [
-      ...this.definition.results,
-      ...this.sequence.flatMap((it) => it.getResults()),
-    ];
+  getResults() {
+    return [...this.results, ...this.sequence.flatMap((it) => it.getResults())];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new AssemblyRecipe({
-      ...this.definition,
-      ingredient: replace(this.definition.ingredient),
-      transitionalItem: replace(this.definition.ingredient),
-      sequence: this.sequence.map((it) =>
-        it.replaceIngredient(replace).toJSON(),
-      ),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new AssemblyRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+      ingredientReplacer(this.transitionalItem),
+      this.results.map(resultReplacer),
+      this.sequence.map((it) => it.replace(ingredientReplacer, resultReplacer)),
+    );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new AssemblyRecipe({
-      ...this.definition,
-      results: this.definition.results.map(replace),
-      sequence: this.sequence.map((it) => it.replaceResult(replace).toJSON()),
-    });
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<AssemblyRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(this.ingredient),
+      transitionalItem: context.ingredients.serialize(this.transitionalItem),
+      results: context.ingredients.serializeList(this.results),
+      sequence: this.sequence.map((it) => context.recipes.serialize(it)),
+    };
   }
 }
 
-export default class AssemblyRecipeParser extends RecipeParser<
+export class AssemblyRecipeParser extends RecipeParser<
   AssemblyRecipeDefinition,
   AssemblyRecipe
 > {
-  create(definition: AssemblyRecipeDefinition): AssemblyRecipe {
-    return new AssemblyRecipe(definition);
+  deserialize(
+    definition: AssemblyRecipeDefinition,
+    context: RecipeParseContext,
+  ): AssemblyRecipe {
+    const ingredient = context.ingredients.create(definition.ingredient);
+    const transitionalItem = context.ingredients.create(
+      definition.transitionalItem,
+    );
+    const results = context.results.createList(definition.results);
+    const sequence = definition.sequence.map((it) =>
+      context.recipes.deserialize(it),
+    );
+    return new AssemblyRecipe(
+      definition,
+      ingredient,
+      transitionalItem,
+      results,
+      sequence,
+    );
   }
 }

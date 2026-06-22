@@ -1,58 +1,74 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import RecipeParser, {
+  type RecipeParseContext,
+  type Replacer,
+} from "../index.js";
+import {
+  ManyToManyRecipe,
+  type ManyToManyRecipeDefinition,
+} from "../manyToMany.js";
 
 export type ToolInput = Readonly<{
   type: "farmersdelight:tool_action";
   action: string;
 }>;
 
-export type CuttingRecipeDefinition = RecipeDefinition &
+export type CuttingRecipeDefinition = Omit<
+  ManyToManyRecipeDefinition,
+  "results"
+> &
   Readonly<{
-    ingredients: Ingredient[];
-    result: Result[];
-    tool: Ingredient | ToolInput;
+    tool: unknown;
+    result: ManyToManyRecipeDefinition["results"];
   }>;
 
-function isToolInput<T>(input: T | ToolInput): input is ToolInput {
-  return (
-    !!input &&
-    typeof input === "object" &&
-    "type" in input &&
-    input.type === "farmersdelight:tool_action"
-  );
-}
+// TODO create actual input
+// function isToolInput<T>(input: T | ToolInput): input is ToolInput {
+//   return (
+//     !!input &&
+//     typeof input === "object" &&
+//     "type" in input &&
+//     input.type === "farmersdelight:tool_action"
+//   );
+// }
 
-export class CuttingRecipe extends Recipe<CuttingRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    if (isToolInput(this.definition.tool)) return this.definition.ingredients;
-    return [...this.definition.ingredients, this.definition.tool];
+export class CuttingRecipe extends ManyToManyRecipe {
+  constructor(
+    definition: RecipeDefinition,
+    ingredients: Ingredient[],
+    results: Result[],
+    private readonly tool: Ingredient,
+  ) {
+    super(definition, ingredients, results);
   }
 
-  getResults(): ResultInput[] {
-    return this.definition.result;
+  override getIngredients() {
+    return [...super.getIngredients(), this.tool];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new CuttingRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map(replace),
-      tool: isToolInput(this.definition.tool)
-        ? this.definition.tool
-        : replace(this.definition.tool),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new CuttingRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+      this.results.map(resultReplacer),
+      ingredientReplacer(this.tool),
+    );
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new CuttingRecipe({
-      ...this.definition,
-      result: this.definition.result.map(replace),
-    });
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<CuttingRecipeDefinition> {
+    const { results, ...rest } = super.serialize(context);
+    return {
+      ...rest,
+      result: results,
+      tool: context.ingredients.serialize(this.tool),
+    };
   }
 }
 
@@ -60,7 +76,13 @@ export default class CuttingRecipeParser extends RecipeParser<
   CuttingRecipeDefinition,
   CuttingRecipe
 > {
-  create(definition: CuttingRecipeDefinition): CuttingRecipe {
-    return new CuttingRecipe(definition);
+  deserialize(
+    definition: CuttingRecipeDefinition,
+    context: RecipeParseContext,
+  ): CuttingRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    const result = context.results.createList(definition.result);
+    const tool = context.ingredients.create(definition.tool);
+    return new CuttingRecipe(definition, ingredients, result, tool);
   }
 }

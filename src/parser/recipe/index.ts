@@ -1,9 +1,7 @@
-import type {
-  Ingredient,
-  IngredientInput,
-  Predicate,
-} from "../../common/ingredient.js";
-import type { Result, ResultInput } from "../../common/result.js";
+import type { Ingredient } from "../../common/ingredient/index.js";
+import type { Predicate } from "../../common/predicates.js";
+import type { Result } from "../../common/result/index.js";
+import type { PackContext } from "../../loader/context.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 
 export type Replacer<T> = (value: T) => T;
@@ -15,35 +13,56 @@ export function createReplacer<T>(from: Predicate<T>, to: T): Replacer<T> {
   };
 }
 
-export abstract class Recipe<
-  TDefinition extends RecipeDefinition = RecipeDefinition,
-> {
-  constructor(protected readonly definition: TDefinition) {}
-
-  abstract getIngredients(): IngredientInput[];
-
-  abstract replaceIngredient(replace: Replacer<Ingredient>): Recipe;
-
-  abstract getResults(): ResultInput[];
-
-  abstract replaceResult(replace: Replacer<Result>): Recipe;
-
-  toJSON(): TDefinition {
-    return this.definition;
-  }
-
-  getTypes() {
-    return [this.toJSON().type];
-  }
+function keep<T>(): Replacer<T> {
+  return (t) => t;
 }
 
-export type InlineRecipeParser = <TDefinition extends RecipeDefinition>(
-  definition: TDefinition,
-) => Recipe<TDefinition>;
+export abstract class Recipe {
+  // TODO would be pretty cool if this could go await
+  constructor(public readonly definition: RecipeDefinition) {}
+
+  abstract getIngredients(): Ingredient[];
+
+  replaceIngredient(replace: Replacer<Ingredient>) {
+    return this.replace(replace, keep());
+  }
+
+  abstract getResults(): Result[];
+
+  replaceResult(replace: Replacer<Result>) {
+    return this.replace(keep(), replace);
+  }
+
+  abstract replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ): Recipe;
+
+  getTypes() {
+    return [this.definition.type];
+  }
+
+  abstract serialize(context: RecipeParseContext): Partial<RecipeDefinition>;
+}
+
+export type RecipeSerializer = {
+  deserialize(definition: RecipeDefinition): Recipe;
+  serialize(recipe: Recipe): RecipeDefinition;
+};
+
+export type RecipeParseContext = Pick<
+  PackContext,
+  "ingredients" | "results"
+> & {
+  recipes: RecipeSerializer;
+};
 
 export default abstract class RecipeParser<
   TDefinition extends RecipeDefinition,
   TRecipe extends Recipe,
 > {
-  abstract create(definition: TDefinition, parse: InlineRecipeParser): TRecipe;
+  abstract deserialize(
+    definition: TDefinition,
+    context: RecipeParseContext,
+  ): TRecipe;
 }

@@ -1,44 +1,55 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type RootComponentRecipeDefinition = RecipeDefinition &
   Readonly<{
     effect: string;
-    ingredients: Ingredient[];
+    ingredients: unknown[];
   }>;
 
-export class RootComponentRecipe extends Recipe<RootComponentRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return this.definition.ingredients;
+export class RootComponentRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: Ingredient[],
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
+  getIngredients() {
+    return this.ingredients;
+  }
+
+  getResults() {
     return [];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new RootComponentRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map(replace),
-    });
+  override replace(ingredientReplacer: Replacer<Ingredient>) {
+    return new RootComponentRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+    );
   }
 
-  replaceResult(): RootComponentRecipe {
-    return new RootComponentRecipe(this.definition);
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<RootComponentRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+    };
   }
 }
 
-export default class RootComponentRecipeParser extends RecipeParser<
+export class RootComponentRecipeParser extends RecipeParser<
   RootComponentRecipeDefinition,
   RootComponentRecipe
 > {
-  create(definition: RootComponentRecipeDefinition): RootComponentRecipe {
-    return new RootComponentRecipe(definition);
+  deserialize(
+    definition: RootComponentRecipeDefinition,
+    context: RecipeParseContext,
+  ): RootComponentRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    return new RootComponentRecipe(definition, ingredients);
   }
 }

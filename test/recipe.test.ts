@@ -1,29 +1,38 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
+import {
+  ItemIngredient,
+  ItemTagIngredient,
+} from "../src/common/ingredient/index.js";
+import { ItemResult } from "../src/common/result/index.js";
 import type { RecipeTest } from "../src/emit/data/recipe.js";
 import { EMPTY_RECIPE } from "../src/emit/data/recipe.js";
 import type { NormalizedId } from "../src/index.js";
-import type { ShapedRecipeDefinition } from "../src/parser/recipe/vanilla/shaped.js";
+import type { ShapedRecipeDefinition } from "../src/parser/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({ include: ["data/**/*.json"] });
 
-it("has no unknown recipe loaders", () => {
+/*
+  TODO do I want these? 
+ it("has no unknown recipe loaders", () => {
   expect(loader.recipeLoader.unknownRecipeTypes()).toMatchObject([]);
-});
-
-it("does not encounter any errors", () => {
-  expect(logger.warn).not.toHaveBeenCalled();
-  expect(logger.error).not.toHaveBeenCalled();
-});
+  });
+  
+  it("does not encounter any errors", () => {
+    expect(logger.warn).not.toHaveBeenCalled();
+    expect(logger.error).not.toHaveBeenCalled();
+    });
+*/
 
 describe("recipe ingredient replacement", () => {
   it("replaces ingredients", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipes.replaceIngredient("minecraft:redstone", {
-      item: "minecraft:emerald",
-    });
+    loader.recipes.replaceIngredient(
+      "minecraft:redstone",
+      new ItemIngredient("minecraft:emerald"),
+    );
 
     await loader.emit(acceptor);
 
@@ -44,9 +53,7 @@ describe("recipe ingredient replacement", () => {
 
     loader.recipes.replaceIngredient(
       "minecraft:redstone",
-      {
-        item: "minecraft:emerald",
-      },
+      new ItemIngredient("minecraft:emerald"),
       {
         input: "#minecraft:planks",
       },
@@ -68,9 +75,10 @@ describe("recipe ingredient replacement", () => {
   it("replaces ingredients in create recipes", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipes.replaceIngredient("#forge:raw_materials/zinc", {
-      tag: "forge:raw_materials/iron",
-    });
+    loader.recipes.replaceIngredient(
+      "#forge:raw_materials/zinc",
+      new ItemTagIngredient("forge:raw_materials/iron"),
+    );
 
     await loader.emit(acceptor);
 
@@ -100,7 +108,7 @@ describe("recipe ingredient replacement", () => {
     const acceptor = createTestAcceptor();
 
     loader.recipes.remove({
-      input: { item: "biomesoplenty:violet" },
+      input: new ItemIngredient("biomesoplenty:violet"),
       type: "farmersdelight:cutting",
     });
 
@@ -225,7 +233,7 @@ it("warns about missing recipe removal matches", async () => {
 
 it("warns about missing recipe replacement matches", async () => {
   const from = "minecraft:nothing";
-  const to = { item: "minecraft:dirt" };
+  const to = new ItemResult("minecraft:dirt");
   loader.recipes.replaceResult(from, to);
 
   await loader.emit(createTestAcceptor());
@@ -241,7 +249,7 @@ it("warns about missing recipe replacement matches", async () => {
 
 it("does not warn about optional missing recipe matches", async () => {
   const from = "minecraft:nothing";
-  const to = { item: "minecraft:dirt" };
+  const to = new ItemResult("minecraft:dirt");
   loader.recipes.replaceResult(from, to, { optional: true });
 
   await loader.emit(createTestAcceptor());

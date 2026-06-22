@@ -1,73 +1,92 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
+import type { BlockId } from "@adeficior/data-modifier/generated";
+import { encodeId } from "../../../common/id.js";
+import {
+  BlockIngredient,
+  type Ingredient,
+} from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import { IllegalShapeError } from "../../../error.js";
-
-type ExtractionBlockInput = string;
+import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+import RecipeParser, {
+  Recipe,
+  type RecipeParseContext,
+  type Replacer,
+} from "../index.js";
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &
   Readonly<{
-    leaves: ExtractionBlockInput;
-    trunk: ExtractionBlockInput;
-    result: ResultInput;
+    leaves: BlockId;
+    trunk: BlockId;
+    result: unknown;
   }>;
 
-function blockToIngredient(input: ExtractionBlockInput): Ingredient {
-  if (typeof input !== "string")
-    throw new IllegalShapeError("unknown block input shape", input);
-  return {
-    block: input,
-  };
-}
-
-function ingredientToBlock(input: IngredientInput): ExtractionBlockInput {
-  if (input && typeof input === "object") {
-    if ("block" in input) return input.block;
-  }
-  throw new IllegalShapeError("unknown block input shape", input);
-}
-
-export class TreeExtractionRecipe extends Recipe<TreeExtractionRecipeDefinition> {
-  private readonly trunk;
-  private readonly leaves;
-
-  constructor(definition: TreeExtractionRecipeDefinition) {
+export class TreeExtractionRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly trunk: Ingredient,
+    private readonly leaves: Ingredient,
+    private readonly result: Result,
+  ) {
     super(definition);
-    this.trunk = blockToIngredient(definition.trunk);
-    this.leaves = blockToIngredient(definition.leaves);
   }
 
-  getIngredients(): IngredientInput[] {
+  getIngredients() {
     return [this.trunk, this.leaves];
   }
 
-  getResults(): ResultInput[] {
-    return [];
+  getResults() {
+    return [this.result];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new TreeExtractionRecipe({
-      ...this.definition,
-      leaves: ingredientToBlock(replace(this.leaves)),
-      trunk: ingredientToBlock(replace(this.trunk)),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new TreeExtractionRecipe(
+      this.definition,
+      ingredientReplacer(this.trunk),
+      ingredientReplacer(this.leaves),
+      resultReplacer(this.result),
+    );
   }
 
-  replaceResult(): TreeExtractionRecipe {
-    return new TreeExtractionRecipe(this.definition);
+  private serializeBlockIngredient(ingredient: Ingredient) {
+    if (ingredient instanceof BlockIngredient) {
+      return encodeId(ingredient.id);
+    }
+
+    throw new IllegalShapeError(
+      "tree extraction recipes ingredients need to be blocks",
+      ingredient,
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<TreeExtractionRecipeDefinition> {
+    return {
+      result: context.results.serialize(this.result),
+      trunk: this.serializeBlockIngredient(this.trunk),
+      leaves: this.serializeBlockIngredient(this.leaves),
+    };
   }
 }
 
-export default class TreeExtractionRecipeParser extends RecipeParser<
+export class TreeExtractionRecipeParser extends RecipeParser<
   TreeExtractionRecipeDefinition,
   TreeExtractionRecipe
 > {
-  create(definition: TreeExtractionRecipeDefinition): TreeExtractionRecipe {
-    return new TreeExtractionRecipe(definition);
+  deserialize(
+    definition: TreeExtractionRecipeDefinition,
+    context: RecipeParseContext,
+  ): TreeExtractionRecipe {
+    const trunk = context.ingredients.create(
+      new BlockIngredient(definition.trunk),
+    );
+    const leaves = context.ingredients.create(
+      new BlockIngredient(definition.leaves),
+    );
+    const result = context.results.create(definition.result);
+    return new TreeExtractionRecipe(definition, trunk, leaves, result);
   }
 }

@@ -1,23 +1,19 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import { exists } from "@adeficior/pack-resolver";
-import type { Ingredient } from ".";
 import {
   BlockIngredient,
   BlockTagIngredient,
   FluidIngredient,
   FluidTagIngredient,
+  Ingredient,
   ItemIngredient,
   ItemTagIngredient,
+  ListIngredient,
 } from ".";
 import { tryCatching } from "../../error";
 import type { PackContext } from "../../loader/context";
 import type { TagRegistry } from "../../loader/tags";
-import {
-  encodeId,
-  type IdInput,
-  type NormalizedId,
-  type TagInput,
-} from "../id";
+import { createId, encodeId, type IdInput, type NormalizedId } from "../id";
 import {
   resolveCommonTest,
   type CommonTest,
@@ -38,7 +34,7 @@ export default function resolveIngredientTest(
   if (typeof test === "string") {
     if (test.startsWith("#")) {
       return resolveIngredientTest(
-        new ItemTagIngredient(test as TagInput),
+        new ItemTagIngredient(test.substring(1)),
         context,
       );
     }
@@ -52,6 +48,10 @@ export default function resolveIngredientTest(
 
   if (typeof test === "function") {
     return (it, logger) => test(context.ingredients.create(it), logger);
+  }
+
+  if (test instanceof Ingredient) {
+    test.validate(context.lookup);
   }
 
   if (test instanceof ItemTagIngredient) {
@@ -74,7 +74,7 @@ export default function resolveIngredientTest(
     return resolveIdTest(
       `#${encodeId(test.tag)}`,
       context.tags.registry("fluid"),
-      extractItemID,
+      extractFluidID,
     );
   }
 
@@ -82,7 +82,7 @@ export default function resolveIngredientTest(
     return resolveIdTest(
       encodeId(test.id),
       context.tags.registry("fluid"),
-      extractItemID,
+      extractFluidID,
     );
   }
 
@@ -90,22 +90,26 @@ export default function resolveIngredientTest(
     return resolveIdTest(
       `#${encodeId(test.tag)}`,
       context.tags.registry("block"),
-      extractItemID,
+      extractBlockID,
     );
   }
 
+  // TODO match method in ingredient itself?
   if (test instanceof BlockIngredient) {
     return resolveIdTest(
       encodeId(test.id),
       context.tags.registry("block"),
-      extractItemID,
+      extractBlockID,
     );
   }
+
+  // TODO add support for ListIngredient?
 
   // TODO warn or throw?
   return () => false;
 }
 
+// TODO is Predicate<Ingredient> fine?
 function resolveIdTest(
   test: NormalizedId | RegExp,
   tags: TagRegistry<RegistryId>,
@@ -113,7 +117,9 @@ function resolveIdTest(
 ): Predicate<IngredientInput> {
   function resolveIds(it: IngredientInput): IdInput[] {
     if (typeof it === "string") return [it];
-    if (Array.isArray(it)) {
+    if (it instanceof ListIngredient) {
+      return it.entries.flatMap(resolveIds);
+    } else if (Array.isArray(it)) {
       return it.flatMap(resolveIds);
     } else {
       return [idSupplier(it)].filter(exists);
@@ -123,6 +129,7 @@ function resolveIdTest(
   return resolveCommonTest<IngredientInput, NormalizedId>(
     test,
     (input, logger) =>
+      // TODO which exception has to be caught here?
       tryCatching(logger, () => {
         return resolveIds(input).map(encodeId);
       }) ?? [],
@@ -132,10 +139,36 @@ function resolveIdTest(
 
 function extractItemID(ingredient: Ingredient): IdInput | null {
   if (ingredient instanceof ItemTagIngredient) {
-    return ingredient.tag;
+    return { ...createId(ingredient.tag), isTag: true };
   }
 
   if (ingredient instanceof ItemIngredient) {
+    return ingredient.id;
+  }
+
+  return null;
+}
+
+// TODO functions on the ingredient itself?
+// TODO common super class maybe even?
+function extractBlockID(ingredient: Ingredient): IdInput | null {
+  if (ingredient instanceof BlockTagIngredient) {
+    return { ...createId(ingredient.tag), isTag: true };
+  }
+
+  if (ingredient instanceof BlockIngredient) {
+    return ingredient.id;
+  }
+
+  return null;
+}
+
+function extractFluidID(ingredient: Ingredient): IdInput | null {
+  if (ingredient instanceof FluidTagIngredient) {
+    return { ...createId(ingredient.tag), isTag: true };
+  }
+
+  if (ingredient instanceof FluidIngredient) {
     return ingredient.id;
   }
 

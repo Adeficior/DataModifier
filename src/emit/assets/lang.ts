@@ -4,7 +4,7 @@ import { arrayOrSelf } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
 import type { Id, IdInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
-import type { Predicate } from "../../common/ingredient.js";
+import type { Predicate } from "../../common/predicates.js";
 import Registry from "../../common/registry.js";
 import type { Replacer } from "../../parser/recipe/index.js";
 import type { LangDefinition } from "../../schema/assets/lang.js";

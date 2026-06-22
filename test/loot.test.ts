@@ -1,5 +1,10 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
+import {
+  ItemIngredient,
+  ItemTagIngredient,
+} from "../src/common/ingredient/index.js";
+import { ItemResult } from "../src/common/result/index.js";
 import { EMPTY_LOOT_TABLE } from "../src/emit/data/loot.js";
 import { LootEntrySchema, LootTableSchema } from "../src/schema/data/loot.js";
 import setupLoader from "./shared/loaderSetup.js";
@@ -42,12 +47,12 @@ describe("loot tables output replacements", () => {
 
     loader.loot.replaceOutput(
       "#forge:ingots/iron",
-      { tag: "forge:ingots/lead" },
+      new ItemTagIngredient("forge:ingots/lead"),
       { id: /minecraft:entities\/.+/ },
     );
     loader.loot.replaceOutput(
-      { item: "minecraft:rotten_flesh" },
-      { item: "minecraft:sand" },
+      new ItemIngredient("minecraft:rotten_flesh"),
+      new ItemIngredient("minecraft:sand"),
       { id: "minecraft:entities/husk" },
     );
 
@@ -74,9 +79,10 @@ describe("loot tables output replacements", () => {
   it("keeps extended loot entry properties", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.replaceOutput("farmersdelight:rice", {
-      item: "minecraft:apple",
-    });
+    loader.loot.replaceOutput(
+      "farmersdelight:rice",
+      new ItemResult("minecraft:apple"),
+    );
 
     await loader.emit(acceptor);
 

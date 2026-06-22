@@ -1,6 +1,12 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import type { Ingredient } from "../src/index.js";
+import type { Ingredient } from "../src/common/ingredient/index.js";
+import {
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+} from "../src/common/ingredient/index.js";
+import { encodeId } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 import { createDumpResolver } from "./shared/testData.js";
 
@@ -11,9 +17,12 @@ describe("blacklist tests", () => {
     const acceptor = createTestAcceptor();
 
     loader.blacklist.hide("minecraft:stone");
-    loader.blacklist.hide({ fluid: "water" });
-    loader.blacklist.hide({ block: "water" });
-    loader.blacklist.hide([{ item: "ice" }, { fluid: "forge:milk" }]);
+    loader.blacklist.hide(new FluidIngredient("water"));
+    loader.blacklist.hide(new BlockIngredient("water"));
+    loader.blacklist.hide([
+      new ItemIngredient("ice"),
+      new FluidIngredient("forge:milk"),
+    ]);
 
     await loader.emit(acceptor);
 
@@ -37,7 +46,9 @@ describe("blacklist tests", () => {
 
     loader.blacklist.hide(/minecraft:.*oak.*/);
     loader.blacklist.hide(
-      (it: Ingredient) => "item" in it && it.item.includes("granite"),
+      (it: Ingredient) =>
+        // TODO id should already be a string
+        it instanceof ItemIngredient && encodeId(it.id).includes("granite"),
     );
 
     await loader.emit(acceptor);

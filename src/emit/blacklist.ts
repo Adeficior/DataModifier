@@ -11,6 +11,7 @@ import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
+  ListIngredient,
 } from "../common/ingredient/index.js";
 import { IllegalShapeError } from "../error.js";
 import type { PackContext } from "../loader/context.js";
@@ -92,8 +93,8 @@ export default class BlacklistEmitter
 
     const ingredient = this.context.ingredients.create(input);
 
-    if (Array.isArray(ingredient)) {
-      return ingredient.flatMap((it) => this.resolveIds(it));
+    if (ingredient instanceof ListIngredient) {
+      return ingredient.entries.flatMap((it) => this.resolveIds(it));
     }
 
     // TODO common super class?
@@ -127,7 +128,7 @@ export default class BlacklistEmitter
   }
 
   private async emitPolytone(acceptor: Acceptor, hiddenIds: NormalizedId[]) {
-    const tabs = this.lookup().keys("minecraft:creative_mode_tab");
+    const tabs = this.context.lookup.keys("minecraft:creative_mode_tab");
 
     if (!tabs)
       throw new Error(

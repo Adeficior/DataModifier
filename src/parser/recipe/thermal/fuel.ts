@@ -1,44 +1,56 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type ThermalFuelRecipeDefinition = RecipeDefinition &
   Readonly<{
     energy: number;
-    ingredient: Ingredient;
+    ingredient: unknown;
   }>;
 
-export class ThermalFuelRecipe extends Recipe<ThermalFuelRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.ingredient];
+// TODO could be same as catalyst
+export class ThermalFuelRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
+  getIngredients() {
+    return [this.ingredient];
+  }
+
+  getResults() {
     return [];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ThermalFuelRecipe({
-      ...this.definition,
-      ingredient: replace(this.definition.ingredient),
-    });
+  override replace(ingredientReplacer: Replacer<Ingredient>): Recipe {
+    return new ThermalFuelRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+    );
   }
 
-  replaceResult(): ThermalFuelRecipe {
-    return new ThermalFuelRecipe(this.definition);
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ThermalFuelRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(this.ingredient),
+    };
   }
 }
 
-export default class ThermalFuelRecipeParser extends RecipeParser<
+export class ThermalFuelRecipeParser extends RecipeParser<
   ThermalFuelRecipeDefinition,
   ThermalFuelRecipe
 > {
-  create(definition: ThermalFuelRecipeDefinition): ThermalFuelRecipe {
-    return new ThermalFuelRecipe(definition);
+  deserialize(
+    definition: ThermalFuelRecipeDefinition,
+    context: RecipeParseContext,
+  ): ThermalFuelRecipe {
+    const ingredient = context.ingredients.create(definition.ingredient);
+    return new ThermalFuelRecipe(definition, ingredient);
   }
 }

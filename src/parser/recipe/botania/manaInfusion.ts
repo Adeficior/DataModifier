@@ -1,58 +1,74 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import { exists } from "@adeficior/pack-resolver";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { BlockInput } from "./orechid.js";
-import { createBlockInput, fromBlockInput } from "./orechid.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
+import { deserializeBlockInput, serializeBlockInput } from "./blocks.js";
 
 export type ManaInfusionRecipeDefinition = RecipeDefinition &
   Readonly<{
-    input: Ingredient;
-    output: Result;
-    catalyst?: BlockInput;
+    input: unknown;
+    output: unknown;
+    catalyst?: unknown;
     mana?: number;
   }>;
 
-export class ManaInfusionRecipe extends Recipe<ManaInfusionRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    if (!this.definition.catalyst) return [this.definition.input];
-    return [fromBlockInput(this.definition.catalyst), this.definition.input];
+export class ManaInfusionRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+    private readonly result: Result,
+    private readonly catalyst?: Ingredient,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.output];
+  getIngredients() {
+    return [this.ingredient, this.catalyst].filter(exists);
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ManaInfusionRecipe({
-      ...this.definition,
-      input: replace(this.definition.input),
-      catalyst:
-        (this.definition.catalyst &&
-          createBlockInput(
-            replace(fromBlockInput(this.definition.catalyst)),
-          )) ??
-        this.definition.catalyst,
-    });
+  getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ManaInfusionRecipe({
-      ...this.definition,
-      output: replace(this.definition.output),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new ManaInfusionRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+      resultReplacer(this.result),
+      this.catalyst && ingredientReplacer(this.catalyst),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ManaInfusionRecipeDefinition> {
+    return {
+      input: context.ingredients.serialize(this.ingredient),
+      output: context.results.serialize(this.result),
+      catalyst: this.catalyst && serializeBlockInput(this.catalyst),
+    };
   }
 }
 
-export default class ManaInfusionRecipeParser extends RecipeParser<
+export class ManaInfusionRecipeParser extends RecipeParser<
   ManaInfusionRecipeDefinition,
   ManaInfusionRecipe
 > {
-  create(definition: ManaInfusionRecipeDefinition): ManaInfusionRecipe {
-    return new ManaInfusionRecipe(definition);
+  deserialize(
+    definition: ManaInfusionRecipeDefinition,
+    context: RecipeParseContext,
+  ): ManaInfusionRecipe {
+    const catalyst =
+      definition.catalyst === undefined
+        ? undefined
+        : deserializeBlockInput(context.ingredients, definition.catalyst);
+    const ingredient = context.ingredients.create(definition.input);
+    const result = context.results.create(definition.output);
+    return new ManaInfusionRecipe(definition, ingredient, result, catalyst);
   }
 }

@@ -1,5 +1,6 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
+import { ItemResult } from "../src/common/result/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const { logger, loader } = setupLoader({
@@ -11,12 +12,14 @@ describe("tests regarding error logging", () => {
   it("warns about incorrect result shape only once", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipes.replaceResult("minecraft:stone", {
-      item: "minecraft:deepslate",
-    });
-    loader.recipes.replaceResult("minecraft:stone", {
-      item: "minecraft:obsidian",
-    });
+    loader.recipes.replaceResult(
+      "minecraft:stone",
+      new ItemResult("minecraft:deepslate"),
+    );
+    loader.recipes.replaceResult(
+      "minecraft:stone",
+      new ItemResult("minecraft:obsidian"),
+    );
 
     await loader.emit(acceptor);
 

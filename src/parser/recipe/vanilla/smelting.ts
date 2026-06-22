@@ -1,48 +1,64 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type SmeltingRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredient: Ingredient;
-    result: Result;
+    ingredient: unknown;
+    result: unknown;
     experience?: number;
   }>;
 
-export class SmeltingRecipe extends Recipe<SmeltingRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.ingredient];
+export class SmeltingRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredient: Ingredient,
+    private readonly result: Result,
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.result];
+  getIngredients() {
+    return [this.ingredient];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new SmeltingRecipe({
-      ...this.definition,
-      ingredient: replace(this.definition.ingredient),
-    });
+  getResults() {
+    return [this.result];
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new SmeltingRecipe({
-      ...this.definition,
-      result: replace(this.definition.result),
-    });
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new SmeltingRecipe(
+      this.definition,
+      ingredientReplacer(this.ingredient),
+      resultReplacer(this.result),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<SmeltingRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(this.ingredient),
+      result: context.results.serialize(this.result),
+    };
   }
 }
 
-export default class SmeltingParser extends RecipeParser<
+export class SmeltingParser extends RecipeParser<
   SmeltingRecipeDefinition,
   SmeltingRecipe
 > {
-  create(definition: SmeltingRecipeDefinition): SmeltingRecipe {
-    return new SmeltingRecipe(definition);
+  deserialize(
+    definition: SmeltingRecipeDefinition,
+    context: RecipeParseContext,
+  ): SmeltingRecipe {
+    const ingredient = context.ingredients.create(definition.ingredient);
+    const result = context.results.create(definition.result);
+    return new SmeltingRecipe(definition, ingredient, result);
   }
 }

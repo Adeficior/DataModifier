@@ -1,63 +1,90 @@
-import { arrayOrSelf, exists } from "@adeficior/pack-resolver";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { Writeable } from "zod";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
+import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Replacer } from "../index.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
-import type { ThermalIngredientInput } from "./ingredient.js";
-import { fromThermalIngredient, toThermalIngredient } from "./ingredient.js";
 
 export type ThermalRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredient?: ThermalIngredientInput;
-    ingredients?: ThermalIngredientInput[];
-    result: Result[] | Result;
+    ingredient?: unknown;
+    ingredients?: unknown[];
+    result: unknown;
     energy?: number;
     experience?: number;
   }>;
 
-export class ThermalRecipe extends Recipe<ThermalRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.ingredient, ...(this.definition.ingredients ?? [])]
-      .filter(exists)
-      .map(fromThermalIngredient);
+export class ThermalRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: Ingredient[],
+    private readonly results: Result[],
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
-    return arrayOrSelf(this.definition.result);
+  getIngredients() {
+    return this.ingredients;
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new ThermalRecipe({
-      ...this.definition,
-      ingredient:
-        this.definition.ingredient &&
-        toThermalIngredient(
-          replace(fromThermalIngredient(this.definition.ingredient)),
-        ),
-      ingredients: this.definition.ingredients
-        ?.map(fromThermalIngredient)
-        ?.map(replace)
-        ?.map(toThermalIngredient),
-    });
+  getResults() {
+    return this.results;
   }
 
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new ThermalRecipe({
-      ...this.definition,
-      result: arrayOrSelf(this.definition.result).map(replace),
-    });
+  replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ): Recipe {
+    return new ThermalRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+      this.results.map(resultReplacer),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ThermalRecipeDefinition> {
+    const serialized: Writeable<Partial<ThermalRecipeDefinition>> = {
+      result: context.results.serializeList(this.results),
+    };
+
+    if (this.ingredients.length === 1) {
+      serialized.ingredient = context.ingredients.serialize(
+        this.ingredients[0]!,
+      );
+    } else {
+      serialized.ingredients = context.ingredients.serializeList(
+        this.ingredients,
+      );
+    }
+
+    return serialized;
   }
 }
 
-export default class ThermalRecipeParser extends RecipeParser<
+export class ThermalRecipeParser extends RecipeParser<
   ThermalRecipeDefinition,
   ThermalRecipe
 > {
-  create(definition: ThermalRecipeDefinition): ThermalRecipe {
-    return new ThermalRecipe(definition);
+  deserialize(
+    definition: ThermalRecipeDefinition,
+    context: RecipeParseContext,
+  ): ThermalRecipe {
+    // TODO map from and to thermals shape
+
+    const ingredients = definition.ingredient
+      ? [context.ingredients.create(definition.ingredient)]
+      : context.ingredients.createList(definition.ingredients ?? []);
+
+    if (ingredients.length === 0)
+      throw new IllegalShapeError("ingredients missing or empty", definition);
+
+    const results = Array.isArray(definition.result)
+      ? context.results.createList(definition.result)
+      : [context.results.create(definition.result)];
+
+    return new ThermalRecipe(definition, ingredients, results);
   }
 }

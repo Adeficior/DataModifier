@@ -1,48 +1,59 @@
 import { exists } from "@adeficior/pack-resolver";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
-import type { Result, ResultInput } from "../../../common/result.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
+import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { Replacer } from "../index.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type CookingRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: Ingredient[];
-    container?: Ingredient;
-    result: Result;
+    ingredients: unknown[];
+    container?: unknown;
+    result: unknown;
     cookingTime?: number;
     experience?: number;
     recipe_book_tab?: string;
   }>;
 
-export class CookingRecipe extends Recipe<CookingRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return [this.definition.container, ...this.definition.ingredients].filter(
-      exists,
+export class CookingRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: Ingredient[],
+    private readonly result: Result,
+    private readonly container?: Ingredient,
+  ) {
+    super(definition);
+  }
+
+  getIngredients() {
+    return [this.container, ...this.ingredients].filter(exists);
+  }
+
+  getResults() {
+    return [this.result];
+  }
+
+  override replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ) {
+    return new CookingRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+      resultReplacer(this.result),
+      this.container && ingredientReplacer(this.container),
     );
   }
 
-  getResults(): ResultInput[] {
-    return [this.definition.result];
-  }
-
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new CookingRecipe({
-      ...this.definition,
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<CookingRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+      result: context.results.serialize(this.result),
       container:
-        this.definition.container && replace(this.definition.container),
-      ingredients: this.definition.ingredients.map(replace),
-    });
-  }
-
-  replaceResult(replace: Replacer<Result>): Recipe {
-    return new CookingRecipe({
-      ...this.definition,
-      result: replace(this.definition.result),
-    });
+        this.container && context.ingredients.serialize(this.container),
+    };
   }
 }
 
@@ -50,7 +61,17 @@ export default class CookingRecipeParser extends RecipeParser<
   CookingRecipeDefinition,
   CookingRecipe
 > {
-  create(definition: CookingRecipeDefinition): CookingRecipe {
-    return new CookingRecipe(definition);
+  deserialize(
+    definition: CookingRecipeDefinition,
+    context: RecipeParseContext,
+  ): CookingRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    const result = context.results.create(definition.result);
+    // TODO optional serialize & deserialize?
+    const container =
+      definition.container === undefined
+        ? undefined
+        : context.ingredients.create(definition.container);
+    return new CookingRecipe(definition, ingredients, result, container);
   }
 }

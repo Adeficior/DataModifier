@@ -1,44 +1,55 @@
-import type { Replacer } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type {
-  Ingredient,
-  IngredientInput,
-} from "../../../common/ingredient.js";
+import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultInput } from "../../../common/result.js";
+import type { RecipeParseContext, Replacer } from "../index.js";
+import RecipeParser, { Recipe } from "../index.js";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
-    ingredients: Ingredient[];
+    ingredients: unknown[];
     brew: string;
   }>;
 
-export class BrewRecipe extends Recipe<BrewRecipeDefinition> {
-  getIngredients(): IngredientInput[] {
-    return this.definition.ingredients;
+export class BrewRecipe extends Recipe {
+  constructor(
+    definition: RecipeDefinition,
+    private readonly ingredients: Ingredient[],
+  ) {
+    super(definition);
   }
 
-  getResults(): ResultInput[] {
+  getIngredients() {
+    return this.ingredients;
+  }
+
+  getResults() {
     return [];
   }
 
-  replaceIngredient(replace: Replacer<Ingredient>): Recipe {
-    return new BrewRecipe({
-      ...this.definition,
-      ingredients: this.definition.ingredients.map(replace),
-    });
+  override replace(ingredientReplacer: Replacer<Ingredient>) {
+    return new BrewRecipe(
+      this.definition,
+      this.ingredients.map(ingredientReplacer),
+    );
   }
 
-  replaceResult(): BrewRecipe {
-    return new BrewRecipe(this.definition);
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<BrewRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+    };
   }
 }
 
-export default class BrewRecipeParser extends RecipeParser<
+export class BrewRecipeParser extends RecipeParser<
   BrewRecipeDefinition,
   BrewRecipe
 > {
-  create(definition: BrewRecipeDefinition): BrewRecipe {
-    return new BrewRecipe(definition);
+  deserialize(
+    definition: BrewRecipeDefinition,
+    context: RecipeParseContext,
+  ): BrewRecipe {
+    const ingredients = context.ingredients.createList(definition.ingredients);
+    return new BrewRecipe(definition, ingredients);
   }
 }
