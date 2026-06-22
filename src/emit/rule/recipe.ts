@@ -1,8 +1,8 @@
+import type { Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import type { Id } from "../../common/id.js";
 import { createId } from "../../common/id.js";
 import type { IngredientInput, Predicate } from "../../common/ingredient.js";
-import type { Logger } from "../../logger.js";
 import type { Recipe } from "../../parser/recipe/index.js";
 import type { Modifier } from "./index.js";
 import Rule from "./index.js";

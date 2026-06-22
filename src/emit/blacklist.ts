@@ -1,5 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import { arrayOrSelf } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
@@ -12,7 +12,6 @@ import {
 import { IllegalShapeError } from "../error.js";
 import type RegistryLookup from "../loader/registry/index.js";
 import type { TagRegistryHolder } from "../loader/tags.js";
-import type { Logger } from "../logger.js";
 import { toJson } from "../textHelper.js";
 import type { ClearableEmitter } from "./index.js";
 

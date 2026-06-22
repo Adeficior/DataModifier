@@ -1,5 +1,5 @@
+import type { Logger } from "@adeficior/pack-resolver";
 import type { Id } from "../../common/id.js";
-import type { Logger } from "../../logger.js";
 
 export type Modifier<T> = (recipe: T) => T | null;
 

@@ -1,12 +1,11 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { IResolver } from "@adeficior/pack-resolver";
+import type { IResolver, Logger } from "@adeficior/pack-resolver";
 import zod from "zod";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
 import type { Ingredient } from "../../common/ingredient.js";
 import Registry from "../../common/registry.js";
 import { tryCatching, UnknownRegistryEntry } from "../../error.js";
-import type { Logger } from "../../logger.js";
 import type { AcceptorWithLoader } from "../index.js";
 import { tryParseJson } from "../index.js";
 import type RegistryLookup from "./index.js";

@@ -1,5 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import type { Id, NormalizedId, TagInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
 import type { CommonTest } from "../../common/ingredient.js";
@@ -8,7 +8,6 @@ import Registry from "../../common/registry.js";
 import type TagsLoader from "../../loader/tags.js";
 import type { TagRegistry } from "../../loader/tags.js";
 import { entryId, orderTagEntries } from "../../loader/tags.js";
-import type { Logger } from "../../logger.js";
 import type { TagDefinition, TagEntry } from "../../schema/data/tag.js";
 import { tagFolderOf } from "../../schema/data/tag.js";
 import { toJson } from "../../textHelper.js";

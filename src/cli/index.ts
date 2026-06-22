@@ -1,7 +1,6 @@
-import { createResolver } from "@adeficior/pack-resolver";
+import { createLogger, createResolver } from "@adeficior/pack-resolver";
 import { existsSync } from "fs";
 import RegistryDumpLoader from "../loader/registry/dump.js";
-import createLogger from "../logger.js";
 import {
   generateRegistryTypes,
   generateStubTypes,

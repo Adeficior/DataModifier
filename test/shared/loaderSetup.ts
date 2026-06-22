@@ -1,9 +1,9 @@
+import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import type { Options } from "@pssbletrngle/pack-resolver";
 import { afterEach, beforeAll } from "bun:test";
 import { PackLoader } from "../../src/index.js";
 import type { PackLoaderOptions } from "../../src/loader/pack.js";
 import { createTestDataResolver } from "./testData.js";
-import createTestLogger from "./testLogger.js";
 
 export default function setupLoader(
   {

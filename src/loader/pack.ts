@@ -2,6 +2,7 @@ import type { RegistryId } from "@adeficior/data-modifier/generated";
 import type {
   Acceptor,
   IResolver,
+  Logger,
   ResolverInfo,
 } from "@adeficior/pack-resolver";
 import match from "minimatch";
@@ -30,7 +31,6 @@ import TagEmitter from "../emit/data/tags.js";
 import type { ClearableEmitter } from "../emit/index.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
-import type { Logger } from "../logger.js";
 import type Loader from "./index.js";
 import type { AcceptorWithLoader } from "./index.js";
 import LangLoader from "./lang.js";

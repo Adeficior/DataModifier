@@ -1,8 +1,8 @@
+import type { Logger } from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
-import { JsonLoader } from "./index.js";
-import type { Logger } from "../logger.js";
 import type { LangDefinition } from "../schema/assets/lang.js";
 import { LangSchema } from "../schema/assets/lang.js";
+import { JsonLoader } from "./index.js";
 
 export default class LangLoader extends JsonLoader<LangDefinition> {
   protected parse(_: Logger, json: unknown, id: Id): LangDefinition | null {

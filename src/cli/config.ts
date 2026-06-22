@@ -1,5 +1,5 @@
+import type { Logger } from "@adeficior/pack-resolver";
 import parseArgs from "arg";
-import type { Logger } from "../logger.js";
 import commandLineUsage from "command-line-usage";
 
 export type CliAction = "help" | "codegen";

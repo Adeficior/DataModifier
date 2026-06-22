@@ -1,9 +1,8 @@
-import type { Acceptor, IResolver } from "@adeficior/pack-resolver";
+import type { Acceptor, IResolver, Logger } from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
 import Registry from "../common/registry.js";
 import type { RegistryProvider } from "../emit/index.js";
 import { tryCatching } from "../error.js";
-import type { Logger } from "../logger.js";
 import { fromJson } from "../textHelper.js";
 
 export type AcceptorWithLoader = (

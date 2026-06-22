@@ -1,6 +1,6 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Logger } from "@adeficior/pack-resolver";
 import { ZodError } from "zod";
-import type { Logger } from "./logger.js";
 
 export class IllegalShapeError extends Error {
   constructor(

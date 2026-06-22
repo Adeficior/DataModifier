@@ -1,5 +1,5 @@
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
@@ -19,7 +19,6 @@ import type { Result, ResultInput } from "../../common/result.js";
 import { createResult } from "../../common/result.js";
 import type RegistryLookup from "../../loader/registry/index.js";
 import type { TagRegistryHolder } from "../../loader/tags.js";
-import type { Logger } from "../../logger.js";
 import type { Replacer } from "../../parser/recipe/index.js";
 import { createReplacer, Recipe } from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";

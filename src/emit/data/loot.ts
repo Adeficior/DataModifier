@@ -1,4 +1,4 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId, prefix } from "../../common/id.js";
 import type {
@@ -11,7 +11,6 @@ import { resolveIngredientTest } from "../../common/ingredient.js";
 import { resolveIDTest } from "../../common/predicates.js";
 import type RegistryLookup from "../../loader/registry/index.js";
 import type { TagRegistryHolder } from "../../loader/tags.js";
-import type { Logger } from "../../logger.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
 import { createLootEntry, replaceItemInTable } from "../../parser/lootTable.js";
 import type { LootModifier, LootTable } from "../../schema/data/loot.js";

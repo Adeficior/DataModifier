@@ -1,6 +1,5 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
-import type { Logger } from "../logger.js";
 import { toJson } from "../textHelper.js";
 import type { PathProvider, RegistryProvider } from "./index.js";
 import type Rule from "./rule/index.js";

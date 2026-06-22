@@ -1,6 +1,6 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Logger } from "@adeficior/pack-resolver";
 import type { TagRegistry } from "../loader/tags.js";
-import type { Logger } from "../logger.js";
 import type { IdInput, NormalizedId, TagInput } from "./id.js";
 import { encodeId } from "./id.js";
 import type { CommonTest, Predicate } from "./ingredient.js";

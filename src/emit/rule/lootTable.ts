@@ -1,7 +1,7 @@
+import type { Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import type { Id } from "../../common/id.js";
 import type { IngredientInput, Predicate } from "../../common/ingredient.js";
-import type { Logger } from "../../logger.js";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
 import { extendLootEntry } from "../../schema/data/loot.js";
 import type { Modifier } from "./index.js";

@@ -1,10 +1,10 @@
 import type { ItemId, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
 import zod from "zod";
 import { IllegalShapeError, tryCatching } from "../error.js";
 import type RegistryLookup from "../loader/registry/index.js";
 import type { TagRegistry, TagRegistryHolder } from "../loader/tags.js";
-import type { Logger } from "../logger.js";
 import type { Id, NormalizedId } from "./id.js";
 import { createId, encodeId, IdSchema } from "./id.js";
 import { resolveCommonTest } from "./predicates.js";
