@@ -19,7 +19,6 @@
         "zod": "^3.25.76",
       },
       "devDependencies": {
-        "@adeficior/data-modifier/generated": "workspace:*",
         "@eslint/js": "^10.0.1",
         "@types/bun": "latest",
         "@types/command-line-usage": "^5.0.4",
@@ -31,13 +30,8 @@
         "typescript-eslint": "^8.61.0",
       },
     },
-    "types": {
-      "name": "@adeficior/data-modifier/generated",
-    },
   },
   "packages": {
-    "@adeficior/data-modifier/generated": ["@adeficior/data-modifier/generated@workspace:types"],
-
     "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0-rc.17", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0" } }, "sha512-1RlxSJ56fDUo0YVUkz/93/XZkb0YF5lMuDu/IU+0zuUfsHzTcv6L+3+O0zFdlZ/NN8OIoOJeDJ3Ngn1vTmL9EQ=="],
 
     "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.0-rc.3", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0-rc.20", "arg": "^5.0.2", "command-line-usage": "^6.1.3", "minimatch": "^5.1.9", "node-stream-zip": "^1.15.0", "zip-a-folder": "^1.1.5" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-dgEXEcZWesk9R/QTNVW++GbD3vZ2KGCnnKEs2bhB0vrUSl4f5hlHWsIkDnmIsrCxxwrtn5mt3c/DEqk6rfrZTw=="],
