@@ -4,18 +4,21 @@
 //    <timestamp>2026-06-21T20:01:51.400Z</timestamp>
 //    <hash>29e5f62cade606c5</hash>
 // </meta>
-
 {
   "compilerOptions": {
     "composite": true,
     // Environment setup & latest features
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
-    "types": ["bun"],
+    "types": [
+      "bun"
+    ],
     // Bundler mode
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
@@ -33,5 +36,8 @@
     "sourceMap": true,
     "rootDir": "."
   },
-  "include": ["test"]
+  "include": [
+    "src",
+    "test"
+  ]
 }

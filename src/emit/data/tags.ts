@@ -124,11 +124,19 @@ export interface TagEmitterOptions {
 export default class TagEmitter implements TagRules, ClearableEmitter {
   private readonly emitters = new Map<string, ScopedEmitter<RegistryId>>();
 
+  readonly blocks: ScopedTagRules<"minecraft:block">;
+  readonly items: ScopedTagRules<"minecraft:item">;
+  readonly fluids: ScopedTagRules<"minecraft:fluid">;
+
   constructor(
     private readonly logger: Logger,
     private readonly registry: TagsLoader,
     private readonly options: TagEmitterOptions,
-  ) {}
+  ) {
+    this.blocks = this.scoped("minecraft:block", "blocks");
+    this.items = this.scoped("minecraft:item", "items");
+    this.fluids = this.scoped("minecraft:fluid", "fluids");
+  }
 
   clear() {
     this.emitters.forEach((it) => it.clear());
@@ -185,8 +193,4 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
       return emitter as ScopedTagRules<T>;
     }
   }
-
-  blocks = this.scoped("minecraft:block", "blocks");
-  items = this.scoped("minecraft:item", "items");
-  fluids = this.scoped("minecraft:fluid", "fluids");
 }

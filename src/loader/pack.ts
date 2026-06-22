@@ -47,78 +47,92 @@ export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
 }
 
 export default class PackLoader implements Loader, ClearableEmitter {
-  private readonly logger!: Logger;
-  private readonly options!: PackLoaderOptions;
-
-  constructor(logger: Logger, options: PackLoaderOptions) {
-    this.logger = logger;
-    this.options = options;
-  }
+  private activeRegistryLookup: RegistryLookup = new EmptyRegistryLookup();
 
   private readonly emitters: ClearableEmitter[] = [];
 
-  registerEmitter<T extends ClearableEmitter>(emitter: T): T {
-    this.emitters.push(emitter);
-    return emitter;
-  }
-
-  private activeRegistryLookup: RegistryLookup = new EmptyRegistryLookup();
+  readonly tags: TagRules;
+  readonly recipes: RecipeRules;
+  readonly loot: LootRules;
+  readonly lang: LangRules;
+  readonly tabs: PolytoneTabs;
+  readonly blacklist: BlacklistRules;
+  private readonly itemDefinition: ItemDefinitionRules;
+  private readonly blockDefinition: BlockDefinitionRules;
 
   private readonly tagLoader = new TagsLoader(() => this.activeRegistryLookup);
   private readonly recipesLoader = new RecipeLoader();
   private readonly lootLoader = new LootTableLoader();
   private readonly langLoader = new LangLoader();
-
-  readonly tags: TagRules = this.registerEmitter(
-    new TagEmitter(this.logger, this.tagLoader, this.options),
-  );
-  readonly recipes: RecipeRules = this.registerEmitter(
-    new RecipeEmitter(
-      this.logger,
-      this.recipesLoader,
-      this.tagLoader,
-      () => this.activeRegistryLookup,
-      this.options.packFormat,
-    ),
-  );
-  readonly loot: LootRules = this.registerEmitter(
-    new LootTableEmitter(
-      this.logger,
-      this.lootLoader,
-      this.tagLoader,
-      () => this.activeRegistryLookup,
-      this.options.packFormat,
-    ),
-  );
-  readonly lang: LangRules = this.registerEmitter(
-    new LangEmitter(this.langLoader),
-  );
-  readonly tabs: PolytoneTabs = this.registerEmitter(
-    new PolytoneTabsEmitter(() => this.activeRegistryLookup),
-  );
-  readonly blacklist: BlacklistRules = this.registerEmitter(
-    new BlacklistEmitter(
-      this.logger,
-      this.tagLoader,
-      () => this.activeRegistryLookup,
-      this.options,
-    ),
-  );
-
   readonly blockstates: BlockstateRules = this.registerEmitter(
     new BlockstateEmitter(),
   );
+
   readonly models: ModelRulesGroup = {
     blocks: this.registerEmitter(new ModelEmitter("block")),
     items: this.registerEmitter(new ModelEmitter("item")),
   };
 
-  private readonly itemDefinition: ItemDefinitionRules = this.registerEmitter(
-    new ItemDefinitionEmitter(this.models, this.blockstates, this.loot),
-  );
-  private readonly blockDefinition: BlockDefinitionRules = this.registerEmitter(
-    new BlockDefinitionEmitter(this.models.blocks, this.blockstates, this.loot),
-  );
+  constructor(
+    readonly logger: Logger,
+    options: PackLoaderOptions,
+  ) {
+    this.tags = this.registerEmitter(
+      new TagEmitter(logger, this.tagLoader, options),
+    );
+
+    this.recipes = this.registerEmitter(
+      new RecipeEmitter(
+        logger,
+        this.recipesLoader,
+        this.tagLoader,
+        () => this.activeRegistryLookup,
+        options.packFormat,
+      ),
+    );
+
+    this.loot = this.registerEmitter(
+      new LootTableEmitter(
+        logger,
+        this.lootLoader,
+        this.tagLoader,
+        () => this.activeRegistryLookup,
+        options.packFormat,
+      ),
+    );
+
+    this.lang = this.registerEmitter(new LangEmitter(this.langLoader));
+
+    this.tabs = this.registerEmitter(
+      new PolytoneTabsEmitter(() => this.activeRegistryLookup),
+    );
+
+    this.blacklist = this.registerEmitter(
+      new BlacklistEmitter(
+        logger,
+        this.tagLoader,
+        () => this.activeRegistryLookup,
+        options,
+      ),
+    );
+
+    this.itemDefinition = this.registerEmitter(
+      new ItemDefinitionEmitter(this.models, this.blockstates, this.loot),
+    );
+
+    this.blockDefinition = this.registerEmitter(
+      new BlockDefinitionEmitter(
+        this.models.blocks,
+        this.blockstates,
+        this.loot,
+      ),
+    );
+  }
+
+  registerEmitter<T extends ClearableEmitter>(emitter: T): T {
+    this.emitters.push(emitter);
+    return emitter;
+  }
 
   registerRegistry(key: string) {
     this.tagLoader.registerRegistry(key);

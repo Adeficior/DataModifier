@@ -83,3 +83,87 @@ exports[`creates addition entries > uses custom file name > removal modifier wit
 }
 "
 `;
+
+exports[`creates addition entries emits per tab key: addition modifier 2 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
+}
+"
+`;
+
+exports[`creates addition entries emits per tab key: addition modifier 1 1`] = `
+"{
+  "targets": ["example:food"],
+  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
+}
+"
+`;
+
+exports[`creates addition entries adds after predicate: addition modifier with after predicate 1`] = `
+"{
+  "targets": ["example:tab"],
+  "additions": [
+    {
+      "items": ["minecraft:oak_log"],
+      "before": false,
+      "predicate": { "items": ["minecraft:stone_axe"], "type": "items_match" }
+    }
+  ]
+}
+"
+`;
+
+exports[`creates addition entries adds before predicate: addition modifier with after predicate 1`] = `
+"{
+  "targets": ["example:tab"],
+  "additions": [
+    {
+      "items": ["minecraft:oak_planks"],
+      "before": true,
+      "predicate": { "items": ["minecraft:stone_hoe"], "type": "items_match" }
+    }
+  ]
+}
+"
+`;
+
+exports[`creates addition entries uses custom file name: removal modifier with custom file name 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "additions": [{ "items": ["minecraft:diamond"] }]
+}
+"
+`;
+
+exports[`create removal entries resolves filter correctly: removal modifier 2 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "removals": [
+    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
+  ]
+}
+"
+`;
+
+exports[`create removal entries resolves filter correctly: removal modifier 1 1`] = `
+"{
+  "targets": ["example:food"],
+  "removals": [
+    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
+  ]
+}
+"
+`;
+
+exports[`create removal entries uses custom file name: removal modifier with custom file name 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "removals": [{ "type": "items_match", "items": ["minecraft:diamond"] }]
+}
+"
+`;
+
+exports[`create new tabs emits and mergers csv: tab csv 1 for something 1`] = `"test_tab,another_tab"`;
+
+exports[`create new tabs emits and mergers csv: tab csv for minecraft 1`] = `"more_blocks"`;

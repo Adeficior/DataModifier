@@ -572,3 +572,37 @@ exports[`loot tables output replacements > replaces outputs with additional test
   "type": "minecraft:entity",
 }
 `;
+
+exports[`loot tables output replacements removes outputs: modified deepslate_iron_ore loot table 1`] = `null`;
+
+exports[`loot tables output replacements removes outputs: modified iron_ore loot table 1`] = `null`;
+
+exports[`loot tables output replacements keeps extended loot entry properties: modified wild rice loot table 1`] = `null`;
+
+exports[`loot table removal removes loot table with output filter: loot tables containing any log 1`] = `[]`;
+
+exports[`creates custom loot tables: parsed loot table 1`] = `
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "children": [
+            {
+              "name": "minecraft:diamond",
+              "type": "minecraft:item",
+            },
+          ],
+          "type": "minecraft:alternatives",
+        },
+        {
+          "name": "minecraft:logs",
+          "type": "minecraft:tag",
+        },
+      ],
+      "rolls": 4,
+    },
+  ],
+  "type": "minecraft:block",
+}
+`;
