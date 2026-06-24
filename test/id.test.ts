@@ -1,7 +1,7 @@
 import { expect, it } from "bun:test";
+import { resolveIDTest } from "../src/common/filters.js";
 import type { Id, NormalizedId } from "../src/common/id.js";
 import { createId, encodeId } from "../src/common/id.js";
-import { resolveIDTest } from "../src/common/predicates.js";
 import Registry from "../src/common/registry.js";
 
 it("parses id from string", () => {

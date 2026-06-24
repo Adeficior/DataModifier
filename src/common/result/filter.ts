@@ -1,31 +1,33 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import { exists } from "@adeficior/pack-resolver";
 import type { Result } from ".";
 import { BlockResult, FluidResult, ItemResult } from ".";
 import { tryCatching } from "../../error";
 import type { PackContext } from "../../loader/context";
 import type { TagRegistry } from "../../loader/tags";
-import { encodeId, type IdInput, type NormalizedId } from "../id";
 import {
-  resolveCommonTest,
-  type CommonTest,
+  createCommonFilter,
+  type CommonFilter,
   type Predicate,
-} from "../predicates";
+} from "../filters";
+import { encodeId, type NormalizedId } from "../id";
 import type { ResultInput } from "./input";
 
-export type ResultTest = CommonTest<Result> | ResultInput;
+export type ResultFilter = CommonFilter<Result> | ResultInput;
 
-export default function resolveResultTest(
-  test: ResultTest,
-  // TODO pass context?
+export default function createResultFilter(
+  test: ResultFilter,
   context: Omit<PackContext, "ingredients">,
 ): Predicate<ResultInput> {
   if (typeof test === "string") {
-    return resolveResultTest(new ItemResult(test), context);
+    return createResultFilter(new ItemResult(test), context);
   }
 
   if (test instanceof RegExp) {
-    return resolveIdTest(test, context.tags.registry("item"), extractItemID);
+    return filterByResultId(
+      test,
+      context.tags.registry("minecraft:item"),
+      (it) => it.idsFor("minecraft:item"),
+    );
   }
 
   if (typeof test === "function") {
@@ -33,27 +35,27 @@ export default function resolveResultTest(
   }
 
   if (test instanceof ItemResult) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("item"),
-      extractItemID,
+    return filterByResultId(
+      test.id,
+      context.tags.registry("minecraft:item"),
+      (it) => it.idsFor("minecraft:item"),
     );
   }
 
   if (test instanceof FluidResult) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("fluid"),
-      extractFluidID,
+    return filterByResultId(
+      test.id,
+      context.tags.registry("minecraft:fluid"),
+      (it) => it.idsFor("minecraft:fluid"),
     );
   }
 
   // TODO match method in ingredient itself?
   if (test instanceof BlockResult) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("block"),
-      extractBlockID,
+    return filterByResultId(
+      test.id,
+      context.tags.registry("minecraft:block"),
+      (it) => it.idsFor("minecraft:block"),
     );
   }
 
@@ -61,53 +63,27 @@ export default function resolveResultTest(
   return () => false;
 }
 
-function resolveIdTest(
+function filterByResultId(
   test: NormalizedId | RegExp,
   tags: TagRegistry<RegistryId>,
-  idSupplier: (it: Result) => IdInput | null,
+  idSupplier: (it: Result) => NormalizedId[],
 ): Predicate<ResultInput> {
-  function resolveIds(it: ResultInput): IdInput[] {
-    if (typeof it === "string") return [it];
+  function resolveIds(it: ResultInput): NormalizedId[] {
+    if (typeof it === "string") return [encodeId(it)];
     if (Array.isArray(it)) {
       return it.flatMap(resolveIds);
     } else {
-      return [idSupplier(it)].filter(exists);
+      return idSupplier(it);
     }
   }
 
-  return resolveCommonTest<ResultInput, NormalizedId>(
+  return createCommonFilter<ResultInput, NormalizedId>(
     test,
     (input, logger) =>
       // TODO which exception has to be caught here?
       tryCatching(logger, () => {
-        return resolveIds(input).map(encodeId);
+        return resolveIds(input);
       }) ?? [],
     tags,
   );
-}
-
-function extractItemID(ingredient: Result): IdInput | null {
-  if (ingredient instanceof ItemResult) {
-    return ingredient.id;
-  }
-
-  return null;
-}
-
-// TODO functions on the ingredient itself?
-// TODO common super class maybe even?
-function extractBlockID(ingredient: Result): IdInput | null {
-  if (ingredient instanceof BlockResult) {
-    return ingredient.id;
-  }
-
-  return null;
-}
-
-function extractFluidID(ingredient: Result): IdInput | null {
-  if (ingredient instanceof FluidResult) {
-    return ingredient.id;
-  }
-
-  return null;
 }

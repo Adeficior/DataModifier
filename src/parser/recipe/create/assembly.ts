@@ -54,7 +54,7 @@ export class AssemblyRecipe extends Recipe {
     return {
       ingredient: context.ingredients.serialize(this.ingredient),
       transitionalItem: context.ingredients.serialize(this.transitionalItem),
-      results: context.ingredients.serializeList(this.results),
+      results: context.results.serializeList(this.results),
       sequence: this.sequence.map((it) => context.recipes.serialize(it)),
     };
   }

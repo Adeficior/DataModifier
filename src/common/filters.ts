@@ -5,10 +5,10 @@ import type { IdInput, NormalizedId, TagInput } from "./id.js";
 import { encodeId } from "./id.js";
 
 export type Predicate<T> = (value: T, logger?: Logger) => boolean;
-export type CommonTest<T> = RegExp | Predicate<T> | T;
+export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
-export function resolveCommonTest<TEntry, TId extends string>(
-  test: CommonTest<TId>,
+export function createCommonFilter<TEntry, TId extends string>(
+  test: CommonFilter<TId>,
   resolve: (value: TEntry, logger?: Logger) => NormalizedId<TId>[],
   tags?: TagRegistry<RegistryId>,
 ): Predicate<TEntry> {
@@ -35,10 +35,10 @@ export function resolveCommonTest<TEntry, TId extends string>(
 }
 
 export function resolveIDTest<T extends RegistryId>(
-  test: CommonTest<NormalizedId<InferIds<T>>>,
+  test: CommonFilter<NormalizedId<InferIds<T>>>,
   tags?: TagRegistry<T>,
 ): Predicate<IdInput<InferIds<T>>> {
-  return resolveCommonTest<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
+  return createCommonFilter<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
     test,
     (it) => [encodeId(it)],
     tags,

@@ -6,8 +6,8 @@ import type {
   ResolverInfo,
 } from "@adeficior/pack-resolver";
 import match from "minimatch";
-import resolveIngredientTest, {
-  type IngredientTest,
+import createIngredientFilter, {
+  type IngredientFilter,
 } from "../common/ingredient/filter.js";
 import type { Ingredient } from "../common/ingredient/index.js";
 import type { IngredientInput } from "../common/ingredient/input.js";
@@ -196,8 +196,8 @@ export default class PackLoader implements Loader, ClearableEmitter {
     return this.ingredients.create(input);
   }
 
-  resolveIngredientTest(test: IngredientTest) {
-    return resolveIngredientTest(test, this.context);
+  resolveIngredientTest(test: IngredientFilter) {
+    return createIngredientFilter(test, this.context);
   }
 
   private loadInternal(resolver: IResolver, logger: Logger) {

@@ -96,7 +96,7 @@ export default class IngredientSerializer {
   }
 
   serialize(ingredient: Ingredient) {
-    return ingredient.toJSON(this.packFormat);
+    return ingredient.serialize(this.packFormat);
   }
 
   serializeList(ingredients: Ingredient[]) {

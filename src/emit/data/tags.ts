@@ -1,8 +1,8 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptor, Logger } from "@adeficior/pack-resolver";
+import { resolveIDTest, type CommonFilter } from "../../common/filters.js";
 import type { Id, NormalizedId, TagInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
-import { resolveIDTest, type CommonTest } from "../../common/predicates.js";
 import Registry from "../../common/registry.js";
 import type TagsLoader from "../../loader/tags.js";
 import type { TagRegistry } from "../../loader/tags.js";
@@ -22,7 +22,7 @@ export interface TagRules {
   remove<T extends RegistryId>(
     registry: T,
     id: TagInput,
-    test: CommonTest<NormalizedId<InferIds<T>>>,
+    test: CommonFilter<NormalizedId<InferIds<T>>>,
   ): void;
 
   scoped<T extends RegistryId>(key: T, folder?: string): ScopedTagRules<T>;
@@ -34,7 +34,7 @@ export interface TagRules {
 
 interface ScopedTagRules<T extends RegistryId> {
   add(id: TagInput, value: TagEntry<InferIds<T>>): void;
-  remove(id: TagInput, test: CommonTest<NormalizedId<InferIds<T>>>): void;
+  remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>): void;
 }
 
 type TagModifier = (previous: TagDefinition) => TagDefinition;
@@ -79,7 +79,7 @@ class ScopedEmitter<T extends RegistryId> implements ScopedTagRules<T> {
     });
   }
 
-  remove(id: TagInput, test: CommonTest<NormalizedId<InferIds<T>>>) {
+  remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>) {
     if (this.options.advancedTags) {
       if (test instanceof RegExp || typeof test === "function") {
         throw new Error(
@@ -170,7 +170,7 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
   remove<T extends RegistryId>(
     registry: T,
     id: TagInput,
-    test: CommonTest<NormalizedId<InferIds<T>>>,
+    test: CommonFilter<NormalizedId<InferIds<T>>>,
   ) {
     this.scoped<T>(registry).remove(id, test);
   }

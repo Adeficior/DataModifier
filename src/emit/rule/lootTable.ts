@@ -1,5 +1,6 @@
 import type { Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
+import type { Predicate } from "../../common/filters.js";
 import type { Id } from "../../common/id.js";
 import {
   ItemIngredient,
@@ -7,7 +8,6 @@ import {
   type Ingredient,
 } from "../../common/ingredient/index.js";
 import type { IngredientInput } from "../../common/ingredient/input.js";
-import type { Predicate } from "../../common/predicates.js";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
 import { extendLootEntry } from "../../schema/data/loot.js";
 import type { Modifier } from "./index.js";

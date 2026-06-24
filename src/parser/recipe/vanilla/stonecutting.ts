@@ -40,7 +40,7 @@ export class StonecuttingRecipe extends Recipe {
   ): Partial<StonecuttingRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(this.ingredient),
-      result: context.ingredients.serialize(this.result),
+      result: context.results.serialize(this.result),
     };
   }
 }

@@ -2,115 +2,163 @@ import type {
   BlockId,
   FluidId,
   ItemId,
+  RegistryId,
 } from "@adeficior/data-modifier/generated";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
-import { encodeId, type IdInput } from "../id";
+import {
+  encodeId,
+  stripTag,
+  toTag,
+  type IdInput,
+  type NormalizedId,
+  type TagId,
+} from "../id";
 import type { Serializable } from "../serializable";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements Serializable {
   // TODO make required
-  validate(_?: RegistryLookup): void {}
-  abstract toJSON(packFormat: SemVerInput): unknown;
+  validate(_: RegistryLookup): void {}
+  abstract serialize(packFormat: SemVerInput): unknown;
+  abstract idsFor(
+    registry: NormalizedId<RegistryId>,
+  ): NormalizedId<RegistryId>[];
 }
 
-export class ItemTagIngredient extends Ingredient {
+export abstract class TagIngredient extends Ingredient {
+  public readonly tag: TagId;
+
   constructor(
-    public readonly tag: IdInput,
-    public readonly count = 1,
+    input: IdInput,
+    private readonly registry: NormalizedId<RegistryId>,
   ) {
     super();
+    // TODO complain if input is already a tag?
+    this.tag = toTag(input);
   }
 
-  toJSON(_packFormat: SemVerInput) {
+  override idsFor(registry: NormalizedId<RegistryId>) {
+    if (this.registry === registry) return [this.tag];
+    return [];
+  }
+}
+
+export class ItemTagIngredient extends TagIngredient {
+  constructor(
+    tag: IdInput,
+    public readonly count = 1,
+  ) {
+    super(tag, "minecraft:item");
+  }
+
+  serialize(_packFormat: SemVerInput) {
     const count = this.count === 1 ? undefined : this.count;
-    const tag = encodeId(this.tag);
+    const tag = stripTag(this.tag);
     return { tag, count };
   }
 }
 
-export class FluidTagIngredient extends Ingredient {
+export class FluidTagIngredient extends TagIngredient {
   constructor(
-    public readonly tag: IdInput,
+    tag: IdInput,
     public readonly amount = BUCKET,
   ) {
-    super();
+    super(tag, "minecraft:fluid");
   }
 
-  toJSON(_packFormat: SemVerInput) {
+  serialize(_packFormat: SemVerInput) {
     const { amount } = this;
-    const tag = encodeId(this.tag);
+    const tag = stripTag(this.tag);
     return { fluidTag: tag, amount };
   }
 }
 
-export class BlockTagIngredient extends Ingredient {
-  constructor(public readonly tag: IdInput) {
-    super();
+export class BlockTagIngredient extends TagIngredient {
+  constructor(tag: IdInput) {
+    super(tag, "minecraft:block");
   }
 
-  toJSON(_packFormat: SemVerInput) {
-    const tag = encodeId(this.tag);
+  serialize(_packFormat: SemVerInput) {
+    const tag = stripTag(this.tag);
     return { blockTag: tag };
   }
 }
 
-export class ItemIngredient extends Ingredient {
+export abstract class RegistryEntryIngredient<
+  T extends string,
+> extends Ingredient {
+  public readonly id: NormalizedId<T>;
+
   constructor(
-    public readonly id: IdInput<ItemId>,
-    public readonly count = 1,
+    input: IdInput<T>,
+    private readonly registry: NormalizedId<RegistryId>,
   ) {
     super();
+    this.id = encodeId(input);
   }
 
-  toJSON(_packFormat: SemVerInput) {
+  override idsFor(registry: NormalizedId<RegistryId>) {
+    if (this.registry === registry) return [this.id];
+    return [];
+  }
+}
+
+export class ItemIngredient extends RegistryEntryIngredient<ItemId> {
+  constructor(
+    id: IdInput<ItemId>,
+    public readonly count = 1,
+  ) {
+    super(id, "minecraft:item");
+  }
+
+  serialize(_packFormat: SemVerInput) {
     const count = this.count === 1 ? undefined : this.count;
     const id = encodeId(this.id);
     return { item: id, count };
   }
 
-  override validate(lookup?: RegistryLookup): void {
-    lookup?.validateEntry("minecraft:item", this.id);
+  override validate(lookup: RegistryLookup): void {
+    lookup.validateEntry("minecraft:item", this.id);
   }
 }
 
-export class FluidIngredient extends Ingredient {
+export class FluidIngredient extends RegistryEntryIngredient<FluidId> {
   constructor(
-    public readonly id: IdInput<FluidId>,
+    id: IdInput<FluidId>,
     public readonly amount = BUCKET,
     public readonly chance?: number,
   ) {
-    super();
+    super(id, "minecraft:fluid");
   }
 
-  toJSON(_packFormat: SemVerInput) {
+  serialize(_packFormat: SemVerInput) {
     const { amount } = this;
     const id = encodeId(this.id);
     return { fluid: id, amount };
   }
 
-  override validate(lookup?: RegistryLookup): void {
-    lookup?.validateEntry("minecraft:fluid", this.id);
+  override validate(lookup: RegistryLookup): void {
+    lookup.validateEntry("minecraft:fluid", this.id);
   }
 }
 
-export class BlockIngredient extends Ingredient {
+export class BlockIngredient extends RegistryEntryIngredient<BlockId> {
   constructor(
-    public readonly id: IdInput<BlockId>,
+    id: IdInput<BlockId>,
     public readonly weight?: number,
   ) {
-    super();
+    super(id, "minecraft:block");
   }
 
-  toJSON(_packFormat: SemVerInput) {
+  serialize(_packFormat: SemVerInput) {
     const { weight } = this;
     const id = encodeId(this.id);
     return { block: id, weight };
   }
 
-  override validate(lookup?: RegistryLookup): void {
-    lookup?.validateEntry("minecraft:block", this.id);
+  override validate(lookup: RegistryLookup): void {
+    lookup.validateEntry("minecraft:block", this.id);
   }
 }
 
@@ -119,12 +167,16 @@ export class ListIngredient extends Ingredient {
     super();
   }
 
-  override toJSON(packFormat: SemVerInput) {
-    return this.entries.map((it) => it.toJSON(packFormat));
+  override serialize(packFormat: SemVerInput) {
+    return this.entries.map((it) => it.serialize(packFormat));
   }
 
-  override validate(lookup?: RegistryLookup): void {
+  override validate(lookup: RegistryLookup): void {
     this.entries.forEach((it) => it.validate(lookup));
+  }
+
+  override idsFor(registry: NormalizedId<RegistryId>) {
+    return this.entries.flatMap((it) => it.idsFor(registry));
   }
 }
 

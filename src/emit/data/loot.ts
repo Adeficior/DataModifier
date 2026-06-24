@@ -1,14 +1,14 @@
 import type { Acceptor, Logger } from "@adeficior/pack-resolver";
-import type { Id, IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId, prefix } from "../../common/id.js";
-import type { IngredientTest } from "../../common/ingredient/filter.js";
-import resolveIngredientTest from "../../common/ingredient/filter.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
 import {
   resolveIDTest,
-  type CommonTest,
+  type CommonFilter,
   type Predicate,
-} from "../../common/predicates.js";
+} from "../../common/filters.js";
+import type { Id, IdInput, NormalizedId } from "../../common/id.js";
+import { encodeId, prefix } from "../../common/id.js";
+import type { IngredientFilter } from "../../common/ingredient/filter.js";
+import createIngredientFilter from "../../common/ingredient/filter.js";
+import type { IngredientInput } from "../../common/ingredient/input.js";
 import type { PackContext } from "../../loader/context.js";
 import { isAtLeastVersion } from "../../packFormat.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
@@ -30,18 +30,18 @@ export const EMPTY_LOOT_MODIFIER: LootModifier = {
 };
 
 type LootTableTest = Readonly<{
-  id?: CommonTest<NormalizedId>;
-  output?: IngredientTest;
+  id?: CommonFilter<NormalizedId>;
+  output?: IngredientFilter;
 }>;
 
 export interface LootRules {
   replaceOutput(
-    from: IngredientTest,
+    from: IngredientFilter,
     to: LootItemInput,
     additionalTests?: LootTableTest,
   ): void;
 
-  removeOutput(from: IngredientTest, additionalTests?: LootTableTest): void;
+  removeOutput(from: IngredientFilter, additionalTests?: LootTableTest): void;
 
   add(id: IdInput, value: LootTable): void;
 
@@ -105,8 +105,8 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     ]);
   }
 
-  resolveIngredientTest(test: IngredientTest) {
-    return resolveIngredientTest(test, this.context);
+  resolveIngredientTest(test: IngredientFilter) {
+    return createIngredientFilter(test, this.context);
   }
 
   private resolveLootTableTest(test: LootTableTest) {
@@ -136,7 +136,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   replaceOutput(
-    from: IngredientTest,
+    from: IngredientFilter,
     to: LootItemInput,
     additionalTests: LootTableTest = {},
   ): void {
@@ -156,7 +156,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     );
   }
 
-  removeOutput(from: IngredientTest, additionalTests?: LootTableTest) {
+  removeOutput(from: IngredientFilter, additionalTests?: LootTableTest) {
     this.replaceOutput(from, EmptyLootEntry, additionalTests);
   }
 

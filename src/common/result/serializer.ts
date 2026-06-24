@@ -57,7 +57,7 @@ export default class ResultSerializer {
   }
 
   serialize(result: Result) {
-    return result.toJSON(this.packFormat);
+    return result.serialize(this.packFormat);
   }
 
   serializeList(results: Result[]) {

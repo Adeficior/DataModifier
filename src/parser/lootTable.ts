@@ -1,11 +1,11 @@
-import { encodeId } from "../common/id.js";
+import type { Predicate } from "../common/filters.js";
+import { encodeId, stripTag } from "../common/id.js";
 import {
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
   type ItemLikeIngredient,
 } from "../common/ingredient/index.js";
-import type { Predicate } from "../common/predicates.js";
 import { ItemResult } from "../common/result/index.js";
 import type RegistryLookup from "../loader/registry/index.js";
 import type {
@@ -28,7 +28,7 @@ function createUnvalidatedLootEntry(input: LootItemInput): LootEntry {
   if (input instanceof ItemTagIngredient) {
     return {
       type: "minecraft:tag",
-      name: encodeId(input.tag),
+      name: stripTag(input.tag),
     };
   }
 

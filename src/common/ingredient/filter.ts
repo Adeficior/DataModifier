@@ -1,5 +1,4 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import { exists } from "@adeficior/pack-resolver";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -8,42 +7,40 @@ import {
   Ingredient,
   ItemIngredient,
   ItemTagIngredient,
-  ListIngredient,
 } from ".";
 import { tryCatching } from "../../error";
 import type { PackContext } from "../../loader/context";
-import type { TagRegistry } from "../../loader/tags";
-import { createId, encodeId, type IdInput, type NormalizedId } from "../id";
+import type { TagRegistryHolder } from "../../loader/tags";
 import {
-  resolveCommonTest,
-  type CommonTest,
+  createCommonFilter,
+  type CommonFilter,
   type Predicate,
-} from "../predicates";
+} from "../filters";
+import { encodeId, type NormalizedId } from "../id";
 import type { IngredientInput } from "./input";
 
-export type IngredientTest =
-  | CommonTest<Ingredient>
+export type IngredientFilter =
+  | CommonFilter<Ingredient>
   | IngredientInput
   | `#${string}`;
 
-export default function resolveIngredientTest(
-  test: IngredientTest,
-  // TODO pass context?
+export default function createIngredientFilter(
+  test: IngredientFilter,
   context: Omit<PackContext, "results">,
 ): Predicate<IngredientInput> {
   if (typeof test === "string") {
     if (test.startsWith("#")) {
-      return resolveIngredientTest(
+      return createIngredientFilter(
         new ItemTagIngredient(test.substring(1)),
         context,
       );
     }
 
-    return resolveIngredientTest(new ItemIngredient(test), context);
+    return createIngredientFilter(new ItemIngredient(test), context);
   }
 
   if (test instanceof RegExp) {
-    return resolveIdTest(test, context.tags.registry("item"), extractItemID);
+    return filterByRegistry(test, context.tags, "minecraft:item");
   }
 
   if (typeof test === "function") {
@@ -55,122 +52,55 @@ export default function resolveIngredientTest(
   }
 
   if (test instanceof ItemTagIngredient) {
-    return resolveIdTest(
-      `#${encodeId(test.tag)}`,
-      context.tags.registry("item"),
-      extractItemID,
-    );
+    return filterByRegistry(test.tag, context.tags, "minecraft:item");
   }
 
   if (test instanceof ItemIngredient) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("item"),
-      extractItemID,
-    );
+    return filterByRegistry(test.id, context.tags, "minecraft:item");
   }
 
   if (test instanceof FluidTagIngredient) {
-    return resolveIdTest(
-      `#${encodeId(test.tag)}`,
-      context.tags.registry("fluid"),
-      extractFluidID,
-    );
+    return filterByRegistry(test.tag, context.tags, "minecraft:fluid");
   }
 
   if (test instanceof FluidIngredient) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("fluid"),
-      extractFluidID,
-    );
+    return filterByRegistry(test.id, context.tags, "minecraft:fluid");
   }
 
   if (test instanceof BlockTagIngredient) {
-    return resolveIdTest(
-      `#${encodeId(test.tag)}`,
-      context.tags.registry("block"),
-      extractBlockID,
-    );
+    return filterByRegistry(test.tag, context.tags, "minecraft:block");
   }
 
-  // TODO match method in ingredient itself?
   if (test instanceof BlockIngredient) {
-    return resolveIdTest(
-      encodeId(test.id),
-      context.tags.registry("block"),
-      extractBlockID,
-    );
+    return filterByRegistry(test.id, context.tags, "minecraft:block");
   }
-
   // TODO add support for ListIngredient?
 
   // TODO warn or throw?
   return () => false;
 }
 
-// TODO is Predicate<Ingredient> fine?
-function resolveIdTest(
+function filterByRegistry(
   test: NormalizedId | RegExp,
-  tags: TagRegistry<RegistryId>,
-  idSupplier: (it: Ingredient) => IdInput | null,
+  tags: TagRegistryHolder,
+  registry: NormalizedId<RegistryId>,
 ): Predicate<IngredientInput> {
-  function resolveIds(it: IngredientInput): IdInput[] {
-    if (typeof it === "string") return [it];
-    if (it instanceof ListIngredient) {
-      return it.entries.flatMap(resolveIds);
-    } else if (Array.isArray(it)) {
+  function resolveIds(it: IngredientInput): NormalizedId[] {
+    if (typeof it === "string") return [encodeId(it)];
+    if (Array.isArray(it)) {
       return it.flatMap(resolveIds);
-    } else {
-      return [idSupplier(it)].filter(exists);
     }
+
+    return it.idsFor(registry);
   }
 
-  return resolveCommonTest<IngredientInput, NormalizedId>(
+  return createCommonFilter<IngredientInput, NormalizedId>(
     test,
     (input, logger) =>
       // TODO which exception has to be caught here?
       tryCatching(logger, () => {
-        return resolveIds(input).map(encodeId);
+        return resolveIds(input);
       }) ?? [],
-    tags,
+    tags.registry(registry),
   );
-}
-
-function extractItemID(ingredient: Ingredient): IdInput | null {
-  if (ingredient instanceof ItemTagIngredient) {
-    return { ...createId(ingredient.tag), isTag: true };
-  }
-
-  if (ingredient instanceof ItemIngredient) {
-    return ingredient.id;
-  }
-
-  return null;
-}
-
-// TODO functions on the ingredient itself?
-// TODO common super class maybe even?
-function extractBlockID(ingredient: Ingredient): IdInput | null {
-  if (ingredient instanceof BlockTagIngredient) {
-    return { ...createId(ingredient.tag), isTag: true };
-  }
-
-  if (ingredient instanceof BlockIngredient) {
-    return ingredient.id;
-  }
-
-  return null;
-}
-
-function extractFluidID(ingredient: Ingredient): IdInput | null {
-  if (ingredient instanceof FluidTagIngredient) {
-    return { ...createId(ingredient.tag), isTag: true };
-  }
-
-  if (ingredient instanceof FluidIngredient) {
-    return ingredient.id;
-  }
-
-  return null;
 }

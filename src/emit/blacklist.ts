@@ -5,8 +5,8 @@ import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
 import { encodeId } from "../common/id.js";
 
-import type { IngredientTest } from "../common/ingredient/filter.js";
-import resolveIngredientTest from "../common/ingredient/filter.js";
+import type { IngredientFilter } from "../common/ingredient/filter.js";
+import createIngredientFilter from "../common/ingredient/filter.js";
 import {
   BlockIngredient,
   FluidIngredient,
@@ -24,7 +24,7 @@ export interface BlacklistOptions {
 }
 
 export interface BlacklistRules {
-  hide(...inputs: IngredientTest[]): void;
+  hide(...inputs: IngredientFilter[]): void;
   hideEntry<T extends RegistryId>(
     type: T,
     ...entries: RegistryIdInput<T>[]
@@ -47,7 +47,7 @@ export default class BlacklistEmitter
     this.hideModes = arrayOrSelf(options.hideFrom);
   }
 
-  hide(...inputs: IngredientTest[]) {
+  hide(...inputs: IngredientFilter[]) {
     this.hidden.push(
       ...inputs.flatMap((test) => this.resolveIds(test)).map(encodeId),
     );
@@ -75,18 +75,18 @@ export default class BlacklistEmitter
     this.hidden.push(...ids);
   }
 
-  private filterIds(test: IngredientTest) {
+  private filterIds(test: IngredientFilter) {
     const keys = this.context.lookup.keys("minecraft:item");
     if (!keys)
       throw new Error(
         "you can only use regex/predicates to blacklist items if a registry dump is loaded",
       );
-    const predicate = resolveIngredientTest(test, this.context);
+    const predicate = createIngredientFilter(test, this.context);
 
     return [...keys.keys()].filter((it) => predicate(it, this.logger));
   }
 
-  private resolveIds(input: IngredientTest): string[] {
+  private resolveIds(input: IngredientFilter): string[] {
     if (input instanceof RegExp || typeof input === "function") {
       return this.filterIds(input);
     }

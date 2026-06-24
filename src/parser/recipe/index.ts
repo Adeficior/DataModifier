@@ -1,6 +1,6 @@
+import type { Predicate } from "../../common/filters.js";
 import { encodeId, type NormalizedId } from "../../common/id.js";
 import type { Ingredient } from "../../common/ingredient/index.js";
-import type { Predicate } from "../../common/predicates.js";
 import type { Result } from "../../common/result/index.js";
 import type { PackContext } from "../../loader/context.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";

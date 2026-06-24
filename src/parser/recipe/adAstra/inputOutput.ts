@@ -1,8 +1,8 @@
 import z from "zod";
 import { encodeId, IdSchema } from "../../../common/id.js";
 import type { Ingredient } from "../../../common/ingredient/index.js";
-import type IngredientSerializer from "../../../common/ingredient/serializer.js";
 import { ItemResult } from "../../../common/result/index.js";
+import type ResultSerializer from "../../../common/result/serializer.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
@@ -18,11 +18,11 @@ const IdResultSchema = z.object({
 });
 
 function deserializeIdResult(
-  ingredients: IngredientSerializer,
+  results: ResultSerializer,
   input: unknown,
 ): ItemResult {
   const { id, count } = IdResultSchema.parse(input);
-  return ingredients.validated(new ItemResult(id, count));
+  return results.validated(new ItemResult(id, count));
 }
 
 function serializeIdResult(result: ItemResult): unknown {
@@ -78,7 +78,7 @@ export class InputOutputRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): InputOutputRecipe {
     const ingredient = context.ingredients.create(definition.input);
-    const result = deserializeIdResult(context.ingredients, definition.output);
+    const result = deserializeIdResult(context.results, definition.output);
     return new InputOutputRecipe(ingredient, result);
   }
 }

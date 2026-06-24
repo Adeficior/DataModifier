@@ -1,19 +1,19 @@
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { Acceptor, Logger } from "@adeficior/pack-resolver";
 import { exists } from "@adeficior/pack-resolver";
-import type { Id, IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId } from "../../common/id.js";
-import type { IngredientTest } from "../../common/ingredient/filter.js";
-import resolveIngredientTest from "../../common/ingredient/filter.js";
-import type { Ingredient } from "../../common/ingredient/index.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
 import {
   resolveIDTest,
-  type CommonTest,
+  type CommonFilter,
   type Predicate,
-} from "../../common/predicates.js";
-import type { ResultTest } from "../../common/result/filter.js";
-import resolveResultTest from "../../common/result/filter.js";
+} from "../../common/filters.js";
+import type { Id, IdInput, NormalizedId } from "../../common/id.js";
+import { encodeId } from "../../common/id.js";
+import type { IngredientFilter } from "../../common/ingredient/filter.js";
+import createIngredientFilter from "../../common/ingredient/filter.js";
+import type { Ingredient } from "../../common/ingredient/index.js";
+import type { IngredientInput } from "../../common/ingredient/input.js";
+import type { ResultFilter } from "../../common/result/filter.js";
+import createResultFilter from "../../common/result/filter.js";
 import type { Result } from "../../common/result/index.js";
 import type { ResultInput } from "../../common/result/input.js";
 import type { PackContext } from "../../loader/context.js";
@@ -33,24 +33,24 @@ import RecipeRule from "../rule/recipe.js";
 import RuledEmitter from "../ruled.js";
 
 export type RecipeTest = Readonly<{
-  id?: CommonTest<NormalizedId>;
-  type?: CommonTest<NormalizedId<RecipeSerializerId>>;
+  id?: CommonFilter<NormalizedId>;
+  type?: CommonFilter<NormalizedId<RecipeSerializerId>>;
   namespace?: string;
-  output?: ResultTest;
-  input?: IngredientTest;
+  output?: ResultFilter;
+  input?: IngredientFilter;
   // TODO not sure if I want to even keep this?
   optional?: boolean;
 }>;
 
 export interface RecipeRules {
   replaceResult(
-    test: ResultTest,
+    test: ResultFilter,
     value: ResultInput,
     additionalTests?: RecipeTest,
   ): void;
 
   replaceIngredient(
-    test: IngredientTest,
+    test: IngredientFilter,
     value: IngredientInput,
     additionalTests?: RecipeTest,
   ): void;
@@ -114,14 +114,14 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     await Promise.all([this.ruled.emit(acceptor), this.custom.emit(acceptor)]);
   }
 
-  resolveIngredientTest(test?: IngredientTest) {
+  resolveIngredientTest(test?: IngredientFilter) {
     if (!test) return () => true;
-    return resolveIngredientTest(test, this.context);
+    return createIngredientFilter(test, this.context);
   }
 
-  resolveResultTest(test?: ResultTest) {
+  resolveResultTest(test?: ResultFilter) {
     if (!test) return () => true;
-    return resolveResultTest(test, this.context);
+    return createResultFilter(test, this.context);
   }
 
   private resolveRecipeTest(test: RecipeTest) {
@@ -191,7 +191,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   replaceResult(
-    test: ResultTest,
+    test: ResultFilter,
     input: ResultInput,
     additionalTest?: RecipeTest,
   ) {
@@ -212,7 +212,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   replaceIngredient(
-    test: IngredientTest,
+    test: IngredientFilter,
     input: IngredientInput,
     additionalTest?: RecipeTest,
   ) {
