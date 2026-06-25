@@ -27,6 +27,7 @@ const { logger, loader } = setupLoader({
 const { ingredients, results } = loader;
 
 describe("tests regarding ingredient/result shapes", () => {
+  // done
   it("warns about unknown ingredient shape", async () => {
     tryCatching(logger, () => ingredients.create(["test", { whatever: true }]));
     tryCatching(logger, () => ingredients.create({}));
@@ -48,6 +49,7 @@ describe("tests regarding ingredient/result shapes", () => {
     expect(logger.warn).toHaveBeenCalledTimes(7);
   });
 
+  // done
   it("warns about tags starting with a #", async () => {
     expect(() => ingredients.create({ tag: "#test" })).toThrow();
     expect(() => ingredients.create({ fluidTag: "#test" })).toThrow();

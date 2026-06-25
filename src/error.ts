@@ -21,6 +21,30 @@ export class UnknownRegistryEntry<T extends RegistryId> extends Error {
   }
 }
 
+export function transformError(error: unknown): Error {
+  if (error instanceof ZodError) {
+    const message = error.errors
+      .map((it) => {
+        if (it.path) return `${it.path.join(".")}: ${it.message}`;
+        else return it.message;
+      })
+      .join(", ");
+    return new IllegalShapeError(message);
+  }
+
+  if (error instanceof Error) return error;
+  return new Error("an unknown error occured");
+}
+
+export function transformErrors<T>(run: () => T): T {
+  try {
+    return run();
+  } catch (error) {
+    throw transformError(error);
+  }
+}
+
+// TODO promise?
 export function tryCatching<T>(
   logger: Logger | undefined,
   run: () => T,

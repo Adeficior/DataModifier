@@ -10,7 +10,7 @@ import {
   ItemTagIngredient,
   ListIngredient,
 } from ".";
-import { IllegalShapeError } from "../../error";
+import { IllegalShapeError, transformErrors } from "../../error";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
 import {
@@ -23,15 +23,18 @@ interface VersionedDeserializer {
   deserialize(input: Record<string, unknown>): Ingredient | null;
 }
 
+const CountSchema = z.number().int().positive().default(1);
+const AmountSchema = z.number().positive();
+
 class OldDeserializer implements VersionedDeserializer {
   private readonly schemas = {
     itemTag: z.object({
       tag: IdSchema,
-      count: z.number().optional(),
+      count: CountSchema,
     }),
     fluidTag: z.object({
       fluidTag: IdSchema,
-      amount: z.number(),
+      amount: AmountSchema,
     }),
     blockTag: z.object({
       blockTag: IdSchema,
@@ -39,11 +42,11 @@ class OldDeserializer implements VersionedDeserializer {
     }),
     itemStack: z.object({
       item: IdSchema,
-      count: z.number().int().optional(),
+      count: CountSchema,
     }),
     fluidStack: z.object({
       fluid: IdSchema,
-      amount: z.number(),
+      amount: AmountSchema,
     }),
     block: z.object({
       block: IdSchema,
@@ -109,6 +112,10 @@ export default class IngredientSerializer {
     if (!input) throw new IllegalShapeError("ingredient input may not be null");
 
     if (typeof input === "string") {
+      if (input.startsWith("#")) {
+        return this.deserialize(new ItemTagIngredient(input));
+      }
+
       this.lookup.validateEntry("minecraft:item", input);
       return new ItemIngredient(input);
     }
@@ -129,9 +136,11 @@ export default class IngredientSerializer {
 
   // TODO rename deserialize
   create(input: unknown) {
-    const deserialized = this.deserialize(input);
-    deserialized.validate(this.lookup);
-    return deserialized;
+    return transformErrors(() => {
+      const deserialized = this.deserialize(input);
+      deserialized.validate(this.lookup);
+      return deserialized;
+    });
   }
 
   validated<T extends Ingredient>(ingredient: T): T {
