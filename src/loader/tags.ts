@@ -1,4 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Acceptor } from "@adeficior/pack-resolver";
 import { orderBy, uniqBy } from "lodash-es";
 import type { IdInput, NormalizedId, TagInput } from "../common/id.js";
 import { encodeId } from "../common/id.js";
@@ -6,7 +7,6 @@ import Registry from "../common/registry.js";
 import type { TagDefinition, TagEntry } from "../schema/data/tag.js";
 import { tagFolderOf } from "../schema/data/tag.js";
 import { fromJson } from "../textHelper.js";
-import type { AcceptorWithLoader } from "./index.js";
 import type RegistryLookup from "./registry/index.js";
 
 export function entryId(entry: TagEntry) {
@@ -158,7 +158,7 @@ export default class TagsLoader implements TagRegistryHolder {
     return { namespace, registry, path, isTag: true };
   }
 
-  readonly accept: AcceptorWithLoader = (_, path, content) => {
+  readonly accept: Acceptor = (path, content) => {
     const info = this.parsePath(path);
     if (!info) return false;
 

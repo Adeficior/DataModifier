@@ -67,7 +67,7 @@ export interface RecipeLoaderAccessor {
 
 export default class RecipeLoader
   extends JsonLoader<RecipeHolder>
-  implements RecipeLoaderAccessor
+  implements RecipeLoaderAccessor, RecipeSerializer
 {
   private readonly recipeParsers = new Map<
     string,
@@ -78,9 +78,10 @@ export default class RecipeLoader
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
 
   constructor(
+    logger: Logger,
     private readonly serializers: Pick<PackContext, "results" | "ingredients">,
   ) {
-    super();
+    super(logger);
 
     this.registerParser("minecraft:crafting_shaped", new ShapedParser());
     this.registerParser("minecraft:crafting_shapeless", new ShapelessParser());
@@ -318,57 +319,37 @@ export default class RecipeLoader
     return [...this._unknownRecipeTypes.values()];
   }
 
-  private recipeParseContext(logger: Logger) {
-    const recipes = this.serializer(logger);
-    return { ...this.serializers, recipes };
+  private recipeParseContext() {
+    return { ...this.serializers, recipes: this };
   }
 
-  // TODO pass logger to deserialize/serialize?
-  serializer(logger: Logger): RecipeSerializer {
-    const recipes: RecipeSerializer = {
-      deserialize: (it) => {
-        const deserialized = this.parse(logger, it);
-        if (deserialized) return deserialized;
-        // TODO no error here?
-        throw new IllegalShapeError("unable to deserialize recipe", it);
-      },
-      serialize: (recipe) => {
-        // TODO group logger?
-        const context = this.recipeParseContext(logger);
-        return recipe.serialize(context);
-      },
-    };
-
-    return recipes;
+  serialize(recipe: RecipeHolder): RecipeDefinition {
+    // TODO group logger?
+    const context = this.recipeParseContext();
+    return recipe.serialize(context);
   }
 
-  parse(logger: Logger, definition: RecipeDefinition): RecipeHolder | null {
+  deserialize(definition: RecipeDefinition): RecipeHolder {
     if (!definition.type)
       throw new IllegalShapeError(`no recipe type set`, definition);
+
     const parser = this.recipeParsers.get(encodeId(definition.type));
 
     if (!("type" in definition))
       throw new IllegalShapeError("recipe type missing");
 
-    if (this.ignoredRecipeTypes.has(definition.type)) return null;
-
     if (!parser) {
       if (!this._unknownRecipeTypes.has(definition.type)) {
         this._unknownRecipeTypes.set(definition.type, definition);
-
-        throw new IllegalShapeError(
-          `unknown recipe type: '${definition.type}'`,
-          definition,
-        );
       }
 
-      return null;
+      throw new IllegalShapeError(
+        `unknown recipe type: '${definition.type}'`,
+        definition,
+      );
     }
 
-    const parsed = parser.deserialize(
-      definition,
-      this.recipeParseContext(logger),
-    );
+    const parsed = parser.deserialize(definition, this.recipeParseContext());
 
     // Catch warnings early
     // TODO not really needed anymore
@@ -376,6 +357,12 @@ export default class RecipeLoader
     // parsed.getIngredients().forEach((it) => createIngredient(it));
 
     return new RecipeHolder(definition, parsed);
+  }
+
+  override parse(definition: RecipeDefinition): RecipeHolder | null {
+    if (this.ignoredRecipeTypes.has(definition.type)) return null;
+    // TODO only print unknown recipe types once in the end
+    return this.deserialize(definition);
   }
 
   registerParser(

@@ -39,7 +39,6 @@ import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
 import type { SemVerInput } from "../packFormat.js";
 import type { PackContext } from "./context.js";
 import type Loader from "./index.js";
-import type { AcceptorWithLoader } from "./index.js";
 import LangLoader from "./lang.js";
 import LootTableLoader from "./loot.js";
 import type { RecipeLoaderAccessor } from "./recipe.js";
@@ -69,8 +68,8 @@ export default class PackLoader implements Loader, ClearableEmitter {
 
   private readonly tagLoader: TagsLoader;
   private readonly recipesLoader: RecipeLoader;
-  private readonly lootLoader = new LootTableLoader();
-  private readonly langLoader = new LangLoader();
+  private readonly lootLoader: LootTableLoader;
+  private readonly langLoader: LangLoader;
   readonly blockstates: BlockstateRules = this.registerEmitter(
     new BlockstateEmitter(),
   );
@@ -83,7 +82,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   private readonly results: ResultSerializer;
   private readonly ingredients: IngredientSerializer;
 
-  private readonly acceptors: Record<string, AcceptorWithLoader>;
+  private readonly acceptors: Record<string, Acceptor>;
   private readonly context: PackContext;
 
   constructor(
@@ -91,6 +90,8 @@ export default class PackLoader implements Loader, ClearableEmitter {
     options: PackLoaderOptions,
   ) {
     this.tagLoader = new TagsLoader(this.lookup);
+    this.lootLoader = new LootTableLoader(logger);
+    this.langLoader = new LangLoader(logger);
 
     this.tags = this.registerEmitter(
       new TagEmitter(logger, this.tagLoader, options),
@@ -110,14 +111,14 @@ export default class PackLoader implements Loader, ClearableEmitter {
       packFormat: options.packFormat,
     };
 
-    this.recipesLoader = new RecipeLoader(this.context);
+    this.recipesLoader = new RecipeLoader(logger, this.context);
 
     this.recipes = this.registerEmitter(
       new RecipeEmitter(
         logger,
         this.recipesLoader,
         this.context,
-        this.recipesLoader.serializer(this.logger),
+        this.recipesLoader,
       ),
     );
 
@@ -200,21 +201,20 @@ export default class PackLoader implements Loader, ClearableEmitter {
     return createIngredientFilter(test, this.context);
   }
 
-  private loadInternal(resolver: IResolver, logger: Logger) {
+  private loadInternal(resolver: IResolver) {
     return resolver.extract((path, content) => {
       const acceptor = Object.entries(this.acceptors).find(([pattern]) =>
         match(path, pattern),
       )?.[1];
       if (!acceptor) return false;
-      return acceptor(logger, path, content);
+      return acceptor(path, content);
     });
   }
 
   async loadFromMultiple(resolvers: ResolverInfo[]) {
     await Promise.all(
-      resolvers.map(({ resolver, name }) => {
-        const logger = this.logger.group(name);
-        return this.loadInternal(resolver, logger);
+      resolvers.map(({ resolver }) => {
+        return this.loadInternal(resolver);
       }),
     );
 
@@ -222,7 +222,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   }
 
   async loadFrom(resolver: IResolver) {
-    await this.loadInternal(resolver, this.logger);
+    await this.loadInternal(resolver);
     this.freeze();
   }
 

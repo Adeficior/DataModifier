@@ -1,11 +1,10 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { IResolver, Logger } from "@adeficior/pack-resolver";
+import type { Acceptor, IResolver, Logger } from "@adeficior/pack-resolver";
 import zod from "zod";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
 import Registry from "../../common/registry.js";
 import { tryCatching, UnknownRegistryEntry } from "../../error.js";
-import type { AcceptorWithLoader } from "../index.js";
 import { tryParseJson } from "../index.js";
 import type RegistryLookup from "./index.js";
 
@@ -17,16 +16,14 @@ export default class RegistryDumpLoader implements RegistryLookup {
   constructor(private readonly logger: Logger) {}
 
   async extract(resolver: IResolver) {
-    await resolver.extract((path, content) =>
-      this.accept(this.logger, path, content),
-    );
+    await resolver.extract((path, content) => this.accept(path, content));
   }
 
   private registryOf(registry: RegistryId) {
     return this.registry.getOrPut(registry, () => new Set<NormalizedId>());
   }
 
-  private readonly accept: AcceptorWithLoader = (logger, path, content) => {
+  private readonly accept: Acceptor = (path, content) => {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
     if (!match?.groups) {
       return false;
@@ -34,7 +31,7 @@ export default class RegistryDumpLoader implements RegistryLookup {
 
     const { registry } = match.groups as { registry: string };
 
-    const grouped = logger.group(path);
+    const grouped = this.logger.group(path);
 
     const json = tryParseJson(grouped, content.toString());
     if (!json) return false;
