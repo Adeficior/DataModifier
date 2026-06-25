@@ -1,6 +1,5 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   type RecipeParseContext,
   type Replacer,
@@ -36,12 +35,11 @@ export type CuttingRecipeDefinition = Omit<
 
 export class CuttingRecipe extends ManyToManyRecipe {
   constructor(
-    definition: RecipeDefinition,
     ingredients: Ingredient[],
     results: Result[],
     private readonly tool: Ingredient,
   ) {
-    super(definition, ingredients, results);
+    super(ingredients, results);
   }
 
   override getIngredients() {
@@ -53,7 +51,6 @@ export class CuttingRecipe extends ManyToManyRecipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new CuttingRecipe(
-      this.definition,
       this.ingredients.map(ingredientReplacer),
       this.results.map(resultReplacer),
       ingredientReplacer(this.tool),
@@ -83,6 +80,6 @@ export default class CuttingRecipeParser extends RecipeParser<
     const ingredients = context.ingredients.createList(definition.ingredients);
     const result = context.results.createList(definition.result);
     const tool = context.ingredients.create(definition.tool);
-    return new CuttingRecipe(definition, ingredients, result, tool);
+    return new CuttingRecipe(ingredients, result, tool);
   }
 }

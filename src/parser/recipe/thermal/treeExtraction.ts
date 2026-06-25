@@ -22,12 +22,11 @@ export type TreeExtractionRecipeDefinition = RecipeDefinition &
 
 export class TreeExtractionRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly trunk: Ingredient,
     private readonly leaves: Ingredient,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -43,7 +42,6 @@ export class TreeExtractionRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new TreeExtractionRecipe(
-      this.definition,
       ingredientReplacer(this.trunk),
       ingredientReplacer(this.leaves),
       resultReplacer(this.result),
@@ -87,6 +85,6 @@ export class TreeExtractionRecipeParser extends RecipeParser<
       new BlockIngredient(definition.leaves),
     );
     const result = context.results.create(definition.result);
-    return new TreeExtractionRecipe(definition, trunk, leaves, result);
+    return new TreeExtractionRecipe(trunk, leaves, result);
   }
 }

@@ -18,11 +18,10 @@ export type FluidConversionRecipeDefinition = RecipeDefinition &
 
 export class FluidConversionRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredient: Ingredient,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -38,7 +37,6 @@ export class FluidConversionRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new FluidConversionRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
     );
@@ -73,6 +71,6 @@ export class FluidConversionRecipeParser extends RecipeParser<
     const result = context.results.validated(
       new FluidResult(definition.output, -1),
     );
-    return new FluidConversionRecipe(definition, ingredient, result);
+    return new FluidConversionRecipe(ingredient, result);
   }
 }

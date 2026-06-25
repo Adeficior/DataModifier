@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
@@ -15,13 +15,12 @@ export type AssemblyRecipeDefinition = RecipeDefinition &
 
 export class AssemblyRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredient: Ingredient,
     private readonly transitionalItem: Ingredient,
     private readonly results: Result[],
-    private readonly sequence: Recipe[],
+    private readonly sequence: RecipeHolder[],
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -41,7 +40,6 @@ export class AssemblyRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new AssemblyRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       ingredientReplacer(this.transitionalItem),
       this.results.map(resultReplacer),
@@ -77,12 +75,6 @@ export class AssemblyRecipeParser extends RecipeParser<
     const sequence = definition.sequence.map((it) =>
       context.recipes.deserialize(it),
     );
-    return new AssemblyRecipe(
-      definition,
-      ingredient,
-      transitionalItem,
-      results,
-      sequence,
-    );
+    return new AssemblyRecipe(ingredient, transitionalItem, results, sequence);
   }
 }

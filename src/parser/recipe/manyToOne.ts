@@ -15,11 +15,10 @@ export type ManyToOneRecipeDefinition = RecipeDefinition &
 
 export class ManyToOneRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     protected readonly ingredients: Ingredient[],
     protected readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -35,7 +34,6 @@ export class ManyToOneRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new ManyToOneRecipe(
-      this.definition,
       this.ingredients.map(ingredientReplacer),
       resultReplacer(this.result),
     );
@@ -60,6 +58,6 @@ export class ManyToOneRecipeParser<
   ): ManyToOneRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
     const result = context.results.create(definition.result);
-    return new ManyToOneRecipe(definition, ingredients, result);
+    return new ManyToOneRecipe(ingredients, result);
   }
 }

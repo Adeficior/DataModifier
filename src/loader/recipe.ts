@@ -37,7 +37,11 @@ import CookingRecipeParser from "../parser/recipe/farmersdelight/cooking.js";
 import CuttingRecipeParser from "../parser/recipe/farmersdelight/cutting.js";
 import ForgeConditionalRecipeParser from "../parser/recipe/forge/conditional.js";
 import type RecipeParser from "../parser/recipe/index.js";
-import type { Recipe, RecipeSerializer } from "../parser/recipe/index.js";
+import {
+  RecipeHolder,
+  type Recipe,
+  type RecipeSerializer,
+} from "../parser/recipe/index.js";
 import {
   RootComponentRecipeParser,
   RootRitualRecipeParser,
@@ -62,7 +66,7 @@ export interface RecipeLoaderAccessor {
 }
 
 export default class RecipeLoader
-  extends JsonLoader<Recipe>
+  extends JsonLoader<RecipeHolder>
   implements RecipeLoaderAccessor
 {
   private readonly recipeParsers = new Map<
@@ -329,18 +333,16 @@ export default class RecipeLoader
         throw new IllegalShapeError("unable to deserialize recipe", it);
       },
       serialize: (recipe) => {
+        // TODO group logger?
         const context = this.recipeParseContext(logger);
-        return {
-          ...recipe.definition,
-          ...recipe.serialize(context),
-        };
+        return recipe.serialize(context);
       },
     };
 
     return recipes;
   }
 
-  parse(logger: Logger, definition: RecipeDefinition): Recipe | null {
+  parse(logger: Logger, definition: RecipeDefinition): RecipeHolder | null {
     if (!definition.type)
       throw new IllegalShapeError(`no recipe type set`, definition);
     const parser = this.recipeParsers.get(encodeId(definition.type));
@@ -373,7 +375,7 @@ export default class RecipeLoader
     // parsed.getResults().forEach((it) => createResult(it));
     // parsed.getIngredients().forEach((it) => createIngredient(it));
 
-    return parsed;
+    return new RecipeHolder(definition, parsed);
   }
 
   registerParser(

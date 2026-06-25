@@ -23,11 +23,8 @@ export type SpaceStationRecipeDefinition = RecipeDefinition &
   }>;
 
 export class SpaceStationRecipe extends Recipe {
-  constructor(
-    definition: RecipeDefinition,
-    private readonly ingredients: Ingredient[],
-  ) {
-    super(definition);
+  constructor(private readonly ingredients: Ingredient[]) {
+    super();
   }
 
   getIngredients() {
@@ -39,10 +36,7 @@ export class SpaceStationRecipe extends Recipe {
   }
 
   replace(ingredientReplacer: Replacer<Ingredient>) {
-    return new SpaceStationRecipe(
-      this.definition,
-      this.ingredients.map(ingredientReplacer),
-    );
+    return new SpaceStationRecipe(this.ingredients.map(ingredientReplacer));
   }
 
   serialize(
@@ -79,6 +73,6 @@ export class SpaceStationRecipeParser extends RecipeParser<
         .map((it) => ({ ...it.ingredient, count: it.count })),
     );
 
-    return new SpaceStationRecipe(definition, ingredients);
+    return new SpaceStationRecipe(ingredients);
   }
 }

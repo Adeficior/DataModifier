@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
@@ -13,11 +13,10 @@ export type GogWrapperRecipeDefinition = RecipeDefinition &
 
 export class GogWrapperRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
-    private readonly base: Recipe,
-    private readonly gog: Recipe,
+    private readonly base: RecipeHolder,
+    private readonly gog: RecipeHolder,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -33,7 +32,6 @@ export class GogWrapperRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new GogWrapperRecipe(
-      this.definition,
       this.base.replace(ingredientReplacer, resultReplacer),
       this.gog.replace(ingredientReplacer, resultReplacer),
     );
@@ -59,6 +57,6 @@ export class GogWrapperRecipeParser extends RecipeParser<
   ): GogWrapperRecipe {
     const base = context.recipes.deserialize(definition.base);
     const gog = context.recipes.deserialize(definition.gog);
-    return new GogWrapperRecipe(definition, base, gog);
+    return new GogWrapperRecipe(base, gog);
   }
 }

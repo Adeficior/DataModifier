@@ -38,11 +38,10 @@ export type InputOutputRecipeDefinition = RecipeDefinition &
 
 export class InputOutputRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     protected readonly ingredient: Ingredient,
     protected readonly result: ItemResult,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -58,7 +57,6 @@ export class InputOutputRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new OneToOneRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
     );
@@ -84,6 +82,6 @@ export class InputOutputRecipeParser extends RecipeParser<
   ): InputOutputRecipe {
     const ingredient = context.ingredients.create(definition.input);
     const result = deserializeIdResult(context.ingredients, definition.output);
-    return new InputOutputRecipe(definition, ingredient, result);
+    return new InputOutputRecipe(ingredient, result);
   }
 }

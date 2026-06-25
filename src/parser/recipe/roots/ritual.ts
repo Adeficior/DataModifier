@@ -1,6 +1,5 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import type { RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser from "../index.js";
 import {
@@ -18,12 +17,11 @@ export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &
 
 export class RootRitualRecipe extends ManyToOneRecipe {
   constructor(
-    definition: RecipeDefinition,
     ingredients: Ingredient[],
     result: Result,
     private readonly incenses: Ingredient[] = [],
   ) {
-    super(definition, ingredients, result);
+    super(ingredients, result);
   }
 
   override getIngredients() {
@@ -35,7 +33,6 @@ export class RootRitualRecipe extends ManyToOneRecipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new RootRitualRecipe(
-      this.definition,
       this.incenses.map(ingredientReplacer),
       resultReplacer(this.result),
       this.incenses.map(ingredientReplacer),
@@ -56,6 +53,6 @@ export class RootRitualRecipeParser extends RecipeParser<
     const incenses =
       definition.incenses &&
       context.ingredients.createList(definition.incenses);
-    return new RootRitualRecipe(definition, ingredients, result, incenses);
+    return new RootRitualRecipe(ingredients, result, incenses);
   }
 }

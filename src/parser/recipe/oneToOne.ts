@@ -15,11 +15,10 @@ export type OneToOneRecipeDefinition = RecipeDefinition &
 
 export class OneToOneRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     protected readonly ingredient: Ingredient,
     protected readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -35,7 +34,6 @@ export class OneToOneRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new OneToOneRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
     );
@@ -60,6 +58,6 @@ export class OneToOneRecipeParser<
   ): OneToOneRecipe {
     const ingredient = context.ingredients.create(definition.ingredient);
     const result = context.results.create(definition.result);
-    return new OneToOneRecipe(definition, ingredient, result);
+    return new OneToOneRecipe(ingredient, result);
   }
 }

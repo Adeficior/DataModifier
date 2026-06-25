@@ -28,6 +28,6 @@ export class RunicAltarRecipeParser extends RecipeParser<
   ): RunicAltarRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
     const result = context.results.create(definition.output);
-    return new RunicAltarRecipe(definition, ingredients, result);
+    return new RunicAltarRecipe(ingredients, result);
   }
 }

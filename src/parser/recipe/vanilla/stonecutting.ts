@@ -14,11 +14,10 @@ export type StonecuttingRecipeDefinition = RecipeDefinition &
 // TODO could also be SmeltingRecipe?
 export class StonecuttingRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredient: Ingredient,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -34,7 +33,6 @@ export class StonecuttingRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new StonecuttingRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
     );
@@ -60,6 +58,6 @@ export class StonecuttingParser extends RecipeParser<
   ): StonecuttingRecipe {
     const ingredient = context.ingredients.create(definition.ingredient);
     const result = context.results.create(definition.result);
-    return new StonecuttingRecipe(definition, ingredient, result);
+    return new StonecuttingRecipe(ingredient, result);
   }
 }

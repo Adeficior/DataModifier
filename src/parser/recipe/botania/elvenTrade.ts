@@ -28,6 +28,6 @@ export class ElvenTradeRecipeParser extends RecipeParser<
   ): ElvenTradeRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
     const results = context.results.createList(definition.output);
-    return new ElvenTradeRecipe(definition, ingredients, results);
+    return new ElvenTradeRecipe(ingredients, results);
   }
 }

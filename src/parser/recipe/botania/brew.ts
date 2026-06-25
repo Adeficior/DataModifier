@@ -10,11 +10,8 @@ export type BrewRecipeDefinition = RecipeDefinition &
   }>;
 
 export class BrewRecipe extends Recipe {
-  constructor(
-    definition: RecipeDefinition,
-    private readonly ingredients: Ingredient[],
-  ) {
-    super(definition);
+  constructor(private readonly ingredients: Ingredient[]) {
+    super();
   }
 
   getIngredients() {
@@ -26,10 +23,7 @@ export class BrewRecipe extends Recipe {
   }
 
   override replace(ingredientReplacer: Replacer<Ingredient>) {
-    return new BrewRecipe(
-      this.definition,
-      this.ingredients.map(ingredientReplacer),
-    );
+    return new BrewRecipe(this.ingredients.map(ingredientReplacer));
   }
 
   override serialize(
@@ -50,6 +44,6 @@ export class BrewRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): BrewRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
-    return new BrewRecipe(definition, ingredients);
+    return new BrewRecipe(ingredients);
   }
 }

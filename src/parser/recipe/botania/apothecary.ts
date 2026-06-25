@@ -16,12 +16,11 @@ export type ApothecaryRecipeDefinition = RecipeDefinition &
 
 export class ApothecaryRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     protected readonly ingredients: Ingredient[],
     protected readonly result: Result,
     protected readonly reagent: Ingredient,
   ) {
-    super(definition);
+    super();
   }
 
   override getIngredients() {
@@ -37,7 +36,6 @@ export class ApothecaryRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new ApothecaryRecipe(
-      this.definition,
       this.ingredients.map(ingredientReplacer),
       resultReplacer(this.result),
       ingredientReplacer(this.reagent),
@@ -66,6 +64,6 @@ export class ApothecaryRecipeParser extends RecipeParser<
     const ingredients = context.ingredients.createList(definition.ingredients);
     const result = context.results.create(definition.output);
     const reagent = context.ingredients.create(definition.ingredients);
-    return new ApothecaryRecipe(definition, ingredients, result, reagent);
+    return new ApothecaryRecipe(ingredients, result, reagent);
   }
 }

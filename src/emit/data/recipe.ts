@@ -18,8 +18,13 @@ import type { Result } from "../../common/result/index.js";
 import type { ResultInput } from "../../common/result/input.js";
 import type { PackContext } from "../../loader/context.js";
 import { isAtLeastVersion } from "../../packFormat.js";
-import type { RecipeSerializer, Replacer } from "../../parser/recipe/index.js";
-import { createReplacer, Recipe } from "../../parser/recipe/index.js";
+import {
+  createReplacer,
+  RecipeHolder,
+  type Recipe,
+  type RecipeSerializer,
+  type Replacer,
+} from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 import CustomEmitter from "../custom.js";
 import type { ClearableEmitter, RegistryProvider } from "../index.js";
@@ -50,7 +55,9 @@ export interface RecipeRules {
     additionalTests?: RecipeTest,
   ): void;
 
-  add(id: IdInput, value: RecipeDefinition | Recipe): void;
+  add(id: IdInput, value: RecipeDefinition): void;
+  add(id: IdInput, value: RecipeHolder): void;
+  add(id: IdInput, type: NormalizedId<RecipeSerializerId>, value: Recipe): void;
 
   remove(test: RecipeTest): void;
 }
@@ -78,15 +85,15 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     this.recipePath(it),
   );
 
-  private readonly ruled: RuledEmitter<Recipe, RecipeRule>;
+  private readonly ruled: RuledEmitter<RecipeHolder, RecipeRule>;
 
   constructor(
     private readonly logger: Logger,
-    private readonly registry: RegistryProvider<Recipe>,
+    private readonly registry: RegistryProvider<RecipeHolder>,
     private readonly context: PackContext,
     private readonly serializer: RecipeSerializer,
   ) {
-    this.ruled = new RuledEmitter<Recipe, RecipeRule>(
+    this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
       this.logger,
       this.registry,
       (id) => this.recipePath(id),
@@ -132,17 +139,30 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     return { id, type, ingredient, result };
   }
 
-  add(id: IdInput, value: RecipeDefinition | Recipe) {
-    if (this.custom.has(id))
-      this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
-    if (value instanceof Recipe)
-      this.custom.add(id, this.serializer.serialize(value));
-    else this.custom.add(id, value);
+  add(
+    id: IdInput,
+    arg: RecipeDefinition | RecipeHolder | NormalizedId<RecipeSerializerId>,
+    arg2?: Recipe,
+  ) {
+    if (typeof arg === "string") {
+      const type = arg;
+      const recipe = arg2!;
+      this.add(id, new RecipeHolder({ type }, recipe));
+    } else {
+      const value = arg;
+
+      if (this.custom.has(id))
+        this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
+
+      if (value instanceof RecipeHolder)
+        this.custom.add(id, this.serializer.serialize(value));
+      else this.custom.add(id, value);
+    }
   }
 
   private addRule(
     shape: unknown[],
-    modifier: Modifier<Recipe>,
+    modifier: Modifier<RecipeHolder>,
     recipeTest: RecipeTest = {},
     ingredientTests: {
       ingredient?: Predicate<IngredientInput>;

@@ -14,11 +14,10 @@ export type ShapedRecipeDefinition = RecipeDefinition &
 
 export class ShapedRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredients: IngredientMap,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -34,7 +33,6 @@ export class ShapedRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new ShapedRecipe(
-      this.definition,
       this.ingredients.replace(ingredientReplacer),
       resultReplacer(this.result),
     );
@@ -60,6 +58,6 @@ export class ShapedParser extends RecipeParser<
   ): ShapedRecipe {
     const ingredients = context.ingredients.ingredientMap(definition.key);
     const result = context.results.create(definition.result);
-    return new ShapedRecipe(definition, ingredients, result);
+    return new ShapedRecipe(ingredients, result);
   }
 }

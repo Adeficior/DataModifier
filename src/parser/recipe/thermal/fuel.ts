@@ -11,11 +11,8 @@ export type ThermalFuelRecipeDefinition = RecipeDefinition &
 
 // TODO could be same as catalyst
 export class ThermalFuelRecipe extends Recipe {
-  constructor(
-    definition: RecipeDefinition,
-    private readonly ingredient: Ingredient,
-  ) {
-    super(definition);
+  constructor(private readonly ingredient: Ingredient) {
+    super();
   }
 
   getIngredients() {
@@ -27,10 +24,7 @@ export class ThermalFuelRecipe extends Recipe {
   }
 
   override replace(ingredientReplacer: Replacer<Ingredient>): Recipe {
-    return new ThermalFuelRecipe(
-      this.definition,
-      ingredientReplacer(this.ingredient),
-    );
+    return new ThermalFuelRecipe(ingredientReplacer(this.ingredient));
   }
 
   override serialize(
@@ -51,6 +45,6 @@ export class ThermalFuelRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): ThermalFuelRecipe {
     const ingredient = context.ingredients.create(definition.ingredient);
-    return new ThermalFuelRecipe(definition, ingredient);
+    return new ThermalFuelRecipe(ingredient);
   }
 }

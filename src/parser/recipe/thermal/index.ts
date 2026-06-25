@@ -17,11 +17,10 @@ export type ThermalRecipeDefinition = RecipeDefinition &
 
 export class ThermalRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredients: Ingredient[],
     private readonly results: Result[],
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -37,7 +36,6 @@ export class ThermalRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ): Recipe {
     return new ThermalRecipe(
-      this.definition,
       this.ingredients.map(ingredientReplacer),
       this.results.map(resultReplacer),
     );
@@ -85,6 +83,6 @@ export class ThermalRecipeParser extends RecipeParser<
       ? context.results.createList(definition.result)
       : [context.results.create(definition.result)];
 
-    return new ThermalRecipe(definition, ingredients, results);
+    return new ThermalRecipe(ingredients, results);
   }
 }

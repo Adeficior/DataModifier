@@ -16,12 +16,11 @@ export type ManaInfusionRecipeDefinition = RecipeDefinition &
 
 export class ManaInfusionRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredient: Ingredient,
     private readonly result: Result,
     private readonly catalyst?: Ingredient,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -37,7 +36,6 @@ export class ManaInfusionRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new ManaInfusionRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
       this.catalyst && ingredientReplacer(this.catalyst),
@@ -69,6 +67,6 @@ export class ManaInfusionRecipeParser extends RecipeParser<
         : deserializeBlockInput(context.ingredients, definition.catalyst);
     const ingredient = context.ingredients.create(definition.input);
     const result = context.results.create(definition.output);
-    return new ManaInfusionRecipe(definition, ingredient, result, catalyst);
+    return new ManaInfusionRecipe(ingredient, result, catalyst);
   }
 }

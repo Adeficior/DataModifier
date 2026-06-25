@@ -13,12 +13,11 @@ export type SmithingRecipeDefinition = RecipeDefinition &
 
 export class SmithingRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly base: Ingredient,
     private readonly addition: Ingredient,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -34,7 +33,6 @@ export class SmithingRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new SmithingRecipe(
-      this.definition,
       ingredientReplacer(this.base),
       ingredientReplacer(this.addition),
       resultReplacer(this.result),
@@ -63,6 +61,6 @@ export class SmithingParser extends RecipeParser<
     const base = context.ingredients.create(definition.base);
     const addition = context.ingredients.create(definition.addition);
     const result = context.results.create(definition.result);
-    return new SmithingRecipe(definition, base, addition, result);
+    return new SmithingRecipe(base, addition, result);
   }
 }

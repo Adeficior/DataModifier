@@ -1,3 +1,4 @@
+import { encodeId, type NormalizedId } from "../../common/id.js";
 import type { Ingredient } from "../../common/ingredient/index.js";
 import type { Predicate } from "../../common/predicates.js";
 import type { Result } from "../../common/result/index.js";
@@ -17,37 +18,73 @@ function keep<T>(): Replacer<T> {
   return (t) => t;
 }
 
-export abstract class Recipe {
-  // TODO would be pretty cool if this could go await
-  constructor(public readonly definition: RecipeDefinition) {}
+export class RecipeHolder {
+  private readonly type: NormalizedId;
 
-  abstract getIngredients(): Ingredient[];
+  constructor(
+    private readonly definition: RecipeDefinition,
+    private readonly recipe: Recipe,
+  ) {
+    this.type = encodeId(definition.type);
+  }
 
-  replaceIngredient(replace: Replacer<Ingredient>) {
+  serialize(context: RecipeParseContext) {
+    return {
+      ...this.definition,
+      ...this.recipe.serialize(context),
+    };
+  }
+
+  getIngredients() {
+    return this.recipe.getIngredients();
+  }
+
+  getResults() {
+    return this.recipe.getResults();
+  }
+
+  // TODO rename modifiy & add modifier object
+  replace(
+    ingredientReplacer: Replacer<Ingredient>,
+    resultReplacer: Replacer<Result>,
+  ): RecipeHolder {
+    const modified = this.recipe.replace(ingredientReplacer, resultReplacer);
+    return new RecipeHolder(this.definition, modified);
+  }
+
+  replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
     return this.replace(replace, keep());
   }
 
-  abstract getResults(): Result[];
-
-  replaceResult(replace: Replacer<Result>) {
+  replaceResult(replace: Replacer<Result>): RecipeHolder {
     return this.replace(keep(), replace);
   }
+
+  getTypes(): NormalizedId[] {
+    return [this.type, ...this.recipe.additionalTypes()];
+  }
+}
+
+export abstract class Recipe {
+  abstract getIngredients(): Ingredient[];
+
+  abstract getResults(): Result[];
 
   abstract replace(
     ingredientReplacer: Replacer<Ingredient>,
     resultReplacer: Replacer<Result>,
   ): Recipe;
 
-  getTypes() {
-    return [this.definition.type];
+  additionalTypes(): NormalizedId[] {
+    return [];
   }
 
   abstract serialize(context: RecipeParseContext): Partial<RecipeDefinition>;
 }
 
 export type RecipeSerializer = {
-  deserialize(definition: RecipeDefinition): Recipe;
-  serialize(recipe: Recipe): RecipeDefinition;
+  deserialize(definition: RecipeDefinition): RecipeHolder;
+  serialize(recipe: RecipeHolder): RecipeDefinition;
 };
 
 export type RecipeParseContext = Pick<

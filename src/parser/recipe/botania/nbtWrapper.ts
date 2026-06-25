@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
@@ -11,11 +11,8 @@ export type NbtWrapperRecipeDefinition = RecipeDefinition &
   }>;
 
 export class NbtWrapperRecipe extends Recipe {
-  constructor(
-    definition: RecipeDefinition,
-    private readonly recipe: Recipe,
-  ) {
-    super(definition);
+  constructor(private readonly recipe: RecipeHolder) {
+    super();
   }
 
   getIngredients() {
@@ -31,7 +28,6 @@ export class NbtWrapperRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ): Recipe {
     return new NbtWrapperRecipe(
-      this.definition,
       this.recipe.replace(ingredientReplacer, resultReplacer),
     );
   }
@@ -54,6 +50,6 @@ export class NbtWrapperRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): NbtWrapperRecipe {
     const recipe = context.recipes.deserialize(definition.recipe);
-    return new NbtWrapperRecipe(definition, recipe);
+    return new NbtWrapperRecipe(recipe);
   }
 }

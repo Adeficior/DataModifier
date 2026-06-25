@@ -13,11 +13,10 @@ export type SmeltingRecipeDefinition = RecipeDefinition &
 
 export class SmeltingRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredient: Ingredient,
     private readonly result: Result,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -33,7 +32,6 @@ export class SmeltingRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new SmeltingRecipe(
-      this.definition,
       ingredientReplacer(this.ingredient),
       resultReplacer(this.result),
     );
@@ -59,6 +57,6 @@ export class SmeltingParser extends RecipeParser<
   ): SmeltingRecipe {
     const ingredient = context.ingredients.create(definition.ingredient);
     const result = context.results.create(definition.result);
-    return new SmeltingRecipe(definition, ingredient, result);
+    return new SmeltingRecipe(ingredient, result);
   }
 }

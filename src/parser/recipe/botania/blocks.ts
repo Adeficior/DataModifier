@@ -119,6 +119,6 @@ export default class BotaniaBlockRecipeParser<
       definition.input,
     );
     const result = deserializeBlockOutput(context.results, definition.output);
-    return new BotaniaBlockRecipe(definition, ingredient, result);
+    return new BotaniaBlockRecipe(ingredient, result);
   }
 }

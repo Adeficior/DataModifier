@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 type WithConditions<T> = {
@@ -15,11 +15,8 @@ export type ForgeConditionalRecipeDefinition = RecipeDefinition &
   }>;
 
 export class ForgeConditionalRecipe extends Recipe {
-  constructor(
-    definition: RecipeDefinition,
-    private readonly recipes: WithConditions<Recipe>[],
-  ) {
-    super(definition);
+  constructor(private readonly recipes: WithConditions<RecipeHolder>[]) {
+    super();
   }
 
   getIngredients() {
@@ -35,7 +32,6 @@ export class ForgeConditionalRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new ForgeConditionalRecipe(
-      this.definition,
       this.recipes.map((it) => ({
         ...it,
         recipe: it.recipe.replace(ingredientReplacer, resultReplacer),
@@ -54,7 +50,7 @@ export class ForgeConditionalRecipe extends Recipe {
     };
   }
 
-  override getTypes() {
+  override additionalTypes() {
     return this.recipes.flatMap((it) => it.recipe.getTypes());
   }
 }
@@ -67,11 +63,13 @@ export default class ForgeConditionalRecipeParser extends RecipeParser<
     definition: ForgeConditionalRecipeDefinition,
     context: RecipeParseContext,
   ): ForgeConditionalRecipe {
-    const recipes = definition.recipes.map<WithConditions<Recipe>>((it) => ({
-      conditions: it.conditions,
-      recipe: context.recipes.deserialize(it.recipe),
-    }));
+    const recipes = definition.recipes.map<WithConditions<RecipeHolder>>(
+      (it) => ({
+        conditions: it.conditions,
+        recipe: context.recipes.deserialize(it.recipe),
+      }),
+    );
 
-    return new ForgeConditionalRecipe(definition, recipes);
+    return new ForgeConditionalRecipe(recipes);
   }
 }

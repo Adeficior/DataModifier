@@ -17,12 +17,11 @@ export type CookingRecipeDefinition = RecipeDefinition &
 
 export class CookingRecipe extends Recipe {
   constructor(
-    definition: RecipeDefinition,
     private readonly ingredients: Ingredient[],
     private readonly result: Result,
     private readonly container?: Ingredient,
   ) {
-    super(definition);
+    super();
   }
 
   getIngredients() {
@@ -38,7 +37,6 @@ export class CookingRecipe extends Recipe {
     resultReplacer: Replacer<Result>,
   ) {
     return new CookingRecipe(
-      this.definition,
       this.ingredients.map(ingredientReplacer),
       resultReplacer(this.result),
       this.container && ingredientReplacer(this.container),
@@ -72,6 +70,6 @@ export default class CookingRecipeParser extends RecipeParser<
       definition.container === undefined
         ? undefined
         : context.ingredients.create(definition.container);
-    return new CookingRecipe(definition, ingredients, result, container);
+    return new CookingRecipe(ingredients, result, container);
   }
 }
