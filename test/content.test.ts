@@ -2,7 +2,8 @@ import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { loader } = setupLoader({ load: false });
+const version = "1.20.1";
+const { loader } = setupLoader({ version, load: false });
 
 describe("integration with content packs mod", () => {
   it("generates additional resources for block definitions", async () => {

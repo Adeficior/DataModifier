@@ -1,9 +1,10 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { EMPTY_LOOT_TABLE, EMPTY_RECIPE, packFormatOf } from "../src/index.js";
+import { EMPTY_LOOT_TABLE, EMPTY_RECIPE } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { loader } = setupLoader({ packFormat: packFormatOf("1.21.1") });
+const version = "1.21.1";
+const { loader } = setupLoader({ load: false, version });
 
 describe("loader respects different pack format versions", () => {
   it("folders follow new syntax after 1.21", async () => {

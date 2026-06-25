@@ -2,7 +2,8 @@ import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { loader } = setupLoader({ include: "assets/*/lang/*.json" });
+const version = "1.20.1";
+const { loader } = setupLoader({ version, include: "assets/*/lang/*.json" });
 
 describe("replacing translation entries", () => {
   it("replaces using string value", async () => {

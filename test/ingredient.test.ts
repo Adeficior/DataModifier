@@ -17,7 +17,11 @@ import { tryCatching } from "../src/error.js";
 import { encodeId } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { logger, loader } = setupLoader({ include: ["data/*/tags/**/*.json"] });
+const version = "1.20.1";
+const { logger, loader } = setupLoader({
+  version,
+  include: ["data/*/tags/**/*.json"],
+});
 
 // @ts-expect-error private
 const { ingredients, results } = loader;

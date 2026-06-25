@@ -6,14 +6,15 @@ import {
   ItemIngredient,
 } from "../src/common/ingredient/index.js";
 import setupLoader from "./shared/loaderSetup.js";
-import { createDumpResolver } from "./shared/testData.js";
 
-const { loader } = setupLoader({ load: false, hideFrom: ["polytone"] });
-
-beforeEach(async () => {
-  const resolver = createDumpResolver();
-  await loader.loadRegistryDump(resolver);
+const version = "1.20.1";
+const { loader, loadDump } = setupLoader({
+  version,
+  load: false,
+  hideFrom: ["polytone"],
 });
+
+beforeEach(loadDump);
 
 describe("blacklist tests", () => {
   it("does not generate a jei blacklist config file", async () => {

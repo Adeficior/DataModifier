@@ -9,7 +9,9 @@ import { EMPTY_LOOT_TABLE } from "../src/emit/data/loot.js";
 import { LootEntrySchema, LootTableSchema } from "../src/schema/data/loot.js";
 import setupLoader from "./shared/loaderSetup.js";
 
+const version = "1.20.1";
 const { logger, loader } = setupLoader({
+  version,
   include: ["data/*/loot_tables/**/*.json", "data/*/tags/**/*.json"],
 });
 

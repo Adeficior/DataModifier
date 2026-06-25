@@ -11,7 +11,11 @@ import type { NormalizedId } from "../src/index.js";
 import type { ShapedRecipeDefinition } from "../src/parser/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { logger, loader } = setupLoader({ include: ["data/**/*.json"] });
+const version = "1.20.1";
+const { logger, loader } = setupLoader({
+  version,
+  include: ["data/**/*.json"],
+});
 
 /*
   TODO do I want these? 

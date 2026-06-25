@@ -6,14 +6,11 @@ import {
 } from "../src/common/ingredient/index.js";
 import { FluidResult, ItemResult } from "../src/common/result/index.js";
 import setupLoader from "./shared/loaderSetup.js";
-import { createDumpResolver } from "./shared/testData.js";
 
-const { logger, loader } = setupLoader({ load: false });
+const version = "1.20.1";
+const { logger, loader, loadDump } = setupLoader({ version, load: false });
 
-beforeEach(async () => {
-  const resolver = createDumpResolver();
-  await loader.loadRegistryDump(resolver);
-});
+beforeEach(loadDump);
 
 describe("registry dump tests", () => {
   it("correctly loads imports registries", async () => {

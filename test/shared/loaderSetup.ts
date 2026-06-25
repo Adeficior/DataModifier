@@ -3,24 +3,29 @@ import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { afterEach, beforeAll } from "bun:test";
 import { packFormatOf, PackLoader } from "../../src/index.js";
 import type { PackLoaderOptions } from "../../src/loader/pack.js";
-import { createTestDataResolver } from "./testData.js";
+import { createDumpResolver, createTestDataResolver } from "./testData.js";
 
 export default function setupLoader(
   {
     load = true,
-    packFormat = packFormatOf("1.20.1"),
+    version,
     ...options
-  }: Partial<Options & PackLoaderOptions> & { load?: boolean } = {},
+  }: Partial<Options & Omit<PackLoaderOptions, "packFormat">> & {
+    load?: boolean;
+    version: string;
+  },
   block?: (loader: PackLoader) => void,
 ) {
   const logger = createTestLogger();
+  const packFormat = packFormatOf(version);
   const loader = new PackLoader(logger, { ...options, packFormat });
+  const loadDump = () => loader.loadRegistryDump(createDumpResolver(version));
 
   block?.(loader);
 
   if (load) {
     beforeAll(async () => {
-      const resolver = createTestDataResolver(options);
+      const resolver = createTestDataResolver(version, options);
       await loader.loadFrom(resolver);
     }, 15_0000);
   }
@@ -30,5 +35,5 @@ export default function setupLoader(
     logger.reset();
   });
 
-  return { loader, logger };
+  return { loader, logger, loadDump };
 }

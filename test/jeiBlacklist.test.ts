@@ -8,9 +8,13 @@ import {
 } from "../src/common/ingredient/index.js";
 import { encodeId } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
-import { createDumpResolver } from "./shared/testData.js";
 
-const { loader } = setupLoader({ load: false, hideFrom: ["jei"] });
+const version = "1.20.1";
+const { loader, loadDump } = setupLoader({
+  version,
+  load: false,
+  hideFrom: ["jei"],
+});
 
 describe("blacklist tests", () => {
   it("generated a jei blacklist config file", async () => {
@@ -42,7 +46,7 @@ describe("blacklist tests", () => {
   it("generated a blacklist using dumped ids", async () => {
     const acceptor = createTestAcceptor();
 
-    await loader.loadRegistryDump(createDumpResolver());
+    await loadDump();
 
     loader.blacklist.hide(/minecraft:.*oak.*/);
     loader.blacklist.hide(
@@ -74,7 +78,7 @@ describe("blacklist tests", () => {
   it("validates custom registry ids", async () => {
     const acceptor = createTestAcceptor();
 
-    await loader.loadRegistryDump(createDumpResolver());
+    await loadDump();
 
     expect(() => loader.blacklist.hideEntry("example", /whatever/)).toThrow(
       `cannot hide using regex/predicates, registry minecraft:example not loaded`,

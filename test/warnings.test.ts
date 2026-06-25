@@ -3,9 +3,11 @@ import { describe, expect, it } from "bun:test";
 import { ItemResult } from "../src/common/result/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
+const version = "1.20.1";
 const { logger, loader } = setupLoader({
+  version,
   include: ["data/*/recipes/**/*.json"],
-  from: "test/resources/failing",
+  from: "failing",
 });
 
 describe("tests regarding error logging", () => {

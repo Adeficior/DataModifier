@@ -2,7 +2,8 @@ import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import setupLoader from "./shared/loaderSetup.js";
 
-const { loader } = setupLoader({ advancedTags: true, load: false });
+const version = "1.20.1";
+const { loader } = setupLoader({ version, advancedTags: true, load: false });
 
 describe("creation of tag definitions for the advanced tag-loader mod", () => {
   it("can generate files using remove entries", async () => {
