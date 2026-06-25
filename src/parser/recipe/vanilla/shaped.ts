@@ -1,7 +1,6 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 import type { IngredientMap, IngredientMapInput } from "../ingredientMap.js";
 
@@ -28,13 +27,10 @@ export class ShapedRecipe extends Recipe {
     return [this.result];
   }
 
-  replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new ShapedRecipe(
-      this.ingredients.replace(ingredientReplacer),
-      resultReplacer(this.result),
+      this.ingredients.replace(modifier.ingredient),
+      modifier.result(this.result),
     );
   }
 

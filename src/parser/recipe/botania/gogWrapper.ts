@@ -1,7 +1,9 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
+import type {
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
+} from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
@@ -27,13 +29,10 @@ export class GogWrapperRecipe extends Recipe {
     return [...this.base.getResults(), ...this.gog.getResults()];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new GogWrapperRecipe(
-      this.base.replace(ingredientReplacer, resultReplacer),
-      this.gog.replace(ingredientReplacer, resultReplacer),
+      this.base.replace(modifier),
+      this.gog.replace(modifier),
     );
   }
 

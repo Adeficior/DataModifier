@@ -1,7 +1,9 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
+import type {
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
+} from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
@@ -23,13 +25,8 @@ export class NbtWrapperRecipe extends Recipe {
     return this.recipe.getResults();
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ): Recipe {
-    return new NbtWrapperRecipe(
-      this.recipe.replace(ingredientReplacer, resultReplacer),
-    );
+  override replace(modifier: RecipeModifier) {
+    return new NbtWrapperRecipe(this.recipe.replace(modifier));
   }
 
   override serialize(

@@ -3,8 +3,8 @@ import type { Result } from "../../common/result/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "./index.js";
 
 export type OneToOneRecipeDefinition = RecipeDefinition &
@@ -29,13 +29,10 @@ export class OneToOneRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new OneToOneRecipe(
-      ingredientReplacer(this.ingredient),
-      resultReplacer(this.result),
+      modifier.ingredient(this.ingredient),
+      modifier.result(this.result),
     );
   }
 

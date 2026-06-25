@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type StonecuttingRecipeDefinition = RecipeDefinition &
@@ -28,13 +28,10 @@ export class StonecuttingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new StonecuttingRecipe(
-      ingredientReplacer(this.ingredient),
-      resultReplacer(this.result),
+      modifier.ingredient(this.ingredient),
+      modifier.result(this.result),
     );
   }
 

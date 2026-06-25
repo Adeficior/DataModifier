@@ -7,7 +7,7 @@ import type { Result } from "../../../common/result/index.js";
 import { FluidResult } from "../../../common/result/index.js";
 import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
@@ -32,13 +32,10 @@ export class FluidConversionRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new FluidConversionRecipe(
-      ingredientReplacer(this.ingredient),
-      resultReplacer(this.result),
+      modifier.ingredient(this.ingredient),
+      modifier.result(this.result),
     );
   }
 

@@ -3,8 +3,8 @@ import type { Result } from "../../common/result/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "./index.js";
 
 export type ManyToManyRecipeDefinition = RecipeDefinition &
@@ -29,13 +29,10 @@ export class ManyToManyRecipe extends Recipe {
     return this.results;
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new ManyToManyRecipe(
-      this.ingredients.map(ingredientReplacer),
-      this.results.map(resultReplacer),
+      this.ingredients.map(modifier.ingredient),
+      this.results.map(modifier.result),
     );
   }
 

@@ -3,7 +3,7 @@ import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type ThermalRecipeDefinition = RecipeDefinition &
@@ -31,13 +31,10 @@ export class ThermalRecipe extends Recipe {
     return this.results;
   }
 
-  replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ): Recipe {
+  override replace(modifier: RecipeModifier) {
     return new ThermalRecipe(
-      this.ingredients.map(ingredientReplacer),
-      this.results.map(resultReplacer),
+      this.ingredients.map(modifier.ingredient),
+      this.results.map(modifier.result),
     );
   }
 

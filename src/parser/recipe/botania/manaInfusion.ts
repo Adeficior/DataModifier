@@ -2,7 +2,7 @@ import { exists } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 import { deserializeBlockInput, serializeBlockInput } from "./blocks.js";
 
@@ -31,14 +31,11 @@ export class ManaInfusionRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new ManaInfusionRecipe(
-      ingredientReplacer(this.ingredient),
-      resultReplacer(this.result),
-      this.catalyst && ingredientReplacer(this.catalyst),
+      modifier.ingredient(this.ingredient),
+      modifier.result(this.result),
+      this.catalyst && modifier.ingredient(this.catalyst),
     );
   }
 

@@ -2,6 +2,7 @@ export {
   Recipe,
   RecipeHolder,
   default as RecipeParser,
+  type RecipeModifier,
   type RecipeParseContext,
   type RecipeSerializer,
 } from "./recipe/index.js";

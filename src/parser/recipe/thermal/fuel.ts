@@ -1,6 +1,6 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type ThermalFuelRecipeDefinition = RecipeDefinition &
@@ -23,8 +23,8 @@ export class ThermalFuelRecipe extends Recipe {
     return [];
   }
 
-  override replace(ingredientReplacer: Replacer<Ingredient>): Recipe {
-    return new ThermalFuelRecipe(ingredientReplacer(this.ingredient));
+  override replace(modifier: RecipeModifier) {
+    return new ThermalFuelRecipe(modifier.ingredient(this.ingredient));
   }
 
   override serialize(

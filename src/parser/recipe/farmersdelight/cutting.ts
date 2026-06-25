@@ -1,8 +1,8 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import RecipeParser, {
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "../index.js";
 import {
   ManyToManyRecipe,
@@ -46,14 +46,11 @@ export class CuttingRecipe extends ManyToManyRecipe {
     return [...super.getIngredients(), this.tool];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new CuttingRecipe(
-      this.ingredients.map(ingredientReplacer),
-      this.results.map(resultReplacer),
-      ingredientReplacer(this.tool),
+      this.ingredients.map(modifier.ingredient),
+      this.results.map(modifier.result),
+      modifier.ingredient(this.tool),
     );
   }
 

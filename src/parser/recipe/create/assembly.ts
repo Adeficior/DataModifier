@@ -1,7 +1,11 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
+import type {
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
+} from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
@@ -35,15 +39,12 @@ export class AssemblyRecipe extends Recipe {
     return [...this.results, ...this.sequence.flatMap((it) => it.getResults())];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new AssemblyRecipe(
-      ingredientReplacer(this.ingredient),
-      ingredientReplacer(this.transitionalItem),
-      this.results.map(resultReplacer),
-      this.sequence.map((it) => it.replace(ingredientReplacer, resultReplacer)),
+      modifier.ingredient(this.ingredient),
+      modifier.ingredient(this.transitionalItem),
+      this.results.map(modifier.result),
+      this.sequence.map((it) => it.replace(modifier)),
     );
   }
 

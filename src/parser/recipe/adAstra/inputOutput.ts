@@ -2,12 +2,12 @@ import z from "zod";
 import { encodeId, IdSchema } from "../../../common/id.js";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type IngredientSerializer from "../../../common/ingredient/serializer.js";
-import { ItemResult, type Result } from "../../../common/result/index.js";
+import { ItemResult } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "../index.js";
 import { OneToOneRecipe } from "../oneToOne.js";
 
@@ -52,13 +52,10 @@ export class InputOutputRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new OneToOneRecipe(
-      ingredientReplacer(this.ingredient),
-      resultReplacer(this.result),
+      modifier.ingredient(this.ingredient),
+      modifier.result(this.result),
     );
   }
 

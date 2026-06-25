@@ -1,7 +1,9 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeHolder, RecipeParseContext, Replacer } from "../index.js";
+import type {
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
+} from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 type WithConditions<T> = {
@@ -27,14 +29,11 @@ export class ForgeConditionalRecipe extends Recipe {
     return this.recipes.flatMap((it) => it.recipe.getResults());
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new ForgeConditionalRecipe(
       this.recipes.map((it) => ({
         ...it,
-        recipe: it.recipe.replace(ingredientReplacer, resultReplacer),
+        recipe: it.recipe.replace(modifier),
       })),
     );
   }

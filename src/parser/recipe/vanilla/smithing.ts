@@ -1,7 +1,7 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type SmithingRecipeDefinition = RecipeDefinition &
@@ -28,14 +28,11 @@ export class SmithingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new SmithingRecipe(
-      ingredientReplacer(this.base),
-      ingredientReplacer(this.addition),
-      resultReplacer(this.result),
+      modifier.ingredient(this.base),
+      modifier.ingredient(this.addition),
+      modifier.result(this.result),
     );
   }
 

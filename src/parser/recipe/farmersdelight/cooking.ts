@@ -2,7 +2,7 @@ import { exists } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type CookingRecipeDefinition = RecipeDefinition &
@@ -32,14 +32,11 @@ export class CookingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new CookingRecipe(
-      this.ingredients.map(ingredientReplacer),
-      resultReplacer(this.result),
-      this.container && ingredientReplacer(this.container),
+      this.ingredients.map(modifier.ingredient),
+      modifier.result(this.result),
+      this.container && modifier.ingredient(this.container),
     );
   }
 

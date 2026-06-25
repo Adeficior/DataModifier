@@ -1,6 +1,6 @@
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 export type BrewRecipeDefinition = RecipeDefinition &
@@ -22,8 +22,8 @@ export class BrewRecipe extends Recipe {
     return [];
   }
 
-  override replace(ingredientReplacer: Replacer<Ingredient>) {
-    return new BrewRecipe(this.ingredients.map(ingredientReplacer));
+  override replace(modifier: RecipeModifier) {
+    return new BrewRecipe(this.ingredients.map(modifier.ingredient));
   }
 
   override serialize(

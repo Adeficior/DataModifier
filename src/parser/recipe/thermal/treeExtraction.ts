@@ -9,8 +9,8 @@ import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "../index.js";
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &
@@ -37,14 +37,11 @@ export class TreeExtractionRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new TreeExtractionRecipe(
-      ingredientReplacer(this.trunk),
-      ingredientReplacer(this.leaves),
-      resultReplacer(this.result),
+      modifier.ingredient(this.trunk),
+      modifier.ingredient(this.leaves),
+      modifier.result(this.result),
     );
   }
 

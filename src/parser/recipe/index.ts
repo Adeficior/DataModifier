@@ -18,6 +18,11 @@ function keep<T>(): Replacer<T> {
   return (t) => t;
 }
 
+export type RecipeModifier = {
+  result: Replacer<Result>;
+  ingredient: Replacer<Ingredient>;
+};
+
 export class RecipeHolder {
   private readonly type: NormalizedId;
 
@@ -44,20 +49,23 @@ export class RecipeHolder {
   }
 
   // TODO rename modifiy & add modifier object
-  replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ): RecipeHolder {
-    const modified = this.recipe.replace(ingredientReplacer, resultReplacer);
+  replace(modifier: RecipeModifier): RecipeHolder {
+    const modified = this.recipe.replace(modifier);
     return new RecipeHolder(this.definition, modified);
   }
 
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
-    return this.replace(replace, keep());
+    return this.replace({
+      ingredient: replace,
+      result: keep(),
+    });
   }
 
   replaceResult(replace: Replacer<Result>): RecipeHolder {
-    return this.replace(keep(), replace);
+    return this.replace({
+      ingredient: keep(),
+      result: replace,
+    });
   }
 
   getTypes(): NormalizedId[] {
@@ -70,10 +78,7 @@ export abstract class Recipe {
 
   abstract getResults(): Result[];
 
-  abstract replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ): Recipe;
+  abstract replace(modifier: RecipeModifier): Recipe;
 
   additionalTypes(): NormalizedId[] {
     return [];

@@ -3,8 +3,8 @@ import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
+  type RecipeModifier,
   type RecipeParseContext,
-  type Replacer,
 } from "../index.js";
 
 export type ApothecaryRecipeDefinition = RecipeDefinition &
@@ -31,14 +31,11 @@ export class ApothecaryRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(
-    ingredientReplacer: Replacer<Ingredient>,
-    resultReplacer: Replacer<Result>,
-  ) {
+  override replace(modifier: RecipeModifier) {
     return new ApothecaryRecipe(
-      this.ingredients.map(ingredientReplacer),
-      resultReplacer(this.result),
-      ingredientReplacer(this.reagent),
+      this.ingredients.map(modifier.ingredient),
+      modifier.result(this.result),
+      modifier.ingredient(this.reagent),
     );
   }
 

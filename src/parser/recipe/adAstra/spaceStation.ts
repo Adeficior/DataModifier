@@ -7,7 +7,7 @@ import {
 } from "../../../common/ingredient/index.js";
 import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeParseContext, Replacer } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
 
 const WrappedIngredientSchema = z.object({
@@ -35,8 +35,8 @@ export class SpaceStationRecipe extends Recipe {
     return [];
   }
 
-  replace(ingredientReplacer: Replacer<Ingredient>) {
-    return new SpaceStationRecipe(this.ingredients.map(ingredientReplacer));
+  override replace(modifier: RecipeModifier) {
+    return new SpaceStationRecipe(this.ingredients.map(modifier.ingredient));
   }
 
   serialize(
