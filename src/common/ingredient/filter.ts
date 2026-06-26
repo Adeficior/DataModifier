@@ -24,9 +24,10 @@ export type IngredientFilter =
   | IngredientInput
   | `#${string}`;
 
+// TODO is createPredicate
 export default function createIngredientFilter(
   test: IngredientFilter,
-  context: Omit<PackContext, "results">,
+  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
 ): Predicate<IngredientInput> {
   if (typeof test === "string") {
     if (test.startsWith("#")) {

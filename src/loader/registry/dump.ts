@@ -15,6 +15,7 @@ export default class RegistryDumpLoader implements RegistryLookup {
 
   constructor(private readonly logger: Logger) {}
 
+  // TODO not needed, use accept directly
   async extract(resolver: IResolver) {
     await resolver.extract((path, content) => this.accept(path, content));
   }

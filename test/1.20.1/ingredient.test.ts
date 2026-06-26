@@ -12,11 +12,11 @@ import { createDumpResolver } from "../shared/testData";
 
 const logger = createTestLogger();
 const version = "1.20.1";
-const registries = new RegistryDumpLoader(logger);
-const ingredients = new IngredientSerializer(packFormatOf(version), registries);
+const lookup = new RegistryDumpLoader(logger);
+const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
 
 beforeAll(async () => {
-  await registries.extract(createDumpResolver(version));
+  await lookup.extract(createDumpResolver(version));
 });
 
 describe("ingredient tests with 1.20.1 format", () => {

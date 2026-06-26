@@ -10,6 +10,7 @@ export type CommonFilter<T> = RegExp | Predicate<T> | T;
 export function createCommonFilter<TEntry, TId extends string>(
   test: CommonFilter<TId>,
   resolve: (value: TEntry, logger?: Logger) => NormalizedId<TId>[],
+  // TODO required?
   tags?: TagRegistry<RegistryId>,
 ): Predicate<TEntry> {
   if (typeof test === "function") {

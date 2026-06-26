@@ -217,23 +217,16 @@ export default class PackLoader implements Loader, ClearableEmitter {
         return this.loadInternal(resolver);
       }),
     );
-
-    this.freeze();
   }
 
   async loadFrom(resolver: IResolver) {
     await this.loadInternal(resolver);
-    this.freeze();
   }
 
   async loadRegistryDump(resolver: IResolver) {
     const registryDumpLoader = new RegistryDumpLoader(this.logger);
     await registryDumpLoader.extract(resolver);
     this.lookup.set(registryDumpLoader);
-  }
-
-  private freeze() {
-    this.tagLoader.freeze();
   }
 
   clear() {

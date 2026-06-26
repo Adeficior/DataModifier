@@ -37,7 +37,6 @@ export interface TagRegistry<T extends RegistryId> {
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   private readonly entries = new Registry<TagEntry[]>();
-  private frozen = false;
 
   constructor(public readonly folder: string) {}
 
@@ -46,13 +45,8 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
     if (!id.startsWith("#")) throw new Error("tag id's must start with a '#'");
   }
 
-  freeze() {
-    this.frozen = true;
-  }
-
   load(id: TagInput, definition: TagDefinition) {
     this.validateId(id);
-    if (this.frozen) throw new Error("TagRegistry has already been frozen");
 
     const existingEntries = this.entries.get(id) ?? [];
     const unique = orderTagEntries([
@@ -65,13 +59,11 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   }
 
   list() {
-    if (!this.frozen) throw new Error("TagRegistry has not been frozen yet");
     return this.entries.keys();
   }
 
   get(id: TagInput) {
     this.validateId(id);
-    if (!this.frozen) throw new Error("TagRegistry has not been frozen yet");
     return this.entries.get(id);
   }
 
@@ -166,8 +158,4 @@ export default class TagsLoader implements TagRegistryHolder {
     const id = encodeId(info) as TagInput;
     info.registry.load(id, parsed);
   };
-
-  freeze() {
-    Object.values(this.registries).forEach((it) => it.freeze());
-  }
 }
