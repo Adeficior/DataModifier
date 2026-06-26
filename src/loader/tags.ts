@@ -72,6 +72,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
     if (level >= 100) throw new Error(`Circular TagDefinition: ${id}`);
 
     const entries = this.get(input) ?? [];
+
     return entries.flatMap((it) => {
       const entry = entryId(it);
       const required = typeof it === "string" ? true : it.required !== false;

@@ -7,6 +7,7 @@ import {
   Ingredient,
   ItemIngredient,
   ItemTagIngredient,
+  ListIngredient,
 } from ".";
 import type { PackContext } from "../../loader/context";
 import {
@@ -22,11 +23,18 @@ export type IngredientFilter =
   | IngredientInput
   | `#${string}`;
 
-// TODO is createPredicate
 export default function createIngredientFilter(
   test: IngredientFilter,
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
-): Predicate<IngredientInput> {
+): Predicate<Ingredient> {
+  const unvalidated = createUnvalidatedFilter(test, context);
+  return (it) => unvalidated(context.ingredients.validated(it));
+}
+
+function createUnvalidatedFilter(
+  test: IngredientFilter,
+  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
+): Predicate<Ingredient> {
   if (typeof test === "string") {
     if (test.startsWith("#")) {
       return createIngredientFilter(
@@ -43,6 +51,7 @@ export default function createIngredientFilter(
   }
 
   if (typeof test === "function") {
+    // ingredients.create not needed if function wrapped
     return (it, logger) => test(context.ingredients.create(it), logger);
   }
 
@@ -73,7 +82,13 @@ export default function createIngredientFilter(
   if (test instanceof BlockIngredient) {
     return filterByRegistry(test.id, context, "minecraft:block");
   }
-  // TODO add support for ListIngredient?
+
+  if (test instanceof ListIngredient) {
+    const predicates = test.entries.map((it) =>
+      createIngredientFilter(it, context),
+    );
+    return (it) => predicates.some((predicate) => predicate(it));
+  }
 
   // TODO warn or throw?
   return () => false;
@@ -83,17 +98,11 @@ function filterByRegistry(
   test: NormalizedId | RegExp,
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
   registry: NormalizedId<RegistryId>,
-): Predicate<IngredientInput> {
-  function resolveIds(it: IngredientInput): NormalizedId[] {
-    const ingredient = context.ingredients.create(it);
-    return ingredient.idsFor(registry);
-  }
-
-  // TODO create Ingredient Filter and transform to input filter
-  return createCommonFilter<IngredientInput, NormalizedId>(
+): Predicate<Ingredient> {
+  return createCommonFilter<Ingredient, NormalizedId>(
     test,
     // TODO remove logger
-    (input, _logger) => resolveIds(input),
+    (it, _logger) => it.idsFor(registry),
     context.tags.registry(registry),
   );
 }

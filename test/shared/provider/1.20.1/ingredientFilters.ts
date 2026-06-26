@@ -4,28 +4,19 @@ import {
   BlockTagIngredient,
   FluidIngredient,
   FluidTagIngredient,
+  type Ingredient,
   ItemIngredient,
   ItemTagIngredient,
+  ListIngredient,
 } from "../../../../src/common/ingredient";
 import type { IngredientFilter } from "../../../../src/common/ingredient/filter";
-import type { IngredientInput } from "../../../../src/common/ingredient/input";
 import { BUCKET } from "../../../../src/common/units";
 import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 
 export function* matchingIngredientFilters(): DataProvider<
-  [IngredientFilter, IngredientInput]
+  [IngredientFilter, Ingredient]
 > {
-  yield [
-    "item id by item id",
-    "minecraft:cooked_beef",
-    "minecraft:cooked_beef",
-  ];
-  yield ["item id by item tag", "#pickaxes", "minecraft:diamond_pickaxe"];
-  yield ["item id by nested item tag", "#buttons", "minecraft:oak_button"];
-  yield ["item tag by item tag", "#stairs", "#stairs"];
-  yield ["item tag by nested item tag", "#buttons", "#wooden_buttons"];
-
   yield [
     "item by item",
     new ItemIngredient("minecraft:ice", 10),
@@ -93,15 +84,54 @@ export function* matchingIngredientFilters(): DataProvider<
     new FluidTagIngredient("stairs"),
     new FluidTagIngredient("minecraft:stairs"),
   ];
+
+  yield [
+    "list by item id",
+    "minecraft:gold_nugget",
+    new ListIngredient([
+      new BlockIngredient("stone"),
+      new ItemIngredient("gold_nugget"),
+    ]),
+  ];
+  yield [
+    "block by list",
+    new ListIngredient([
+      new BlockTagIngredient("base_stone_overworld"),
+      new ItemIngredient("gold_nugget"),
+    ]),
+    new BlockIngredient("stone"),
+  ];
+  yield [
+    "list by block tag",
+    new BlockTagIngredient("base_stone_overworld"),
+    new ListIngredient([
+      new BlockIngredient("stone"),
+      new ItemIngredient("gold_nugget"),
+    ]),
+  ];
+
+  yield [
+    "item by regex",
+    /^.+:birch_/,
+    new ItemIngredient("minecraft:birch_stairs"),
+  ];
+  // TODO do I want this?
+  yield [
+    "item tag by regex",
+    /^.+:birch_/,
+    new ItemTagIngredient("minecraft:birch_stairs"),
+  ];
+
+  yield [
+    "fluid tag by predicate",
+    (it) => it instanceof FluidTagIngredient && it.amount > BUCKET,
+    new FluidTagIngredient("water", BUCKET * 2),
+  ];
 }
 
 export function* missingIngredientFilters(): DataProvider<
-  [IngredientFilter, IngredientInput]
+  [IngredientFilter, Ingredient]
 > {
-  yield ["item id by item id", "minecraft:cooked_beef", "minecraft:redstone"];
-  yield ["item id by item tag", "#banners", "minecraft:diamond"];
-  yield ["item tag by item tag", "#banners", "#stairs"];
-
   yield [
     "item by item",
     new ItemIngredient("minecraft:ice"),
@@ -148,6 +178,19 @@ export function* missingIngredientFilters(): DataProvider<
     "fluid tag by fluid tag",
     new FluidTagIngredient("minecraft:lava"),
     new FluidTagIngredient("minecraft:water"),
+  ];
+
+  yield [
+    "block by regex",
+    /^.+:birch_/,
+    new BlockIngredient("minecraft:birch_stairs"),
+  ];
+  yield ["block by regex", /.*/, new FluidIngredient("minecraft:lava")];
+
+  yield [
+    "fluid tag by predicate",
+    (it) => it instanceof BlockIngredient,
+    new FluidTagIngredient("lava"),
   ];
 }
 

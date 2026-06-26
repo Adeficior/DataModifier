@@ -7,7 +7,6 @@ import {
   ItemTagIngredient,
   type Ingredient,
 } from "../../common/ingredient/index.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
 import { extendLootEntry } from "../../schema/data/loot.js";
 import type { Modifier } from "./index.js";
@@ -40,7 +39,7 @@ function entryMatches(
 
 function hasOutput(
   logger: Logger,
-  test: Predicate<IngredientInput>,
+  test: Predicate<Ingredient>,
   table: LootTable,
 ): boolean {
   return table.pools.some((pool) =>
@@ -54,7 +53,7 @@ export default class LootTableRule extends Rule<LootTable> {
   constructor(
     private readonly shape: unknown[],
     private readonly idTests: Predicate<Id>[],
-    private readonly outputTests: Predicate<IngredientInput>[],
+    private readonly outputTests: Predicate<Ingredient>[],
     modifier: Modifier<LootTable>,
   ) {
     super(modifier);

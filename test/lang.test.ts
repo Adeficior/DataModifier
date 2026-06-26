@@ -65,7 +65,7 @@ describe("replacing translation entries", () => {
 
     loader.lang.replaceValue("Iron", "Steel", {
       lang: "en_us",
-      mod: ["create", "farmersdelight"],
+      namespaces: ["create", "farmersdelight"],
     });
 
     await loader.emit(acceptor);
@@ -78,7 +78,7 @@ describe("replacing translation entries", () => {
 
     loader.lang.replaceValue("Dark Oak", "Mahagony", {
       lang: "en_us",
-      mod: ["minecraft"],
+      namespaces: ["minecraft"],
       keepCase: false,
     });
 

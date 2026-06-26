@@ -56,8 +56,8 @@ describe("ingredient filter tests with 1.20.1 format", () => {
   it("invalid test subject", () => {
     const filter = new ItemIngredient("minecraft:apple");
     const predicate = createIngredientFilter(filter, context);
-    expect(() => predicate("minecraft:horse_radish")).toThrow(
-      UnknownRegistryEntry,
-    );
+    expect(() =>
+      predicate(new ItemIngredient("minecraft:horse_radish")),
+    ).toThrow(UnknownRegistryEntry);
   });
 });

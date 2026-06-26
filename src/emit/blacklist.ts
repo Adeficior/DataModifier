@@ -7,13 +7,7 @@ import { encodeId } from "../common/id.js";
 
 import type { IngredientFilter } from "../common/ingredient/filter.js";
 import createIngredientFilter from "../common/ingredient/filter.js";
-import {
-  BlockIngredient,
-  FluidIngredient,
-  ItemIngredient,
-  ListIngredient,
-} from "../common/ingredient/index.js";
-import { IllegalShapeError } from "../error.js";
+import { ItemIngredient } from "../common/ingredient/index.js";
 import type { PackContext } from "../loader/context.js";
 import { toJson } from "../textHelper.js";
 import type { ClearableEmitter } from "./index.js";
@@ -75,38 +69,34 @@ export default class BlacklistEmitter
     this.hidden.push(...ids);
   }
 
-  private filterIds(test: IngredientFilter) {
+  private filterItemIds(test: IngredientFilter) {
     const keys = this.context.lookup.keys("minecraft:item");
     if (!keys)
       throw new Error(
         "you can only use regex/predicates to blacklist items if a registry dump is loaded",
       );
+
     const predicate = createIngredientFilter(test, this.context);
 
-    return [...keys.keys()].filter((it) => predicate(it, this.logger));
+    return [...keys.keys()].filter((it) =>
+      predicate(new ItemIngredient(it), this.logger),
+    );
   }
 
   private resolveIds(input: IngredientFilter): string[] {
     if (input instanceof RegExp || typeof input === "function") {
-      return this.filterIds(input);
+      return this.filterItemIds(input);
     }
 
     const ingredient = this.context.ingredients.create(input);
 
-    if (ingredient instanceof ListIngredient) {
-      return ingredient.entries.flatMap((it) => this.resolveIds(it));
-    }
+    const registries: NormalizedId<RegistryId>[] = [
+      "minecraft:item",
+      "minecraft:fluid",
+      "minecraft:block",
+    ];
 
-    // TODO common super class?
-    if (
-      ingredient instanceof BlockIngredient ||
-      ingredient instanceof FluidIngredient ||
-      ingredient instanceof ItemIngredient
-    ) {
-      return [encodeId(ingredient.id)];
-    }
-
-    throw new IllegalShapeError("illegal blacklist entry", input);
+    return registries.flatMap((registry) => ingredient.idsFor(registry));
   }
 
   async emit(acceptor: Acceptor) {

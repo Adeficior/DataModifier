@@ -8,7 +8,7 @@ import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId, prefix } from "../../common/id.js";
 import type { IngredientFilter } from "../../common/ingredient/filter.js";
 import createIngredientFilter from "../../common/ingredient/filter.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
+import type { Ingredient } from "../../common/ingredient/index.js";
 import type { PackContext } from "../../loader/context.js";
 import { isAtLeastVersion } from "../../packFormat.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
@@ -111,7 +111,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
 
   private resolveLootTableTest(test: LootTableTest) {
     const id: Predicate<Id>[] = [];
-    const output: Predicate<IngredientInput>[] = [];
+    const output: Predicate<Ingredient>[] = [];
 
     if (test.id) id.push(resolveIDTest(test.id));
     if (test.output) output.push(this.resolveIngredientTest(test.output));

@@ -13,7 +13,7 @@ import type { ClearableEmitter, RegistryProvider } from "../index.js";
 
 type LangRule = Readonly<{
   languages: string[];
-  mods: string[];
+  namespaces: string[];
   key?: Predicate<string>;
   value?: Predicate<string>;
   replacer: Replacer<string>;
@@ -23,7 +23,7 @@ type ReplaceOptions = Readonly<{
   matchCase?: boolean;
   keepCase?: boolean;
   lang?: string | string[];
-  mod?: string | string[];
+  namespaces?: string | string[];
 }>;
 
 type EntryOptions = { lang?: string };
@@ -60,7 +60,8 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
       const allRules = this.rules.filter((rule) => {
         return (
           (rule.languages.length === 0 || rule.languages.includes(id.path)) &&
-          (rule.mods.length === 0 || rule.mods.includes(id.namespace))
+          (rule.namespaces.length === 0 ||
+            rule.namespaces.includes(id.namespace))
         );
       });
 
@@ -115,7 +116,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
     options: ReplaceOptions = {},
   ) {
     const languages = arrayOrSelf(options.lang);
-    const mods = arrayOrSelf(options.mod);
+    const mods = arrayOrSelf(options.namespaces);
     const matcher: (it: string) => string =
       options.keepCase === false ? () => value : keepCaseMatcher(value);
 
@@ -123,7 +124,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
       if (options.matchCase) {
         this.rules.push({
           languages,
-          mods,
+          namespaces: mods,
           value: (it) => it.includes(match),
           replacer: (it) => it.replaceAll(match, matcher),
         });
@@ -133,7 +134,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
     } else {
       this.rules.push({
         languages,
-        mods,
+        namespaces: mods,
         value: (it) => match.test(it),
         replacer: (it) => it.replace(match, matcher),
       });

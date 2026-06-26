@@ -3,8 +3,8 @@ import { exists } from "@adeficior/pack-resolver";
 import type { Predicate } from "../../common/filters.js";
 import type { Id } from "../../common/id.js";
 import { createId } from "../../common/id.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
-import type { ResultInput } from "../../common/result/input.js";
+import type { Ingredient } from "../../common/ingredient/index.js";
+import type { Result } from "../../common/result/index.js";
 import type { RecipeHolder } from "../../parser/recipe/index.js";
 import type { Modifier } from "./index.js";
 import Rule from "./index.js";
@@ -14,8 +14,8 @@ export default class RecipeRule extends Rule<RecipeHolder> {
     private readonly shape: unknown[],
     private readonly idsTests: Predicate<Id>[],
     private readonly typeTests: Predicate<Id>[],
-    private readonly ingredientTests: Predicate<IngredientInput>[],
-    private readonly resultTests: Predicate<ResultInput>[],
+    private readonly ingredientTests: Predicate<Ingredient>[],
+    private readonly resultTests: Predicate<Result>[],
     modifier: Modifier<RecipeHolder>,
   ) {
     super(modifier);

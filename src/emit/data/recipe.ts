@@ -127,8 +127,8 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   private resolveRecipeTest(test: RecipeTest) {
     const id: Predicate<Id>[] = [];
     const type: Predicate<Id>[] = [];
-    const ingredient: Predicate<IngredientInput>[] = [];
-    const result: Predicate<ResultInput>[] = [];
+    const ingredient: Predicate<Ingredient>[] = [];
+    const result: Predicate<Result>[] = [];
 
     if (test.id) id.push(resolveIDTest(test.id));
     if (test.type) type.push(resolveIDTest(test.type));
@@ -165,8 +165,8 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     modifier: Modifier<RecipeHolder>,
     recipeTest: RecipeTest = {},
     ingredientTests: {
-      ingredient?: Predicate<IngredientInput>;
-      result?: Predicate<ResultInput>;
+      ingredient?: Predicate<Ingredient>;
+      result?: Predicate<Result>;
     } = {},
   ) {
     const recipePredicates = this.resolveRecipeTest(recipeTest ?? {});
@@ -220,9 +220,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
     const value = this.context.ingredients.create(input);
 
-    const replacer = createReplacer<IngredientInput>(predicate, value);
-    const replace: Replacer<Ingredient> = (it) =>
-      this.context.ingredients.create(replacer(it));
+    const replace = createReplacer<Ingredient>(predicate, value);
 
     this.addRule(
       ["replace ingredient", test, "with", value, additionalTest],
