@@ -4,6 +4,8 @@ import {
   BlockTagIngredient,
   FluidIngredient,
   FluidTagIngredient,
+  ItemIngredient,
+  ItemTagIngredient,
 } from "../../../../src/common/ingredient";
 import type { IngredientFilter } from "../../../../src/common/ingredient/filter";
 import type { IngredientInput } from "../../../../src/common/ingredient/input";
@@ -23,6 +25,32 @@ export function* matchingIngredientFilters(): DataProvider<
   yield ["item id by nested item tag", "#buttons", "minecraft:oak_button"];
   yield ["item tag by item tag", "#stairs", "#stairs"];
   yield ["item tag by nested item tag", "#buttons", "#wooden_buttons"];
+
+  yield [
+    "item by item",
+    new ItemIngredient("minecraft:ice", 10),
+    new ItemIngredient("ice", 2),
+  ];
+  yield [
+    "item by item tag",
+    new ItemTagIngredient("rails"),
+    new ItemIngredient("minecraft:powered_rail", 18),
+  ];
+  yield [
+    "item by nested item tag",
+    new ItemTagIngredient("minecraft:logs", 123),
+    new ItemIngredient("oak_log", 3),
+  ];
+  yield [
+    "item tag by item tag",
+    new ItemTagIngredient("stairs"),
+    new ItemTagIngredient("minecraft:stairs"),
+  ];
+  yield [
+    "item tag by nested item tag",
+    new ItemTagIngredient("minecraft:logs", 9),
+    new ItemTagIngredient("logs_that_burn"),
+  ];
 
   yield [
     "block by block",
@@ -73,6 +101,22 @@ export function* missingIngredientFilters(): DataProvider<
   yield ["item id by item id", "minecraft:cooked_beef", "minecraft:redstone"];
   yield ["item id by item tag", "#banners", "minecraft:diamond"];
   yield ["item tag by item tag", "#banners", "#stairs"];
+
+  yield [
+    "item by item",
+    new ItemIngredient("minecraft:ice"),
+    new ItemIngredient("minecraft:packed_ice"),
+  ];
+  yield [
+    "item by item tag",
+    new ItemTagIngredient("shovels"),
+    new ItemIngredient("minecraft:granite"),
+  ];
+  yield [
+    "item tag by item tag",
+    new ItemTagIngredient("planks"),
+    new ItemTagIngredient("minecraft:portals"),
+  ];
 
   yield [
     "block by block",
