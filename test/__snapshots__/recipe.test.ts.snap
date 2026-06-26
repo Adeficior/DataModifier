@@ -4,7 +4,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified piston rec
 {
   "key": {
     "#": {
-      "item": "minecraft:cobblestone",
+      "tag": "forge:cobblestone/normal",
     },
     "R": {
       "item": "minecraft:emerald",
@@ -13,7 +13,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified piston rec
       "tag": "minecraft:planks",
     },
     "X": {
-      "item": "minecraft:iron_ingot",
+      "tag": "forge:ingots/iron",
     },
   },
   "pattern": [
@@ -32,7 +32,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified compass re
 {
   "key": {
     "#": {
-      "item": "minecraft:iron_ingot",
+      "tag": "forge:ingots/iron",
     },
     "X": {
       "item": "minecraft:emerald",
@@ -98,7 +98,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
 {
   "key": {
     "#": {
-      "item": "minecraft:cobblestone",
+      "tag": "forge:cobblestone/normal",
     },
     "R": {
       "item": "minecraft:emerald",
@@ -107,7 +107,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
       "tag": "minecraft:planks",
     },
     "X": {
-      "item": "minecraft:iron_ingot",
+      "tag": "forge:ingots/iron",
     },
   },
   "pattern": [
@@ -124,6 +124,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
 
 exports[`recipe ingredient replacement replaces ingredients with additional input filter: modified note_block recipe 1`] = `
 {
+  "category": "redstone",
   "key": {
     "#": {
       "tag": "minecraft:planks",
@@ -140,6 +141,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
   "result": {
     "item": "minecraft:note_block",
   },
+  "show_notification": true,
   "type": "minecraft:crafting_shaped",
 }
 `;

@@ -1,182 +1,4 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`creates custom loot tables: parsed loot table 1`] = `
-{
-  "pools": [
-    {
-      "entries": [
-        {
-          "children": [
-            {
-              "name": "minecraft:diamond",
-              "type": "minecraft:item",
-            },
-          ],
-          "type": "minecraft:alternatives",
-        },
-        {
-          "name": "minecraft:logs",
-          "type": "minecraft:tag",
-        },
-      ],
-      "rolls": 4,
-    },
-  ],
-  "type": "minecraft:block",
-}
-`;
-
-exports[`loot table removal removes loot table with output filter: loot tables containing any log 1`] = `
-[
-  "data/minecraft/loot_tables/blocks/acacia_log.json",
-  "data/minecraft/loot_tables/blocks/acacia_wood.json",
-  "data/minecraft/loot_tables/blocks/birch_log.json",
-  "data/minecraft/loot_tables/blocks/birch_wood.json",
-  "data/minecraft/loot_tables/blocks/crimson_hyphae.json",
-  "data/minecraft/loot_tables/blocks/crimson_stem.json",
-  "data/minecraft/loot_tables/blocks/dark_oak_log.json",
-  "data/minecraft/loot_tables/blocks/dark_oak_wood.json",
-  "data/minecraft/loot_tables/blocks/jungle_log.json",
-  "data/minecraft/loot_tables/blocks/jungle_wood.json",
-  "data/minecraft/loot_tables/blocks/oak_log.json",
-  "data/minecraft/loot_tables/blocks/oak_wood.json",
-  "data/minecraft/loot_tables/blocks/spruce_log.json",
-  "data/minecraft/loot_tables/blocks/spruce_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_acacia_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_acacia_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_birch_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_birch_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_crimson_hyphae.json",
-  "data/minecraft/loot_tables/blocks/stripped_crimson_stem.json",
-  "data/minecraft/loot_tables/blocks/stripped_dark_oak_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_dark_oak_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_jungle_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_jungle_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_oak_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_oak_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_spruce_log.json",
-  "data/minecraft/loot_tables/blocks/stripped_spruce_wood.json",
-  "data/minecraft/loot_tables/blocks/stripped_warped_hyphae.json",
-  "data/minecraft/loot_tables/blocks/stripped_warped_stem.json",
-  "data/minecraft/loot_tables/blocks/warped_hyphae.json",
-  "data/minecraft/loot_tables/blocks/warped_stem.json",
-  "data/minecraft/loot_tables/chests/pillager_outpost.json",
-  "data/minecraft/loot_tables/chests/spawn_bonus_chest.json",
-  "data/minecraft/loot_tables/chests/village/village_taiga_house.json",
-]
-`;
-
-exports[`loot tables output replacements keeps extended loot entry properties: modified wild rice loot table 1`] = `
-{
-  "pools": [
-    {
-      "conditions": [
-        {
-          "block": "farmersdelight:wild_rice",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "half": "lower",
-          },
-        },
-        {
-          "condition": "minecraft:location_check",
-          "offsetY": 1,
-          "predicate": {
-            "block": {
-              "block": "farmersdelight:wild_rice",
-              "state": {
-                "half": "upper",
-              },
-            },
-          },
-        },
-      ],
-      "entries": [
-        {
-          "children": [
-            {
-              "conditions": [
-                {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "tag": "forge:shears",
-                  },
-                },
-              ],
-              "name": "farmersdelight:wild_rice",
-              "type": "minecraft:item",
-            },
-            {
-              "conditions": [
-                {
-                  "condition": "minecraft:survives_explosion",
-                },
-              ],
-              "name": "minecraft:apple",
-              "type": "minecraft:item",
-            },
-          ],
-          "type": "minecraft:alternatives",
-        },
-      ],
-      "rolls": 1,
-    },
-    {
-      "conditions": [
-        {
-          "block": "farmersdelight:wild_rice",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "half": "upper",
-          },
-        },
-        {
-          "condition": "minecraft:location_check",
-          "offsetY": -1,
-          "predicate": {
-            "block": {
-              "block": "farmersdelight:wild_rice",
-              "state": {
-                "half": "lower",
-              },
-            },
-          },
-        },
-      ],
-      "entries": [
-        {
-          "children": [
-            {
-              "conditions": [
-                {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "tag": "forge:shears",
-                  },
-                },
-              ],
-              "name": "farmersdelight:wild_rice",
-              "type": "minecraft:item",
-            },
-            {
-              "conditions": [
-                {
-                  "condition": "minecraft:survives_explosion",
-                },
-              ],
-              "name": "minecraft:apple",
-              "type": "minecraft:item",
-            },
-          ],
-          "type": "minecraft:alternatives",
-        },
-      ],
-      "rolls": 1,
-    },
-  ],
-  "type": "minecraft:block",
-}
-`;
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`loot tables output replacements removes outputs: modified deepslate_iron_ore loot table 1`] = `
 {
@@ -570,5 +392,191 @@ exports[`loot tables output replacements replaces outputs with additional tests:
     },
   ],
   "type": "minecraft:entity",
+}
+`;
+
+exports[`loot tables output replacements keeps extended loot entry properties: modified wild rice loot table 1`] = `
+{
+  "pools": [
+    {
+      "conditions": [
+        {
+          "block": "farmersdelight:wild_rice",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "half": "lower",
+          },
+        },
+        {
+          "condition": "minecraft:location_check",
+          "offsetY": 1,
+          "predicate": {
+            "block": {
+              "block": "farmersdelight:wild_rice",
+              "state": {
+                "half": "upper",
+              },
+            },
+          },
+        },
+      ],
+      "entries": [
+        {
+          "children": [
+            {
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "tag": "forge:shears",
+                  },
+                },
+              ],
+              "name": "farmersdelight:wild_rice",
+              "type": "minecraft:item",
+            },
+            {
+              "conditions": [
+                {
+                  "condition": "minecraft:survives_explosion",
+                },
+              ],
+              "name": "minecraft:apple",
+              "type": "minecraft:item",
+            },
+          ],
+          "type": "minecraft:alternatives",
+        },
+      ],
+      "rolls": 1,
+    },
+    {
+      "conditions": [
+        {
+          "block": "farmersdelight:wild_rice",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "half": "upper",
+          },
+        },
+        {
+          "condition": "minecraft:location_check",
+          "offsetY": -1,
+          "predicate": {
+            "block": {
+              "block": "farmersdelight:wild_rice",
+              "state": {
+                "half": "lower",
+              },
+            },
+          },
+        },
+      ],
+      "entries": [
+        {
+          "children": [
+            {
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "tag": "forge:shears",
+                  },
+                },
+              ],
+              "name": "farmersdelight:wild_rice",
+              "type": "minecraft:item",
+            },
+            {
+              "conditions": [
+                {
+                  "condition": "minecraft:survives_explosion",
+                },
+              ],
+              "name": "minecraft:apple",
+              "type": "minecraft:item",
+            },
+          ],
+          "type": "minecraft:alternatives",
+        },
+      ],
+      "rolls": 1,
+    },
+  ],
+  "type": "minecraft:block",
+}
+`;
+
+exports[`loot table removal removes loot table with output filter: loot tables containing any log 1`] = `
+[
+  "data/minecraft/loot_tables/blocks/acacia_log.json",
+  "data/minecraft/loot_tables/blocks/acacia_wood.json",
+  "data/minecraft/loot_tables/blocks/birch_log.json",
+  "data/minecraft/loot_tables/blocks/birch_wood.json",
+  "data/minecraft/loot_tables/blocks/cherry_log.json",
+  "data/minecraft/loot_tables/blocks/cherry_wood.json",
+  "data/minecraft/loot_tables/blocks/crimson_hyphae.json",
+  "data/minecraft/loot_tables/blocks/crimson_stem.json",
+  "data/minecraft/loot_tables/blocks/dark_oak_log.json",
+  "data/minecraft/loot_tables/blocks/dark_oak_wood.json",
+  "data/minecraft/loot_tables/blocks/jungle_log.json",
+  "data/minecraft/loot_tables/blocks/jungle_wood.json",
+  "data/minecraft/loot_tables/blocks/mangrove_log.json",
+  "data/minecraft/loot_tables/blocks/mangrove_wood.json",
+  "data/minecraft/loot_tables/blocks/oak_log.json",
+  "data/minecraft/loot_tables/blocks/oak_wood.json",
+  "data/minecraft/loot_tables/blocks/spruce_log.json",
+  "data/minecraft/loot_tables/blocks/spruce_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_acacia_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_acacia_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_birch_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_birch_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_cherry_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_cherry_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_crimson_hyphae.json",
+  "data/minecraft/loot_tables/blocks/stripped_crimson_stem.json",
+  "data/minecraft/loot_tables/blocks/stripped_dark_oak_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_dark_oak_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_jungle_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_jungle_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_mangrove_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_mangrove_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_oak_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_oak_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_spruce_log.json",
+  "data/minecraft/loot_tables/blocks/stripped_spruce_wood.json",
+  "data/minecraft/loot_tables/blocks/stripped_warped_hyphae.json",
+  "data/minecraft/loot_tables/blocks/stripped_warped_stem.json",
+  "data/minecraft/loot_tables/blocks/warped_hyphae.json",
+  "data/minecraft/loot_tables/blocks/warped_stem.json",
+  "data/minecraft/loot_tables/chests/pillager_outpost.json",
+  "data/minecraft/loot_tables/chests/spawn_bonus_chest.json",
+  "data/minecraft/loot_tables/chests/village/village_taiga_house.json",
+]
+`;
+
+exports[`creates custom loot tables: parsed loot table 1`] = `
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "children": [
+            {
+              "name": "minecraft:diamond",
+              "type": "minecraft:item",
+            },
+          ],
+          "type": "minecraft:alternatives",
+        },
+        {
+          "name": "minecraft:logs",
+          "type": "minecraft:tag",
+        },
+      ],
+      "rolls": 4,
+    },
+  ],
+  "type": "minecraft:block",
 }
 `;

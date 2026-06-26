@@ -10,8 +10,8 @@ describe("loading of tags", () => {
     const itemTags = loader.tagRegistry("item");
     const blockTags = loader.tagRegistry("block");
 
-    expect(blockTags.list().length).toBe(259);
-    expect(itemTags.list().length).toBe(302);
+    expect(blockTags.list().length).toBe(297);
+    expect(itemTags.list().length).toBe(330);
 
     expect(blockTags.get("#minecraft:mineable/pickaxe")).toMatchSnapshot(
       "#mineable/pickaxe content",
