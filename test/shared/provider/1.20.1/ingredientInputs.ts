@@ -1,6 +1,5 @@
 import { IllegalShapeError, UnknownRegistryEntry } from "../../../../src";
-import type {
-  Ingredient} from "../../../../src/common/ingredient";
+import type { Ingredient } from "../../../../src/common/ingredient";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -11,6 +10,7 @@ import {
 } from "../../../../src/common/ingredient";
 import { BUCKET } from "../../../../src/common/units";
 import type { DataProvider } from "../providers";
+import { results } from "./resultInputs";
 
 // TODO add somewhere
 export interface Class<T> {
@@ -67,6 +67,43 @@ export function* invalidIngredientInputs(): DataProvider<
     UnknownRegistryEntry,
   ];
   yield ["unknown block", { block: "minecraft:unknown" }, UnknownRegistryEntry];
+
+  for (const [name, result] of results()) {
+    yield [name, result, IllegalShapeError];
+  }
+}
+
+export function* ingredients(): DataProvider<[Ingredient, Class<Ingredient>]> {
+  yield [
+    "item ingredient",
+    new ItemIngredient("minecraft:golden_carrot"),
+    ItemIngredient,
+  ];
+  yield [
+    "block ingredient",
+    new BlockIngredient("minecraft:oak_stairs"),
+    BlockIngredient,
+  ];
+  yield [
+    "item ingredient",
+    new FluidIngredient("minecraft:lava"),
+    FluidIngredient,
+  ];
+  yield [
+    "item tag ingredient",
+    new ItemTagIngredient("redstone_block"),
+    ItemTagIngredient,
+  ];
+  yield [
+    "block tag ingredient",
+    new BlockTagIngredient("stairs"),
+    BlockTagIngredient,
+  ];
+  yield [
+    "item tag ingredient",
+    new FluidTagIngredient("minecraft:lava"),
+    FluidTagIngredient,
+  ];
 }
 
 export function* ingredientInputs(): DataProvider<
@@ -105,4 +142,8 @@ export function* ingredientInputs(): DataProvider<
     { fluidTag: "minecraft:water", amount: BUCKET },
     FluidTagIngredient,
   ];
+
+  for (const ingredient of ingredients()) {
+    yield ingredient;
+  }
 }

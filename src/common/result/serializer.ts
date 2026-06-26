@@ -1,8 +1,9 @@
 import z from "zod";
 import { BlockResult, FluidResult, ItemResult, Result } from ".";
-import { IllegalShapeError } from "../../error";
+import { IllegalShapeError, transformErrors } from "../../error";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
+import { AmountSchema, ChanceSchema, CountSchema } from "../fields";
 import { IdSchema } from "../id";
 
 interface VersionedDeserializer {
@@ -13,13 +14,13 @@ class OldDeserializer implements VersionedDeserializer {
   private readonly schemas = {
     itemStack: z.object({
       item: IdSchema,
-      count: z.number().int().optional(),
-      chance: z.number().optional(),
+      count: CountSchema,
+      chance: ChanceSchema,
     }),
     fluidStack: z.object({
       fluid: IdSchema,
-      amount: z.number(),
-      chance: z.number().optional(),
+      amount: AmountSchema,
+      chance: ChanceSchema,
     }),
     block: z.object({
       block: IdSchema,
@@ -85,9 +86,11 @@ export default class ResultSerializer {
   }
 
   create(input: unknown) {
-    const deserialized = this.deserialize(input);
-    deserialized.validate(this.lookup);
-    return deserialized;
+    return transformErrors(() => {
+      const deserialized = this.deserialize(input);
+      deserialized.validate(this.lookup);
+      return deserialized;
+    });
   }
 
   validated<T extends Result>(result: T): T {

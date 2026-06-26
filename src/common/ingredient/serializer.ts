@@ -17,14 +17,12 @@ import {
   IngredientMap,
   type IngredientMapInput,
 } from "../../parser/recipe/ingredientMap";
+import { AmountSchema, CountSchema } from "../fields";
 import { IdSchema } from "../id";
 
 interface VersionedDeserializer {
   deserialize(input: Record<string, unknown>): Ingredient | null;
 }
-
-const CountSchema = z.number().int().positive().default(1);
-const AmountSchema = z.number().positive();
 
 class OldDeserializer implements VersionedDeserializer {
   private readonly schemas = {
