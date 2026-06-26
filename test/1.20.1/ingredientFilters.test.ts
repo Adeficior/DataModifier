@@ -1,11 +1,13 @@
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { beforeAll, describe, expect } from "bun:test";
-import { packFormatOf } from "../../src";
+import { beforeAll, describe, expect, it } from "bun:test";
+import { packFormatOf, UnknownRegistryEntry } from "../../src";
+import { ItemIngredient } from "../../src/common/ingredient";
 import createIngredientFilter from "../../src/common/ingredient/filter";
 import IngredientSerializer from "../../src/common/ingredient/serializer";
 import RegistryDumpLoader from "../../src/loader/registry/dump";
 import TagsLoader from "../../src/loader/tags";
 import {
+  invalidIngredientFilters,
   matchingIngredientFilters,
   missingIngredientFilters,
 } from "../shared/provider/1.20.1/ingredientFilters";
@@ -41,5 +43,21 @@ describe("ingredient filter tests with 1.20.1 format", () => {
     const predicate = createIngredientFilter(filter, context);
     const actual = predicate(input);
     expect(actual).toBeFalse();
+  });
+
+  provided(
+    "invalid filters",
+    invalidIngredientFilters(),
+    (filter, expected) => {
+      expect(() => createIngredientFilter(filter, context)).toThrow(expected);
+    },
+  );
+
+  it("invalid test subject", () => {
+    const filter = new ItemIngredient("minecraft:apple");
+    const predicate = createIngredientFilter(filter, context);
+    expect(() => predicate("minecraft:horse_radish")).toThrow(
+      UnknownRegistryEntry,
+    );
   });
 });

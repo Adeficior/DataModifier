@@ -9,14 +9,9 @@ import {
   ItemTagIngredient,
 } from "../../../../src/common/ingredient";
 import { BUCKET } from "../../../../src/common/units";
+import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 import { results } from "./resultInputs";
-
-// TODO add somewhere
-export interface Class<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new (...args: any[]): T;
-}
 
 export function* invalidIngredientInputs(): DataProvider<
   [unknown, Class<Error> | string]

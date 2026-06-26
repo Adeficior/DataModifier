@@ -8,15 +8,13 @@ import {
   ItemIngredient,
   ItemTagIngredient,
 } from ".";
-import { tryCatching } from "../../error";
 import type { PackContext } from "../../loader/context";
-import type { TagRegistryHolder } from "../../loader/tags";
 import {
   createCommonFilter,
   type CommonFilter,
   type Predicate,
 } from "../filters";
-import { encodeId, type NormalizedId } from "../id";
+import { type NormalizedId } from "../id";
 import type { IngredientInput } from "./input";
 
 export type IngredientFilter =
@@ -41,7 +39,7 @@ export default function createIngredientFilter(
   }
 
   if (test instanceof RegExp) {
-    return filterByRegistry(test, context.tags, "minecraft:item");
+    return filterByRegistry(test, context, "minecraft:item");
   }
 
   if (typeof test === "function") {
@@ -53,27 +51,27 @@ export default function createIngredientFilter(
   }
 
   if (test instanceof ItemTagIngredient) {
-    return filterByRegistry(test.tag, context.tags, "minecraft:item");
+    return filterByRegistry(test.tag, context, "minecraft:item");
   }
 
   if (test instanceof ItemIngredient) {
-    return filterByRegistry(test.id, context.tags, "minecraft:item");
+    return filterByRegistry(test.id, context, "minecraft:item");
   }
 
   if (test instanceof FluidTagIngredient) {
-    return filterByRegistry(test.tag, context.tags, "minecraft:fluid");
+    return filterByRegistry(test.tag, context, "minecraft:fluid");
   }
 
   if (test instanceof FluidIngredient) {
-    return filterByRegistry(test.id, context.tags, "minecraft:fluid");
+    return filterByRegistry(test.id, context, "minecraft:fluid");
   }
 
   if (test instanceof BlockTagIngredient) {
-    return filterByRegistry(test.tag, context.tags, "minecraft:block");
+    return filterByRegistry(test.tag, context, "minecraft:block");
   }
 
   if (test instanceof BlockIngredient) {
-    return filterByRegistry(test.id, context.tags, "minecraft:block");
+    return filterByRegistry(test.id, context, "minecraft:block");
   }
   // TODO add support for ListIngredient?
 
@@ -83,25 +81,19 @@ export default function createIngredientFilter(
 
 function filterByRegistry(
   test: NormalizedId | RegExp,
-  tags: TagRegistryHolder,
+  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
   registry: NormalizedId<RegistryId>,
 ): Predicate<IngredientInput> {
   function resolveIds(it: IngredientInput): NormalizedId[] {
-    if (typeof it === "string") return [encodeId(it)];
-    if (Array.isArray(it)) {
-      return it.flatMap(resolveIds);
-    }
-
-    return it.idsFor(registry);
+    const ingredient = context.ingredients.create(it);
+    return ingredient.idsFor(registry);
   }
 
+  // TODO create Ingredient Filter and transform to input filter
   return createCommonFilter<IngredientInput, NormalizedId>(
     test,
-    (input, logger) =>
-      // TODO which exception has to be caught here?
-      tryCatching(logger, () => {
-        return resolveIds(input);
-      }) ?? [],
-    tags.registry(registry),
+    // TODO remove logger
+    (input, _logger) => resolveIds(input),
+    context.tags.registry(registry),
   );
 }

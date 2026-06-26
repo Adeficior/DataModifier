@@ -1,3 +1,4 @@
+import { UnknownRegistryEntry } from "../../../../src";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -7,6 +8,7 @@ import {
 import type { IngredientFilter } from "../../../../src/common/ingredient/filter";
 import type { IngredientInput } from "../../../../src/common/ingredient/input";
 import { BUCKET } from "../../../../src/common/units";
+import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 
 export function* matchingIngredientFilters(): DataProvider<
@@ -70,7 +72,7 @@ export function* missingIngredientFilters(): DataProvider<
 > {
   yield ["item id by item id", "minecraft:cooked_beef", "minecraft:redstone"];
   yield ["item id by item tag", "#banners", "minecraft:diamond"];
-  yield ["item tag by item tag", "#banners", "stairs"];
+  yield ["item tag by item tag", "#banners", "#stairs"];
 
   yield [
     "block by block",
@@ -85,7 +87,7 @@ export function* missingIngredientFilters(): DataProvider<
   yield [
     "block tag by block tag",
     new BlockTagIngredient("planks"),
-    new BlockIngredient("minecraft:portals"),
+    new BlockTagIngredient("minecraft:portals"),
   ];
 
   yield [
@@ -102,5 +104,21 @@ export function* missingIngredientFilters(): DataProvider<
     "fluid tag by fluid tag",
     new FluidTagIngredient("minecraft:lava"),
     new FluidTagIngredient("minecraft:water"),
+  ];
+}
+
+export function* invalidIngredientFilters(): DataProvider<
+  [IngredientFilter, Class<Error>]
+> {
+  yield ["unknown item id", "minecraft:whatever", UnknownRegistryEntry];
+  yield [
+    "unknown block id",
+    new BlockIngredient("minecraft:whatever"),
+    UnknownRegistryEntry,
+  ];
+  yield [
+    "unknown fluid id",
+    new FluidIngredient("minecraft:whatever"),
+    UnknownRegistryEntry,
   ];
 }
