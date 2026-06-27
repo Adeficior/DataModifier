@@ -116,7 +116,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
     options: ReplaceOptions = {},
   ) {
     const languages = arrayOrSelf(options.lang);
-    const mods = arrayOrSelf(options.namespaces);
+    const namespaces = arrayOrSelf(options.namespaces);
     const matcher: (it: string) => string =
       options.keepCase === false ? () => value : keepCaseMatcher(value);
 
@@ -124,7 +124,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
       if (options.matchCase) {
         this.rules.push({
           languages,
-          namespaces: mods,
+          namespaces,
           value: (it) => it.includes(match),
           replacer: (it) => it.replaceAll(match, matcher),
         });
@@ -134,7 +134,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
     } else {
       this.rules.push({
         languages,
-        namespaces: mods,
+        namespaces,
         value: (it) => match.test(it),
         replacer: (it) => it.replace(match, matcher),
       });

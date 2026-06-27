@@ -76,7 +76,7 @@ describe("replacing translation entries", () => {
   it("respects keepCase option", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.lang.replaceValue("Dark Oak", "Mahagony", {
+    loader.lang.replaceValue("Dark Oak", "Mahogony", {
       lang: "en_us",
       namespaces: ["minecraft"],
       keepCase: false,
