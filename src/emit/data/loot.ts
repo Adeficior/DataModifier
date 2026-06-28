@@ -7,7 +7,7 @@ import {
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId, prefix } from "../../common/id.js";
 import type { IngredientFilter } from "../../common/ingredient/filter.js";
-import createIngredientFilter from "../../common/ingredient/filter.js";
+import createIngredientPredicate from "../../common/ingredient/filter.js";
 import type { Ingredient } from "../../common/ingredient/index.js";
 import type { PackContext } from "../../loader/context.js";
 import { isAtLeastVersion } from "../../packFormat.js";
@@ -106,7 +106,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   resolveIngredientTest(test: IngredientFilter) {
-    return createIngredientFilter(test, this.context);
+    return createIngredientPredicate(test, this.context);
   }
 
   private resolveLootTableTest(test: LootTableTest) {

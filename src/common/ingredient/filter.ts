@@ -11,7 +11,7 @@ import {
 } from ".";
 import type { PackContext } from "../../loader/context";
 import {
-  createCommonFilter,
+  createIdPredicate,
   type CommonFilter,
   type Predicate,
 } from "../filters";
@@ -23,7 +23,7 @@ export type IngredientFilter =
   | IngredientInput
   | `#${string}`;
 
-export default function createIngredientFilter(
+export default function createIngredientPredicate(
   test: IngredientFilter,
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
 ): Predicate<Ingredient> {
@@ -37,13 +37,13 @@ function createUnvalidatedFilter(
 ): Predicate<Ingredient> {
   if (typeof test === "string") {
     if (test.startsWith("#")) {
-      return createIngredientFilter(
+      return createIngredientPredicate(
         new ItemTagIngredient(test.substring(1)),
         context,
       );
     }
 
-    return createIngredientFilter(new ItemIngredient(test), context);
+    return createIngredientPredicate(new ItemIngredient(test), context);
   }
 
   if (test instanceof RegExp) {
@@ -85,7 +85,7 @@ function createUnvalidatedFilter(
 
   if (test instanceof ListIngredient) {
     const predicates = test.entries.map((it) =>
-      createIngredientFilter(it, context),
+      createIngredientPredicate(it, context),
     );
     return (it) => predicates.some((predicate) => predicate(it));
   }
@@ -99,7 +99,7 @@ function filterByRegistry(
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
   registry: NormalizedId<RegistryId>,
 ): Predicate<Ingredient> {
-  return createCommonFilter<Ingredient, NormalizedId>(
+  return createIdPredicate<Ingredient, NormalizedId>(
     test,
     // TODO remove logger
     (it, _logger) => it.idsFor(registry),

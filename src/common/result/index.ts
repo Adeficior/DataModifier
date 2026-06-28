@@ -7,6 +7,12 @@ import type {
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
 import { encodeId, type IdInput, type NormalizedId } from "../id";
+import {
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+  type Ingredient,
+} from "../ingredient";
 import type { Serializable } from "../serializable";
 import { BUCKET } from "../units";
 
@@ -16,6 +22,7 @@ export abstract class Result implements Serializable {
   abstract idsFor(
     registry: NormalizedId<RegistryId>,
   ): NormalizedId<RegistryId>[];
+  abstract asIngredient(): Ingredient;
 }
 
 export abstract class RegistryEntryResult<T extends string> extends Result {
@@ -54,6 +61,10 @@ export class ItemResult extends RegistryEntryResult<ItemId> {
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:item", this.id);
   }
+
+  override asIngredient() {
+    return new ItemIngredient(this.id, this.count);
+  }
 }
 
 export class FluidResult extends RegistryEntryResult<FluidId> {
@@ -74,6 +85,10 @@ export class FluidResult extends RegistryEntryResult<FluidId> {
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:fluid", this.id);
   }
+
+  override asIngredient() {
+    return new FluidIngredient(this.id, this.amount);
+  }
 }
 
 export class BlockResult extends RegistryEntryResult<BlockId> {
@@ -88,5 +103,9 @@ export class BlockResult extends RegistryEntryResult<BlockId> {
 
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:block", this.id);
+  }
+
+  override asIngredient() {
+    return new BlockIngredient(this.id);
   }
 }

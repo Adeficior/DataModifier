@@ -7,7 +7,7 @@ import { encodeId } from "./id.js";
 export type Predicate<T> = (value: T, logger?: Logger) => boolean;
 export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
-export function createCommonFilter<TEntry, TId extends string>(
+export function createIdPredicate<TEntry, TId extends string>(
   test: CommonFilter<TId>,
   resolve: (value: TEntry, logger?: Logger) => NormalizedId<TId>[],
   // TODO required?
@@ -39,7 +39,7 @@ export function resolveIDTest<T extends RegistryId>(
   test: CommonFilter<NormalizedId<InferIds<T>>>,
   tags?: TagRegistry<T>,
 ): Predicate<IdInput<InferIds<T>>> {
-  return createCommonFilter<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
+  return createIdPredicate<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
     test,
     (it) => [encodeId(it)],
     tags,

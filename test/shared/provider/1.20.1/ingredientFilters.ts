@@ -185,7 +185,7 @@ export function* missingIngredientFilters(): DataProvider<
     /^.+:birch_/,
     new BlockIngredient("minecraft:birch_stairs"),
   ];
-  yield ["block by regex", /.*/, new FluidIngredient("minecraft:lava")];
+  yield ["fluid by regex", /.*/, new FluidIngredient("minecraft:lava")];
 
   yield [
     "fluid tag by predicate",

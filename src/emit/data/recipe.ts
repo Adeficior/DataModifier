@@ -9,10 +9,9 @@ import {
 import type { Id, IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
 import type { IngredientFilter } from "../../common/ingredient/filter.js";
-import createIngredientFilter from "../../common/ingredient/filter.js";
+import createIngredientPredicate from "../../common/ingredient/filter.js";
 import type { Ingredient } from "../../common/ingredient/index.js";
 import type { IngredientInput } from "../../common/ingredient/input.js";
-import type { ResultFilter } from "../../common/result/filter.js";
 import createResultFilter from "../../common/result/filter.js";
 import type { Result } from "../../common/result/index.js";
 import type { ResultInput } from "../../common/result/input.js";
@@ -23,7 +22,6 @@ import {
   RecipeHolder,
   type Recipe,
   type RecipeSerializer,
-  type Replacer,
 } from "../../parser/recipe/index.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
 import CustomEmitter from "../custom.js";
@@ -36,7 +34,7 @@ export type RecipeTest = Readonly<{
   id?: CommonFilter<NormalizedId>;
   type?: CommonFilter<NormalizedId<RecipeSerializerId>>;
   namespace?: string;
-  output?: ResultFilter;
+  output?: IngredientFilter;
   input?: IngredientFilter;
   // TODO not sure if I want to even keep this?
   optional?: boolean;
@@ -44,7 +42,7 @@ export type RecipeTest = Readonly<{
 
 export interface RecipeRules {
   replaceResult(
-    test: ResultFilter,
+    test: IngredientFilter,
     value: ResultInput,
     additionalTests?: RecipeTest,
   ): void;
@@ -114,14 +112,14 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     await Promise.all([this.ruled.emit(acceptor), this.custom.emit(acceptor)]);
   }
 
-  resolveIngredientTest(test?: IngredientFilter) {
-    if (!test) return () => true;
-    return createIngredientFilter(test, this.context);
+  private createIngredientPredicate(filter?: IngredientFilter) {
+    if (!filter) return () => true;
+    return createIngredientPredicate(filter, this.context);
   }
 
-  resolveResultTest(test?: ResultFilter) {
-    if (!test) return () => true;
-    return createResultFilter(test, this.context);
+  private createResultPredicate(filter?: IngredientFilter) {
+    if (!filter) return () => true;
+    return createResultFilter(filter, this.context);
   }
 
   private resolveRecipeTest(test: RecipeTest) {
@@ -133,8 +131,8 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     if (test.id) id.push(resolveIDTest(test.id));
     if (test.type) type.push(resolveIDTest(test.type));
     if (test.namespace) id.push((id) => id.namespace === test.namespace);
-    if (test.output) result.push(this.resolveResultTest(test.output));
-    if (test.input) ingredient.push(this.resolveIngredientTest(test.input));
+    if (test.output) result.push(this.createResultPredicate(test.output));
+    if (test.input) ingredient.push(this.createIngredientPredicate(test.input));
 
     return { id, type, ingredient, result };
   }
@@ -191,17 +189,15 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   replaceResult(
-    test: ResultFilter,
+    test: IngredientFilter,
     input: ResultInput,
     additionalTest?: RecipeTest,
   ) {
-    const predicate = this.resolveResultTest(test);
+    const predicate = this.createResultPredicate(test);
 
     const value = this.context.results.create(input);
 
-    const replacer = createReplacer<ResultInput>(predicate, value);
-    const replace: Replacer<Result> = (it) =>
-      this.context.results.create(replacer(it));
+    const replace = createReplacer(predicate, value);
 
     this.addRule(
       ["replace result", test, "with", value, additionalTest],
@@ -216,11 +212,11 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     input: IngredientInput,
     additionalTest?: RecipeTest,
   ) {
-    const predicate = this.resolveIngredientTest(test);
+    const predicate = this.createIngredientPredicate(test);
 
     const value = this.context.ingredients.create(input);
 
-    const replace = createReplacer<Ingredient>(predicate, value);
+    const replace = createReplacer(predicate, value);
 
     this.addRule(
       ["replace ingredient", test, "with", value, additionalTest],

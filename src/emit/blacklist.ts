@@ -6,7 +6,7 @@ import type { NormalizedId } from "../common/id.js";
 import { encodeId } from "../common/id.js";
 
 import type { IngredientFilter } from "../common/ingredient/filter.js";
-import createIngredientFilter from "../common/ingredient/filter.js";
+import createIngredientPredicate from "../common/ingredient/filter.js";
 import { ItemIngredient } from "../common/ingredient/index.js";
 import type { PackContext } from "../loader/context.js";
 import { toJson } from "../textHelper.js";
@@ -76,7 +76,7 @@ export default class BlacklistEmitter
         "you can only use regex/predicates to blacklist items if a registry dump is loaded",
       );
 
-    const predicate = createIngredientFilter(test, this.context);
+    const predicate = createIngredientPredicate(test, this.context);
 
     return [...keys.keys()].filter((it) =>
       predicate(new ItemIngredient(it), this.logger),

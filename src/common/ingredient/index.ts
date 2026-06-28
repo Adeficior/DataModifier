@@ -14,6 +14,7 @@ import {
   type NormalizedId,
   type TagId,
 } from "../id";
+import { BlockResult, FluidResult, ItemResult, type Result } from "../result";
 import type { Serializable } from "../serializable";
 import { BUCKET } from "../units";
 
@@ -24,6 +25,7 @@ export abstract class Ingredient implements Serializable {
   abstract idsFor(
     registry: NormalizedId<RegistryId>,
   ): NormalizedId<RegistryId>[];
+  abstract asResult(): Result;
 }
 
 export abstract class TagIngredient extends Ingredient {
@@ -41,6 +43,10 @@ export abstract class TagIngredient extends Ingredient {
   override idsFor(registry: NormalizedId<RegistryId>) {
     if (this.registry === registry) return [this.tag];
     return [];
+  }
+
+  override asResult(): Result {
+    throw new Error("tag ingredients cannot be transformed into a result");
   }
 }
 
@@ -121,6 +127,10 @@ export class ItemIngredient extends RegistryEntryIngredient<ItemId> {
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:item", this.id);
   }
+
+  override asResult() {
+    return new ItemResult(this.id, this.count);
+  }
 }
 
 export class FluidIngredient extends RegistryEntryIngredient<FluidId> {
@@ -141,6 +151,10 @@ export class FluidIngredient extends RegistryEntryIngredient<FluidId> {
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:fluid", this.id);
   }
+
+  override asResult() {
+    return new FluidResult(this.id, this.amount);
+  }
 }
 
 export class BlockIngredient extends RegistryEntryIngredient<BlockId> {
@@ -160,6 +174,10 @@ export class BlockIngredient extends RegistryEntryIngredient<BlockId> {
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:block", this.id);
   }
+
+  override asResult() {
+    return new BlockResult(this.id);
+  }
 }
 
 export class ListIngredient extends Ingredient {
@@ -177,6 +195,10 @@ export class ListIngredient extends Ingredient {
 
   override idsFor(registry: NormalizedId<RegistryId>) {
     return this.entries.flatMap((it) => it.idsFor(registry));
+  }
+
+  override asResult(): Result {
+    throw new Error("union ingredients cannot be transformed into a result");
   }
 }
 

@@ -2,15 +2,16 @@ import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { beforeAll, describe, expect, it } from "bun:test";
 import { packFormatOf, UnknownRegistryEntry } from "../../src";
 import { ItemIngredient } from "../../src/common/ingredient";
-import createIngredientPredicate from "../../src/common/ingredient/filter";
 import IngredientSerializer from "../../src/common/ingredient/serializer";
+import { ItemResult } from "../../src/common/result";
+import createResultPredicate from "../../src/common/result/filter";
 import RegistryDumpLoader from "../../src/loader/registry/dump";
 import TagsLoader from "../../src/loader/tags";
 import {
-  invalidIngredientFilters,
-  matchingIngredientFilters,
-  missingIngredientFilters,
-} from "../shared/provider/1.20.1/ingredientFilters";
+  invalidResultFilters,
+  matchingResultFilters,
+  missingResultFilters,
+} from "../shared/provider/1.20.1/resultFilters";
 import { provided } from "../shared/provider/providers";
 import { createDumpResolver, createTestDataResolver } from "../shared/testData";
 
@@ -32,34 +33,28 @@ beforeAll(async () => {
   await data.extract(tags.accept);
 });
 
-describe("ingredient filter tests with 1.20.1 format", () => {
-  provided("matching filters", matchingIngredientFilters(), (filter, input) => {
-    const predicate = createIngredientPredicate(filter, context);
+describe("result filter tests with 1.20.1 format", () => {
+  provided("matching filters", matchingResultFilters(), (filter, input) => {
+    const predicate = createResultPredicate(filter, context);
     const actual = predicate(input);
     expect(actual).toBeTrue();
   });
 
-  provided("missing filters", missingIngredientFilters(), (filter, input) => {
-    const predicate = createIngredientPredicate(filter, context);
+  provided("missing filters", missingResultFilters(), (filter, input) => {
+    const predicate = createResultPredicate(filter, context);
     const actual = predicate(input);
     expect(actual).toBeFalse();
   });
 
-  provided(
-    "invalid filters",
-    invalidIngredientFilters(),
-    (filter, expected) => {
-      expect(() => createIngredientPredicate(filter, context)).toThrow(
-        expected,
-      );
-    },
-  );
+  provided("invalid filters", invalidResultFilters(), (filter, expected) => {
+    expect(() => createResultPredicate(filter, context)).toThrow(expected);
+  });
 
   it("invalid test subject", () => {
     const filter = new ItemIngredient("minecraft:apple");
-    const predicate = createIngredientPredicate(filter, context);
-    expect(() =>
-      predicate(new ItemIngredient("minecraft:horse_radish")),
-    ).toThrow(UnknownRegistryEntry);
+    const predicate = createResultPredicate(filter, context);
+    expect(() => predicate(new ItemResult("minecraft:horse_radish"))).toThrow(
+      UnknownRegistryEntry,
+    );
   });
 });
