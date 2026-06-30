@@ -1,4 +1,4 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Resolver } from "@adeficior/pack-resolver";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId, prefix, suffix } from "../../common/id.js";
 import type { Model } from "../../schema/assets/model.js";
@@ -22,24 +22,23 @@ export interface ModelRulesGroup {
 
 export default class ModelEmitter implements ModelRules, ClearableEmitter {
   private readonly custom;
+  readonly resolver: Resolver;
 
   constructor(type: string) {
     this.custom = new CustomEmitter<Model>(
       (id) => `assets/${id.namespace}/models/${type}/${id.path}.json`,
     );
+    this.resolver = this.custom.resolver;
+  }
+
+  // TODO helper WrappedEmitter?
+  clear() {
+    this.custom.clear();
   }
 
   add(id: IdInput, model: Model) {
     this.custom.add(id, model);
     return encodeId(id);
-  }
-
-  emit(acceptor: Acceptor) {
-    return this.custom.emit(acceptor);
-  }
-
-  clear() {
-    this.custom.clear();
   }
 
   cubeAll(id: IdInput, texture = prefix(id, "block/")) {

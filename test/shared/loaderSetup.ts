@@ -1,4 +1,4 @@
-import type { Options } from "@adeficior/pack-resolver";
+import type { ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { afterEach, beforeAll } from "bun:test";
 import { packFormatOf, PackLoader } from "../../src/index.js";
@@ -10,7 +10,7 @@ export default function setupLoader(
     load = true,
     version,
     ...options
-  }: Partial<Options & Omit<PackLoaderOptions, "packFormat">> & {
+  }: Partial<ResolverOptions & Omit<PackLoaderOptions, "packFormat">> & {
     load?: boolean;
     version: string;
   },

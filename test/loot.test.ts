@@ -32,7 +32,7 @@ describe("loot tables output replacements", () => {
 
     loader.loot.removeOutput("#minecraft:iron_ores");
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/blocks/iron_ore.json"),
@@ -58,7 +58,7 @@ describe("loot tables output replacements", () => {
       { id: "minecraft:entities/husk" },
     );
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(acceptor.paths().length).toBe(4);
 
@@ -86,7 +86,7 @@ describe("loot tables output replacements", () => {
       new ItemResult("minecraft:apple"),
     );
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/farmersdelight/loot_tables/blocks/wild_rice.json"),
@@ -102,7 +102,7 @@ describe("loot table removal", () => {
       id: /minecraft:.*oak_log/,
     });
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(acceptor.paths().length).toBe(4);
 
@@ -131,7 +131,7 @@ describe("loot table removal", () => {
       output: "#minecraft:logs",
     });
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(acceptor.paths()).toMatchSnapshot("loot tables containing any log");
   });
@@ -166,7 +166,7 @@ it("creates custom loot tables", async () => {
 
   loader.loot.add("example:custom", lootTable);
 
-  await loader.emit(acceptor);
+  await loader.resolver.extract(acceptor);
 
   expect(
     acceptor.jsonAt("data/example/loot_tables/custom.json"),

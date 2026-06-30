@@ -1,4 +1,9 @@
-import type { Acceptor, IResolver, Logger } from "@adeficior/pack-resolver";
+import type {
+  Acceptable,
+  Acceptor,
+  Logger,
+  Resolver,
+} from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
 import Registry from "../common/registry.js";
 import type { RegistryProvider } from "../emit/index.js";
@@ -6,10 +11,10 @@ import { tryCatching } from "../error.js";
 import { fromJson } from "../textHelper.js";
 
 export default interface Loader {
-  loadFrom(resolver: IResolver): Promise<void>;
+  loadFrom(resolver: Resolver): Promise<void>;
 }
 
-export function tryParseJson(logger: Logger, content: string) {
+export function tryParseJson(logger: Logger, content: Acceptable) {
   try {
     return fromJson(content);
   } catch (error) {
@@ -21,7 +26,7 @@ export function tryParseJson(logger: Logger, content: string) {
   }
 }
 
-export abstract class JsonLoader<T> implements RegistryProvider<T> {
+export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
   protected readonly registry = new Registry<T>();
 
   constructor(protected readonly logger: Logger) {}
@@ -38,7 +43,7 @@ export abstract class JsonLoader<T> implements RegistryProvider<T> {
     await this.registry.forEachAsync(consumer);
   }
 
-  readonly accept: Acceptor = (path, content) => {
+  async accept(path: string, content: PromiseLike<Acceptable>) {
     const match =
       /(data|assets)\/(?<namespace>[\w-]+)\/\w+\/(?<rest>[\w-/]+).json/.exec(
         path,
@@ -50,12 +55,12 @@ export abstract class JsonLoader<T> implements RegistryProvider<T> {
 
     const grouped = this.logger.group(path);
 
-    const json = tryParseJson(grouped, content.toString());
+    const json = tryParseJson(grouped, await content);
     if (!json) return false;
 
     const parsed = tryCatching(grouped, () => this.parse(json, id));
     if (!parsed) return false;
 
     this.registry.set(id, parsed);
-  };
+  }
 }

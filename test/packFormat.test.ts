@@ -13,7 +13,7 @@ describe("loader respects different pack format versions", () => {
     loader.recipes.add("example:test", EMPTY_RECIPE);
     loader.loot.add("example:test", EMPTY_LOOT_TABLE);
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(acceptor.jsonAt("data/example/loot_table/test.json")).toMatchObject(
       EMPTY_LOOT_TABLE,

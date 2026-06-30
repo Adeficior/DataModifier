@@ -1,6 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
-import { arrayOrSelf } from "@adeficior/pack-resolver";
+import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
 import type { Predicate } from "../../common/filters.js";
 import type { Id, IdInput } from "../../common/id.js";
@@ -53,7 +52,7 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
 
   constructor(private readonly registry: RegistryProvider<LangDefinition>) {}
 
-  async emit(acceptor: Acceptor) {
+  readonly resolver = simpleResolver(async (acceptor) => {
     const missingCustomFiles = new Set(this.custom.keys());
 
     await this.registry.forEachAsync(async (lang, id) => {
@@ -89,17 +88,17 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
       if (Object.keys(output).length > 0) {
         missingCustomFiles.delete(encodeId(id));
         const path = this.langPath(id);
-        acceptor(path, await toJson(output));
+        acceptor(path, toJson(output));
       }
     });
 
     await Promise.all(
       Array.from(missingCustomFiles).map(async (id) => {
         const path = this.langPath(createId(id));
-        acceptor(path, await toJson(this.custom.get(id)));
+        acceptor(path, toJson(this.custom.get(id)));
       }),
     );
-  }
+  });
 
   clear() {
     this.rules = [];

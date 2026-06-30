@@ -1,4 +1,8 @@
-import type { Acceptor, Logger } from "@adeficior/pack-resolver";
+import {
+  combineResolvers,
+  type Logger,
+  type Resolver,
+} from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
   type CommonFilter,
@@ -64,6 +68,8 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
 
   private readonly ruled: RuledEmitter<LootTable, LootTableRule>;
 
+  readonly resolver: Resolver;
+
   constructor(
     private readonly logger: Logger,
     private readonly lootTables: RegistryProvider<LootTable>,
@@ -77,6 +83,15 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
       // TODO also add value object here?
       (it) => it,
       (id) => this.customTables.has(id),
+    );
+
+    this.resolver = combineResolvers(
+      [
+        this.ruled.resolver,
+        this.customTables.resolver,
+        this.customModifiers.resolver,
+      ],
+      { async: true },
     );
   }
 
@@ -95,14 +110,6 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     this.customTables.clear();
     this.customModifiers.clear();
     this.ruled.clear();
-  }
-
-  async emit(acceptor: Acceptor) {
-    await Promise.all([
-      this.ruled.emit(acceptor),
-      this.customTables.emit(acceptor),
-      this.customModifiers.emit(acceptor),
-    ]);
   }
 
   resolveIngredientTest(test: IngredientFilter) {

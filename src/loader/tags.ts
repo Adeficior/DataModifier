@@ -1,5 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { orderBy, uniqBy } from "lodash-es";
 import type { IdInput, NormalizedId, TagInput } from "../common/id.js";
 import { encodeId } from "../common/id.js";
@@ -106,7 +106,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   }
 }
 
-export default class TagsLoader implements TagRegistryHolder {
+export default class TagsLoader implements TagRegistryHolder, Acceptor {
   // TODO lookup should add some?
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
@@ -151,12 +151,13 @@ export default class TagsLoader implements TagRegistryHolder {
     return { namespace, registry, path, isTag: true };
   }
 
-  readonly accept: Acceptor = (path, content) => {
+  async accept(path: string, content: PromiseLike<Acceptable>) {
+    console.log(this);
     const info = this.parsePath(path);
     if (!info) return false;
 
-    const parsed: TagDefinition = fromJson(content.toString());
+    const parsed: TagDefinition = fromJson(await content);
     const id = encodeId(info) as TagInput;
     info.registry.load(id, parsed);
-  };
+  }
 }

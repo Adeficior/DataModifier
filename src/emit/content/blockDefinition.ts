@@ -1,5 +1,4 @@
 import type { BlockId } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
 import type { Id, IdInput } from "../../common/id.js";
 import type {
   BlockDefinition,
@@ -108,9 +107,7 @@ export default class BlockDefinitionEmitter
     return definition;
   }
 
-  emit(acceptor: Acceptor) {
-    return this.custom.emit(acceptor);
-  }
+  readonly resolver = this.custom.resolver;
 
   clear() {
     this.custom.clear();

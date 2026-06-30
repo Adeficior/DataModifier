@@ -1,4 +1,3 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
 import type { Id, IdInput } from "../../common/id.js";
 import { prefix } from "../../common/id.js";
 import type { Blockstate } from "../../schema/assets/blockstate.js";
@@ -24,9 +23,7 @@ export default class BlockstateEmitter
     this.custom.add(id, blockstate);
   }
 
-  emit(acceptor: Acceptor) {
-    return this.custom.emit(acceptor);
-  }
+  readonly resolver = this.custom.resolver;
 
   clear() {
     this.custom.clear();

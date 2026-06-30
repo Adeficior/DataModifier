@@ -32,7 +32,7 @@ async function runCodegen(config: CliConfig) {
     const resolver = createResolver({ from: config.registryDump });
 
     const registry = new RegistryDumpLoader(logger);
-    await registry.extract(resolver);
+    await resolver.extract(registry);
 
     await generateRegistryTypes(registry, config.output);
     logger.info("successfully generated registry entry types");

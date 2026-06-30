@@ -1,5 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor, Logger } from "@adeficior/pack-resolver";
+import { simpleResolver, type Logger } from "@adeficior/pack-resolver";
 import { resolveIDTest, type CommonFilter } from "../../common/filters.js";
 import type { Id, NormalizedId, TagInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
@@ -140,7 +140,7 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
     this.emitters.forEach((it) => it.clear());
   }
 
-  async emit(acceptor: Acceptor) {
+  readonly resolver = simpleResolver(async (acceptor) => {
     const emitters = Array.from(this.emitters.values());
     await Promise.all(
       emitters.flatMap((scoped) =>
@@ -148,7 +148,7 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
           const path = `data/${id.namespace}/tags/${scoped.folder}/${id.path}.json`;
           acceptor(
             path,
-            await toJson({
+            toJson({
               ...definition,
               values: definition.values && orderTagEntries(definition.values),
               remove: definition.remove && orderTagEntries(definition.remove),
@@ -157,7 +157,7 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
         }),
       ),
     );
-  }
+  });
 
   add<T extends RegistryId>(
     registry: T,

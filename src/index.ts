@@ -29,7 +29,10 @@ export {
 export { EMPTY_RECIPE } from "./emit/data/recipe.js";
 export type { RecipeRules } from "./emit/data/recipe.js";
 export type { TagRules } from "./emit/data/tags.js";
-export type { ClearableEmitter, RegistryProvider } from "./emit/index.js";
+export type {
+  ClearableEmitter as ClearableEmitter,
+  RegistryProvider,
+} from "./emit/index.js";
 export { default as RuledEmitter } from "./emit/ruled.js";
 export { IllegalShapeError, UnknownRegistryEntry } from "./error.js";
 export { default as PackLoader } from "./loader/pack.js";

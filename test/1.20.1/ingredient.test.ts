@@ -1,23 +1,16 @@
-import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { beforeAll, describe, expect } from "bun:test";
+import { describe, expect } from "bun:test";
 import { packFormatOf } from "../../src";
 import IngredientSerializer from "../../src/common/ingredient/serializer";
-import RegistryDumpLoader from "../../src/loader/registry/dump";
+import setupLookup from "../shared/dump";
 import {
   ingredientInputs,
   invalidIngredientInputs,
 } from "../shared/provider/1.20.1/ingredientInputs";
 import { provided } from "../shared/provider/providers";
-import { createDumpResolver } from "../shared/testData";
 
-const logger = createTestLogger();
 const version = "1.20.1";
-const lookup = new RegistryDumpLoader(logger);
+const lookup = setupLookup(version);
 const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
-
-beforeAll(async () => {
-  await lookup.extract(createDumpResolver(version));
-});
 
 describe("ingredient tests with 1.20.1 format", () => {
   provided(

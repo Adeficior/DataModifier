@@ -1,11 +1,13 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type {
-  Acceptor,
-  IResolver,
-  Logger,
-  ResolverInfo,
+import {
+  combineResolvers,
+  distributedAcceptor,
+  type Acceptor,
+  type Logger,
+  type Resolver,
+  type ResolverInfo,
 } from "@adeficior/pack-resolver";
-import match from "minimatch";
+import { createMergingAcceptor } from "@adeficior/resource-merger";
 import createIngredientPredicate, {
   type IngredientFilter,
 } from "../common/ingredient/filter.js";
@@ -82,7 +84,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   private readonly results: ResultSerializer;
   private readonly ingredients: IngredientSerializer;
 
-  private readonly acceptors: Record<string, Acceptor>;
+  private readonly acceptor: Acceptor;
   private readonly context: PackContext;
 
   constructor(
@@ -146,14 +148,16 @@ export default class PackLoader implements Loader, ClearableEmitter {
       ),
     );
 
-    this.acceptors = {
-      "data/*/tags/**/*.json": this.tagLoader.accept,
-      "data/*/recipes/**/*.json": this.recipesLoader.accept,
-      "data/*/recipe/**/*.json": this.recipesLoader.accept,
-      "data/*/loot_tables/**/*.json": this.lootLoader.accept,
-      "data/*/loot_table/**/*.json": this.lootLoader.accept,
-      "assets/*/lang/*.json": this.langLoader.accept,
-    };
+    this.acceptor = createMergingAcceptor(
+      distributedAcceptor({
+        "data/*/tags/**/*.json": this.tagLoader,
+        "data/*/recipes/**/*.json": this.recipesLoader,
+        "data/*/recipe/**/*.json": this.recipesLoader,
+        "data/*/loot_tables/**/*.json": this.lootLoader,
+        "data/*/loot_table/**/*.json": this.lootLoader,
+        "assets/*/lang/*.json": this.langLoader,
+      }),
+    );
   }
 
   registerEmitter<T extends ClearableEmitter>(emitter: T): T {
@@ -201,31 +205,18 @@ export default class PackLoader implements Loader, ClearableEmitter {
     return createIngredientPredicate(test, this.context);
   }
 
-  private loadInternal(resolver: IResolver) {
-    return resolver.extract((path, content) => {
-      const acceptor = Object.entries(this.acceptors).find(([pattern]) =>
-        match(path, pattern),
-      )?.[1];
-      if (!acceptor) return false;
-      return acceptor(path, content);
-    });
+  loadFromMultiple(resolvers: ResolverInfo[]) {
+    const combined = combineResolvers(resolvers);
+    return this.loadFrom(combined);
   }
 
-  async loadFromMultiple(resolvers: ResolverInfo[]) {
-    await Promise.all(
-      resolvers.map(({ resolver }) => {
-        return this.loadInternal(resolver);
-      }),
-    );
+  async loadFrom(resolver: Resolver) {
+    await resolver.extract(this.acceptor);
   }
 
-  async loadFrom(resolver: IResolver) {
-    await this.loadInternal(resolver);
-  }
-
-  async loadRegistryDump(resolver: IResolver) {
+  async loadRegistryDump(resolver: Resolver) {
     const registryDumpLoader = new RegistryDumpLoader(this.logger);
-    await registryDumpLoader.extract(resolver);
+    await resolver.extract(registryDumpLoader);
     this.lookup.set(registryDumpLoader);
   }
 
@@ -236,12 +227,15 @@ export default class PackLoader implements Loader, ClearableEmitter {
     this.emitters.forEach((it) => it.clear());
   }
 
-  async emit(acceptor: Acceptor) {
-    await Promise.all(this.emitters.map((it) => it.emit(acceptor)));
+  get resolver(): Resolver {
+    return combineResolvers(
+      this.emitters.map((it) => it.resolver),
+      { async: true },
+    );
   }
 
-  async run(from: IResolver, to: Acceptor) {
+  async run(from: Resolver, to: Acceptor) {
     await this.loadFrom(from);
-    await this.emit(to);
+    await this.resolver.extract(to);
   }
 }

@@ -1,25 +1,27 @@
 import {
+  createCombinedResolver,
   createResolver,
-  type IResolver,
-  type Options,
+  type Resolver,
+  type ResolverOptions,
 } from "@adeficior/pack-resolver";
-import { createTestResolver } from "@adeficior/pack-resolver/testing";
 import { join } from "node:path";
 
 export function createTestDataResolver(
   version: string,
-  { from, ...options }: Partial<Options> = {},
-): IResolver {
+  { from, ...options }: Partial<ResolverOptions> = {},
+): Resolver {
   if (Array.isArray(from))
     throw new Error("only one resolver input supported for TestResolver");
 
-  return createTestResolver(join(version, from ?? "default"), {
+  return createCombinedResolver({
+    from: join("test", "resources", version, from ?? "default"),
     include: ["assets/**/*.json", "data/**/*.json"],
+    logger: false,
     ...options,
   });
 }
 
-export function createDumpResolver(version: string): IResolver {
+export function createDumpResolver(version: string): Resolver {
   return createResolver({
     from: join("test", "resources", version, "dump"),
     logger: false,

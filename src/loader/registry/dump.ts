@@ -1,5 +1,5 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor, IResolver, Logger } from "@adeficior/pack-resolver";
+import type { Acceptable, Acceptor, Logger } from "@adeficior/pack-resolver";
 import zod from "zod";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
@@ -10,21 +10,16 @@ import type RegistryLookup from "./index.js";
 
 const schema = zod.array(zod.string());
 
-export default class RegistryDumpLoader implements RegistryLookup {
+export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
   private readonly registry = new Registry<Set<NormalizedId>, RegistryId>();
 
   constructor(private readonly logger: Logger) {}
-
-  // TODO not needed, use accept directly
-  async extract(resolver: IResolver) {
-    await resolver.extract((path, content) => this.accept(path, content));
-  }
 
   private registryOf(registry: RegistryId) {
     return this.registry.getOrPut(registry, () => new Set<NormalizedId>());
   }
 
-  private readonly accept: Acceptor = (path, content) => {
+  accept(path: string, content: PromiseLike<Acceptable>) {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
     if (!match?.groups) {
       return false;
@@ -42,7 +37,7 @@ export default class RegistryDumpLoader implements RegistryLookup {
 
     const set = this.registryOf(registry);
     parsed.map(encodeId).forEach((id) => set.add(id));
-  };
+  }
 
   registries(): NormalizedId<RegistryId>[] {
     return this.registry.keys();

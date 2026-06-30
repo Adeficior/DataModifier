@@ -1,12 +1,15 @@
+import type { Acceptable } from "@adeficior/pack-resolver";
 import json from "json5";
 import { format } from "prettier";
 
-export function fromJson(input: string) {
+export function fromJson(input: Acceptable) {
+  const data = input.toString();
   try {
-    return json.parse(input);
+    return json.parse(data);
   } catch (e) {
     if (e instanceof SyntaxError) {
-      return json.parse(input.replaceAll("\r\n", ""));
+      // TODO what the hell is happening here
+      return json.parse(data.replaceAll("\r\n", ""));
     }
     throw e;
   }

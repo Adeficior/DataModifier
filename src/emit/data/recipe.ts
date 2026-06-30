@@ -1,6 +1,6 @@
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { Acceptor, Logger } from "@adeficior/pack-resolver";
-import { exists } from "@adeficior/pack-resolver";
+import type { Logger, Resolver } from "@adeficior/pack-resolver";
+import { combineResolvers, exists } from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
   type CommonFilter,
@@ -84,6 +84,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   );
 
   private readonly ruled: RuledEmitter<RecipeHolder, RecipeRule>;
+  readonly resolver: Resolver;
 
   constructor(
     private readonly logger: Logger,
@@ -99,6 +100,11 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
       (it) => this.serializer.serialize(it),
       (id) => this.custom.has(id),
     );
+
+    this.resolver = combineResolvers(
+      [this.ruled.resolver, this.custom.resolver],
+      { async: true },
+    );
   }
 
   private recipePath(id: Id) {
@@ -106,10 +112,6 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
       ? "recipe"
       : "recipes";
     return `data/${id.namespace}/${folder}/${id.path}.json`;
-  }
-
-  async emit(acceptor: Acceptor) {
-    await Promise.all([this.ruled.emit(acceptor), this.custom.emit(acceptor)]);
   }
 
   private createIngredientPredicate(filter?: IngredientFilter) {

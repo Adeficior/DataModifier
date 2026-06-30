@@ -23,7 +23,7 @@ describe("tests regarding error logging", () => {
       new ItemResult("minecraft:obsidian"),
     );
 
-    await loader.emit(acceptor);
+    await loader.resolver.extract(acceptor);
 
     expect(logger.warn).toHaveBeenCalledWith(
       `data/example/recipes/incorrectResult.json -> unknown result shape`,

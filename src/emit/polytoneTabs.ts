@@ -2,8 +2,7 @@ import type {
   CreativeModeTabId,
   ItemId,
 } from "@adeficior/data-modifier/generated";
-import type { Acceptor } from "@adeficior/pack-resolver";
-import { arrayOrSelf } from "@adeficior/pack-resolver";
+import { arrayOrSelf, combineResolvers } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";
 import type { IdInput, NormalizedId } from "../common/id.js";
 import { createId, encodeId } from "../common/id.js";
@@ -147,9 +146,10 @@ export default class PolytoneTabsEmitter
     this.tabs.clear();
   }
 
-  async emit(acceptor: Acceptor) {
-    await Promise.all([this.entries.emit(acceptor), this.tabs.emit(acceptor)]);
-  }
+  readonly resolver = combineResolvers(
+    [this.entries.resolver, this.tabs.resolver],
+    { async: true },
+  );
 
   remove(
     tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],

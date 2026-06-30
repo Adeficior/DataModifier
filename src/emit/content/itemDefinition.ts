@@ -1,4 +1,3 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
 import type { Id, IdInput } from "../../common/id.js";
 import { prefix } from "../../common/id.js";
 import type { BlockDefinition } from "../../schema/content/blockDefinition.js";
@@ -68,9 +67,7 @@ export default class ItemDefinitionEmitter
     this.custom.clear();
   }
 
-  emit(acceptor: Acceptor) {
-    return this.custom.emit(acceptor);
-  }
+  readonly resolver = this.custom.resolver;
 
   basic(
     id: IdInput,

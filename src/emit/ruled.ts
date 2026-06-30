@@ -1,10 +1,17 @@
-import type { Acceptor, Logger } from "@adeficior/pack-resolver";
+import { simpleResolver, type Logger } from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
 import { toJson } from "../textHelper.js";
-import type { PathProvider, RegistryProvider } from "./index.js";
+import type {
+  ClearableEmitter,
+  PathProvider,
+  RegistryProvider,
+} from "./index.js";
 import type Rule from "./rule/index.js";
 
-export default class RuledEmitter<TEntry, TRule extends Rule<TEntry>> {
+export default class RuledEmitter<
+  TEntry,
+  TRule extends Rule<TEntry>,
+> implements ClearableEmitter {
   constructor(
     private readonly logger: Logger,
     private readonly provider: RegistryProvider<TEntry>,
@@ -31,7 +38,7 @@ export default class RuledEmitter<TEntry, TRule extends Rule<TEntry>> {
     if (required) this.requiredRules.add(rule);
   }
 
-  async emit(acceptor: Acceptor) {
+  readonly resolver = simpleResolver(async (acceptor) => {
     const missingRules = new Set<TRule>(this.requiredRules);
     await this.provider.forEachAsync(async (recipe, id) => {
       if (this.shouldSkip(id)) return;
@@ -52,11 +59,11 @@ export default class RuledEmitter<TEntry, TRule extends Rule<TEntry>> {
 
       const serialized = modified ? this.serialize(modified) : this.emptyValue;
 
-      acceptor(path, await toJson(serialized));
+      acceptor(path, toJson(serialized));
     });
 
     missingRules.forEach((rule) => {
       rule.printWarning(this.logger);
     });
-  }
+  });
 }

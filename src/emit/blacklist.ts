@@ -1,6 +1,6 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptor, Logger } from "@adeficior/pack-resolver";
-import { arrayOrSelf } from "@adeficior/pack-resolver";
+import type { DataConsumer, Logger } from "@adeficior/pack-resolver";
+import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
 import { encodeId } from "../common/id.js";
@@ -99,7 +99,7 @@ export default class BlacklistEmitter
     return registries.flatMap((registry) => ingredient.idsFor(registry));
   }
 
-  async emit(acceptor: Acceptor) {
+  readonly resolver = simpleResolver(async (acceptor) => {
     const hiddenIds = uniq(this.hidden).sort();
     if (hiddenIds.length === 0) return;
 
@@ -109,15 +109,18 @@ export default class BlacklistEmitter
     if (this.hideModes.includes("polytone"))
       promises.push(this.emitPolytone(acceptor, hiddenIds));
     await Promise.all(promises);
-  }
+  });
 
-  private async emitJei(acceptor: Acceptor, hiddenIds: NormalizedId[]) {
+  private async emitJei(acceptor: DataConsumer, hiddenIds: NormalizedId[]) {
     const content = hiddenIds.join("\n");
     const path = "jei/blacklist.cfg";
-    acceptor(path, content);
+    acceptor(path, Promise.resolve(content));
   }
 
-  private async emitPolytone(acceptor: Acceptor, hiddenIds: NormalizedId[]) {
+  private async emitPolytone(
+    acceptor: DataConsumer,
+    hiddenIds: NormalizedId[],
+  ) {
     const tabs = this.context.lookup.keys("minecraft:creative_mode_tab");
 
     if (!tabs)
@@ -125,7 +128,7 @@ export default class BlacklistEmitter
         "Cannot use polytone output without creative mod tab registry",
       );
 
-    const content = await toJson({
+    const content = toJson({
       targets: [...tabs.values()],
       removals: [
         {

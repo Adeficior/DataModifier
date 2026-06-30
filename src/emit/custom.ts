@@ -1,11 +1,11 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
+import { simpleResolver, type Resolver } from "@adeficior/pack-resolver";
 import type { IdInput } from "../common/id.js";
 import { createId } from "../common/id.js";
 import Registry from "../common/registry.js";
 import { toJson } from "../textHelper.js";
-import type { PathProvider } from "./index.js";
+import type { ClearableEmitter, PathProvider } from "./index.js";
 
-export default class CustomEmitter<TEntry> {
+export default class CustomEmitter<TEntry> implements ClearableEmitter {
   constructor(
     private readonly pathProvider: PathProvider,
     private readonly encoder: (
@@ -36,12 +36,12 @@ export default class CustomEmitter<TEntry> {
     else this.add(id, factory());
   }
 
-  async emit(acceptor: Acceptor) {
+  readonly resolver: Resolver = simpleResolver(async (acceptor) => {
     await this.customEntries.forEachAsync(async (entry, id) => {
       const path = this.pathProvider(id);
-      acceptor(path, await this.encoder(entry));
+      await acceptor(path, Promise.resolve(this.encoder(entry)));
     });
-  }
+  });
 
   has(id: IdInput) {
     return this.customEntries.has(id);
