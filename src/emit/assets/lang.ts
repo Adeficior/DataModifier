@@ -88,14 +88,14 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
       if (Object.keys(output).length > 0) {
         missingCustomFiles.delete(encodeId(id));
         const path = this.langPath(id);
-        acceptor(path, toJson(output));
+        await acceptor(path, toJson(output));
       }
     });
 
     await Promise.all(
       Array.from(missingCustomFiles).map(async (id) => {
         const path = this.langPath(createId(id));
-        acceptor(path, toJson(this.custom.get(id)));
+        await acceptor(path, toJson(this.custom.get(id)));
       }),
     );
   });

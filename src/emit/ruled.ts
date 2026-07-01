@@ -59,7 +59,7 @@ export default class RuledEmitter<
 
       const serialized = modified ? this.serialize(modified) : this.emptyValue;
 
-      acceptor(path, toJson(serialized));
+      await acceptor(path, toJson(serialized));
     });
 
     missingRules.forEach((rule) => {

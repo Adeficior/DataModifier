@@ -114,7 +114,7 @@ export default class BlacklistEmitter
   private async emitJei(acceptor: DataConsumer, hiddenIds: NormalizedId[]) {
     const content = hiddenIds.join("\n");
     const path = "jei/blacklist.cfg";
-    acceptor(path, Promise.resolve(content));
+    await acceptor(path, Promise.resolve(content));
   }
 
   private async emitPolytone(
@@ -139,7 +139,7 @@ export default class BlacklistEmitter
     });
 
     const path = "assets/generated/polytone/creative_tab_modifiers/hidden.json";
-    acceptor(path, content);
+    await acceptor(path, content);
   }
 
   clear() {

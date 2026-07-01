@@ -152,7 +152,6 @@ export default class TagsLoader implements TagRegistryHolder, Acceptor {
   }
 
   async accept(path: string, content: PromiseLike<Acceptable>) {
-    console.log(this);
     const info = this.parsePath(path);
     if (!info) return false;
 

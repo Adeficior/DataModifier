@@ -1,39 +1,20 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`replacing translation entries emits custom values: custom values 1`] = `
+exports[`replacing translation entries replaces using string value: replaced diorite values 1`] = `
 {
-  "item.minecraft.diamond": "Sapphire",
-  "something.else": "The Value",
-}
-`;
-
-exports[`replacing translation entries emits custom values together with replaced values: custom values 1`] = `
-{
-  "advancements.story.mine_diamond.description": "Acquire rubys",
-  "advancements.story.mine_diamond.title": "Rubys!",
-  "advancements.story.shiny_gear.description": "Ruby armor saves lives",
-  "advancements.story.shiny_gear.title": "Cover Me with Rubys",
-  "block.minecraft.deepslate_diamond_ore": "Deepslate Ruby Ore",
-  "block.minecraft.diamond_block": "Block of Ruby",
-  "block.minecraft.diamond_ore": "Ruby Ore",
-  "item.minecraft.diamond": "Sapphire",
-  "item.minecraft.diamond_axe": "Ruby Axe",
-  "item.minecraft.diamond_boots": "Ruby Boots",
-  "item.minecraft.diamond_chestplate": "Ruby Chestplate",
-  "item.minecraft.diamond_helmet": "Ruby Helmet",
-  "item.minecraft.diamond_hoe": "Ruby Hoe",
-  "item.minecraft.diamond_horse_armor": "Ruby Horse Armor",
-  "item.minecraft.diamond_leggings": "Ruby Leggings",
-  "item.minecraft.diamond_pickaxe": "Ruby Pickaxe",
-  "item.minecraft.diamond_shovel": "Ruby Shovel",
-  "item.minecraft.diamond_sword": "Ruby Sword",
-  "something.else": "The Value",
-  "subtitles.item.armor.equip_diamond": "Ruby armor clangs",
+  "block.minecraft.diorite": "Bird poop",
+  "block.minecraft.diorite_slab": "Bird poop Slab",
+  "block.minecraft.diorite_stairs": "Bird poop Stairs",
+  "block.minecraft.diorite_wall": "Bird poop Wall",
+  "block.minecraft.polished_diorite": "Polished Bird poop",
+  "block.minecraft.polished_diorite_slab": "Polished Bird poop Slab",
+  "block.minecraft.polished_diorite_stairs": "Polished Bird poop Stairs",
 }
 `;
 
 exports[`replacing translation entries replaces requires the case to match: replaced matched case values 1`] = `
 {
+  "advancements.story.mine_stone.description": "Mine Rock with your new Pickaxe",
   "advancements.story.mine_stone.title": "Rock Age",
   "block.minecraft.chiseled_stone_bricks": "Chiseled Rock Bricks",
   "block.minecraft.cracked_stone_bricks": "Cracked Rock Bricks",
@@ -74,38 +55,64 @@ exports[`replacing translation entries replaces requires the case to match: repl
 }
 `;
 
-exports[`replacing translation entries replaces using string value: replaced diorite values 1`] = `
+exports[`replacing translation entries emits custom values: custom values 1`] = `
 {
-  "block.minecraft.diorite": "Bird poop",
-  "block.minecraft.diorite_slab": "Bird poop Slab",
-  "block.minecraft.diorite_stairs": "Bird poop Stairs",
-  "block.minecraft.diorite_wall": "Bird poop Wall",
-  "block.minecraft.polished_diorite": "Polished Bird poop",
-  "block.minecraft.polished_diorite_slab": "Polished Bird poop Slab",
-  "block.minecraft.polished_diorite_stairs": "Polished Bird poop Stairs",
+  "item.minecraft.diamond": "Sapphire",
+  "something.else": "The Value",
+}
+`;
+
+exports[`replacing translation entries emits custom values together with replaced values: custom values 1`] = `
+{
+  "advancements.story.mine_diamond.description": "Acquire rubys",
+  "advancements.story.mine_diamond.title": "Rubys!",
+  "advancements.story.shiny_gear.description": "Ruby armor saves lives",
+  "advancements.story.shiny_gear.title": "Cover Me with Rubys",
+  "block.minecraft.deepslate_diamond_ore": "Deepslate Ruby Ore",
+  "block.minecraft.diamond_block": "Block of Ruby",
+  "block.minecraft.diamond_ore": "Ruby Ore",
+  "item.minecraft.diamond": "Sapphire",
+  "item.minecraft.diamond_axe": "Ruby Axe",
+  "item.minecraft.diamond_boots": "Ruby Boots",
+  "item.minecraft.diamond_chestplate": "Ruby Chestplate",
+  "item.minecraft.diamond_helmet": "Ruby Helmet",
+  "item.minecraft.diamond_hoe": "Ruby Hoe",
+  "item.minecraft.diamond_horse_armor": "Ruby Horse Armor",
+  "item.minecraft.diamond_leggings": "Ruby Leggings",
+  "item.minecraft.diamond_pickaxe": "Ruby Pickaxe",
+  "item.minecraft.diamond_shovel": "Ruby Shovel",
+  "item.minecraft.diamond_sword": "Ruby Sword",
+  "item.minecraft.smithing_template.netherite_upgrade.applies_to": "Ruby Equipment",
+  "item.minecraft.smithing_template.netherite_upgrade.base_slot_description": "Add ruby armor, weapon, or tool",
+  "something.else": "The Value",
+  "subtitles.item.armor.equip_diamond": "Ruby armor clangs",
+  "trim_material.minecraft.diamond": "Ruby Material",
 }
 `;
 
 exports[`replacing translation entries respects keepCase option: kept case values 1`] = `
 {
-  "block.minecraft.dark_oak_button": "Mahagony Button",
-  "block.minecraft.dark_oak_door": "Mahagony Door",
-  "block.minecraft.dark_oak_fence": "Mahagony Fence",
-  "block.minecraft.dark_oak_fence_gate": "Mahagony Fence Gate",
-  "block.minecraft.dark_oak_leaves": "Mahagony Leaves",
-  "block.minecraft.dark_oak_log": "Mahagony Log",
-  "block.minecraft.dark_oak_planks": "Mahagony Planks",
-  "block.minecraft.dark_oak_pressure_plate": "Mahagony Pressure Plate",
-  "block.minecraft.dark_oak_sapling": "Mahagony Sapling",
-  "block.minecraft.dark_oak_sign": "Mahagony Sign",
-  "block.minecraft.dark_oak_slab": "Mahagony Slab",
-  "block.minecraft.dark_oak_stairs": "Mahagony Stairs",
-  "block.minecraft.dark_oak_trapdoor": "Mahagony Trapdoor",
-  "block.minecraft.dark_oak_wall_sign": "Mahagony Wall Sign",
-  "block.minecraft.dark_oak_wood": "Mahagony Wood",
-  "block.minecraft.potted_dark_oak_sapling": "Potted Mahagony Sapling",
-  "block.minecraft.stripped_dark_oak_log": "Stripped Mahagony Log",
-  "block.minecraft.stripped_dark_oak_wood": "Stripped Mahagony Wood",
-  "item.minecraft.dark_oak_boat": "Mahagony Boat",
+  "block.minecraft.dark_oak_button": "Mahogony Button",
+  "block.minecraft.dark_oak_door": "Mahogony Door",
+  "block.minecraft.dark_oak_fence": "Mahogony Fence",
+  "block.minecraft.dark_oak_fence_gate": "Mahogony Fence Gate",
+  "block.minecraft.dark_oak_hanging_sign": "Mahogony Hanging Sign",
+  "block.minecraft.dark_oak_leaves": "Mahogony Leaves",
+  "block.minecraft.dark_oak_log": "Mahogony Log",
+  "block.minecraft.dark_oak_planks": "Mahogony Planks",
+  "block.minecraft.dark_oak_pressure_plate": "Mahogony Pressure Plate",
+  "block.minecraft.dark_oak_sapling": "Mahogony Sapling",
+  "block.minecraft.dark_oak_sign": "Mahogony Sign",
+  "block.minecraft.dark_oak_slab": "Mahogony Slab",
+  "block.minecraft.dark_oak_stairs": "Mahogony Stairs",
+  "block.minecraft.dark_oak_trapdoor": "Mahogony Trapdoor",
+  "block.minecraft.dark_oak_wall_hanging_sign": "Mahogony Wall Hanging Sign",
+  "block.minecraft.dark_oak_wall_sign": "Mahogony Wall Sign",
+  "block.minecraft.dark_oak_wood": "Mahogony Wood",
+  "block.minecraft.potted_dark_oak_sapling": "Potted Mahogony Sapling",
+  "block.minecraft.stripped_dark_oak_log": "Stripped Mahogony Log",
+  "block.minecraft.stripped_dark_oak_wood": "Stripped Mahogony Wood",
+  "item.minecraft.dark_oak_boat": "Mahogony Boat",
+  "item.minecraft.dark_oak_chest_boat": "Mahogony Boat with Chest",
 }
 `;

@@ -19,7 +19,7 @@ export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
     return this.registry.getOrPut(registry, () => new Set<NormalizedId>());
   }
 
-  accept(path: string, content: PromiseLike<Acceptable>) {
+  async accept(path: string, content: PromiseLike<Acceptable>) {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
     if (!match?.groups) {
       return false;
@@ -29,7 +29,7 @@ export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
 
     const grouped = this.logger.group(path);
 
-    const json = tryParseJson(grouped, content.toString());
+    const json = tryParseJson(grouped, await content);
     if (!json) return false;
 
     const parsed = tryCatching(grouped, () => schema.parse(json));

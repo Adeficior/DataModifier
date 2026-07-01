@@ -146,7 +146,7 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
       emitters.flatMap((scoped) =>
         scoped.getModified(async (id, definition) => {
           const path = `data/${id.namespace}/tags/${scoped.folder}/${id.path}.json`;
-          acceptor(
+          await acceptor(
             path,
             toJson({
               ...definition,
