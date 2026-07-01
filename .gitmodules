@@ -2,3 +2,7 @@
 	path = test/resources/1.20.1/default/vanilla-data
 	url = https://github.com/misode/mcmeta.git
 	shallow  = true
+[submodule "test/resources/1.20.1/default/vanilla-assets"]
+	path = test/resources/1.20.1/default/vanilla-assets
+	url = https://github.com/misode/mcmeta.git
+	shallow  = true
