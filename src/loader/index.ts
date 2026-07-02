@@ -1,6 +1,7 @@
 import type {
   Acceptable,
   Acceptor,
+  BaseContext,
   Logger,
   Resolver,
 } from "@adeficior/pack-resolver";
@@ -43,7 +44,11 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
     await this.registry.forEachAsync(consumer);
   }
 
-  async accept(path: string, content: PromiseLike<Acceptable>) {
+  async accept(
+    path: string,
+    content: PromiseLike<Acceptable>,
+    context: BaseContext,
+  ) {
     const match =
       /(data|assets)\/(?<namespace>[\w-]+)\/\w+\/(?<rest>[\w-/]+).json/.exec(
         path,
@@ -53,12 +58,10 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
     const { namespace, rest } = match.groups;
     const id: Id = { namespace: namespace!, path: rest! };
 
-    const grouped = this.logger.group(path);
-
-    const json = tryParseJson(grouped, await content);
+    const json = tryParseJson(context.logger, await content);
     if (!json) return false;
 
-    const parsed = tryCatching(grouped, () => this.parse(json, id));
+    const parsed = tryCatching(context.logger, () => this.parse(json, id));
     if (!parsed) return false;
 
     this.registry.set(id, parsed);

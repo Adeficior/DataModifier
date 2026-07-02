@@ -25,7 +25,7 @@ export default function setupLoader(
 
   if (load) {
     beforeAll(async () => {
-      const resolver = createTestDataResolver(version, options);
+      const resolver = createTestDataResolver(version, { ...options, logger });
       await loader.loadFrom(resolver);
     }, 15_0000);
   }

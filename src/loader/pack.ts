@@ -2,10 +2,13 @@ import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {
   combineResolvers,
   distributedAcceptor,
+  extendContext,
+  filterAcceptor,
   type Acceptor,
+  type BaseContext,
+  type FilterOptions,
   type Logger,
   type Resolver,
-  type ResolverInfo,
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
 import createIngredientPredicate, {
@@ -54,7 +57,7 @@ export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
   packFormat: SemVerInput;
 }
 
-export default class PackLoader implements Loader, ClearableEmitter {
+export default class PackLoader implements Loader {
   private readonly lookup = new WrappedRegistryLookup();
 
   private readonly emitters: ClearableEmitter[] = [];
@@ -148,15 +151,20 @@ export default class PackLoader implements Loader, ClearableEmitter {
       ),
     );
 
-    this.acceptor = createMergingAcceptor(
-      distributedAcceptor({
-        "data/*/tags/**/*.json": this.tagLoader,
-        "data/*/recipes/**/*.json": this.recipesLoader,
-        "data/*/recipe/**/*.json": this.recipesLoader,
-        "data/*/loot_tables/**/*.json": this.lootLoader,
-        "data/*/loot_table/**/*.json": this.lootLoader,
-        "assets/*/lang/*.json": this.langLoader,
-      }),
+    this.acceptor = filterAcceptor(
+      createMergingAcceptor(
+        distributedAcceptor({
+          "data/*/tags/**/*.json": this.tagLoader,
+          "data/*/recipes/**/*.json": this.recipesLoader,
+          "data/*/recipe/**/*.json": this.recipesLoader,
+          "data/*/loot_tables/**/*.json": this.lootLoader,
+          "data/*/loot_table/**/*.json": this.lootLoader,
+          "assets/*/lang/*.json": this.langLoader,
+        }),
+      ),
+      {
+        include: ["assets/**/*.json", "data/**/*.json"],
+      } satisfies FilterOptions,
     );
   }
 
@@ -205,7 +213,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
     return createIngredientPredicate(test, this.context);
   }
 
-  loadFromMultiple(resolvers: ResolverInfo[]) {
+  loadFromMultiple(resolvers: Resolver[]) {
     const combined = combineResolvers(resolvers);
     return this.loadFrom(combined);
   }
@@ -215,7 +223,7 @@ export default class PackLoader implements Loader, ClearableEmitter {
   }
 
   async loadRegistryDump(resolver: Resolver) {
-    const registryDumpLoader = new RegistryDumpLoader(this.logger);
+    const registryDumpLoader = new RegistryDumpLoader();
     await resolver.extract(registryDumpLoader);
     this.lookup.set(registryDumpLoader);
   }
@@ -227,15 +235,21 @@ export default class PackLoader implements Loader, ClearableEmitter {
     this.emitters.forEach((it) => it.clear());
   }
 
-  get resolver(): Resolver {
+  private resolver(context: BaseContext) {
     return combineResolvers(
-      this.emitters.map((it) => it.resolver),
+      this.emitters.map((it) =>
+        it.resolver(extendContext(context, { emitter: it.constructor.name })),
+      ),
       { async: true },
     );
   }
 
+  async emit(to: Acceptor) {
+    await this.resolver({ logger: this.logger }).extract(to);
+  }
+
   async run(from: Resolver, to: Acceptor) {
     await this.loadFrom(from);
-    await this.resolver.extract(to);
+    await this.emit(to);
   }
 }

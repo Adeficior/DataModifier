@@ -23,11 +23,14 @@ describe("tests regarding error logging", () => {
       new ItemResult("minecraft:obsidian"),
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(logger.warn).toHaveBeenCalledWith(
-      `data/example/recipes/incorrectResult.json -> unknown result shape`,
-      120,
+      "unknown result shape",
+      expect.objectContaining({
+        input: 120,
+        path: "data/example/recipes/incorrectResult.json",
+      }),
     );
   });
 });

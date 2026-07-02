@@ -1,5 +1,9 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import { simpleResolver, type Logger } from "@adeficior/pack-resolver";
+import {
+  simpleResolver,
+  type BaseContext,
+  type Logger,
+} from "@adeficior/pack-resolver";
 import { resolveIDTest, type CommonFilter } from "../../common/filters.js";
 import type { Id, NormalizedId, TagInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
@@ -140,24 +144,26 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
     this.emitters.forEach((it) => it.clear());
   }
 
-  readonly resolver = simpleResolver(async (acceptor) => {
-    const emitters = Array.from(this.emitters.values());
-    await Promise.all(
-      emitters.flatMap((scoped) =>
-        scoped.getModified(async (id, definition) => {
-          const path = `data/${id.namespace}/tags/${scoped.folder}/${id.path}.json`;
-          await acceptor(
-            path,
-            toJson({
-              ...definition,
-              values: definition.values && orderTagEntries(definition.values),
-              remove: definition.remove && orderTagEntries(definition.remove),
-            }),
-          );
-        }),
-      ),
-    );
-  });
+  resolver(context: BaseContext) {
+    return simpleResolver(async (acceptor) => {
+      const emitters = Array.from(this.emitters.values());
+      await Promise.all(
+        emitters.flatMap((scoped) =>
+          scoped.getModified(async (id, definition) => {
+            const path = `data/${id.namespace}/tags/${scoped.folder}/${id.path}.json`;
+            await acceptor(
+              path,
+              toJson({
+                ...definition,
+                values: definition.values && orderTagEntries(definition.values),
+                remove: definition.remove && orderTagEntries(definition.remove),
+              }),
+            );
+          }),
+        ),
+      );
+    }, context);
+  }
 
   add<T extends RegistryId>(
     registry: T,

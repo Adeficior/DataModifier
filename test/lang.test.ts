@@ -11,7 +11,7 @@ describe("replacing translation entries", () => {
 
     loader.lang.replaceValue("diorite", "bird poop", { lang: "en_us" });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("assets/minecraft/lang/en_us.json")).toMatchSnapshot(
       "replaced diorite values",
@@ -26,7 +26,7 @@ describe("replacing translation entries", () => {
       matchCase: true,
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("assets/minecraft/lang/en_us.json")).toMatchSnapshot(
       "replaced matched case values",
@@ -39,7 +39,7 @@ describe("replacing translation entries", () => {
     loader.lang.addCustom("en_us", "something.else", "The Value");
     loader.lang.entryName("minecraft:item", "minecraft:diamond", "Sapphire");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("assets/minecraft/lang/en_us.json")).toMatchSnapshot(
       "custom values",
@@ -53,7 +53,7 @@ describe("replacing translation entries", () => {
     loader.lang.entryName("minecraft:item", "minecraft:diamond", "Sapphire");
     loader.lang.replaceValue("Diamond", "ruby");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("assets/minecraft/lang/en_us.json")).toMatchSnapshot(
       "custom values",
@@ -68,7 +68,7 @@ describe("replacing translation entries", () => {
       namespaces: ["create", "farmersdelight"],
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths()).toHaveLength(2);
   });
@@ -82,7 +82,7 @@ describe("replacing translation entries", () => {
       keepCase: false,
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("assets/minecraft/lang/en_us.json")).toMatchSnapshot(
       "kept case values",

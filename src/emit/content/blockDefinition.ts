@@ -1,4 +1,5 @@
 import type { BlockId } from "@adeficior/data-modifier/generated";
+import type { BaseContext } from "@adeficior/pack-resolver";
 import type { Id, IdInput } from "../../common/id.js";
 import type {
   BlockDefinition,
@@ -107,7 +108,9 @@ export default class BlockDefinitionEmitter
     return definition;
   }
 
-  readonly resolver = this.custom.resolver;
+  resolver(context: BaseContext) {
+    return this.custom.resolver(context);
+  }
 
   clear() {
     this.custom.clear();

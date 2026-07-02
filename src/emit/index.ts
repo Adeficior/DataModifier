@@ -1,4 +1,8 @@
-import type { Resolver } from "@adeficior/pack-resolver";
+import type {
+  Acceptable,
+  BaseContext,
+  Resolver,
+} from "@adeficior/pack-resolver";
 import type { Id } from "../common/id.js";
 
 export interface RegistryProvider<T> {
@@ -10,5 +14,5 @@ export type PathProvider = (id: Id) => string;
 
 export interface ClearableEmitter {
   clear(): void;
-  resolver: Resolver;
+  resolver(context: BaseContext): Resolver<Acceptable, BaseContext>;
 }

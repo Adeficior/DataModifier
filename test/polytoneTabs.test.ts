@@ -19,7 +19,7 @@ describe("creates addition entries", () => {
       ["minecraft:diamond", { namespace: "forge", path: "the_logo" }],
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -38,7 +38,7 @@ describe("creates addition entries", () => {
       after: "minecraft:stone_axe",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at("assets/example/polytone/creative_tab_modifiers/tab.json"),
@@ -52,7 +52,7 @@ describe("creates addition entries", () => {
       before: "minecraft:stone_hoe",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at("assets/example/polytone/creative_tab_modifiers/tab.json"),
@@ -66,7 +66,7 @@ describe("creates addition entries", () => {
       file: "other:id",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -102,7 +102,7 @@ describe("create removal entries", () => {
       ["minecraft:diamond", { namespace: "forge", path: "the_logo" }],
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -121,7 +121,7 @@ describe("create removal entries", () => {
       file: "other:id",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -142,7 +142,7 @@ describe("create new tabs", () => {
     loader.tabs.create("something:another_tab");
     loader.tabs.create("minecraft:more_blocks");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(encodeId(id)).toMatch("something:test_tab");
     expect(

@@ -28,7 +28,7 @@ describe("blacklist tests", () => {
       new FluidIngredient("forge:milk"),
     ]);
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toMatchSnapshot(
       "jei blacklist config file",
@@ -38,7 +38,7 @@ describe("blacklist tests", () => {
   it("does not create the jei blacklist config if nothing is hidden", async () => {
     const acceptor = createTestAcceptor();
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toBeNull();
   });
@@ -55,7 +55,7 @@ describe("blacklist tests", () => {
         it instanceof ItemIngredient && encodeId(it.id).includes("granite"),
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toMatchSnapshot(
       "jei blacklist config file using registry dump",
@@ -70,7 +70,7 @@ describe("blacklist tests", () => {
     expect(() => loader.blacklist.hide(/whatever/)).toThrow(message);
     expect(() => loader.blacklist.hide(() => true)).toThrow(message);
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toBeNull();
   });
@@ -92,7 +92,7 @@ describe("blacklist tests", () => {
       /minecraft:.+_forest/,
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toMatchSnapshot(
       "jei blacklist config file using biome registry",

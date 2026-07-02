@@ -73,3 +73,11 @@ export const packFormatOf = defineFormats({
   "1.21.7": "81",
   "1.21.9": "88.0",
 });
+
+export function lootTableFolder(packFormat: SemVerInput) {
+  return isAtLeastVersion(packFormat, "44") ? "loot_table" : "loot_tables";
+}
+
+export function recipeFolder(packFormat: SemVerInput) {
+  return isAtLeastVersion(packFormat, "44") ? "recipe" : "recipes";
+}

@@ -1,5 +1,4 @@
-import type { Logger } from "@adeficior/pack-resolver";
-import { exists } from "@adeficior/pack-resolver";
+import type { ContextLike, Logger } from "@adeficior/pack-resolver";
 import type { Predicate } from "../../common/filters.js";
 import type { Id } from "../../common/id.js";
 import {
@@ -51,7 +50,7 @@ function hasOutput(
 
 export default class LootTableRule extends Rule<LootTable> {
   constructor(
-    private readonly shape: unknown[],
+    private readonly context: ContextLike,
     private readonly idTests: Predicate<Id>[],
     private readonly outputTests: Predicate<Ingredient>[],
     modifier: Modifier<LootTable>,
@@ -68,9 +67,6 @@ export default class LootTableRule extends Rule<LootTable> {
   }
 
   printWarning(logger: Logger) {
-    logger.error(
-      "Could not find any loot table matching",
-      ...this.shape.filter(exists),
-    );
+    logger.error("Could not find any matching loot table", this.context);
   }
 }

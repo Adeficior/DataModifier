@@ -1,7 +1,7 @@
 import {
   combineResolvers,
+  type BaseContext,
   type Logger,
-  type Resolver,
 } from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
@@ -14,7 +14,7 @@ import type { IngredientFilter } from "../../common/ingredient/filter.js";
 import createIngredientPredicate from "../../common/ingredient/filter.js";
 import type { Ingredient } from "../../common/ingredient/index.js";
 import type { PackContext } from "../../loader/context.js";
-import { isAtLeastVersion } from "../../packFormat.js";
+import { lootTableFolder } from "../../packFormat.js";
 import type { LootItemInput } from "../../parser/lootTable.js";
 import { createLootEntry, replaceItemInTable } from "../../parser/lootTable.js";
 import type { LootModifier, LootTable } from "../../schema/data/loot.js";
@@ -68,15 +68,12 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
 
   private readonly ruled: RuledEmitter<LootTable, LootTableRule>;
 
-  readonly resolver: Resolver;
-
   constructor(
     private readonly logger: Logger,
     private readonly lootTables: RegistryProvider<LootTable>,
     private readonly context: PackContext,
   ) {
     this.ruled = new RuledEmitter<LootTable, LootTableRule>(
-      this.logger,
       this.lootTables,
       (id) => this.tablePath(id),
       EMPTY_LOOT_TABLE,
@@ -84,21 +81,21 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
       (it) => it,
       (id) => this.customTables.has(id),
     );
+  }
 
-    this.resolver = combineResolvers(
+  resolver(context: BaseContext) {
+    return combineResolvers(
       [
-        this.ruled.resolver,
-        this.customTables.resolver,
-        this.customModifiers.resolver,
+        this.ruled.resolver(context),
+        this.customTables.resolver(context),
+        this.customModifiers.resolver(context),
       ],
       { async: true },
     );
   }
 
   private tablePath(id: Id) {
-    const folder = isAtLeastVersion(this.context.packFormat, "44")
-      ? "loot_table"
-      : "loot_tables";
+    const folder = lootTableFolder(this.context.packFormat);
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
@@ -134,7 +131,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     const predicates = this.resolveLootTableTest(test);
     this.ruled.addRule(
       new LootTableRule(
-        ["remove output", test],
+        { operation: "remove", test },
         predicates.id,
         predicates.output,
         () => null,
@@ -155,7 +152,7 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
     );
     this.ruled.addRule(
       new LootTableRule(
-        ["replace output", from, "with", to, additionalTests],
+        { operation: "replace output", from, to, test: additionalTests },
         predicates.id,
         [outputPredicate, ...predicates.output],
         replacer,

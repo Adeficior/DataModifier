@@ -86,7 +86,7 @@ describe("adding of tag entries", () => {
       required: false,
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/items/minable/axe.json"),
@@ -99,7 +99,7 @@ describe("adding of tag entries", () => {
     loader.registerRegistry("whatever/registry");
     loader.tags.add("whatever/registry", "#example:something", "example:entry");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/example/tags/whatever/registry/something.json"),
@@ -113,7 +113,7 @@ describe("removal of tag entries", () => {
 
     loader.tags.blocks.remove("#minecraft:oak_logs", "minecraft:oak_log");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/blocks/oak_logs.json"),
@@ -133,7 +133,7 @@ describe("removal of tag entries", () => {
       "#minecraft:mineable/pickaxe",
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/blocks/mineable/axe.json"),
@@ -148,7 +148,7 @@ describe("removal of tag entries", () => {
 
     loader.tags.blocks.remove("#minecraft:birch_logs", /minecraft:stripped_.+/);
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/blocks/birch_logs.json"),
@@ -162,7 +162,7 @@ describe("removal of tag entries", () => {
       it.includes("gold"),
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/blocks/guarded_by_piglins.json"),

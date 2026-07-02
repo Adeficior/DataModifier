@@ -11,7 +11,7 @@ describe("integration with content packs mod", () => {
 
     loader.content.blocks.basic("example:ruby_ore", { material: "stone" });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/ruby_ore.json"),
@@ -35,7 +35,7 @@ describe("integration with content packs mod", () => {
       stack_size: 24,
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.jsonAt("content/example/item/ruby.json")).toMatchSnapshot(
       "basic item definition",
@@ -53,7 +53,7 @@ describe("integration with content packs mod", () => {
       block: (blocks) => blocks.basic({ material: "metal" }, { loot: false }),
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/item/ruby_block.json"),
@@ -88,7 +88,7 @@ describe("integration with content packs mod", () => {
         blocks.basic({ material: "stone", type: "example_block" }),
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/sapphire_block.json"),
@@ -125,7 +125,7 @@ describe("integration with content packs mod", () => {
         }),
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/sapphire_block.json"),
@@ -151,7 +151,7 @@ describe("integration with content packs mod", () => {
       copy: "minecraft:emerald_ore",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/ruby_ore.json"),

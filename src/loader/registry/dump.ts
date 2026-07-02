@@ -1,5 +1,9 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptable, Acceptor, Logger } from "@adeficior/pack-resolver";
+import type {
+  Acceptable,
+  Acceptor,
+  BaseContext,
+} from "@adeficior/pack-resolver";
 import zod from "zod";
 import type { IdInput, NormalizedId } from "../../common/id.js";
 import { encodeId } from "../../common/id.js";
@@ -13,13 +17,15 @@ const schema = zod.array(zod.string());
 export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
   private readonly registry = new Registry<Set<NormalizedId>, RegistryId>();
 
-  constructor(private readonly logger: Logger) {}
-
   private registryOf(registry: RegistryId) {
     return this.registry.getOrPut(registry, () => new Set<NormalizedId>());
   }
 
-  async accept(path: string, content: PromiseLike<Acceptable>) {
+  async accept(
+    path: string,
+    content: PromiseLike<Acceptable>,
+    context: BaseContext,
+  ) {
     const match = /(?<registry>[\w-/]+)\/[\w-]+.json/.exec(path);
     if (!match?.groups) {
       return false;
@@ -27,12 +33,10 @@ export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
 
     const { registry } = match.groups as { registry: string };
 
-    const grouped = this.logger.group(path);
-
-    const json = tryParseJson(grouped, await content);
+    const json = tryParseJson(context.logger, await content);
     if (!json) return false;
 
-    const parsed = tryCatching(grouped, () => schema.parse(json));
+    const parsed = tryCatching(context.logger, () => schema.parse(json));
     if (!parsed) return false;
 
     const set = this.registryOf(registry);
@@ -44,15 +48,7 @@ export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
   }
 
   keys<T extends RegistryId>(registry: IdInput<T>) {
-    const keys = this.registry.get(registry);
-    if (keys === undefined) {
-      this.logger.warn(
-        `tried to access registry '${encodeId(
-          registry,
-        )}', which has not been loaded`,
-      );
-    }
-    return keys;
+    return this.registry.get(registry);
   }
 
   isKnown(registry: IdInput<RegistryId>) {

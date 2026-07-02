@@ -1,4 +1,4 @@
-import { simpleResolver, type Resolver } from "@adeficior/pack-resolver";
+import { simpleResolver, type BaseContext } from "@adeficior/pack-resolver";
 import type { IdInput } from "../common/id.js";
 import { createId } from "../common/id.js";
 import Registry from "../common/registry.js";
@@ -36,12 +36,14 @@ export default class CustomEmitter<TEntry> implements ClearableEmitter {
     else this.add(id, factory());
   }
 
-  readonly resolver: Resolver = simpleResolver(async (acceptor) => {
-    await this.customEntries.forEachAsync(async (entry, id) => {
-      const path = this.pathProvider(id);
-      await acceptor(path, Promise.resolve(this.encoder(entry)));
-    });
-  });
+  resolver(context: BaseContext) {
+    return simpleResolver(async (acceptor) => {
+      await this.customEntries.forEachAsync(async (entry, id) => {
+        const path = this.pathProvider(id);
+        await acceptor(path, Promise.resolve(this.encoder(entry)));
+      });
+    }, context);
+  }
 
   has(id: IdInput) {
     return this.customEntries.has(id);

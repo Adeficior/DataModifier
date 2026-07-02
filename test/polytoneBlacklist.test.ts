@@ -22,7 +22,7 @@ describe("blacklist tests", () => {
 
     loader.blacklist.hide("minecraft:stone");
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toBeNull();
   });
@@ -38,7 +38,7 @@ describe("blacklist tests", () => {
       new FluidIngredient("minecraft:lava"),
     ]);
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.at(

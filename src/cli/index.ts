@@ -29,9 +29,9 @@ async function runCodegen(config: CliConfig) {
   if (!config.output) throw new Error("output not specified");
 
   if (config.registryDump && existsSync(config.registryDump)) {
-    const resolver = createResolver({ from: config.registryDump });
+    const resolver = createResolver({ from: config.registryDump, logger });
 
-    const registry = new RegistryDumpLoader(logger);
+    const registry = new RegistryDumpLoader();
     await resolver.extract(registry);
 
     await generateRegistryTypes(registry, config.output);

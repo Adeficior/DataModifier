@@ -8,10 +8,10 @@ export default function setupLookup(
   version: string,
   logger: Logger = createTestLogger(),
 ) {
-  const lookup = new RegistryDumpLoader(logger);
+  const lookup = new RegistryDumpLoader();
 
   beforeAll(async () => {
-    const resolver = createDumpResolver(version);
+    const resolver = createDumpResolver(version, logger);
     await resolver.extract(lookup);
   });
 

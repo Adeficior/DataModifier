@@ -20,14 +20,6 @@ describe("registry dump tests", () => {
     );
   });
 
-  it("warns about unknown registries", async () => {
-    loader.registries.keys("example");
-
-    expect(logger.warn).toHaveBeenCalledWith(
-      "tried to access registry 'minecraft:example', which has not been loaded",
-    );
-  });
-
   it("validates correct ingredients", async () => {
     loader.createIngredient("minecraft:stone");
     loader.createIngredient(new ItemIngredient("minecraft:stone"));

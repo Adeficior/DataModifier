@@ -15,7 +15,7 @@ describe("creation of tag definitions for the advanced tag-loader mod", () => {
       "#minecraft:logs_that_burn",
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/tags/blocks/fire_resistant_logs.json"),

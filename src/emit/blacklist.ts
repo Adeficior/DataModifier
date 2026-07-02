@@ -1,10 +1,13 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { DataConsumer, Logger } from "@adeficior/pack-resolver";
+import type {
+  BaseContext,
+  DataConsumer,
+  Logger,
+} from "@adeficior/pack-resolver";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
 import { encodeId } from "../common/id.js";
-
 import type { IngredientFilter } from "../common/ingredient/filter.js";
 import createIngredientPredicate from "../common/ingredient/filter.js";
 import { ItemIngredient } from "../common/ingredient/index.js";
@@ -99,27 +102,34 @@ export default class BlacklistEmitter
     return registries.flatMap((registry) => ingredient.idsFor(registry));
   }
 
-  readonly resolver = simpleResolver(async (acceptor) => {
-    const hiddenIds = uniq(this.hidden).sort();
-    if (hiddenIds.length === 0) return;
+  resolver(context: BaseContext) {
+    return simpleResolver(async (acceptor) => {
+      const hiddenIds = uniq(this.hidden).sort();
+      if (hiddenIds.length === 0) return;
 
-    const promises: Promise<void>[] = [];
-    if (this.hideModes.includes("jei"))
-      promises.push(this.emitJei(acceptor, hiddenIds));
-    if (this.hideModes.includes("polytone"))
-      promises.push(this.emitPolytone(acceptor, hiddenIds));
-    await Promise.all(promises);
-  });
+      const promises: Promise<void>[] = [];
+      if (this.hideModes.includes("jei"))
+        promises.push(this.emitJei(acceptor, hiddenIds, context));
+      if (this.hideModes.includes("polytone"))
+        promises.push(this.emitPolytone(acceptor, hiddenIds, context));
+      await Promise.all(promises);
+    }, context);
+  }
 
-  private async emitJei(acceptor: DataConsumer, hiddenIds: NormalizedId[]) {
+  private async emitJei(
+    acceptor: DataConsumer,
+    hiddenIds: NormalizedId[],
+    context: BaseContext,
+  ) {
     const content = hiddenIds.join("\n");
     const path = "jei/blacklist.cfg";
-    await acceptor(path, Promise.resolve(content));
+    await acceptor(path, Promise.resolve(content), context);
   }
 
   private async emitPolytone(
     acceptor: DataConsumer,
     hiddenIds: NormalizedId[],
+    context: BaseContext,
   ) {
     const tabs = this.context.lookup.keys("minecraft:creative_mode_tab");
 
@@ -139,7 +149,7 @@ export default class BlacklistEmitter
     });
 
     const path = "assets/generated/polytone/creative_tab_modifiers/hidden.json";
-    await acceptor(path, content);
+    await acceptor(path, content, context);
   }
 
   clear() {

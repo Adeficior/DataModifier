@@ -1,9 +1,11 @@
 import {
   createCombinedResolver,
   createResolver,
+  type Logger,
   type Resolver,
   type ResolverOptions,
 } from "@adeficior/pack-resolver";
+import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { join } from "node:path";
 
 export function createTestDataResolver(
@@ -15,15 +17,17 @@ export function createTestDataResolver(
 
   return createCombinedResolver({
     from: join("test", "resources", version, from ?? "default"),
-    include: ["assets/**/*.json", "data/**/*.json"],
     logger: false,
     ...options,
   });
 }
 
-export function createDumpResolver(version: string): Resolver {
+export function createDumpResolver(
+  version: string,
+  logger: Logger = createTestLogger(),
+): Resolver {
   return createResolver({
     from: join("test", "resources", version, "dump"),
-    logger: false,
+    logger,
   });
 }

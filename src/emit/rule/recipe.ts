@@ -1,5 +1,4 @@
-import type { Logger } from "@adeficior/pack-resolver";
-import { exists } from "@adeficior/pack-resolver";
+import type { ContextLike, Logger } from "@adeficior/pack-resolver";
 import type { Predicate } from "../../common/filters.js";
 import type { Id } from "../../common/id.js";
 import { createId } from "../../common/id.js";
@@ -11,7 +10,7 @@ import Rule from "./index.js";
 
 export default class RecipeRule extends Rule<RecipeHolder> {
   constructor(
-    private readonly shape: unknown[],
+    private readonly context: ContextLike,
     private readonly idsTests: Predicate<Id>[],
     private readonly typeTests: Predicate<Id>[],
     private readonly ingredientTests: Predicate<Ingredient>[],
@@ -37,9 +36,6 @@ export default class RecipeRule extends Rule<RecipeHolder> {
   }
 
   printWarning(logger: Logger) {
-    logger.error(
-      "Could not find any recipes matching",
-      ...this.shape.filter(exists),
-    );
+    logger.error("Could not find any recipes matching", this.context);
   }
 }

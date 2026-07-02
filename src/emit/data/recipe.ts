@@ -1,5 +1,9 @@
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { Logger, Resolver } from "@adeficior/pack-resolver";
+import type {
+  BaseContext,
+  ContextLike,
+  Logger,
+} from "@adeficior/pack-resolver";
 import { combineResolvers, exists } from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
@@ -16,7 +20,7 @@ import createResultFilter from "../../common/result/filter.js";
 import type { Result } from "../../common/result/index.js";
 import type { ResultInput } from "../../common/result/input.js";
 import type { PackContext } from "../../loader/context.js";
-import { isAtLeastVersion } from "../../packFormat.js";
+import { recipeFolder } from "../../packFormat.js";
 import {
   createReplacer,
   RecipeHolder,
@@ -84,7 +88,6 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   );
 
   private readonly ruled: RuledEmitter<RecipeHolder, RecipeRule>;
-  readonly resolver: Resolver;
 
   constructor(
     private readonly logger: Logger,
@@ -93,24 +96,23 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     private readonly serializer: RecipeSerializer,
   ) {
     this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
-      this.logger,
       this.registry,
       (id) => this.recipePath(id),
       EMPTY_RECIPE,
       (it) => this.serializer.serialize(it),
       (id) => this.custom.has(id),
     );
+  }
 
-    this.resolver = combineResolvers(
-      [this.ruled.resolver, this.custom.resolver],
+  resolver(context: BaseContext) {
+    return combineResolvers(
+      [this.ruled.resolver(context), this.custom.resolver(context)],
       { async: true },
     );
   }
 
   private recipePath(id: Id) {
-    const folder = isAtLeastVersion(this.context.packFormat, "44")
-      ? "recipe"
-      : "recipes";
+    const folder = recipeFolder(this.context.packFormat);
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
@@ -161,7 +163,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   private addRule(
-    shape: unknown[],
+    context: ContextLike,
     modifier: Modifier<RecipeHolder>,
     recipeTest: RecipeTest = {},
     ingredientTests: {
@@ -173,7 +175,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
     this.ruled.addRule(
       new RecipeRule(
-        shape,
+        context,
         recipePredicates.id,
         recipePredicates.type,
         [ingredientTests.ingredient, ...recipePredicates.ingredient].filter(
@@ -187,7 +189,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   remove(test: RecipeTest) {
-    this.addRule([test], () => null, test);
+    this.addRule({ operation: "remove", test }, () => null, test);
   }
 
   replaceResult(
@@ -202,7 +204,12 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     const replace = createReplacer(predicate, value);
 
     this.addRule(
-      ["replace result", test, "with", value, additionalTest],
+      {
+        operation: "replace result",
+        from: test,
+        to: value,
+        test: additionalTest,
+      },
       (recipe) => recipe.replaceResult(replace),
       additionalTest,
       { result: predicate },
@@ -221,7 +228,12 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
     const replace = createReplacer(predicate, value);
 
     this.addRule(
-      ["replace ingredient", test, "with", value, additionalTest],
+      {
+        operation: "replace ingredient",
+        from: test,
+        to: value,
+        test: additionalTest,
+      },
       (recipe) => recipe.replaceIngredient(replace),
       additionalTest,
       { ingredient: predicate },

@@ -1,5 +1,9 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
+import {
+  arrayOrSelf,
+  simpleResolver,
+  type BaseContext,
+} from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
 import type { Predicate } from "../../common/filters.js";
 import type { Id, IdInput } from "../../common/id.js";
@@ -52,53 +56,55 @@ export default class LangEmitter implements LangRules, ClearableEmitter {
 
   constructor(private readonly registry: RegistryProvider<LangDefinition>) {}
 
-  readonly resolver = simpleResolver(async (acceptor) => {
-    const missingCustomFiles = new Set(this.custom.keys());
+  resolver(context: BaseContext) {
+    return simpleResolver(async (acceptor) => {
+      const missingCustomFiles = new Set(this.custom.keys());
 
-    await this.registry.forEachAsync(async (lang, id) => {
-      const allRules = this.rules.filter((rule) => {
-        return (
-          (rule.languages.length === 0 || rule.languages.includes(id.path)) &&
-          (rule.namespaces.length === 0 ||
-            rule.namespaces.includes(id.namespace))
+      await this.registry.forEachAsync(async (lang, id) => {
+        const allRules = this.rules.filter((rule) => {
+          return (
+            (rule.languages.length === 0 || rule.languages.includes(id.path)) &&
+            (rule.namespaces.length === 0 ||
+              rule.namespaces.includes(id.namespace))
+          );
+        });
+
+        const replaced = omitBy(
+          mapValues(lang, (value, key) => {
+            const rules = allRules.filter(
+              (rule) => rule.key?.(key) || rule.value?.(value),
+            );
+            if (rules.length === 0) return undefined;
+            return rules.reduce(
+              (previous, rule) => rule.replacer(previous),
+              value,
+            );
+          }),
+          (it) => !it,
         );
+
+        const custom = this.custom.get(id) ?? {};
+
+        const output = {
+          ...replaced,
+          ...custom,
+        };
+
+        if (Object.keys(output).length > 0) {
+          missingCustomFiles.delete(encodeId(id));
+          const path = this.langPath(id);
+          await acceptor(path, toJson(output));
+        }
       });
 
-      const replaced = omitBy(
-        mapValues(lang, (value, key) => {
-          const rules = allRules.filter(
-            (rule) => rule.key?.(key) || rule.value?.(value),
-          );
-          if (rules.length === 0) return undefined;
-          return rules.reduce(
-            (previous, rule) => rule.replacer(previous),
-            value,
-          );
+      await Promise.all(
+        Array.from(missingCustomFiles).map(async (id) => {
+          const path = this.langPath(createId(id));
+          await acceptor(path, toJson(this.custom.get(id)));
         }),
-        (it) => !it,
       );
-
-      const custom = this.custom.get(id) ?? {};
-
-      const output = {
-        ...replaced,
-        ...custom,
-      };
-
-      if (Object.keys(output).length > 0) {
-        missingCustomFiles.delete(encodeId(id));
-        const path = this.langPath(id);
-        await acceptor(path, toJson(output));
-      }
-    });
-
-    await Promise.all(
-      Array.from(missingCustomFiles).map(async (id) => {
-        const path = this.langPath(createId(id));
-        await acceptor(path, toJson(this.custom.get(id)));
-      }),
-    );
-  });
+    }, context);
+  }
 
   clear() {
     this.rules = [];

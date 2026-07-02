@@ -1,3 +1,4 @@
+import type { BaseContext } from "@adeficior/pack-resolver";
 import type { Id, IdInput } from "../../common/id.js";
 import { prefix } from "../../common/id.js";
 import type { BlockDefinition } from "../../schema/content/blockDefinition.js";
@@ -67,7 +68,9 @@ export default class ItemDefinitionEmitter
     this.custom.clear();
   }
 
-  readonly resolver = this.custom.resolver;
+  resolver(context: BaseContext) {
+    return this.custom.resolver(context);
+  }
 
   basic(
     id: IdInput,

@@ -38,7 +38,7 @@ describe("recipe ingredient replacement", () => {
       new ItemIngredient("minecraft:emerald"),
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/recipes/piston.json"),
@@ -63,7 +63,7 @@ describe("recipe ingredient replacement", () => {
       },
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths().length).toBe(2);
 
@@ -84,7 +84,7 @@ describe("recipe ingredient replacement", () => {
       new ItemTagIngredient("forge:raw_materials/iron"),
     );
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths().length).toBe(4);
 
@@ -116,7 +116,7 @@ describe("recipe ingredient replacement", () => {
       type: "farmersdelight:cutting",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(
       acceptor.jsonAt("data/custom/recipes/conditional.json"),
@@ -132,7 +132,7 @@ describe("recipe removal", () => {
       id: /minecraft:.*piston/,
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths().length).toBe(2);
 
@@ -151,7 +151,7 @@ describe("recipe removal", () => {
       type: "minecraft:smelting",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths().length).toBe(118);
   });
@@ -163,7 +163,7 @@ describe("recipe removal", () => {
       output: "minecraft:cooked_beef",
     });
 
-    await loader.resolver.extract(acceptor);
+    await loader.emit(acceptor);
 
     expect(acceptor.paths().length).toBe(3);
 
@@ -202,7 +202,7 @@ it("creates custom recipes", async () => {
 
   loader.recipes.add("example:custom", recipe);
 
-  await loader.resolver.extract(acceptor);
+  await loader.emit(acceptor);
 
   expect(acceptor.jsonAt("data/example/recipes/custom.json")).toMatchObject(
     recipe,
@@ -221,17 +221,20 @@ it("warns about duplicate custom recipe IDs", () => {
 });
 
 it("warns about missing recipe removal matches", async () => {
-  const filter: RecipeTest = {
+  const test: RecipeTest = {
     type: "example:not_existing",
   };
 
-  loader.recipes.remove(filter);
+  loader.recipes.remove(test);
 
-  await loader.resolver.extract(createTestAcceptor());
+  await loader.emit(createTestAcceptor());
 
   expect(logger.error).toHaveBeenCalledWith(
     "Could not find any recipes matching",
-    filter,
+    expect.objectContaining({
+      operation: "remove",
+      test,
+    }),
   );
 });
 
@@ -240,14 +243,15 @@ it("warns about missing recipe replacement matches", async () => {
   const to = new ItemResult("minecraft:dirt");
   loader.recipes.replaceResult(from, to);
 
-  await loader.resolver.extract(createTestAcceptor());
+  await loader.emit(createTestAcceptor());
 
   expect(logger.error).toHaveBeenCalledWith(
     "Could not find any recipes matching",
-    "replace result",
-    from,
-    "with",
-    to,
+    expect.objectContaining({
+      operation: "replace result",
+      from,
+      to,
+    }),
   );
 });
 
@@ -256,7 +260,7 @@ it("does not warn about optional missing recipe matches", async () => {
   const to = new ItemResult("minecraft:dirt");
   loader.recipes.replaceResult(from, to, { optional: true });
 
-  await loader.resolver.extract(createTestAcceptor());
+  await loader.emit(createTestAcceptor());
 
   expect(logger.error).not.toHaveBeenCalled();
 });
