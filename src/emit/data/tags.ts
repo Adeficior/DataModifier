@@ -31,6 +31,14 @@ export interface TagRules {
 
   scoped<T extends RegistryId>(key: T, folder?: string): ScopedTagRules<T>;
 
+  empty<T extends RegistryId>(registry: T, id: TagInput): void;
+
+  replace<T extends RegistryId>(
+    registry: T,
+    id: TagInput,
+    values: TagEntry<InferIds<T>>[],
+  ): void;
+
   blocks: ScopedTagRules<"minecraft:block">;
   items: ScopedTagRules<"minecraft:item">;
   fluids: ScopedTagRules<"minecraft:fluid">;
@@ -38,7 +46,12 @@ export interface TagRules {
 
 interface ScopedTagRules<T extends RegistryId> {
   add(id: TagInput, value: TagEntry<InferIds<T>>): void;
+
   remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>): void;
+
+  empty(id: TagInput): void;
+
+  replace(id: TagInput, values: TagEntry<InferIds<T>>[]): void;
 }
 
 type TagModifier = (previous: TagDefinition) => TagDefinition;
@@ -114,6 +127,14 @@ class ScopedEmitter<T extends RegistryId> implements ScopedTagRules<T> {
     }
   }
 
+  empty(id: TagInput) {
+    this.replace(id, []);
+  }
+
+  replace(id: TagInput, values: TagEntry<InferIds<T>>[]): void {
+    this.modify(id, () => ({ replace: true, values }));
+  }
+
   clear() {
     this.modifiers.clear();
   }
@@ -179,6 +200,18 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
     test: CommonFilter<NormalizedId<InferIds<T>>>,
   ) {
     this.scoped<T>(registry).remove(id, test);
+  }
+
+  replace<T extends RegistryId>(
+    registry: T,
+    id: TagInput,
+    values: TagEntry<InferIds<T>>[],
+  ) {
+    this.scoped<T>(registry).replace(id, values);
+  }
+
+  empty<T extends RegistryId>(registry: T, id: TagInput) {
+    this.scoped(registry).empty(id);
   }
 
   scoped<T extends RegistryId>(
