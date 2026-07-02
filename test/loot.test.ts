@@ -21,6 +21,7 @@ afterEach(() => {
 
 describe("loading of loot tables", () => {
   it("loads loot tables without errors", async () => {
+    expect(logger.trace).not.toHaveBeenCalled();
     expect(logger.warn).not.toHaveBeenCalled();
     expect(logger.error).not.toHaveBeenCalled();
   });

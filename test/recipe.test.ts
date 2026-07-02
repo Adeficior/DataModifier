@@ -229,8 +229,8 @@ it("warns about missing recipe removal matches", async () => {
 
   await loader.emit(createTestAcceptor());
 
-  expect(logger.error).toHaveBeenCalledWith(
-    "Could not find any recipes matching",
+  expect(logger.trace).toHaveBeenCalledWith(
+    "could not find any recipes matching",
     expect.objectContaining({
       operation: "remove",
       test,
@@ -245,8 +245,8 @@ it("warns about missing recipe replacement matches", async () => {
 
   await loader.emit(createTestAcceptor());
 
-  expect(logger.error).toHaveBeenCalledWith(
-    "Could not find any recipes matching",
+  expect(logger.trace).toHaveBeenCalledWith(
+    "could not find any recipes matching",
     expect.objectContaining({
       operation: "replace result",
       from,

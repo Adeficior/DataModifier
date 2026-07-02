@@ -67,6 +67,6 @@ export default class LootTableRule extends Rule<LootTable> {
   }
 
   printWarning(logger: Logger) {
-    logger.error("Could not find any matching loot table", this.context);
+    logger.trace("could not find any matching loot table", this.context);
   }
 }

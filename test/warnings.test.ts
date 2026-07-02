@@ -25,7 +25,7 @@ describe("tests regarding error logging", () => {
 
     await loader.emit(acceptor);
 
-    expect(logger.warn).toHaveBeenCalledWith(
+    expect(logger.trace).toHaveBeenCalledWith(
       "unknown result shape",
       expect.objectContaining({
         input: 120,

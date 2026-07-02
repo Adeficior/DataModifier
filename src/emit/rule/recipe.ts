@@ -36,6 +36,6 @@ export default class RecipeRule extends Rule<RecipeHolder> {
   }
 
   printWarning(logger: Logger) {
-    logger.error("Could not find any recipes matching", this.context);
+    logger.trace("could not find any recipes matching", this.context);
   }
 }

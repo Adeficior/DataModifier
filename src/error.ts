@@ -55,8 +55,8 @@ export function tryCatching<T>(
   } catch (error) {
     if (error instanceof IllegalShapeError) {
       // TODO trace?
-      if (error.input) logger?.warn(error.message, { input: error.input });
-      else logger?.warn(error.message);
+      if (error.input) logger?.trace(error.message, { input: error.input });
+      else logger?.trace(error.message);
       return null;
     }
 
