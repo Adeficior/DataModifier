@@ -6,7 +6,7 @@ export type CliAction = "help" | "codegen";
 
 export default interface CliConfig {
   resources: string[];
-  output?: string;
+  output: string;
   registryDump?: string;
   action: CliAction;
 }
@@ -23,8 +23,10 @@ export function fromArgs(argv = process.argv): CliConfig {
     { argv, permissive: true },
   );
 
+  const defaultOutput = "@types";
+
   if (args["--help"]) {
-    return { action: "help", resources: [] };
+    return { action: "help", resources: [], output: defaultOutput };
   }
 
   const action = args["--help"] ? "help" : (args._[2] as CliAction);
@@ -34,7 +36,7 @@ export function fromArgs(argv = process.argv): CliConfig {
   return {
     resources: args["--resources"] ?? [],
     registryDump: args["--registry-dump"],
-    output: args["--output"],
+    output: args["--output"] ?? defaultOutput,
     action,
   };
 }

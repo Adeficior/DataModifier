@@ -12,10 +12,9 @@ async function runCli() {
   switch (config.action) {
     case "help":
       return printHelp(logger);
-    case "codegen": {
-      if (!config.output) throw new Error("output not specified");
+    case "codegen":
       return generateDumpTypes(config.registryDump, config.output, logger);
-    }
+
     default:
       throw new Error(`unknown action '${config.action}'`);
   }

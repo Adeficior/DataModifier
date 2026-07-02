@@ -1,6 +1,5 @@
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { camelCase } from "lodash-es";
-import { join, resolve } from "path";
 import { format } from "prettier";
 import type { Id, IdInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
@@ -39,18 +38,10 @@ function moduleTemplate(...content: string[]) {
   return format(replaced, { parser: "typescript" });
 }
 
-function createTypesDirectory(base: string) {
-  const dir = resolve(base, "@types", "generated");
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  return dir;
-}
-
 export async function generateRegistryTypes(
   lookup: RegistryLookup,
-  outputDirectory: string,
+  file: string,
 ) {
-  const typesDirectory = createTypesDirectory(outputDirectory);
-
   const registryBlock = idTemplate("Registry", lookup.registries());
   const inferIdBlock = inferRegistryTemplate(lookup.registries());
 
@@ -65,19 +56,16 @@ export async function generateRegistryTypes(
     });
 
   writeFileSync(
-    join(typesDirectory, "index.d.ts"),
+    file,
     await moduleTemplate(registryBlock, ...idBlocks, inferIdBlock),
   );
 }
 
-export async function generateStubTypes(outputDirectory: string) {
-  const typesDirectory = createTypesDirectory(outputDirectory);
-  const registryStub = resolve(typesDirectory, "index.d.ts");
-
+export async function generateStubTypes(file: string) {
   const stubIdType = "`${string}:${string}`";
 
   writeFileSync(
-    registryStub,
+    file,
     await format(
       `
          declare module '@adeficior/data-modifier/generated' {
