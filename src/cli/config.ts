@@ -11,7 +11,7 @@ export default interface CliConfig {
   action: CliAction;
 }
 
-export function fromArgs(logger: Logger, argv = process.argv): CliConfig {
+export function fromArgs(argv = process.argv): CliConfig {
   const args = parseArgs(
     {
       "--help": Boolean,

@@ -1,11 +1,14 @@
-import { createLogger, createResolver } from "@adeficior/pack-resolver";
+import {
+  createLogger,
+  createResolver,
+  type Logger,
+} from "@adeficior/pack-resolver";
 import { existsSync } from "fs";
 import RegistryDumpLoader from "../loader/registry/dump.js";
 import {
   generateRegistryTypes,
   generateStubTypes,
 } from "./codegen/registry.js";
-import type CliConfig from "./config.js";
 import { fromArgs, printHelp } from "./config.js";
 
 const logger = createLogger();
@@ -13,31 +16,35 @@ const logger = createLogger();
 runCli().catch((e) => logger.error("an error occurred", e));
 
 async function runCli() {
-  const config = fromArgs(logger);
+  const config = fromArgs();
 
   switch (config.action) {
     case "help":
       return printHelp(logger);
-    case "codegen":
-      return runCodegen(config);
+    case "codegen": {
+      if (!config.output) throw new Error("output not specified");
+      return runCodegen(config.registryDump, config.output, logger);
+    }
     default:
       throw new Error(`unknown action '${config.action}'`);
   }
 }
 
-async function runCodegen(config: CliConfig) {
-  if (!config.output) throw new Error("output not specified");
-
-  if (config.registryDump && existsSync(config.registryDump)) {
-    const resolver = createResolver({ from: config.registryDump, logger });
+export async function runCodegen(
+  dumpDir: string | undefined,
+  output: string,
+  logger: Logger = createLogger(),
+) {
+  if (dumpDir && existsSync(dumpDir)) {
+    const resolver = createResolver({ from: dumpDir, logger });
 
     const registry = new RegistryDumpLoader();
     await resolver.extract(registry);
 
-    await generateRegistryTypes(registry, config.output);
+    await generateRegistryTypes(registry, output);
     logger.info("successfully generated registry entry types");
   } else {
     logger.warn("registry dump missing, generating stub types");
-    await generateStubTypes(config.output);
+    await generateStubTypes(output);
   }
 }

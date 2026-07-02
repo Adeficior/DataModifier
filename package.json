@@ -15,7 +15,8 @@
     "./parser/farmersdelight": "./dist/parser/farmersdelight.js",
     "./parser/adAstra": "./dist/parser/adAstra.js",
     "./parser/roots": "./dist/parser/roots.js",
-    "./ids": "./dist/schema/ids.js"
+    "./ids": "./dist/schema/ids.js",
+    "./cli": "./dist/cli/index.js"
   },
   "typesVersions": {
     "*": {
@@ -42,6 +43,9 @@
       ],
       "ids": [
         "./dist/schema/ids.d.ts"
+      ],
+      "cli": [
+        "./dist/cli/ids.d.ts"
       ]
     }
   },
