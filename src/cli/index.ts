@@ -9,28 +9,8 @@ import {
   generateRegistryTypes,
   generateStubTypes,
 } from "./codegen/registry.js";
-import { fromArgs, printHelp } from "./config.js";
 
-const logger = createLogger();
-
-runCli().catch((e) => logger.error("an error occurred", e));
-
-async function runCli() {
-  const config = fromArgs();
-
-  switch (config.action) {
-    case "help":
-      return printHelp(logger);
-    case "codegen": {
-      if (!config.output) throw new Error("output not specified");
-      return runCodegen(config.registryDump, config.output, logger);
-    }
-    default:
-      throw new Error(`unknown action '${config.action}'`);
-  }
-}
-
-export async function runCodegen(
+export async function generateDumpTypes(
   dumpDir: string | undefined,
   output: string,
   logger: Logger = createLogger(),

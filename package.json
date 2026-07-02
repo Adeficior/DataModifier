@@ -4,7 +4,7 @@
   "description": "Data Modifier",
   "main": "dist/index.js",
   "bin": {
-    "datamod": "dist/cli/index.js"
+    "datamod": "dist/cli/run.js"
   },
   "exports": {
     ".": "./dist/index.js",
