@@ -36,7 +36,7 @@ const serializer15 = createSerializer<Ingredient>((builder) => {
   );
 
   builder.serializer(ListIngredient, (it, serialize) =>
-    it.entries.map(serialize),
+    it.entries.flatMap(serialize),
   );
 
   builder.deserializer<unknown[]>(

@@ -13,7 +13,7 @@ const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
 const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
 
-describe(`ingredient tests with ${version} format`, () => {
+describe(`ingredient deserialization on ${version}`, () => {
   provided(
     "invalid ingredient inputs",
     invalidIngredientInputs(),

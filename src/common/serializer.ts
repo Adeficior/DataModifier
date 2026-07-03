@@ -36,35 +36,35 @@ export interface SerializerBuilder<Out, In> {
   ): void;
 }
 
-export function createSerializer<Out, In = unknown>(
-  factory: (builder: SerializerBuilder<Out, In>) => void,
-): IOSerializer<Out, In> {
+export function createSerializer<Out>(
+  factory: (builder: SerializerBuilder<Out, unknown>) => void,
+): IOSerializer<Out, unknown> {
   const deserializers: Array<{
-    test: Predicate<In>;
-    mapper: Mapper<In, Out, In, Out>;
+    test: Predicate<unknown>;
+    mapper: Mapper<unknown, Out, unknown, Out>;
   }> = [];
 
   const serializers: Array<{
     clazz: Class<Out>;
-    mapper: Mapper<Out, In, Out, In>;
+    mapper: Mapper<Out, unknown, Out, unknown>;
   }> = [];
 
   factory({
     deserializer: (test, mapper) => {
       deserializers.push({
         test,
-        mapper: mapper as unknown as Mapper<In, Out, In, Out>,
+        mapper: mapper as unknown as Mapper<unknown, Out, unknown, Out>,
       });
     },
     serializer: (clazz, mapper) => {
       serializers.push({
         clazz,
-        mapper: mapper as unknown as Mapper<Out, In, Out, In>,
+        mapper: mapper as unknown as Mapper<Out, unknown, Out, unknown>,
       });
     },
     register(clazz, test, schema, deserialize, serialize) {
       this.serializer(clazz, (it, nested) =>
-        schema.parse(serialize(it, nested)),
+        schema.encode(serialize(it, nested)),
       );
       this.deserializer(test, (it, nested) =>
         deserialize(schema.parse(it), nested),

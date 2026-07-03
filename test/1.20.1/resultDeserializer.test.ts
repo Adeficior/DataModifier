@@ -13,7 +13,7 @@ const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
 const results = new ResultSerializer(packFormatOf(version), lookup);
 
-describe(`result tests with ${version} format`, () => {
+describe(`result deserialization on ${version}`, () => {
   provided(
     "invalid result inputs",
     invalidResultInputs(),
