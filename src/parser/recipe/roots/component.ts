@@ -22,7 +22,7 @@ export class RootComponentRecipe extends Recipe {
     return [];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new RootComponentRecipe(this.ingredients.map(modifier.ingredient));
   }
 

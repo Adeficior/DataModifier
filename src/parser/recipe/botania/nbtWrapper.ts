@@ -25,8 +25,8 @@ export class NbtWrapperRecipe extends Recipe {
     return this.recipe.getResults();
   }
 
-  override replace(modifier: RecipeModifier) {
-    return new NbtWrapperRecipe(this.recipe.replace(modifier));
+  override modify(modifier: RecipeModifier) {
+    return new NbtWrapperRecipe(this.recipe.modify(modifier));
   }
 
   override serialize(

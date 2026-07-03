@@ -28,7 +28,7 @@ export class StonecuttingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new StonecuttingRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),

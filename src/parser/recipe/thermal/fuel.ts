@@ -23,7 +23,7 @@ export class ThermalFuelRecipe extends Recipe {
     return [];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ThermalFuelRecipe(modifier.ingredient(this.ingredient));
   }
 

@@ -29,11 +29,11 @@ export class ForgeConditionalRecipe extends Recipe {
     return this.recipes.flatMap((it) => it.recipe.getResults());
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ForgeConditionalRecipe(
       this.recipes.map((it) => ({
         ...it,
-        recipe: it.recipe.replace(modifier),
+        recipe: it.recipe.modify(modifier),
       })),
     );
   }

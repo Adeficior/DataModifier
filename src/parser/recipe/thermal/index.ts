@@ -31,7 +31,7 @@ export class ThermalRecipe extends Recipe {
     return this.results;
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ThermalRecipe(
       this.ingredients.map(modifier.ingredient),
       this.results.map(modifier.result),

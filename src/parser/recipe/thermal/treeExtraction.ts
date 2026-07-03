@@ -37,7 +37,7 @@ export class TreeExtractionRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new TreeExtractionRecipe(
       modifier.ingredient(this.trunk),
       modifier.ingredient(this.leaves),

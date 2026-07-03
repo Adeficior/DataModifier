@@ -35,7 +35,7 @@ export class SpaceStationRecipe extends Recipe {
     return [];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new SpaceStationRecipe(this.ingredients.map(modifier.ingredient));
   }
 

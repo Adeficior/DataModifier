@@ -22,7 +22,7 @@ export class BrewRecipe extends Recipe {
     return [];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new BrewRecipe(this.ingredients.map(modifier.ingredient));
   }
 

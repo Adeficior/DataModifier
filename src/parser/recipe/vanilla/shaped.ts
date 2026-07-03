@@ -27,7 +27,7 @@ export class ShapedRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ShapedRecipe(
       this.ingredients.replace(modifier.ingredient),
       modifier.result(this.result),

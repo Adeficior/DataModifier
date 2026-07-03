@@ -29,7 +29,7 @@ export class OneToOneRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new OneToOneRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),

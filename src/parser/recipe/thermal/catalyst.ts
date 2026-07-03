@@ -26,7 +26,7 @@ export class ThermalCatalystRecipe extends Recipe {
     return [];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ThermalCatalystRecipe(modifier.ingredient(this.ingredient));
   }
 

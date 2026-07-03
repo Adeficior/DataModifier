@@ -29,7 +29,7 @@ export class ManyToOneRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ManyToOneRecipe(
       this.ingredients.map(modifier.ingredient),
       modifier.result(this.result),

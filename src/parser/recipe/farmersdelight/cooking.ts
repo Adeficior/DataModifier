@@ -32,7 +32,7 @@ export class CookingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new CookingRecipe(
       this.ingredients.map(modifier.ingredient),
       modifier.result(this.result),

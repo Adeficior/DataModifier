@@ -48,21 +48,20 @@ export class RecipeHolder {
     return this.recipe.getResults();
   }
 
-  // TODO rename modifiy & add modifier object
-  replace(modifier: RecipeModifier): RecipeHolder {
-    const modified = this.recipe.replace(modifier);
+  modify(modifier: RecipeModifier): RecipeHolder {
+    const modified = this.recipe.modify(modifier);
     return new RecipeHolder(this.definition, modified);
   }
 
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
-    return this.replace({
+    return this.modify({
       ingredient: replace,
       result: keep(),
     });
   }
 
   replaceResult(replace: Replacer<Result>): RecipeHolder {
-    return this.replace({
+    return this.modify({
       ingredient: keep(),
       result: replace,
     });
@@ -78,7 +77,7 @@ export abstract class Recipe {
 
   abstract getResults(): Result[];
 
-  abstract replace(modifier: RecipeModifier): Recipe;
+  abstract modify(modifier: RecipeModifier): Recipe;
 
   additionalTypes(): NormalizedId[] {
     return [];

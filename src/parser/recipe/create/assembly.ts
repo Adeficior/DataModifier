@@ -39,12 +39,12 @@ export class AssemblyRecipe extends Recipe {
     return [...this.results, ...this.sequence.flatMap((it) => it.getResults())];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new AssemblyRecipe(
       modifier.ingredient(this.ingredient),
       modifier.ingredient(this.transitionalItem),
       this.results.map(modifier.result),
-      this.sequence.map((it) => it.replace(modifier)),
+      this.sequence.map((it) => it.modify(modifier)),
     );
   }
 

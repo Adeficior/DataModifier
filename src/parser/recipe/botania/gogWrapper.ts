@@ -29,10 +29,10 @@ export class GogWrapperRecipe extends Recipe {
     return [...this.base.getResults(), ...this.gog.getResults()];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new GogWrapperRecipe(
-      this.base.replace(modifier),
-      this.gog.replace(modifier),
+      this.base.modify(modifier),
+      this.gog.modify(modifier),
     );
   }
 

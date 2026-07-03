@@ -321,7 +321,6 @@ export default class RecipeLoader
   }
 
   serialize(recipe: RecipeHolder): RecipeDefinition {
-    // TODO group logger?
     const context = this.recipeParseContext();
     return recipe.serialize(context);
   }

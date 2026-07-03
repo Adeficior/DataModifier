@@ -28,7 +28,7 @@ export class RootRitualRecipe extends ManyToOneRecipe {
     return [...super.getIngredients(), ...this.incenses];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new RootRitualRecipe(
       this.incenses.map(modifier.ingredient),
       modifier.result(this.result),

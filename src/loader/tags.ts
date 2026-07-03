@@ -107,7 +107,6 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
 }
 
 export default class TagsLoader implements TagRegistryHolder, Acceptor {
-  // TODO lookup should add some?
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
 

@@ -46,7 +46,7 @@ export class CuttingRecipe extends ManyToManyRecipe {
     return [...super.getIngredients(), this.tool];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new CuttingRecipe(
       this.ingredients.map(modifier.ingredient),
       this.results.map(modifier.result),

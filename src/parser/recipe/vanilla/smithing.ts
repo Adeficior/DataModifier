@@ -28,7 +28,7 @@ export class SmithingRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new SmithingRecipe(
       modifier.ingredient(this.base),
       modifier.ingredient(this.addition),

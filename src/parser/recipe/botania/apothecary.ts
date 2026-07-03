@@ -31,7 +31,7 @@ export class ApothecaryRecipe extends Recipe {
     return [this.result];
   }
 
-  override replace(modifier: RecipeModifier) {
+  override modify(modifier: RecipeModifier) {
     return new ApothecaryRecipe(
       this.ingredients.map(modifier.ingredient),
       modifier.result(this.result),
