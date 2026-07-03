@@ -6,7 +6,6 @@ import {
   FluidIngredient,
   ItemIngredient,
 } from "../src/common/ingredient/index.js";
-import { encodeId } from "../src/index.js";
 import setupLoader from "./shared/loaderSetup.js";
 
 const version = "1.20.1";
@@ -51,8 +50,7 @@ describe("blacklist tests", () => {
     loader.blacklist.hide(/minecraft:.*oak.*/);
     loader.blacklist.hide(
       (it: Ingredient) =>
-        // TODO id should already be a string
-        it instanceof ItemIngredient && encodeId(it.id).includes("granite"),
+        it instanceof ItemIngredient && it.id.includes("granite"),
     );
 
     await loader.emit(acceptor);
