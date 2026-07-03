@@ -1,6 +1,6 @@
 import type { ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { afterEach, beforeAll } from "bun:test";
+import { afterEach, beforeEach } from "bun:test";
 import { packFormatOf, PackLoader } from "../../src/index.js";
 import type { PackLoaderOptions } from "../../src/loader/pack.js";
 import { createDumpResolver, createTestDataResolver } from "./testData.js";
@@ -24,7 +24,7 @@ export default function setupLoader(
   block?.(loader);
 
   if (load) {
-    beforeAll(async () => {
+    beforeEach(async () => {
       const resolver = createTestDataResolver(version, { ...options, logger });
       await loader.loadFrom(resolver);
     }, 15_0000);

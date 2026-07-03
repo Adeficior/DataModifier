@@ -162,3 +162,19 @@ export class ListIngredient extends Ingredient {
 export type ItemLikeIngredient = ItemTagIngredient | ItemIngredient;
 export type FluidLikeIngredient = FluidTagIngredient | FluidIngredient;
 export type BlockLikeIngredient = BlockTagIngredient | BlockIngredient;
+
+export class ToolActionIngredient extends Ingredient {
+  constructor(public readonly action: string) {
+    super();
+  }
+
+  override asResult(): Result {
+    throw new Error(
+      "tool action ingredient cannot be transformed into a result",
+    );
+  }
+
+  override idsFor() {
+    return [];
+  }
+}

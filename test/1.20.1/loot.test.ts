@@ -1,5 +1,6 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
+import { basename } from "node:path";
 import {
   ItemIngredient,
   ItemTagIngredient,
@@ -12,7 +13,7 @@ import {
 } from "../../src/schema/data/loot.js";
 import setupLoader from "../shared/loaderSetup.js";
 
-const version = "1.20.1";
+const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({
   version,
   include: ["data/*/loot_tables/**/*.json", "data/*/tags/**/*.json"],

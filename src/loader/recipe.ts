@@ -267,21 +267,6 @@ export default class RecipeLoader
     );
     this.registerParser("rootsclassic:ritual", new RootRitualRecipeParser());
 
-    // this.ignoreType("minecraft:crafting_special_armordye");
-    // this.ignoreType("minecraft:crafting_special_bannerduplicate");
-    // this.ignoreType("minecraft:crafting_special_bookcloning");
-    // this.ignoreType("minecraft:crafting_decorated_pot");
-    // this.ignoreType("minecraft:crafting_special_firework_rocket");
-    // this.ignoreType("minecraft:crafting_special_firework_star");
-    // this.ignoreType("minecraft:crafting_special_firework_star_fade");
-    // this.ignoreType("minecraft:crafting_special_mapcloning");
-    // this.ignoreType("minecraft:crafting_special_mapextending");
-    // this.ignoreType("minecraft:crafting_special_repairitem");
-    // this.ignoreType("minecraft:crafting_special_shielddecoration");
-    // this.ignoreType("minecraft:crafting_special_shulkerboxcoloring");
-    // this.ignoreType("minecraft:crafting_special_suspiciousstew");
-    // this.ignoreType("minecraft:crafting_special_tippedarrow");
-
     this.ignoreType("jeed:*");
     this.ignoreType("immersiveengineering:*");
   }
@@ -335,6 +320,7 @@ export default class RecipeLoader
       )
     )
       return null;
+
     // TODO only print unknown recipe types once in the end
 
     const importantData = omit(

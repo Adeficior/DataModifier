@@ -4,6 +4,7 @@ import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
+import { createThermalIngredients } from "./ingredient.js";
 
 type Writeable<T> = {
   -readonly [P in keyof T]: T[P];
@@ -72,12 +73,16 @@ export class ThermalRecipeParser extends RecipeParser<
   ): ThermalRecipe {
     // TODO map from and to thermals shape
 
-    const ingredients = definition.ingredient
-      ? [context.ingredients.deserialize(definition.ingredient)]
-      : context.ingredients.deserializeList(definition.ingredients ?? []);
+    const rawIngredients = definition.ingredient
+      ? [definition.ingredient]
+      : (definition.ingredients ?? []);
 
-    if (ingredients.length === 0)
+    if (rawIngredients.length === 0)
       throw new IllegalShapeError("ingredients missing or empty", definition);
+
+    const ingredients = rawIngredients.flatMap((it) =>
+      createThermalIngredients(context.ingredients, it),
+    );
 
     const results = Array.isArray(definition.result)
       ? context.results.deserializeList(definition.result)

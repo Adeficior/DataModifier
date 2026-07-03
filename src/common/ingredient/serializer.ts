@@ -9,6 +9,7 @@ import {
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
+  ToolActionIngredient,
 } from ".";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
@@ -20,6 +21,7 @@ import { AmountSchema, CountSchema } from "../fields";
 import { IdSchema, stripTag } from "../id";
 import {
   createSerializer,
+  hasType,
   isObjectWith,
   VersionedSerializer,
 } from "../serializer";
@@ -42,6 +44,18 @@ const serializer15 = createSerializer<Ingredient>((builder) => {
   builder.deserializer<unknown[]>(
     Array.isArray,
     (it, deserialize) => new ListIngredient(it.map(deserialize)),
+  );
+
+  const toolActionType = "farmersdelight:tool_action" as const;
+  builder.register(
+    ToolActionIngredient,
+    hasType(toolActionType),
+    z.object({
+      type: z.literal(toolActionType),
+      action: z.string().nonempty(),
+    }),
+    (it) => new ToolActionIngredient(it.action),
+    ({ action }) => ({ action, type: toolActionType }),
   );
 
   builder.register(

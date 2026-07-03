@@ -52,8 +52,8 @@ export function tryCatching<T>(logger: Logger, run: () => T): T | null {
 
     if (transformed instanceof IllegalShapeError) {
       if (transformed.input)
-        logger?.trace(transformed.message, { input: transformed.input });
-      else logger?.trace(transformed.message);
+        logger.trace(transformed.message, { input: transformed.input });
+      else logger.trace(transformed.message);
       return null;
     }
 

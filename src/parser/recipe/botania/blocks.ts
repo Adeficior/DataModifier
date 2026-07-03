@@ -19,7 +19,8 @@ import { OneToOneRecipe } from "../oneToOne.js";
 
 const BlockOutputSchema = z
   .object({
-    name: IdSchema,
+    type: z.literal("block"),
+    block: IdSchema,
   })
   .or(IdSchema);
 
@@ -88,7 +89,7 @@ export function deserializeBlockOutput(
   output: unknown,
 ): Result {
   const parsed = BlockOutputSchema.parse(output);
-  const id = typeof parsed === "string" ? parsed : parsed.name;
+  const id = typeof parsed === "string" ? parsed : parsed.block;
   return results.deserialize(new BlockResult(id));
 }
 

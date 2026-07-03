@@ -1,8 +1,9 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
+import { basename } from "node:path";
 import setupLoader from "../shared/loaderSetup.js";
 
-const version = "1.20.1";
+const version = basename(import.meta.dir);
 const { loader } = setupLoader({ version, advancedTags: true, load: false });
 
 describe("creation of tag definitions for the advanced tag-loader mod", () => {

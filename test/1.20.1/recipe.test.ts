@@ -1,5 +1,6 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
+import { basename } from "node:path";
 import {
   ItemIngredient,
   ItemTagIngredient,
@@ -11,14 +12,18 @@ import type { NormalizedId } from "../../src/index.js";
 import type { ShapedRecipeDefinition } from "../../src/parser/index.js";
 import setupLoader from "../shared/loaderSetup.js";
 
-const version = "1.20.1";
+const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({
   version,
   include: ["data/**/*.json"],
 });
 
+logger.trace.mockImplementation((message, context) => {
+  console.error(message, context.path, context.input);
+});
+
 it("has no unknown recipe loaders", () => {
-  expect(loader.recipeLoader.unknownRecipeTypes()).toMatchObject([]);
+  expect(loader.recipeLoader.unknownRecipeTypes()).toBeEmpty();
 });
 
 it("does not encounter any errors", () => {

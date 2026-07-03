@@ -1,4 +1,5 @@
 import z from "zod";
+import { AmountSchema, CountSchema } from "../../../common/fields.js";
 import { encodeId, IdSchema } from "../../../common/id.js";
 import {
   FluidTagIngredient,
@@ -10,8 +11,8 @@ import type IngredientSerializer from "../../../common/ingredient/serializer.js"
 import { IllegalShapeError } from "../../../error.js";
 
 const ThermalFluidTagSchema = z.object({
-  fluid_tag: z.string(),
-  amount: z.number(),
+  fluid_tag: IdSchema,
+  amount: AmountSchema,
 });
 
 const ThermalItemEntry = z.object({
@@ -25,7 +26,7 @@ const ThermalTagEntry = z.object({
 const ThermalIngredientEntry = ThermalItemEntry.or(ThermalTagEntry);
 const ThermalIngredientList = z.object({
   value: z.array(ThermalIngredientEntry),
-  count: z.number(),
+  count: CountSchema,
 });
 
 type ThermalFluidTag = z.infer<typeof ThermalFluidTagSchema>;
