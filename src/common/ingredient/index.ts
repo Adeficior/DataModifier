@@ -33,7 +33,7 @@ export abstract class TagIngredient extends Ingredient {
 
   constructor(
     input: IdInput,
-    private readonly registry: NormalizedId<RegistryId>,
+    public readonly registry: NormalizedId<RegistryId>,
   ) {
     super();
     // TODO complain if input is already a tag?
@@ -98,7 +98,7 @@ export abstract class RegistryEntryIngredient<
 
   constructor(
     input: IdInput<T>,
-    private readonly registry: NormalizedId<RegistryId>,
+    public readonly registry: NormalizedId<RegistryId>,
   ) {
     super();
     this.id = encodeId(input);

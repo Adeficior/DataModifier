@@ -4,15 +4,7 @@ import { format } from "prettier";
 
 export function fromJson(input: Acceptable) {
   const data = input.toString();
-  try {
-    return json.parse(data);
-  } catch (e) {
-    if (e instanceof SyntaxError) {
-      // TODO what the hell is happening here
-      return json.parse(data.replaceAll("\r\n", ""));
-    }
-    throw e;
-  }
+  return json.parse(data.replaceAll("\r\n", ""));
 }
 
 export function toJson(input: unknown) {

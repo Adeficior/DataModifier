@@ -44,17 +44,11 @@ export function transformErrors<T>(run: () => T): T {
   }
 }
 
-// TODO promise?
-// TODO require logger?
-export function tryCatching<T>(
-  logger: Logger | undefined,
-  run: () => T,
-): T | null {
+export function tryCatching<T>(logger: Logger, run: () => T): T | null {
   try {
     return run();
   } catch (error) {
     if (error instanceof IllegalShapeError) {
-      // TODO trace?
       if (error.input) logger?.trace(error.message, { input: error.input });
       else logger?.trace(error.message);
       return null;

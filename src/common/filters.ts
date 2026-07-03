@@ -9,20 +9,19 @@ export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
 export function createIdPredicate<TEntry, TId extends string>(
   test: CommonFilter<TId>,
-  resolve: (value: TEntry, logger?: Logger) => NormalizedId<TId>[],
-  // TODO required?
+  resolve: (value: TEntry) => NormalizedId<TId>[],
   tags?: TagRegistry<RegistryId>,
 ): Predicate<TEntry> {
   if (typeof test === "function") {
     return (entry, logger) =>
-      resolve(entry, logger).some((id) => test(id as TId, logger));
+      resolve(entry).some((id) => test(id as TId, logger));
   } else if (test instanceof RegExp) {
     return (ingredient, logger) => {
-      return resolve(ingredient, logger).some((it) => test.test(it));
+      return resolve(ingredient).some((it) => test.test(it));
     };
   } else if (test.startsWith("#")) {
     return (ingredient, logger) => {
-      return resolve(ingredient, logger).some((id) => {
+      return resolve(ingredient).some((id) => {
         if (id.startsWith("#") && test === id) return true;
         else if (tags) return tags.contains(test as TagInput, id) ?? false;
         else throw new Error("Cannot parse ID test without tags");
@@ -30,7 +29,7 @@ export function createIdPredicate<TEntry, TId extends string>(
     };
   } else {
     return (ingredient, logger) => {
-      return resolve(ingredient, logger).includes(encodeId(test));
+      return resolve(ingredient).includes(encodeId(test));
     };
   }
 }

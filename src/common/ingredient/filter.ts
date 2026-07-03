@@ -1,14 +1,13 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {
-  BlockIngredient,
-  BlockTagIngredient,
-  FluidIngredient,
-  FluidTagIngredient,
   Ingredient,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
+  RegistryEntryIngredient,
+  TagIngredient,
 } from ".";
+import { IllegalShapeError } from "../../error";
 import type { PackContext } from "../../loader/context";
 import {
   createIdPredicate,
@@ -59,28 +58,12 @@ function createUnvalidatedFilter(
     test.validate(context.lookup);
   }
 
-  if (test instanceof ItemTagIngredient) {
-    return filterByRegistry(test.tag, context, "minecraft:item");
+  if (test instanceof TagIngredient) {
+    return filterByRegistry(test.tag, context, test.registry);
   }
 
-  if (test instanceof ItemIngredient) {
-    return filterByRegistry(test.id, context, "minecraft:item");
-  }
-
-  if (test instanceof FluidTagIngredient) {
-    return filterByRegistry(test.tag, context, "minecraft:fluid");
-  }
-
-  if (test instanceof FluidIngredient) {
-    return filterByRegistry(test.id, context, "minecraft:fluid");
-  }
-
-  if (test instanceof BlockTagIngredient) {
-    return filterByRegistry(test.tag, context, "minecraft:block");
-  }
-
-  if (test instanceof BlockIngredient) {
-    return filterByRegistry(test.id, context, "minecraft:block");
+  if (test instanceof RegistryEntryIngredient) {
+    return filterByRegistry(test.id, context, test.registry);
   }
 
   if (test instanceof ListIngredient) {
@@ -90,8 +73,7 @@ function createUnvalidatedFilter(
     return (it) => predicates.some((predicate) => predicate(it));
   }
 
-  // TODO warn or throw?
-  return () => false;
+  throw new IllegalShapeError("cannot filter by unknown ingredient type", test);
 }
 
 function filterByRegistry(
@@ -101,8 +83,7 @@ function filterByRegistry(
 ): Predicate<Ingredient> {
   return createIdPredicate<Ingredient, NormalizedId>(
     test,
-    // TODO remove logger
-    (it, _logger) => it.idsFor(registry),
+    (it) => it.idsFor(registry),
     context.tags.registry(registry),
   );
 }
