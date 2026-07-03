@@ -10,7 +10,6 @@ import {
   ItemTagIngredient,
   ListIngredient,
 } from ".";
-import { IllegalShapeError, transformErrors } from "../../error";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
 import {
@@ -18,137 +17,104 @@ import {
   type IngredientMapInput,
 } from "../../parser/recipe/ingredientMap";
 import { AmountSchema, CountSchema } from "../fields";
-import { IdSchema } from "../id";
+import { IdSchema, stripTag } from "../id";
+import {
+  createSerializer,
+  isObjectWith,
+  VersionedSerializer,
+} from "../serializer";
 
-interface VersionedDeserializer {
-  deserialize(input: Record<string, unknown>): Ingredient | null;
-}
+const serializer15 = createSerializer<Ingredient>((builder) => {
+  builder.deserializer<string>(
+    (it) => typeof it === "string",
+    (input) => {
+      if (input.startsWith("#")) {
+        return new ItemTagIngredient(input);
+      }
+      return new ItemIngredient(input);
+    },
+  );
 
-class OldDeserializer implements VersionedDeserializer {
-  private readonly schemas = {
-    itemTag: z.object({
+  builder.serializer(ListIngredient, (it, serialize) =>
+    it.entries.map(serialize),
+  );
+
+  builder.deserializer<unknown[]>(
+    Array.isArray,
+    (it, deserialize) => new ListIngredient(it.map(deserialize)),
+  );
+
+  builder.register(
+    ItemTagIngredient,
+    isObjectWith("tag"),
+    z.object({
       tag: IdSchema,
       count: CountSchema,
     }),
-    fluidTag: z.object({
+    (it) => new ItemTagIngredient(it.tag, it.count),
+    ({ count, tag }) => ({ tag: stripTag(tag), count }),
+  );
+
+  builder.register(
+    FluidTagIngredient,
+    isObjectWith("fluidTag"),
+    z.object({
       fluidTag: IdSchema,
       amount: AmountSchema,
     }),
-    blockTag: z.object({
+    (it) => new FluidTagIngredient(it.fluidTag, it.amount),
+    ({ amount, tag }) => ({ fluidTag: stripTag(tag), amount }),
+  );
+
+  builder.register(
+    BlockTagIngredient,
+    isObjectWith("blockTag"),
+    z.object({
       blockTag: IdSchema,
       weight: z.number().optional(),
     }),
-    itemStack: z.object({
+    (it) => new BlockTagIngredient(it.blockTag),
+    ({ tag }) => ({ blockTag: stripTag(tag) }),
+  );
+
+  builder.register(
+    ItemIngredient,
+    isObjectWith("item"),
+    z.object({
       item: IdSchema,
       count: CountSchema,
     }),
-    fluidStack: z.object({
+    (it) => new ItemIngredient(it.item, it.count),
+    ({ id, ...rest }) => ({ item: id, ...rest }),
+  );
+
+  builder.register(
+    FluidIngredient,
+    isObjectWith("fluid"),
+    z.object({
       fluid: IdSchema,
       amount: AmountSchema,
     }),
-    block: z.object({
+    (it) => new FluidIngredient(it.fluid, it.amount),
+    ({ id, ...rest }) => ({ fluid: id, ...rest }),
+  );
+
+  builder.register(
+    BlockIngredient,
+    isObjectWith("block"),
+    z.object({
       block: IdSchema,
     }),
-  };
+    (it) => new BlockIngredient(it.block),
+    ({ id }) => ({ block: id }),
+  );
+});
 
-  deserialize(input: Record<string, unknown>): Ingredient | null {
-    if ("blockTag" in input) {
-      const parsed = this.schemas.blockTag.parse(input);
-      return new BlockTagIngredient(parsed.blockTag);
-    }
-
-    if ("tag" in input) {
-      const parsed = this.schemas.itemTag.parse(input);
-      return new ItemTagIngredient(parsed.tag, parsed.count);
-    }
-
-    if ("fluidTag" in input) {
-      const parsed = this.schemas.fluidTag.parse(input);
-      return new FluidTagIngredient(parsed.fluidTag, parsed.amount);
-    }
-
-    if ("block" in input) {
-      const parsed = this.schemas.block.parse(input);
-      return new BlockIngredient(parsed.block);
-    }
-
-    if ("item" in input) {
-      const parsed = this.schemas.itemStack.parse(input);
-      return new ItemIngredient(parsed.item, parsed.count);
-    }
-
-    if ("fluid" in input) {
-      const parsed = this.schemas.fluidStack.parse(input);
-      return new FluidIngredient(parsed.fluid, parsed.amount);
-    }
-
-    return null;
-  }
-}
-
-export default class IngredientSerializer {
-  private readonly deserializer: VersionedDeserializer;
-
-  constructor(
-    private readonly packFormat: SemVerInput,
-    private readonly lookup: RegistryLookup,
-  ) {
-    this.deserializer = new OldDeserializer();
-  }
-
-  serialize(ingredient: Ingredient) {
-    return ingredient.serialize(this.packFormat);
-  }
-
-  serializeList(ingredients: Ingredient[]) {
-    return ingredients.map((it) => this.serialize(it));
-  }
-
-  private deserializeUnvalidated(input: unknown): Ingredient {
-    if (input instanceof Ingredient) return input;
-
-    if (!input) throw new IllegalShapeError("ingredient input may not be null");
-
-    if (typeof input === "string") {
-      if (input.startsWith("#")) {
-        return this.deserializeUnvalidated(new ItemTagIngredient(input));
-      }
-
-      this.lookup.validateEntry("minecraft:item", input);
-      return new ItemIngredient(input);
-    }
-
-    if (Array.isArray(input)) {
-      return new ListIngredient(
-        input.map((it) => this.deserializeUnvalidated(it)),
-      );
-    }
-
-    if (typeof input === "object") {
-      const deserialized = this.deserializer.deserialize(
-        input as Record<string, unknown>,
-      );
-      if (deserialized) return deserialized;
-    }
-
-    throw new IllegalShapeError(`unknown ingredient shape`, input);
-  }
-
-  deserialize(input: unknown) {
-    return transformErrors(() => {
-      const deserialized = this.deserializeUnvalidated(input);
-      deserialized.validate(this.lookup);
-      return deserialized;
+export default class IngredientSerializer extends VersionedSerializer<Ingredient> {
+  constructor(packFormat: SemVerInput, lookup: RegistryLookup) {
+    super(packFormat, lookup, Ingredient, {
+      15: serializer15,
     });
-  }
-
-  validated<T extends Ingredient>(ingredient: T): T {
-    ingredient.validate(this.lookup);
-    return ingredient;
-  }
-
-  createList(input: unknown[]) {
-    return input.map((it) => this.deserialize(it));
   }
 
   ingredientMap(input: IngredientMapInput) {

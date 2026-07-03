@@ -5,7 +5,6 @@ import type {
   RegistryId,
 } from "@adeficior/data-modifier/generated";
 import type RegistryLookup from "../../loader/registry";
-import type { SemVerInput } from "../../packFormat";
 import { encodeId, type IdInput, type NormalizedId } from "../id";
 import {
   BlockIngredient,
@@ -13,12 +12,11 @@ import {
   ItemIngredient,
   type Ingredient,
 } from "../ingredient";
-import type { Serializable } from "../serializable";
+import type { InputOutput } from "../inputOutput";
 import { BUCKET } from "../units";
 
-export abstract class Result implements Serializable {
+export abstract class Result implements InputOutput {
   validate(_: RegistryLookup): void {}
-  abstract serialize(packFormat: SemVerInput): Record<string, unknown>;
   abstract idsFor(
     registry: NormalizedId<RegistryId>,
   ): NormalizedId<RegistryId>[];
@@ -51,13 +49,6 @@ export class ItemResult extends RegistryEntryResult<ItemId> {
     super(id, "minecraft:item");
   }
 
-  serialize(_packFormat: SemVerInput) {
-    const { chance } = this;
-    const count = this.count === 1 ? undefined : this.count;
-    const id = encodeId(this.id);
-    return { item: id, count, chance };
-  }
-
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:item", this.id);
   }
@@ -76,12 +67,6 @@ export class FluidResult extends RegistryEntryResult<FluidId> {
     super(id, "minecraft:fluid");
   }
 
-  serialize(_packFormat: SemVerInput) {
-    const { amount, chance } = this;
-    const id = encodeId(this.id);
-    return { fluid: id, amount, chance };
-  }
-
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:fluid", this.id);
   }
@@ -94,11 +79,6 @@ export class FluidResult extends RegistryEntryResult<FluidId> {
 export class BlockResult extends RegistryEntryResult<BlockId> {
   constructor(id: IdInput<BlockId>) {
     super(id, "minecraft:block");
-  }
-
-  serialize(_packFormat: SemVerInput) {
-    const id = encodeId(this.id);
-    return { block: id };
   }
 
   override validate(lookup: RegistryLookup): void {

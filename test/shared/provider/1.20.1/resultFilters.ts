@@ -1,3 +1,4 @@
+import type { Class } from "../../../../src/common/class";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -15,7 +16,6 @@ import {
   type Result,
 } from "../../../../src/common/result";
 import { BUCKET } from "../../../../src/common/units";
-import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 
 export function* matchingResultFilters(): DataProvider<

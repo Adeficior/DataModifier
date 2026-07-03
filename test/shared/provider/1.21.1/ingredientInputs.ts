@@ -1,3 +1,4 @@
+import type { Class } from "../../../../src/common/class";
 import type { Ingredient } from "../../../../src/common/ingredient";
 import {
   BlockIngredient,
@@ -8,7 +9,6 @@ import {
   ItemTagIngredient,
 } from "../../../../src/common/ingredient";
 import { BUCKET } from "../../../../src/common/units";
-import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 import { results } from "./resultInputs";
 
@@ -43,22 +43,22 @@ export function* invalidIngredientInputs(): DataProvider<
   yield [
     "item tag with negative count",
     { tag: "buttons", count: -21 },
-    "count: Number must be greater than 0",
+    "count: Too small: expected number to be >0",
   ];
   yield [
     "item with zero count",
     { item: "oak_button", count: 0 },
-    "count: Number must be greater than 0",
+    "count: Too small: expected number to be >0",
   ];
   yield [
     "fluid tag with negative amount",
     { fluidTag: "water", amount: -21 },
-    "amount: Number must be greater than 0",
+    "amount: Too small: expected number to be >0",
   ];
   yield [
     "item with zero amount",
     { fluid: "lava", amount: 0 },
-    "amount: Number must be greater than 0",
+    "amount: Too small: expected number to be >0",
   ];
 
   yield [

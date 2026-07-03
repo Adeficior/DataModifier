@@ -1,10 +1,13 @@
-import type { Writeable } from "zod";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import { IllegalShapeError } from "../../../error.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
+
+type Writeable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
 
 export type ThermalRecipeDefinition = RecipeDefinition &
   Readonly<{

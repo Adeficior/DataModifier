@@ -5,22 +5,19 @@ import type {
   RegistryId,
 } from "@adeficior/data-modifier/generated";
 import type RegistryLookup from "../../loader/registry";
-import type { SemVerInput } from "../../packFormat";
 import {
   encodeId,
-  stripTag,
   toTag,
   type IdInput,
   type NormalizedId,
   type TagId,
 } from "../id";
+import type { InputOutput } from "../inputOutput";
 import { BlockResult, FluidResult, ItemResult, type Result } from "../result";
-import type { Serializable } from "../serializable";
 import { BUCKET } from "../units";
 
-export abstract class Ingredient implements Serializable {
+export abstract class Ingredient implements InputOutput {
   validate(_: RegistryLookup): void {}
-  abstract serialize(packFormat: SemVerInput): unknown;
   abstract idsFor(
     registry: NormalizedId<RegistryId>,
   ): NormalizedId<RegistryId>[];
@@ -56,12 +53,6 @@ export class ItemTagIngredient extends TagIngredient {
   ) {
     super(tag, "minecraft:item");
   }
-
-  serialize(_packFormat: SemVerInput) {
-    const count = this.count === 1 ? undefined : this.count;
-    const tag = stripTag(this.tag);
-    return { tag, count };
-  }
 }
 
 export class FluidTagIngredient extends TagIngredient {
@@ -71,22 +62,11 @@ export class FluidTagIngredient extends TagIngredient {
   ) {
     super(tag, "minecraft:fluid");
   }
-
-  serialize(_packFormat: SemVerInput) {
-    const { amount } = this;
-    const tag = stripTag(this.tag);
-    return { fluidTag: tag, amount };
-  }
 }
 
 export class BlockTagIngredient extends TagIngredient {
   constructor(tag: IdInput) {
     super(tag, "minecraft:block");
-  }
-
-  serialize(_packFormat: SemVerInput) {
-    const tag = stripTag(this.tag);
-    return { blockTag: tag };
   }
 }
 
@@ -117,12 +97,6 @@ export class ItemIngredient extends RegistryEntryIngredient<ItemId> {
     super(id, "minecraft:item");
   }
 
-  serialize(_packFormat: SemVerInput) {
-    const count = this.count === 1 ? undefined : this.count;
-    const id = encodeId(this.id);
-    return { item: id, count };
-  }
-
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:item", this.id);
   }
@@ -139,12 +113,6 @@ export class FluidIngredient extends RegistryEntryIngredient<FluidId> {
     public readonly chance?: number,
   ) {
     super(id, "minecraft:fluid");
-  }
-
-  serialize(_packFormat: SemVerInput) {
-    const { amount } = this;
-    const id = encodeId(this.id);
-    return { fluid: id, amount };
   }
 
   override validate(lookup: RegistryLookup): void {
@@ -164,12 +132,6 @@ export class BlockIngredient extends RegistryEntryIngredient<BlockId> {
     super(id, "minecraft:block");
   }
 
-  serialize(_packFormat: SemVerInput) {
-    const { weight } = this;
-    const id = encodeId(this.id);
-    return { block: id, weight };
-  }
-
   override validate(lookup: RegistryLookup): void {
     lookup.validateEntry("minecraft:block", this.id);
   }
@@ -182,10 +144,6 @@ export class BlockIngredient extends RegistryEntryIngredient<BlockId> {
 export class ListIngredient extends Ingredient {
   constructor(public readonly entries: Ingredient[]) {
     super();
-  }
-
-  override serialize(packFormat: SemVerInput) {
-    return this.entries.map((it) => it.serialize(packFormat));
   }
 
   override validate(lookup: RegistryLookup): void {

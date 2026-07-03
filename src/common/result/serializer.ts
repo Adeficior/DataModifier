@@ -1,104 +1,60 @@
 import z from "zod";
 import { BlockResult, FluidResult, ItemResult, Result } from ".";
-import { IllegalShapeError, transformErrors } from "../../error";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
 import { AmountSchema, ChanceSchema, CountSchema } from "../fields";
 import { IdSchema } from "../id";
+import {
+  createSerializer,
+  isObjectWith,
+  VersionedSerializer,
+} from "../serializer";
 
-interface VersionedDeserializer {
-  deserialize(input: Record<string, unknown>): Result | null;
-}
+const serializer15 = createSerializer<Result>((builder) => {
+  builder.deserializer<string>(
+    (it) => typeof it === "string",
+    (input) => new ItemResult(input),
+  );
 
-class OldDeserializer implements VersionedDeserializer {
-  private readonly schemas = {
-    itemStack: z.object({
+  builder.register(
+    ItemResult,
+    isObjectWith("item"),
+    z.object({
       item: IdSchema,
       count: CountSchema,
       chance: ChanceSchema,
     }),
-    fluidStack: z.object({
+    (it) => new ItemResult(it.item, it.count, it.chance),
+    ({ id, ...rest }) => ({ item: id, ...rest }),
+  );
+
+  builder.register(
+    FluidResult,
+    isObjectWith("fluid"),
+    z.object({
       fluid: IdSchema,
       amount: AmountSchema,
       chance: ChanceSchema,
     }),
-    block: z.object({
+    (it) => new FluidResult(it.fluid, it.amount, it.chance),
+    ({ id, ...rest }) => ({ fluid: id, ...rest }),
+  );
+
+  builder.register(
+    BlockResult,
+    isObjectWith("block"),
+    z.object({
       block: IdSchema,
     }),
-  };
+    (it) => new BlockResult(it.block),
+    ({ id }) => ({ block: id }),
+  );
+});
 
-  deserialize(input: Record<string, unknown>): Result | null {
-    if ("block" in input) {
-      const parsed = this.schemas.block.parse(input);
-      return new BlockResult(parsed.block);
-    }
-
-    if ("item" in input) {
-      const parsed = this.schemas.itemStack.parse(input);
-      return new ItemResult(parsed.item, parsed.count, parsed.chance);
-    }
-
-    if ("fluid" in input) {
-      const parsed = this.schemas.fluidStack.parse(input);
-      return new FluidResult(parsed.fluid, parsed.amount, parsed.chance);
-    }
-
-    return null;
-  }
-}
-
-export default class ResultSerializer {
-  private readonly deserializer: VersionedDeserializer;
-
-  constructor(
-    private readonly packFormat: SemVerInput,
-    private readonly lookup: RegistryLookup,
-  ) {
-    this.deserializer = new OldDeserializer();
-  }
-
-  serialize(result: Result) {
-    return result.serialize(this.packFormat);
-  }
-
-  serializeList(results: Result[]) {
-    return results.map((it) => this.serialize(it));
-  }
-
-  private deserializeUnvalidated(input: unknown): Result {
-    if (input instanceof Result) return input;
-
-    if (!input) throw new IllegalShapeError("result input may not be null");
-
-    if (typeof input === "string") {
-      this.lookup.validateEntry("minecraft:item", input);
-      return new ItemResult(input);
-    }
-
-    if (typeof input === "object") {
-      const deserialized = this.deserializer.deserialize(
-        input as Record<string, unknown>,
-      );
-      if (deserialized) return deserialized;
-    }
-
-    throw new IllegalShapeError(`unknown result shape`, input);
-  }
-
-  deserialize(input: unknown) {
-    return transformErrors(() => {
-      const deserialized = this.deserializeUnvalidated(input);
-      deserialized.validate(this.lookup);
-      return deserialized;
+export default class ResultSerializer extends VersionedSerializer<Result> {
+  constructor(packFormat: SemVerInput, lookup: RegistryLookup) {
+    super(packFormat, lookup, Result, {
+      15: serializer15,
     });
-  }
-
-  validated<T extends Result>(result: T): T {
-    result.validate(this.lookup);
-    return result;
-  }
-
-  createList(input: unknown[]) {
-    return input.map((it) => this.deserialize(it));
   }
 }

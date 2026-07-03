@@ -23,7 +23,7 @@ export class UnknownRegistryEntry<T extends RegistryId> extends Error {
 
 export function transformError(error: unknown): Error {
   if (error instanceof ZodError) {
-    const message = error.errors
+    const message = error.issues
       .map((it) => {
         if (it.path) return `${it.path.join(".")}: ${it.message}`;
         else return it.message;
@@ -48,20 +48,12 @@ export function tryCatching<T>(logger: Logger, run: () => T): T | null {
   try {
     return run();
   } catch (error) {
-    if (error instanceof IllegalShapeError) {
-      if (error.input) logger?.trace(error.message, { input: error.input });
-      else logger?.trace(error.message);
-      return null;
-    }
+    const transformed = transformError(error);
 
-    if (error instanceof ZodError) {
-      const message = error.errors
-        .map((it) => {
-          if (it.path) return `${it.path.join(".")}: ${it.message}`;
-          else return it.message;
-        })
-        .join(", ");
-      logger?.warn(`unknown shape: ${message}`);
+    if (transformed instanceof IllegalShapeError) {
+      if (transformed.input)
+        logger?.trace(transformed.message, { input: transformed.input });
+      else logger?.trace(transformed.message);
       return null;
     }
 

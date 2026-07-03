@@ -15,7 +15,7 @@
         "node-stream-zip": "^1.15.0",
         "prettier": "^3.8.4",
         "prismarine-nbt": "^2.8.0",
-        "zod": "^3.25.76",
+        "zod": "^4.4.3",
       },
       "devDependencies": {
         "@eslint/js": "^10.0.1",
@@ -296,7 +296,7 @@
 
     "zip-a-folder": ["zip-a-folder@6.1.1", "", { "dependencies": { "lzma": "^2.3.2", "tinyglobby": "^0.2.16" }, "bin": { "zip-a-folder": "dist/cli.mjs" } }, "sha512-8hjtUn4YQpj8HZvDwtGHhol27oDf+D1x70ldKwA3Bwru6gup62fDVrBTd+BC90/8REgjdCa5ep7EsBiGHudSdA=="],
 
-    "zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
+    "zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
 
     "@adeficior/pack-resolver/minimatch": ["minimatch@10.2.5", "", { "dependencies": { "brace-expansion": "^5.0.5" } }, "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="],
 

@@ -1,3 +1,4 @@
+import type { Class } from "../../../../src/common/class";
 import type { Result } from "../../../../src/common/result";
 import {
   BlockResult,
@@ -5,7 +6,6 @@ import {
   ItemResult,
 } from "../../../../src/common/result";
 import { BUCKET } from "../../../../src/common/units";
-import type { Class } from "../../types";
 import type { DataProvider } from "../providers";
 import { ingredients } from "./ingredientInputs";
 
@@ -25,22 +25,22 @@ export function* invalidResultInputs(): DataProvider<
   yield [
     "item with negative count",
     { item: "minecraft:apple", count: -21 },
-    "count: Number must be greater than 0",
+    "count: Too small: expected number to be >0",
   ];
   yield [
     "item with zero count",
     { item: "oak_button", count: 0 },
-    "count: Number must be greater than 0",
+    "count: Too small: expected number to be >0",
   ];
   yield [
     "fluid with negative amount",
     { fluid: "water", amount: -21 },
-    "amount: Number must be greater than 0",
+    "amount: Too small: expected number to be >0",
   ];
   yield [
     "item with zero amount",
     { fluid: "lava", amount: 0 },
-    "amount: Number must be greater than 0",
+    "amount: Too small: expected number to be >0",
   ];
 
   yield [
