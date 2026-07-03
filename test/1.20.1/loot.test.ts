@@ -3,11 +3,14 @@ import { afterEach, describe, expect, it } from "bun:test";
 import {
   ItemIngredient,
   ItemTagIngredient,
-} from "../src/common/ingredient/index.js";
-import { ItemResult } from "../src/common/result/index.js";
-import { EMPTY_LOOT_TABLE } from "../src/emit/data/loot.js";
-import { LootEntrySchema, LootTableSchema } from "../src/schema/data/loot.js";
-import setupLoader from "./shared/loaderSetup.js";
+} from "../../src/common/ingredient/index.js";
+import { ItemResult } from "../../src/common/result/index.js";
+import { EMPTY_LOOT_TABLE } from "../../src/emit/data/loot.js";
+import {
+  LootEntrySchema,
+  LootTableSchema,
+} from "../../src/schema/data/loot.js";
+import setupLoader from "../shared/loaderSetup.js";
 
 const version = "1.20.1";
 const { logger, loader } = setupLoader({

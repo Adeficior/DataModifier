@@ -4,15 +4,19 @@ exports[`recipe ingredient replacement replaces ingredients: modified piston rec
 {
   "key": {
     "#": {
+      "count": 1,
       "tag": "forge:cobblestone/normal",
     },
     "R": {
+      "count": 1,
       "item": "minecraft:emerald",
     },
     "T": {
+      "count": 1,
       "tag": "minecraft:planks",
     },
     "X": {
+      "count": 1,
       "tag": "forge:ingots/iron",
     },
   },
@@ -22,6 +26,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified piston rec
     "#R#",
   ],
   "result": {
+    "count": 1,
     "item": "minecraft:piston",
   },
   "type": "minecraft:crafting_shaped",
@@ -32,9 +37,11 @@ exports[`recipe ingredient replacement replaces ingredients: modified compass re
 {
   "key": {
     "#": {
+      "count": 1,
       "tag": "forge:ingots/iron",
     },
     "X": {
+      "count": 1,
       "item": "minecraft:emerald",
     },
   },
@@ -44,6 +51,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified compass re
     " # ",
   ],
   "result": {
+    "count": 1,
     "item": "minecraft:compass",
   },
   "type": "minecraft:crafting_shaped",
@@ -98,15 +106,19 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
 {
   "key": {
     "#": {
+      "count": 1,
       "tag": "forge:cobblestone/normal",
     },
     "R": {
+      "count": 1,
       "item": "minecraft:emerald",
     },
     "T": {
+      "count": 1,
       "tag": "minecraft:planks",
     },
     "X": {
+      "count": 1,
       "tag": "forge:ingots/iron",
     },
   },
@@ -116,6 +128,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
     "#R#",
   ],
   "result": {
+    "count": 1,
     "item": "minecraft:piston",
   },
   "type": "minecraft:crafting_shaped",
@@ -127,9 +140,11 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
   "category": "redstone",
   "key": {
     "#": {
+      "count": 1,
       "tag": "minecraft:planks",
     },
     "X": {
+      "count": 1,
       "item": "minecraft:emerald",
     },
   },
@@ -139,6 +154,7 @@ exports[`recipe ingredient replacement replaces ingredients with additional inpu
     "###",
   ],
   "result": {
+    "count": 1,
     "item": "minecraft:note_block",
   },
   "show_notification": true,
@@ -150,6 +166,7 @@ exports[`recipe ingredient replacement replaces ingredients in create recipes: m
 {
   "key": {
     "C": {
+      "count": 1,
       "tag": "forge:raw_materials/iron",
     },
   },
@@ -159,6 +176,7 @@ exports[`recipe ingredient replacement replaces ingredients in create recipes: m
     "CCC",
   ],
   "result": {
+    "count": 1,
     "item": "create:raw_zinc_block",
   },
   "type": "minecraft:crafting_shaped",
@@ -169,16 +187,19 @@ exports[`recipe ingredient replacement replaces ingredients in create recipes: m
 {
   "ingredients": [
     {
+      "count": 1,
       "tag": "forge:raw_materials/iron",
     },
   ],
   "processingTime": 400,
   "results": [
     {
+      "count": 1,
       "item": "create:crushed_raw_zinc",
     },
     {
       "chance": 0.75,
+      "count": 1,
       "item": "create:experience_nugget",
     },
   ],
@@ -191,9 +212,11 @@ exports[`recipe ingredient replacement replaces ingredients in create recipes: m
   "cookingtime": 100,
   "experience": 0.7,
   "ingredient": {
+    "count": 1,
     "tag": "forge:raw_materials/iron",
   },
   "result": {
+    "count": 1,
     "item": "create:zinc_ingot",
   },
   "type": "minecraft:blasting",
@@ -205,9 +228,11 @@ exports[`recipe ingredient replacement replaces ingredients in create recipes: m
   "cookingtime": 200,
   "experience": 0.7,
   "ingredient": {
+    "count": 1,
     "tag": "forge:raw_materials/iron",
   },
   "result": {
+    "count": 1,
     "item": "create:zinc_ingot",
   },
   "type": "minecraft:smelting",

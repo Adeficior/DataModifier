@@ -79,7 +79,7 @@ export function createSerializer<Out, In = unknown>(
       return match.mapper(input, nested);
     },
     serialize(output, nested) {
-      const match = serializers.find((it) => it instanceof it.clazz);
+      const match = serializers.find((it) => output instanceof it.clazz);
       if (!match) return false;
       return match.mapper(output, nested);
     },
@@ -117,7 +117,7 @@ export abstract class VersionedSerializer<Out extends InputOutput> {
     if (serialized !== false) return serialized;
     throw new IllegalShapeError(
       `unable to serialize ${this.typeName}`,
-      serialized,
+      ingredient,
     );
   }
 

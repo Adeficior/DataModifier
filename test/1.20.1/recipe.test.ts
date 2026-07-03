@@ -3,13 +3,13 @@ import { describe, expect, it } from "bun:test";
 import {
   ItemIngredient,
   ItemTagIngredient,
-} from "../src/common/ingredient/index.js";
-import { ItemResult } from "../src/common/result/index.js";
-import type { RecipeTest } from "../src/emit/data/recipe.js";
-import { EMPTY_RECIPE } from "../src/emit/data/recipe.js";
-import type { NormalizedId } from "../src/index.js";
-import type { ShapedRecipeDefinition } from "../src/parser/index.js";
-import setupLoader from "./shared/loaderSetup.js";
+} from "../../src/common/ingredient/index.js";
+import { ItemResult } from "../../src/common/result/index.js";
+import type { RecipeTest } from "../../src/emit/data/recipe.js";
+import { EMPTY_RECIPE } from "../../src/emit/data/recipe.js";
+import type { NormalizedId } from "../../src/index.js";
+import type { ShapedRecipeDefinition } from "../../src/parser/index.js";
+import setupLoader from "../shared/loaderSetup.js";
 
 const version = "1.20.1";
 const { logger, loader } = setupLoader({

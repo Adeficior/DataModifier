@@ -1,6 +1,6 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import setupLoader from "./shared/loaderSetup.js";
+import setupLoader from "../shared/loaderSetup.js";
 
 const version = "1.20.1";
 const { loader } = setupLoader({ version, advancedTags: true, load: false });
