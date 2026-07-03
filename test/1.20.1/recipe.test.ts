@@ -17,17 +17,15 @@ const { logger, loader } = setupLoader({
   include: ["data/**/*.json"],
 });
 
-/*
-  TODO do I want these? 
- it("has no unknown recipe loaders", () => {
+it("has no unknown recipe loaders", () => {
   expect(loader.recipeLoader.unknownRecipeTypes()).toMatchObject([]);
-  });
-  
-  it("does not encounter any errors", () => {
-    expect(logger.warn).not.toHaveBeenCalled();
-    expect(logger.error).not.toHaveBeenCalled();
-    });
-*/
+});
+
+it("does not encounter any errors", () => {
+  expect(logger.trace).not.toHaveBeenCalled();
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+});
 
 describe("recipe ingredient replacement", () => {
   it("replaces ingredients", async () => {

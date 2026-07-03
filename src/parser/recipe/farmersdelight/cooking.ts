@@ -46,8 +46,7 @@ export class CookingRecipe extends Recipe {
     return {
       ingredients: context.ingredients.serializeList(this.ingredients),
       result: context.results.serialize(this.result),
-      container:
-        this.container && context.ingredients.serialize(this.container),
+      container: context.ingredients.serializeOptional(this.container),
     };
   }
 }
@@ -60,13 +59,13 @@ export default class CookingRecipeParser extends RecipeParser<
     definition: CookingRecipeDefinition,
     context: RecipeParseContext,
   ): CookingRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
     const result = context.results.deserialize(definition.result);
-    // TODO optional serialize & deserialize?
-    const container =
-      definition.container === undefined
-        ? undefined
-        : context.ingredients.deserialize(definition.container);
+    const container = context.ingredients.deserializeOptional(
+      definition.container,
+    );
     return new CookingRecipe(ingredients, result, container);
   }
 }

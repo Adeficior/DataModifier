@@ -1,3 +1,4 @@
+import { exists } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
@@ -8,31 +9,34 @@ export type SmithingRecipeDefinition = RecipeDefinition &
   Readonly<{
     base: unknown;
     addition: unknown;
-    result: unknown;
+    result?: unknown;
+    template?: unknown;
   }>;
 
 export class SmithingRecipe extends Recipe {
   constructor(
     private readonly base: Ingredient,
     private readonly addition: Ingredient,
-    private readonly result: Result,
+    private readonly result: Result | undefined,
+    private readonly template: Ingredient | undefined,
   ) {
     super();
   }
 
   getIngredients() {
-    return [this.base, this.addition];
+    return [this.base, this.addition, this.template].filter(exists);
   }
 
   getResults() {
-    return [this.result];
+    return [this.result].filter(exists);
   }
 
   override modify(modifier: RecipeModifier) {
     return new SmithingRecipe(
       modifier.ingredient(this.base),
       modifier.ingredient(this.addition),
-      modifier.result(this.result),
+      this.result && modifier.result(this.result),
+      this.template && modifier.ingredient(this.template),
     );
   }
 
@@ -42,7 +46,8 @@ export class SmithingRecipe extends Recipe {
     return {
       base: context.ingredients.serialize(this.base),
       addition: context.ingredients.serialize(this.addition),
-      result: context.results.serialize(this.result),
+      result: context.results.serializeOptional(this.result),
+      template: context.ingredients.serializeOptional(this.template),
     };
   }
 }
@@ -57,7 +62,10 @@ export class SmithingParser extends RecipeParser<
   ): SmithingRecipe {
     const base = context.ingredients.deserialize(definition.base);
     const addition = context.ingredients.deserialize(definition.addition);
-    const result = context.results.deserialize(definition.result);
-    return new SmithingRecipe(base, addition, result);
+    const result = context.results.deserializeOptional(definition.result);
+    const template = context.ingredients.deserializeOptional(
+      definition.addition,
+    );
+    return new SmithingRecipe(base, addition, result, template);
   }
 }

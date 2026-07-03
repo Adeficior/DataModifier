@@ -43,7 +43,9 @@ export class RootComponentRecipeParser extends RecipeParser<
     definition: RootComponentRecipeDefinition,
     context: RecipeParseContext,
   ): RootComponentRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
     return new RootComponentRecipe(ingredients);
   }
 }

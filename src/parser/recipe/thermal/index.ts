@@ -74,13 +74,13 @@ export class ThermalRecipeParser extends RecipeParser<
 
     const ingredients = definition.ingredient
       ? [context.ingredients.deserialize(definition.ingredient)]
-      : context.ingredients.createList(definition.ingredients ?? []);
+      : context.ingredients.deserializeList(definition.ingredients ?? []);
 
     if (ingredients.length === 0)
       throw new IllegalShapeError("ingredients missing or empty", definition);
 
     const results = Array.isArray(definition.result)
-      ? context.results.createList(definition.result)
+      ? context.results.deserializeList(definition.result)
       : [context.results.deserialize(definition.result)];
 
     return new ThermalRecipe(ingredients, results);

@@ -26,8 +26,10 @@ export class ElvenTradeRecipeParser extends RecipeParser<
     definition: ElvenTradeRecipeDefinition,
     context: RecipeParseContext,
   ): ElvenTradeRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
-    const results = context.results.createList(definition.output);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
+    const results = context.results.deserializeList(definition.output);
     return new ElvenTradeRecipe(ingredients, results);
   }
 }

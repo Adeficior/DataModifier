@@ -58,7 +58,9 @@ export class ApothecaryRecipeParser extends RecipeParser<
     definition: ApothecaryRecipeDefinition,
     context: RecipeParseContext,
   ): ApothecaryRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
     const result = context.results.deserialize(definition.output);
     const reagent = context.ingredients.deserialize(definition.ingredients);
     return new ApothecaryRecipe(ingredients, result, reagent);

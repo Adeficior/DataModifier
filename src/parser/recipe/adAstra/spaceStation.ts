@@ -67,7 +67,7 @@ export class SpaceStationRecipeParser extends RecipeParser<
     definition: SpaceStationRecipeDefinition,
     context: RecipeParseContext,
   ): SpaceStationRecipe {
-    const ingredients = context.ingredients.createList(
+    const ingredients = context.ingredients.deserializeList(
       definition.ingredients
         .map((it) => WrappedIngredientSchema.parse(it))
         .map((it) => ({ ...it.ingredient, count: it.count })),

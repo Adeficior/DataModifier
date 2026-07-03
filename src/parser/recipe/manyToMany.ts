@@ -53,8 +53,10 @@ export class ManyToManyRecipeParser<
     definition: TDefinition,
     context: RecipeParseContext,
   ): ManyToManyRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
-    const results = context.results.createList(definition.results);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
+    const results = context.results.deserializeList(definition.results);
     return new ManyToManyRecipe(ingredients, results);
   }
 }

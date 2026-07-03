@@ -110,19 +110,21 @@ export abstract class VersionedSerializer<Out extends InputOutput> {
     this.serializer = match;
   }
 
-  serialize(ingredient: Out) {
-    const serialized = this.serializer.serialize(ingredient, (it) =>
+  serialize(output: Out) {
+    const serialized = this.serializer.serialize(output, (it) =>
       this.serialize(it),
     );
     if (serialized !== false) return serialized;
-    throw new IllegalShapeError(
-      `unable to serialize ${this.typeName}`,
-      ingredient,
-    );
+    throw new IllegalShapeError(`unable to serialize ${this.typeName}`, output);
   }
 
-  serializeList(ingredients: Out[]) {
-    return ingredients.map((it) => this.serialize(it));
+  serializeList(outputs: Out[]) {
+    return outputs.map((it) => this.serialize(it));
+  }
+
+  serializeOptional(output: Out | undefined) {
+    if (output === undefined) return undefined;
+    return this.serialize(output);
   }
 
   private deserializeUnvalidated(input: unknown): Out {
@@ -148,13 +150,17 @@ export abstract class VersionedSerializer<Out extends InputOutput> {
     });
   }
 
-  validated<T extends Out>(ingredient: T): T {
-    ingredient.validate(this.lookup);
-    return ingredient;
+  deserializeOptional(input: unknown) {
+    if (input === undefined) return undefined;
+    return this.deserialize(input);
   }
 
-  // TODO rename deserializeList
-  createList(input: unknown[]) {
+  validated<T extends Out>(output: T): T {
+    output.validate(this.lookup);
+    return output;
+  }
+
+  deserializeList(input: unknown[]) {
     return input.map((it) => this.deserialize(it));
   }
 }

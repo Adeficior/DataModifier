@@ -43,7 +43,9 @@ export class BrewRecipeParser extends RecipeParser<
     definition: BrewRecipeDefinition,
     context: RecipeParseContext,
   ): BrewRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
     return new BrewRecipe(ingredients);
   }
 }

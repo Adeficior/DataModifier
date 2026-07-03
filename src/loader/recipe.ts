@@ -1,6 +1,8 @@
+import { omit } from "lodash-es";
 import { encodeId } from "../common/id.js";
 import { IllegalShapeError } from "../error.js";
 
+import minimatch from "minimatch";
 import {
   FluidConversionRecipeParser,
   HammeringRecipeParser,
@@ -73,7 +75,7 @@ export default class RecipeLoader
     RecipeParser<RecipeDefinition, Recipe>
   >();
 
-  private readonly ignoredRecipeTypes = new Set<string>();
+  private readonly ignoredRecipeTypePatterns: string[] = [];
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
 
   constructor(
@@ -88,6 +90,8 @@ export default class RecipeLoader
     this.registerParser("minecraft:blasting", new SmeltingParser());
     this.registerParser("minecraft:campfire_cooking", new SmeltingParser());
     this.registerParser("minecraft:smithing", new SmithingParser());
+    this.registerParser("minecraft:smithing_trim", new SmithingParser());
+    this.registerParser("minecraft:smithing_transform", new SmithingParser());
     this.registerParser("minecraft:stonecutting", new StonecuttingParser());
 
     this.registerParser("create:mixing", new CreateProcessingRecipeParser());
@@ -263,53 +267,27 @@ export default class RecipeLoader
     );
     this.registerParser("rootsclassic:ritual", new RootRitualRecipeParser());
 
-    this.ignoreType("jeed:effect_provider");
-    this.ignoreType("jeed:potion_provider");
+    // this.ignoreType("minecraft:crafting_special_armordye");
+    // this.ignoreType("minecraft:crafting_special_bannerduplicate");
+    // this.ignoreType("minecraft:crafting_special_bookcloning");
+    // this.ignoreType("minecraft:crafting_decorated_pot");
+    // this.ignoreType("minecraft:crafting_special_firework_rocket");
+    // this.ignoreType("minecraft:crafting_special_firework_star");
+    // this.ignoreType("minecraft:crafting_special_firework_star_fade");
+    // this.ignoreType("minecraft:crafting_special_mapcloning");
+    // this.ignoreType("minecraft:crafting_special_mapextending");
+    // this.ignoreType("minecraft:crafting_special_repairitem");
+    // this.ignoreType("minecraft:crafting_special_shielddecoration");
+    // this.ignoreType("minecraft:crafting_special_shulkerboxcoloring");
+    // this.ignoreType("minecraft:crafting_special_suspiciousstew");
+    // this.ignoreType("minecraft:crafting_special_tippedarrow");
 
-    this.ignoreType("pipez:copy_nbt");
-    this.ignoreType("pipez:clear_nbt");
-
-    this.ignoreType("refinedstorage:upgrade_with_enchanted_book");
-
-    this.ignoreType("forge:ore_shaped");
-
-    this.ignoreType("supplementaries:trapped_present");
-    this.ignoreType("supplementaries:weathered_map");
-    this.ignoreType("supplementaries:soap_clearing");
-    this.ignoreType("supplementaries:rope_arrow_create");
-    this.ignoreType("supplementaries:present_dye");
-    this.ignoreType("supplementaries:rope_arrow_add");
-    this.ignoreType("supplementaries:item_lore");
-    this.ignoreType("supplementaries:flag_from_banner");
-    this.ignoreType("supplementaries:bubble_blower_charge");
-    this.ignoreType("supplementaries:bamboo_spikes_tipped");
-    this.ignoreType("supplementaries:antique_book");
-    this.ignoreType("supplementaries:cauldron_flag_dye");
-    this.ignoreType("supplementaries:cauldron_flag_clear");
-    this.ignoreType("supplementaries:cauldron_blackboard");
-
-    this.ignoreType("quark:mixed_exclusion");
-    this.ignoreType("quark:elytra_duplication");
-    this.ignoreType("quark:slab_to_block");
-
-    // TODO could to in the future
-    this.ignoreType("ad_astra:lunarian_trade_simple");
-    this.ignoreType("ad_astra:lunarian_trade_enchanted_item");
-    this.ignoreType("ad_astra:lunarian_trade_suspicious_stew");
-    this.ignoreType("ad_astra:lunarian_trade_enchanted_book");
-    this.ignoreType("ad_astra:lunarian_trade_dyed_item");
-    this.ignoreType("ad_astra:lunarian_trade_potioned_item");
-
-    this.ignoreType("immersiveengineering:cloche");
-    this.ignoreType("immersiveengineering:crusher");
-    this.ignoreType("immersiveengineering:fermenter");
-    this.ignoreType("immersiveengineering:metal_press");
-    this.ignoreType("immersiveengineering:squeezer");
-    this.ignoreType("immersiveengineering:mineral_mix");
+    this.ignoreType("jeed:*");
+    this.ignoreType("immersiveengineering:*");
   }
 
-  ignoreType(recipeType: string) {
-    this.ignoredRecipeTypes.add(recipeType);
+  ignoreType(pattern: string) {
+    this.ignoredRecipeTypePatterns.push(pattern);
   }
 
   unknownRecipeTypes() {
@@ -351,8 +329,25 @@ export default class RecipeLoader
   }
 
   override parse(definition: RecipeDefinition): RecipeHolder | null {
-    if (this.ignoredRecipeTypes.has(definition.type)) return null;
+    if (
+      this.ignoredRecipeTypePatterns.some((it) =>
+        minimatch(definition.type, it),
+      )
+    )
+      return null;
     // TODO only print unknown recipe types once in the end
+
+    const importantData = omit(
+      definition,
+      "type",
+      "category",
+      "conditions",
+      "fabric:load_conditions",
+      "neoforge:conditions",
+    );
+
+    if (Object.keys(importantData).length === 0) return null;
+
     return this.deserialize(definition);
   }
 

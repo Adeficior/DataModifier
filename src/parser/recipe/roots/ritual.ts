@@ -45,11 +45,13 @@ export class RootRitualRecipeParser extends RecipeParser<
     definition: RootRitualRecipeDefinition,
     context: RecipeParseContext,
   ): RootRitualRecipe {
-    const ingredients = context.ingredients.createList(definition.ingredients);
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
     const result = context.results.deserialize(definition.result);
     const incenses =
       definition.incenses &&
-      context.ingredients.createList(definition.incenses);
+      context.ingredients.deserializeList(definition.incenses);
     return new RootRitualRecipe(ingredients, result, incenses);
   }
 }
