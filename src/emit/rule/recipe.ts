@@ -20,17 +20,17 @@ export default class RecipeRule extends Rule<RecipeHolder> {
     super(modifier);
   }
 
-  matches(id: Id, recipe: RecipeHolder, logger: Logger): boolean {
+  matches(id: Id, recipe: RecipeHolder): boolean {
     const types = recipe.getTypes().map(createId);
 
     return (
-      this.idsTests.every((test) => test(id, logger)) &&
+      this.idsTests.every((test) => test(id)) &&
       this.typeTests.every((test) => types.some((it) => test(it))) &&
       this.ingredientTests.every((test) =>
-        recipe.getIngredients().some((it) => test(it, logger)),
+        recipe.getIngredients().some((it) => test(it)),
       ) &&
       this.resultTests.every((test) =>
-        recipe.getResults().some((it) => test(it, logger)),
+        recipe.getResults().some((it) => test(it)),
       )
     );
   }

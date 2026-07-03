@@ -41,7 +41,11 @@ import TagEmitter from "../emit/data/tags.js";
 import type { ClearableEmitter } from "../emit/index.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
-import type { SemVerInput } from "../packFormat.js";
+import {
+  lootTableFolder,
+  recipeFolder,
+  type SemVerInput,
+} from "../packFormat.js";
 import type { PackContext } from "./context.js";
 import type Loader from "./index.js";
 import LangLoader from "./lang.js";
@@ -95,12 +99,10 @@ export default class PackLoader implements Loader {
     options: PackLoaderOptions,
   ) {
     this.tagLoader = new TagsLoader(this.lookup);
-    this.lootLoader = new LootTableLoader(logger);
-    this.langLoader = new LangLoader(logger);
+    this.lootLoader = new LootTableLoader();
+    this.langLoader = new LangLoader();
 
-    this.tags = this.registerEmitter(
-      new TagEmitter(logger, this.tagLoader, options),
-    );
+    this.tags = this.registerEmitter(new TagEmitter(this.tagLoader, options));
 
     this.results = new ResultSerializer(options.packFormat, this.lookup);
     this.ingredients = new IngredientSerializer(
@@ -116,7 +118,7 @@ export default class PackLoader implements Loader {
       packFormat: options.packFormat,
     };
 
-    this.recipesLoader = new RecipeLoader(logger, this.context);
+    this.recipesLoader = new RecipeLoader(this.context);
 
     this.recipes = this.registerEmitter(
       new RecipeEmitter(
@@ -128,7 +130,7 @@ export default class PackLoader implements Loader {
     );
 
     this.loot = this.registerEmitter(
-      new LootTableEmitter(logger, this.lootLoader, this.context),
+      new LootTableEmitter(this.lootLoader, this.context),
     );
 
     this.lang = this.registerEmitter(new LangEmitter(this.langLoader));
@@ -136,7 +138,7 @@ export default class PackLoader implements Loader {
     this.tabs = this.registerEmitter(new PolytoneTabsEmitter(this.lookup));
 
     this.blacklist = this.registerEmitter(
-      new BlacklistEmitter(logger, this.context, options),
+      new BlacklistEmitter(this.context, options),
     );
 
     this.itemDefinition = this.registerEmitter(
@@ -155,10 +157,10 @@ export default class PackLoader implements Loader {
       createMergingAcceptor(
         distributedAcceptor({
           "data/*/tags/**/*.json": this.tagLoader,
-          "data/*/recipes/**/*.json": this.recipesLoader,
-          "data/*/recipe/**/*.json": this.recipesLoader,
-          "data/*/loot_tables/**/*.json": this.lootLoader,
-          "data/*/loot_table/**/*.json": this.lootLoader,
+          [`data/*/${recipeFolder(options.packFormat)}/**/*.json`]:
+            this.recipesLoader,
+          [`data/*/${lootTableFolder(options.packFormat)}/**/*.json`]:
+            this.lootLoader,
           "assets/*/lang/*.json": this.langLoader,
         }),
       ),

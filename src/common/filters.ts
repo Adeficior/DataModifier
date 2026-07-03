@@ -1,10 +1,9 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Logger } from "@adeficior/pack-resolver";
 import type { TagRegistry } from "../loader/tags.js";
 import type { IdInput, NormalizedId, TagInput } from "./id.js";
 import { encodeId } from "./id.js";
 
-export type Predicate<T> = (value: T, logger?: Logger) => boolean;
+export type Predicate<T> = (value: T) => boolean;
 export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
 export function createIdPredicate<TEntry, TId extends string>(
@@ -13,14 +12,13 @@ export function createIdPredicate<TEntry, TId extends string>(
   tags?: TagRegistry<RegistryId>,
 ): Predicate<TEntry> {
   if (typeof test === "function") {
-    return (entry, logger) =>
-      resolve(entry).some((id) => test(id as TId, logger));
+    return (entry) => resolve(entry).some((id) => test(id as TId));
   } else if (test instanceof RegExp) {
-    return (ingredient, logger) => {
+    return (ingredient) => {
       return resolve(ingredient).some((it) => test.test(it));
     };
   } else if (test.startsWith("#")) {
-    return (ingredient, logger) => {
+    return (ingredient) => {
       return resolve(ingredient).some((id) => {
         if (id.startsWith("#") && test === id) return true;
         else if (tags) return tags.contains(test as TagInput, id) ?? false;
@@ -28,7 +26,7 @@ export function createIdPredicate<TEntry, TId extends string>(
       });
     };
   } else {
-    return (ingredient, logger) => {
+    return (ingredient) => {
       return resolve(ingredient).includes(encodeId(test));
     };
   }

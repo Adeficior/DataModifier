@@ -50,8 +50,8 @@ function createUnvalidatedFilter(
   }
 
   if (typeof test === "function") {
-    // ingredients.create not needed if function wrapped
-    return (it, logger) => test(context.ingredients.create(it), logger);
+    // TODO ingredients.create not needed if function wrapped
+    return (it) => test(context.ingredients.create(it));
   }
 
   if (test instanceof Ingredient) {

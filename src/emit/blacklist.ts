@@ -1,9 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type {
-  BaseContext,
-  DataConsumer,
-  Logger,
-} from "@adeficior/pack-resolver";
+import type { BaseContext, DataConsumer } from "@adeficior/pack-resolver";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { NormalizedId } from "../common/id.js";
@@ -37,7 +33,6 @@ export default class BlacklistEmitter
   private readonly hideModes: HideMode[];
 
   constructor(
-    private readonly logger: Logger,
     private readonly context: PackContext,
     options: BlacklistOptions,
   ) {
@@ -81,9 +76,7 @@ export default class BlacklistEmitter
 
     const predicate = createIngredientPredicate(test, this.context);
 
-    return [...keys.keys()].filter((it) =>
-      predicate(new ItemIngredient(it), this.logger),
-    );
+    return [...keys.keys()].filter((it) => predicate(new ItemIngredient(it)));
   }
 
   private resolveIds(input: IngredientFilter): string[] {

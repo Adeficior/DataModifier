@@ -1,8 +1,4 @@
-import {
-  combineResolvers,
-  type BaseContext,
-  type Logger,
-} from "@adeficior/pack-resolver";
+import { combineResolvers, type BaseContext } from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
   type CommonFilter,
@@ -69,7 +65,6 @@ export default class LootTableEmitter implements LootRules, ClearableEmitter {
   private readonly ruled: RuledEmitter<LootTable, LootTableRule>;
 
   constructor(
-    private readonly logger: Logger,
     private readonly lootTables: RegistryProvider<LootTable>,
     private readonly context: PackContext,
   ) {

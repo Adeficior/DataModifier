@@ -1,4 +1,3 @@
-import type { Logger } from "@adeficior/pack-resolver";
 import { encodeId } from "../common/id.js";
 import { IllegalShapeError } from "../error.js";
 
@@ -78,10 +77,9 @@ export default class RecipeLoader
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
 
   constructor(
-    logger: Logger,
     private readonly serializers: Pick<PackContext, "results" | "ingredients">,
   ) {
-    super(logger);
+    super();
 
     this.registerParser("minecraft:crafting_shaped", new ShapedParser());
     this.registerParser("minecraft:crafting_shapeless", new ShapelessParser());

@@ -30,8 +30,6 @@ export function tryParseJson(logger: Logger, content: Acceptable) {
 export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
   protected readonly registry = new Registry<T>();
 
-  constructor(protected readonly logger: Logger) {}
-
   protected abstract parse(json: unknown, id: Id): T | null;
 
   forEach(consumer: (recipe: T, id: Id) => void): void {

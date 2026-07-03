@@ -1,9 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import {
-  simpleResolver,
-  type BaseContext,
-  type Logger,
-} from "@adeficior/pack-resolver";
+import { simpleResolver, type BaseContext } from "@adeficior/pack-resolver";
 import { resolveIDTest, type CommonFilter } from "../../common/filters.js";
 import type { Id, NormalizedId, TagInput } from "../../common/id.js";
 import { createId, encodeId } from "../../common/id.js";
@@ -152,7 +148,6 @@ export default class TagEmitter implements TagRules, ClearableEmitter {
   readonly fluids: ScopedTagRules<"minecraft:fluid">;
 
   constructor(
-    private readonly logger: Logger,
     private readonly registry: TagsLoader,
     private readonly options: TagEmitterOptions,
   ) {

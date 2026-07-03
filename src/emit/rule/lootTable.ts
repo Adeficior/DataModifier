@@ -6,6 +6,7 @@ import {
   ItemTagIngredient,
   type Ingredient,
 } from "../../common/ingredient/index.js";
+import { IllegalShapeError, tryCatching } from "../../error.js";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
 import { extendLootEntry } from "../../schema/data/loot.js";
 import type { Modifier } from "./index.js";
@@ -14,7 +15,6 @@ import Rule from "./index.js";
 // TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
 
 function entryMatches(
-  logger: Logger,
   test: Predicate<Ingredient>,
   base: LootEntryBase,
 ): boolean {
@@ -22,17 +22,16 @@ function entryMatches(
     const entry = extendLootEntry(base);
     switch (entry.type) {
       case "minecraft:alternatives":
-        return entry.children.some((it) => entryMatches(logger, test, it));
+        return entry.children.some((it) => entryMatches(test, it));
       case "minecraft:item":
-        return test(new ItemIngredient(entry.name), logger);
+        return test(new ItemIngredient(entry.name));
       case "minecraft:tag":
-        return test(new ItemTagIngredient(entry.name), logger);
+        return test(new ItemTagIngredient(entry.name));
       default:
         return false;
     }
   } catch {
-    logger.warn(`unknown loot entry type:`, base);
-    return false;
+    throw new IllegalShapeError(`unknown loot entry type:`, base);
   }
 }
 
@@ -43,7 +42,7 @@ function hasOutput(
 ): boolean {
   return table.pools.some((pool) =>
     pool.entries.some((entry) => {
-      return entryMatches(logger, test, entry);
+      return tryCatching(logger, () => entryMatches(test, entry)) ?? false;
     }),
   );
 }
@@ -59,10 +58,9 @@ export default class LootTableRule extends Rule<LootTable> {
   }
 
   matches(id: Id, table: LootTable, logger: Logger): boolean {
-    const prefixed = logger;
     return (
-      this.idTests.every((test) => test(id, prefixed)) &&
-      this.outputTests.every((test) => hasOutput(prefixed, test, table))
+      this.idTests.every((test) => test(id)) &&
+      this.outputTests.every((test) => hasOutput(logger, test, table))
     );
   }
 
