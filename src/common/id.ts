@@ -21,18 +21,12 @@ export type TagInput = IdInput<`#${string}`>;
 
 export const IdSchema = zod
   .string()
-  .regex(/^([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)
+  .regex(
+    /^#?([a-z0-9_.-]+:)?[a-z0-9_.-/]+$/i,
+    "ID may only include letters, numbers, dashes and underscores",
+  )
+  .refine((val) => !val.startsWith("#"), "IDs may not start with a hashtag")
   .describe("Valid ID");
-
-export const TagSchema = zod
-  .string()
-  .regex(/^#([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)
-  .describe("Valid Tag-ID") as zod.ZodType<`#${string}`>;
-
-export const IdOrTagSchema = zod
-  .string()
-  .regex(/^#?([a-z0-9_.-]+:)?[a-z0-9/._-]+$/i)
-  .describe("Valid ID or Tag-ID");
 
 export function createId(from: IdInput): Id {
   if (typeof from !== "string") return from;

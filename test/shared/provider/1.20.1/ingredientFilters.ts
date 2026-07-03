@@ -1,4 +1,3 @@
-import { UnknownRegistryEntry } from "../../../../src";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -195,17 +194,21 @@ export function* missingIngredientFilters(): DataProvider<
 }
 
 export function* invalidIngredientFilters(): DataProvider<
-  [IngredientFilter, Class<Error>]
+  [IngredientFilter, Class<Error> | string]
 > {
-  yield ["unknown item id", "minecraft:whatever", UnknownRegistryEntry];
+  yield [
+    "unknown item id",
+    "minecraft:whatever",
+    "unknown minecraft:item 'minecraft:whatever'",
+  ];
   yield [
     "unknown block id",
     new BlockIngredient("minecraft:whatever"),
-    UnknownRegistryEntry,
+    "unknown minecraft:block 'minecraft:whatever'",
   ];
   yield [
     "unknown fluid id",
     new FluidIngredient("minecraft:whatever"),
-    UnknownRegistryEntry,
+    "unknown minecraft:fluid 'minecraft:whatever'",
   ];
 }

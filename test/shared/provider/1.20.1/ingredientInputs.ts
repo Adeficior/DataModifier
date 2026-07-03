@@ -1,4 +1,3 @@
-import { IllegalShapeError, UnknownRegistryEntry } from "../../../../src";
 import type { Ingredient } from "../../../../src/common/ingredient";
 import {
   BlockIngredient,
@@ -16,55 +15,75 @@ import { results } from "./resultInputs";
 export function* invalidIngredientInputs(): DataProvider<
   [unknown, Class<Error> | string]
 > {
-  yield ["array", ["minecraft:apple", { whatever: true }], IllegalShapeError];
-  yield ["invalid object", { whatever: true }, IllegalShapeError];
-  yield ["empty object", {}, IllegalShapeError];
-  yield ["number", 10, IllegalShapeError];
-  yield ["null", null, IllegalShapeError];
+  yield [
+    "array",
+    ["minecraft:apple", { whatever: true }],
+    "unknown ingredient shape",
+  ];
+  yield ["invalid object", { whatever: true }, "unknown ingredient shape"];
+  yield ["empty object", {}, "unknown ingredient shape"];
+  yield ["number", 10, "unknown ingredient shape"];
+  yield ["null", null, "ingredient input may not be null"];
 
-  yield ["item tag with #", { tag: "#test" }, IllegalShapeError];
+  yield [
+    "item tag with #",
+    { tag: "#test" },
+    "tag: IDs may not start with a hashtag",
+  ];
   yield [
     "fluid tag with #",
     { fluidTag: "#test", amount: BUCKET },
-    IllegalShapeError,
+    "fluidTag: IDs may not start with a hashtag",
   ];
-  yield ["block tag with #", { blockTag: "#test" }, IllegalShapeError];
+  yield [
+    "block tag with #",
+    { blockTag: "#test" },
+    "blockTag: IDs may not start with a hashtag",
+  ];
   yield [
     "item tag with negative count",
     { tag: "buttons", count: -21 },
-    IllegalShapeError,
+    "count: Number must be greater than 0",
   ];
   yield [
     "item with zero count",
     { item: "oak_button", count: 0 },
-    IllegalShapeError,
+    "count: Number must be greater than 0",
   ];
   yield [
     "fluid tag with negative amount",
     { fluidTag: "water", amount: -21 },
-    IllegalShapeError,
+    "amount: Number must be greater than 0",
   ];
   yield [
     "item with zero amount",
     { fluid: "lava", amount: 0 },
-    IllegalShapeError,
+    "amount: Number must be greater than 0",
   ];
 
-  yield ["unknown item ID", "minecraft:unknown", UnknownRegistryEntry];
+  yield [
+    "unknown item ID",
+    "minecraft:unknown",
+    "unknown minecraft:item 'minecraft:unknown'",
+  ];
   yield [
     "unknown item",
     { item: "minecraft:unknown", count: 12 },
-    UnknownRegistryEntry,
+    "unknown minecraft:item 'minecraft:unknown'",
   ];
   yield [
     "unknown fluid",
     { fluid: "minecraft:unknown", amount: BUCKET },
-    UnknownRegistryEntry,
+    "unknown minecraft:fluid 'minecraft:unknown'",
   ];
-  yield ["unknown block", { block: "minecraft:unknown" }, UnknownRegistryEntry];
+  yield [
+    "unknown block",
+    { block: "minecraft:unknown" },
+    "unknown minecraft:block 'minecraft:unknown'",
+  ];
 
   for (const [name, result] of results()) {
-    yield [name, result, IllegalShapeError];
+    yield [name, result, "unknown ingredient shape"];
   }
 }
 
