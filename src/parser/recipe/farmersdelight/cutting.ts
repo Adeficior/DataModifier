@@ -76,7 +76,7 @@ export default class CuttingRecipeParser extends RecipeParser<
   ): CuttingRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
     const result = context.results.createList(definition.result);
-    const tool = context.ingredients.create(definition.tool);
+    const tool = context.ingredients.deserialize(definition.tool);
     return new CuttingRecipe(ingredients, result, tool);
   }
 }

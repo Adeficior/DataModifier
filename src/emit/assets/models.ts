@@ -29,7 +29,6 @@ export default class ModelEmitter implements ModelRules, ClearableEmitter {
     );
   }
 
-  // TODO helper WrappedEmitter?
   clear() {
     this.custom.clear();
   }

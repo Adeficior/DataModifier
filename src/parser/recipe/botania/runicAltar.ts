@@ -27,7 +27,7 @@ export class RunicAltarRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): RunicAltarRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
-    const result = context.results.create(definition.output);
+    const result = context.results.deserialize(definition.output);
     return new RunicAltarRecipe(ingredients, result);
   }
 }

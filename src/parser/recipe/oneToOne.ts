@@ -53,8 +53,8 @@ export class OneToOneRecipeParser<
     definition: TDefinition,
     context: RecipeParseContext,
   ): OneToOneRecipe {
-    const ingredient = context.ingredients.create(definition.ingredient);
-    const result = context.results.create(definition.result);
+    const ingredient = context.ingredients.deserialize(definition.ingredient);
+    const result = context.results.deserialize(definition.result);
     return new OneToOneRecipe(ingredient, result);
   }
 }

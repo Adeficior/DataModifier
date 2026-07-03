@@ -65,7 +65,7 @@ export default class ResultSerializer {
     return results.map((it) => this.serialize(it));
   }
 
-  private deserialize(input: unknown): Result {
+  private deserializeUnvalidated(input: unknown): Result {
     if (input instanceof Result) return input;
 
     if (!input) throw new IllegalShapeError("result input may not be null");
@@ -85,9 +85,9 @@ export default class ResultSerializer {
     throw new IllegalShapeError(`unknown result shape`, input);
   }
 
-  create(input: unknown) {
+  deserialize(input: unknown) {
     return transformErrors(() => {
-      const deserialized = this.deserialize(input);
+      const deserialized = this.deserializeUnvalidated(input);
       deserialized.validate(this.lookup);
       return deserialized;
     });
@@ -99,6 +99,6 @@ export default class ResultSerializer {
   }
 
   createList(input: unknown[]) {
-    return input.map((it) => this.create(it));
+    return input.map((it) => this.deserialize(it));
   }
 }

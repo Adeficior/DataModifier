@@ -20,7 +20,7 @@ const data = createTestDataResolver(version, {
   include: ["data/*/tags/**/*.json"],
 });
 const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
-const tags = new TagsLoader(lookup);
+const tags = new TagsLoader(packFormatOf(version));
 const context = { ingredients, lookup, tags };
 
 beforeAll(() => data.extract(tags));

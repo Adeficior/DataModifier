@@ -53,7 +53,7 @@ export class ShapedParser extends RecipeParser<
     context: RecipeParseContext,
   ): ShapedRecipe {
     const ingredients = context.ingredients.ingredientMap(definition.key);
-    const result = context.results.create(definition.result);
+    const result = context.results.deserialize(definition.result);
     return new ShapedRecipe(ingredients, result);
   }
 }

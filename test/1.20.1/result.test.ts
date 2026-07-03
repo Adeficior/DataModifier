@@ -18,13 +18,13 @@ describe("result tests with 1.20.1 format", () => {
     invalidResultInputs(),
     (input, expected) => {
       expect(() => {
-        results.create(input);
+        results.deserialize(input);
       }).toThrow(expected);
     },
   );
 
   provided("valid result inputs", resultInputs(), (input, expected) => {
-    const actual = results.create(input);
+    const actual = results.deserialize(input);
     expect(actual).toBeInstanceOf(expected);
   });
 });

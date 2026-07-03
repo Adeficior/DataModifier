@@ -53,8 +53,8 @@ export class StonecuttingParser extends RecipeParser<
     definition: StonecuttingRecipeDefinition,
     context: RecipeParseContext,
   ): StonecuttingRecipe {
-    const ingredient = context.ingredients.create(definition.ingredient);
-    const result = context.results.create(definition.result);
+    const ingredient = context.ingredients.deserialize(definition.ingredient);
+    const result = context.results.deserialize(definition.result);
     return new StonecuttingRecipe(ingredient, result);
   }
 }

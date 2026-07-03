@@ -54,7 +54,7 @@ export class ManyToOneRecipeParser<
     context: RecipeParseContext,
   ): ManyToOneRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
-    const result = context.results.create(definition.result);
+    const result = context.results.deserialize(definition.result);
     return new ManyToOneRecipe(ingredients, result);
   }
 }

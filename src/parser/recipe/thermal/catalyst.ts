@@ -47,7 +47,7 @@ export class ThermalCatalystRecipeParser extends RecipeParser<
     definition: ThermalCatalystRecipeDefinition,
     context: RecipeParseContext,
   ): ThermalCatalystRecipe {
-    const ingredient = context.ingredients.create(definition.ingredient);
+    const ingredient = context.ingredients.deserialize(definition.ingredient);
     return new ThermalCatalystRecipe(ingredient);
   }
 }

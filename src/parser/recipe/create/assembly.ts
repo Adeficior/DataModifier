@@ -68,8 +68,8 @@ export class AssemblyRecipeParser extends RecipeParser<
     definition: AssemblyRecipeDefinition,
     context: RecipeParseContext,
   ): AssemblyRecipe {
-    const ingredient = context.ingredients.create(definition.ingredient);
-    const transitionalItem = context.ingredients.create(
+    const ingredient = context.ingredients.deserialize(definition.ingredient);
+    const transitionalItem = context.ingredients.deserialize(
       definition.transitionalItem,
     );
     const results = context.results.createList(definition.results);

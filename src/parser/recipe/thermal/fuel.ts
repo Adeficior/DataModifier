@@ -44,7 +44,7 @@ export class ThermalFuelRecipeParser extends RecipeParser<
     definition: ThermalFuelRecipeDefinition,
     context: RecipeParseContext,
   ): ThermalFuelRecipe {
-    const ingredient = context.ingredients.create(definition.ingredient);
+    const ingredient = context.ingredients.deserialize(definition.ingredient);
     return new ThermalFuelRecipe(ingredient);
   }
 }

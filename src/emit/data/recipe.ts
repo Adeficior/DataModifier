@@ -199,7 +199,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.createResultPredicate(test);
 
-    const value = this.context.results.create(input);
+    const value = this.context.results.deserialize(input);
 
     const replace = createReplacer(predicate, value);
 
@@ -223,7 +223,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.createIngredientPredicate(test);
 
-    const value = this.context.ingredients.create(input);
+    const value = this.context.ingredients.deserialize(input);
 
     const replace = createReplacer(predicate, value);
 

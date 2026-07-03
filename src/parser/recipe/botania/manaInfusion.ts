@@ -62,8 +62,8 @@ export class ManaInfusionRecipeParser extends RecipeParser<
       definition.catalyst === undefined
         ? undefined
         : deserializeBlockInput(context.ingredients, definition.catalyst);
-    const ingredient = context.ingredients.create(definition.input);
-    const result = context.results.create(definition.output);
+    const ingredient = context.ingredients.deserialize(definition.input);
+    const result = context.results.deserialize(definition.output);
     return new ManaInfusionRecipe(ingredient, result, catalyst);
   }
 }

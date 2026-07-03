@@ -4,10 +4,10 @@ import { orderBy, uniqBy } from "lodash-es";
 import type { IdInput, NormalizedId, TagInput } from "../common/id.js";
 import { encodeId } from "../common/id.js";
 import Registry from "../common/registry.js";
+import { isAtLeastVersion, type SemVerInput } from "../packFormat.js";
 import type { TagDefinition, TagEntry } from "../schema/data/tag.js";
 import { tagFolderOf } from "../schema/data/tag.js";
 import { fromJson } from "../textHelper.js";
-import type RegistryLookup from "./registry/index.js";
 
 export function entryId(entry: TagEntry) {
   if (typeof entry === "string") return entry;
@@ -111,11 +111,26 @@ export default class TagsLoader implements TagRegistryHolder, Acceptor {
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
 
-  constructor(private readonly lookup: RegistryLookup) {
-    this.registerRegistry("minecraft:item", "items");
-    this.registerRegistry("minecraft:block", "blocks");
-    this.registerRegistry("minecraft:fluid", "fluids");
-    this.registerRegistry("minecraft:entity_type", "entity_types");
+  constructor(packFormat: SemVerInput) {
+    const withSuffix = (it: string) => {
+      if (isAtLeastVersion(packFormat, "44")) return it;
+      return it + "s";
+    };
+
+    this.registerRegistry("minecraft:banner_pattern");
+    this.registerRegistry("minecraft:block", withSuffix("block"));
+    this.registerRegistry("minecraft:cat_variant");
+    this.registerRegistry("minecraft:damage_type");
+    this.registerRegistry("minecraft:entity_type", withSuffix("entity_type"));
+    this.registerRegistry("minecraft:fluid", withSuffix("fluid"));
+    this.registerRegistry("minecraft:game_event", withSuffix("game_event"));
+    this.registerRegistry("minecraft:instrument");
+    this.registerRegistry("minecraft:item", withSuffix("item"));
+    this.registerRegistry("minecraft:painting_variant");
+    this.registerRegistry("minecraft:worldgen/biome");
+    this.registerRegistry("minecraft:worldgen/structure");
+    this.registerRegistry("minecraft:worldgen/flat_level_generator_preset");
+    this.registerRegistry("minecraft:worldgen/world_preset");
   }
 
   registerRegistry(key: IdInput, folder = tagFolderOf(key)) {

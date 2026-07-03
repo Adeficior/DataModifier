@@ -18,13 +18,13 @@ describe("ingredient tests with 1.20.1 format", () => {
     invalidIngredientInputs(),
     (input, expected) => {
       expect(() => {
-        ingredients.create(input);
+        ingredients.deserialize(input);
       }).toThrow(expected);
     },
   );
 
   provided("valid ingredient inputs", ingredientInputs(), (input, expected) => {
-    const actual = ingredients.create(input);
+    const actual = ingredients.deserialize(input);
     expect(actual).toBeInstanceOf(expected);
   });
 });

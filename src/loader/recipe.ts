@@ -308,7 +308,6 @@ export default class RecipeLoader
     this.ignoreType("immersiveengineering:mineral_mix");
   }
 
-  // TODO this does not make sense
   ignoreType(recipeType: string) {
     this.ignoredRecipeTypes.add(recipeType);
   }
@@ -348,11 +347,6 @@ export default class RecipeLoader
     }
 
     const parsed = parser.deserialize(definition, this.recipeParseContext());
-
-    // Catch warnings early
-    // TODO not really needed anymore
-    // parsed.getResults().forEach((it) => createResult(it));
-    // parsed.getIngredients().forEach((it) => createIngredient(it));
 
     return new RecipeHolder(definition, parsed);
   }

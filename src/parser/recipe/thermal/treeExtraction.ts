@@ -75,13 +75,13 @@ export class TreeExtractionRecipeParser extends RecipeParser<
     definition: TreeExtractionRecipeDefinition,
     context: RecipeParseContext,
   ): TreeExtractionRecipe {
-    const trunk = context.ingredients.create(
+    const trunk = context.ingredients.deserialize(
       new BlockIngredient(definition.trunk),
     );
-    const leaves = context.ingredients.create(
+    const leaves = context.ingredients.deserialize(
       new BlockIngredient(definition.leaves),
     );
-    const result = context.results.create(definition.result);
+    const result = context.results.deserialize(definition.result);
     return new TreeExtractionRecipe(trunk, leaves, result);
   }
 }

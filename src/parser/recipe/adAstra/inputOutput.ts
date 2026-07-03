@@ -77,7 +77,7 @@ export class InputOutputRecipeParser extends RecipeParser<
     definition: InputOutputRecipeDefinition,
     context: RecipeParseContext,
   ): InputOutputRecipe {
-    const ingredient = context.ingredients.create(definition.input);
+    const ingredient = context.ingredients.deserialize(definition.input);
     const result = deserializeIdResult(context.results, definition.output);
     return new InputOutputRecipe(ingredient, result);
   }

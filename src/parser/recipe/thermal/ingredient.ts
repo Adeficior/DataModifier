@@ -53,7 +53,7 @@ export function createThermalIngredients(
     }
   }
 
-  return [ingredients.create(input)];
+  return [ingredients.deserialize(input)];
 }
 
 export function serializeThermalIngredient(

@@ -64,7 +64,7 @@ export class FluidConversionRecipeParser extends RecipeParser<
     definition: FluidConversionRecipeDefinition,
     context: RecipeParseContext,
   ): FluidConversionRecipe {
-    const ingredient = context.ingredients.create(definition.input);
+    const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.validated(
       new FluidResult(definition.output, -1),
     );

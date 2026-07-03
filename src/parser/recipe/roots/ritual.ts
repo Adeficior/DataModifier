@@ -46,7 +46,7 @@ export class RootRitualRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): RootRitualRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
-    const result = context.results.create(definition.result);
+    const result = context.results.deserialize(definition.result);
     const incenses =
       definition.incenses &&
       context.ingredients.createList(definition.incenses);

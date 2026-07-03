@@ -84,7 +84,7 @@ export default class BlacklistEmitter
       return this.filterItemIds(input);
     }
 
-    const ingredient = this.context.ingredients.create(input);
+    const ingredient = this.context.ingredients.deserialize(input);
 
     const registries: NormalizedId<RegistryId>[] = [
       "minecraft:item",

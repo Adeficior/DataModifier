@@ -19,7 +19,6 @@ import type { Serializable } from "../serializable";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements Serializable {
-  // TODO make required
   validate(_: RegistryLookup): void {}
   abstract serialize(packFormat: SemVerInput): unknown;
   abstract idsFor(

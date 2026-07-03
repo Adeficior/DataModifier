@@ -55,9 +55,9 @@ export class SmithingParser extends RecipeParser<
     definition: SmithingRecipeDefinition,
     context: RecipeParseContext,
   ): SmithingRecipe {
-    const base = context.ingredients.create(definition.base);
-    const addition = context.ingredients.create(definition.addition);
-    const result = context.results.create(definition.result);
+    const base = context.ingredients.deserialize(definition.base);
+    const addition = context.ingredients.deserialize(definition.addition);
+    const result = context.results.deserialize(definition.result);
     return new SmithingRecipe(base, addition, result);
   }
 }

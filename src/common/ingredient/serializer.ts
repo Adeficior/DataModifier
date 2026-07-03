@@ -104,14 +104,14 @@ export default class IngredientSerializer {
     return ingredients.map((it) => this.serialize(it));
   }
 
-  private deserialize(input: unknown): Ingredient {
+  private deserializeUnvalidated(input: unknown): Ingredient {
     if (input instanceof Ingredient) return input;
 
     if (!input) throw new IllegalShapeError("ingredient input may not be null");
 
     if (typeof input === "string") {
       if (input.startsWith("#")) {
-        return this.deserialize(new ItemTagIngredient(input));
+        return this.deserializeUnvalidated(new ItemTagIngredient(input));
       }
 
       this.lookup.validateEntry("minecraft:item", input);
@@ -119,7 +119,9 @@ export default class IngredientSerializer {
     }
 
     if (Array.isArray(input)) {
-      return new ListIngredient(input.map((it) => this.deserialize(it)));
+      return new ListIngredient(
+        input.map((it) => this.deserializeUnvalidated(it)),
+      );
     }
 
     if (typeof input === "object") {
@@ -132,10 +134,9 @@ export default class IngredientSerializer {
     throw new IllegalShapeError(`unknown ingredient shape`, input);
   }
 
-  // TODO rename deserialize
-  create(input: unknown) {
+  deserialize(input: unknown) {
     return transformErrors(() => {
-      const deserialized = this.deserialize(input);
+      const deserialized = this.deserializeUnvalidated(input);
       deserialized.validate(this.lookup);
       return deserialized;
     });
@@ -147,10 +148,10 @@ export default class IngredientSerializer {
   }
 
   createList(input: unknown[]) {
-    return input.map((it) => this.create(it));
+    return input.map((it) => this.deserialize(it));
   }
 
   ingredientMap(input: IngredientMapInput) {
-    return new IngredientMap(mapValues(input, (it) => this.create(it)));
+    return new IngredientMap(mapValues(input, (it) => this.deserialize(it)));
   }
 }

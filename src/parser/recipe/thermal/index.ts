@@ -70,7 +70,7 @@ export class ThermalRecipeParser extends RecipeParser<
     // TODO map from and to thermals shape
 
     const ingredients = definition.ingredient
-      ? [context.ingredients.create(definition.ingredient)]
+      ? [context.ingredients.deserialize(definition.ingredient)]
       : context.ingredients.createList(definition.ingredients ?? []);
 
     if (ingredients.length === 0)
@@ -78,7 +78,7 @@ export class ThermalRecipeParser extends RecipeParser<
 
     const results = Array.isArray(definition.result)
       ? context.results.createList(definition.result)
-      : [context.results.create(definition.result)];
+      : [context.results.deserialize(definition.result)];
 
     return new ThermalRecipe(ingredients, results);
   }

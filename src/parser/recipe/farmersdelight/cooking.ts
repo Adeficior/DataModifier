@@ -61,12 +61,12 @@ export default class CookingRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): CookingRecipe {
     const ingredients = context.ingredients.createList(definition.ingredients);
-    const result = context.results.create(definition.result);
+    const result = context.results.deserialize(definition.result);
     // TODO optional serialize & deserialize?
     const container =
       definition.container === undefined
         ? undefined
-        : context.ingredients.create(definition.container);
+        : context.ingredients.deserialize(definition.container);
     return new CookingRecipe(ingredients, result, container);
   }
 }

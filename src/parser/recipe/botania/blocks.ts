@@ -89,7 +89,7 @@ export function deserializeBlockOutput(
 ): Result {
   const parsed = BlockOutputSchema.parse(output);
   const id = typeof parsed === "string" ? parsed : parsed.name;
-  return results.create(new BlockResult(id));
+  return results.deserialize(new BlockResult(id));
 }
 
 export type BotaniaBlockRecipeDefinition = RecipeDefinition &

@@ -14,11 +14,7 @@ import { createMergingAcceptor } from "@adeficior/resource-merger";
 import createIngredientPredicate, {
   type IngredientFilter,
 } from "../common/ingredient/filter.js";
-import type { Ingredient } from "../common/ingredient/index.js";
-import type { IngredientInput } from "../common/ingredient/input.js";
 import IngredientSerializer from "../common/ingredient/serializer.js";
-import type { Result } from "../common/result/index.js";
-import type { ResultInput } from "../common/result/input.js";
 import ResultSerializer from "../common/result/serializer.js";
 import type { BlockstateRules } from "../emit/assets/blockstates.js";
 import BlockstateEmitter from "../emit/assets/blockstates.js";
@@ -98,7 +94,7 @@ export default class PackLoader implements Loader {
     readonly logger: Logger,
     options: PackLoaderOptions,
   ) {
-    this.tagLoader = new TagsLoader(this.lookup);
+    this.tagLoader = new TagsLoader(options.packFormat);
     this.lootLoader = new LootTableLoader();
     this.langLoader = new LangLoader();
 
@@ -199,16 +195,6 @@ export default class PackLoader implements Loader {
 
   get registries(): RegistryLookup {
     return this.lookup;
-  }
-
-  //  TODO what do I even need this for?
-  createResult(input: ResultInput): Result {
-    return this.results.create(input);
-  }
-
-  //  TODO what do I even need this for?
-  createIngredient(input: IngredientInput): Ingredient {
-    return this.ingredients.create(input);
   }
 
   resolveIngredientTest(test: IngredientFilter) {
