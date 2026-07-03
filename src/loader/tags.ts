@@ -158,6 +158,7 @@ export default class TagsLoader implements TagRegistryHolder, Acceptor {
     const registry = Object.values(this.registries).find((it) =>
       rest.startsWith(`${it.folder}/`),
     );
+
     if (!registry) return null;
 
     const path = rest!.substring(registry.folder.length + 1);

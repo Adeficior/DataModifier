@@ -1,0 +1,10 @@
+[
+  "neoforge:and",
+  "neoforge:false",
+  "neoforge:item_exists",
+  "neoforge:mod_loaded",
+  "neoforge:not",
+  "neoforge:or",
+  "neoforge:tag_empty",
+  "neoforge:true"
+]

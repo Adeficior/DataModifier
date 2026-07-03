@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "bun:test";
+import { basename } from "node:path";
 import { packFormatOf, UnknownRegistryEntry } from "../../src";
 import { ItemIngredient } from "../../src/common/ingredient";
 import IngredientSerializer from "../../src/common/ingredient/serializer";
@@ -14,7 +15,7 @@ import {
 import { provided } from "../shared/provider/providers";
 import { createTestDataResolver } from "../shared/testData";
 
-const version = "1.20.1";
+const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
 const data = createTestDataResolver(version, {
   include: ["data/*/tags/**/*.json"],
@@ -25,7 +26,7 @@ const context = { ingredients, lookup, tags };
 
 beforeAll(() => data.extract(tags));
 
-describe("result filter tests with 1.20.1 format", () => {
+describe(`result filter tests with ${version} format`, () => {
   provided("matching filters", matchingResultFilters(), (filter, input) => {
     const predicate = createResultPredicate(filter, context);
     const actual = predicate(input);

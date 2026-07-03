@@ -1,0 +1,11 @@
+[
+  "neoforge:add_carvers",
+  "neoforge:add_features",
+  "neoforge:add_spawn_costs",
+  "neoforge:add_spawns",
+  "neoforge:none",
+  "neoforge:remove_carvers",
+  "neoforge:remove_features",
+  "neoforge:remove_spawn_costs",
+  "neoforge:remove_spawns"
+]
