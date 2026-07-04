@@ -178,3 +178,17 @@ export class ToolActionIngredient extends Ingredient {
     return [];
   }
 }
+
+export class IgnoredIngredient extends Ingredient {
+  constructor(public readonly raw: unknown) {
+    super();
+  }
+
+  override asResult(): Result {
+    throw new Error("ignored ingredient cannot be transformed into a result");
+  }
+
+  override idsFor() {
+    return [];
+  }
+}

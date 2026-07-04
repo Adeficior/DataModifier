@@ -1,7 +1,7 @@
 import { describe, expect } from "bun:test";
 import { basename } from "node:path";
 import { packFormatOf } from "../../src";
-import IngredientSerializer from "../../src/common/ingredient/serializer";
+import { createIngredientSerializer } from "../../src/serializer/ingredients";
 import setupLookup from "../shared/dump";
 import {
   ingredientInputs,
@@ -11,7 +11,7 @@ import { provided } from "../shared/provider/providers";
 
 const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
-const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
+const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
 
 describe(`ingredient tests with ${version} format`, () => {
   provided(

@@ -2,10 +2,10 @@ import { beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import { packFormatOf, UnknownRegistryEntry } from "../../src";
 import { ItemIngredient } from "../../src/common/ingredient";
-import IngredientSerializer from "../../src/common/ingredient/serializer";
 import { ItemResult } from "../../src/common/result";
 import createResultPredicate from "../../src/common/result/filter";
 import TagsLoader from "../../src/loader/tags";
+import { createIngredientSerializer } from "../../src/serializer/ingredients";
 import setupLookup from "../shared/dump";
 import {
   invalidResultFilters,
@@ -20,7 +20,7 @@ const lookup = setupLookup(version);
 const data = createTestDataResolver(version, {
   include: ["data/*/tags/**/*.json"],
 });
-const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
+const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
 const tags = new TagsLoader(packFormatOf(version));
 const context = { ingredients, lookup, tags };
 

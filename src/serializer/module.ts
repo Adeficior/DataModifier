@@ -15,7 +15,7 @@ export interface SerializerModule<Out, In = unknown> {
   serialize(input: Out, nested: (it: Out) => In): In | false;
 }
 
-export interface SerializerBuilder<Out, In> {
+export interface SerializerBuilder<Out, In = unknown> {
   deserializer<TIn extends In>(
     test: Predicate<In>,
     mapper: Mapper<TIn, Out, In, Out>,

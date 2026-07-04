@@ -30,7 +30,7 @@ export class RecipeHolder implements WithSerializerModules {
   constructor(
     private readonly definition: RecipeDefinition,
     private readonly recipe: Recipe,
-    private readonly parser: RecipeParser,
+    private readonly modules?: WithSerializerModules,
   ) {
     this.type = encodeId(definition.type);
   }
@@ -52,7 +52,7 @@ export class RecipeHolder implements WithSerializerModules {
 
   modify(modifier: RecipeModifier): RecipeHolder {
     const modified = this.recipe.modify(modifier);
-    return new RecipeHolder(this.definition, modified, this.parser);
+    return new RecipeHolder(this.definition, modified, this.modules);
   }
 
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
@@ -74,11 +74,12 @@ export class RecipeHolder implements WithSerializerModules {
   }
 
   ingredientModules() {
-    return this.parser.ingredientModules();
+    return this.modules?.ingredientModules() ?? {};
   }
 
   resultModules() {
-    return this.parser.resultModules();
+    // TODO this will not work with custom recipes, serialize needs to be done by RecipeParser
+    return this.modules?.resultModules() ?? {};
   }
 }
 

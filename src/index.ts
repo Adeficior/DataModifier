@@ -8,7 +8,9 @@ export {
   type NormalizedId,
   type TagInput,
 } from "./common/id.js";
+export * from "./common/ingredient/index.js";
 export { default as Registry } from "./common/registry.js";
+export * from "./common/result/index.js";
 export type { BlockstateRules } from "./emit/assets/blockstates.js";
 export type { ModelRules, ModelRulesGroup } from "./emit/assets/models.js";
 export type {

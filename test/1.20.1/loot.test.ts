@@ -1,5 +1,5 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
-import { afterEach, describe, expect, it } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import {
   ItemIngredient,
@@ -17,10 +17,6 @@ const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({
   version,
   include: ["data/*/loot_tables/**/*.json", "data/*/tags/**/*.json"],
-});
-
-afterEach(() => {
-  loader.clear();
 });
 
 describe("loading of loot tables", () => {

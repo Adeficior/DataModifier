@@ -1,7 +1,7 @@
 import { describe, expect } from "bun:test";
 import { basename } from "node:path";
 import { packFormatOf } from "../../src";
-import ResultSerializer from "../../src/common/result/serializer";
+import { createResultSerializer } from "../../src/serializer/results";
 import setupLookup from "../shared/dump";
 import {
   invalidResultInputs,
@@ -11,7 +11,7 @@ import { provided } from "../shared/provider/providers";
 
 const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
-const results = new ResultSerializer(packFormatOf(version), lookup);
+const results = createResultSerializer(packFormatOf(version), lookup);
 
 describe(`result deserialization on ${version}`, () => {
   provided(

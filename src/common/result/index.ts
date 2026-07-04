@@ -89,3 +89,17 @@ export class BlockResult extends RegistryEntryResult<BlockId> {
     return new BlockIngredient(this.id);
   }
 }
+
+export class IgnoredResult extends Result {
+  constructor(public readonly raw: unknown) {
+    super();
+  }
+
+  override asIngredient(): Ingredient {
+    throw new Error("ignored result cannot be transformed into a ingredient");
+  }
+
+  override idsFor() {
+    return [];
+  }
+}

@@ -2,8 +2,8 @@ import z from "zod";
 import { encodeId, IdSchema } from "../../../common/id.js";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import { ItemResult } from "../../../common/result/index.js";
-import type ResultSerializer from "../../../common/result/serializer.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
+import type { ResultSerializer } from "../../../serializer/results/index.js";
 import RecipeParser, {
   Recipe,
   type RecipeModifier,
@@ -16,6 +16,8 @@ const IdResultSchema = z.object({
   id: IdSchema,
   count: z.number().optional(),
 });
+
+// TODO create serializer module
 
 function deserializeIdResult(
   results: ResultSerializer,

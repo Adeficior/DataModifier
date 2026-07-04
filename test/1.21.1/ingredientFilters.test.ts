@@ -3,8 +3,8 @@ import { basename } from "node:path";
 import { packFormatOf, UnknownRegistryEntry } from "../../src";
 import { ItemIngredient } from "../../src/common/ingredient";
 import createIngredientPredicate from "../../src/common/ingredient/filter";
-import IngredientSerializer from "../../src/common/ingredient/serializer";
 import TagsLoader from "../../src/loader/tags";
+import { createIngredientSerializer } from "../../src/serializer/ingredients";
 import setupLookup from "../shared/dump";
 import {
   invalidIngredientFilters,
@@ -20,7 +20,7 @@ const data = createTestDataResolver(version, {
   include: ["data/*/tags/**/*.json"],
 });
 
-const ingredients = new IngredientSerializer(packFormatOf(version), lookup);
+const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
 const tags = new TagsLoader(packFormatOf(version));
 const context = { ingredients, lookup, tags };
 

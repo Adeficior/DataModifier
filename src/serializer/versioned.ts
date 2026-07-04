@@ -59,12 +59,11 @@ export abstract class VersionedSerializer<
   override deserialize(input: unknown) {
     return transformErrors(() => {
       const deserialized = this.deserializeUnvalidated(input);
-      deserialized.validate(this.lookup);
-      return deserialized;
+      return this.validated(deserialized);
     });
   }
 
-  validated<T extends Out>(output: T): T {
+  override validated<T extends Out>(output: T): T {
     output.validate(this.lookup);
     return output;
   }

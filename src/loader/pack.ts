@@ -14,14 +14,6 @@ import { createMergingAcceptor } from "@adeficior/resource-merger";
 import createIngredientPredicate, {
   type IngredientFilter,
 } from "../common/ingredient/filter.js";
-import {
-  createIngredientSerializer,
-  type IngredientSerializer,
-} from "../common/ingredient/serializer.js";
-import {
-  createResultSerializer,
-  type ResultSerializer,
-} from "../common/result/serializer.js";
 import type { BlockstateRules } from "../emit/assets/blockstates.js";
 import BlockstateEmitter from "../emit/assets/blockstates.js";
 import type { LangRules } from "../emit/assets/lang.js";
@@ -48,6 +40,14 @@ import {
   recipeFolder,
   type SemVerInput,
 } from "../packFormat.js";
+import {
+  createIngredientSerializer,
+  type IngredientSerializer,
+} from "../serializer/ingredients";
+import {
+  createResultSerializer,
+  type ResultSerializer,
+} from "../serializer/results";
 import type { PackContext } from "./context.js";
 import type Loader from "./index.js";
 import LangLoader from "./lang.js";

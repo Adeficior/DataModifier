@@ -12,6 +12,7 @@ export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredient: unknown;
     transitionalItem: unknown;
+    transitional_item: unknown;
     results: unknown[];
     loops?: number;
     sequence: RecipeDefinition[];
@@ -53,7 +54,9 @@ export class AssemblyRecipe extends Recipe {
   ): Partial<AssemblyRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(this.ingredient),
-      transitionalItem: context.ingredients.serialize(this.transitionalItem),
+      transitionalItem: context.results.serialize(
+        this.transitionalItem.asResult(),
+      ),
       results: context.results.serializeList(this.results),
       sequence: this.sequence.map((it) => context.recipes.serialize(it)),
     };
@@ -69,9 +72,12 @@ export class AssemblyRecipeParser extends RecipeParser<
     context: RecipeParseContext,
   ): AssemblyRecipe {
     const ingredient = context.ingredients.deserialize(definition.ingredient);
-    const transitionalItem = context.ingredients.deserialize(
-      definition.transitionalItem,
-    );
+
+    const rawTransitionalItem =
+      definition.transitionalItem ?? definition.transitional_item;
+    const transitionalItem = context.results
+      .deserialize(rawTransitionalItem)
+      .asIngredient();
     const results = context.results.deserializeList(definition.results);
     const sequence = definition.sequence.map((it) =>
       context.recipes.deserialize(it),

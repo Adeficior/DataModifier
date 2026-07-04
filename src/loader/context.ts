@@ -1,6 +1,6 @@
-import type { IngredientSerializer } from "../common/ingredient/serializer";
-import type { ResultSerializer } from "../common/result/serializer";
 import type { SemVerInput } from "../packFormat";
+import type { IngredientSerializer } from "../serializer/ingredients";
+import type { ResultSerializer } from "../serializer/results";
 import type RegistryLookup from "./registry";
 import type { TagRegistryHolder } from "./tags";
 

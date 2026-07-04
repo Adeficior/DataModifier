@@ -35,4 +35,8 @@ export class WrapperSerializer<
   override selectModule(): never {
     throw new Error("serializer is already wrapped with module");
   }
+
+  override validated<T extends Out>(output: T) {
+    return this.serializer.validated(output);
+  }
 }
