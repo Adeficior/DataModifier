@@ -47,16 +47,20 @@ export function transformErrors<T>(run: () => T): T {
 export function tryCatching<T>(logger: Logger, run: () => T): T | null {
   try {
     return run();
-  } catch (error) {
-    const transformed = transformError(error);
+  } catch (throwable) {
+    const error = transformError(throwable);
 
-    if (transformed instanceof IllegalShapeError) {
-      if (transformed.input)
-        logger.trace(transformed.message, { input: transformed.input });
-      else logger.trace(transformed.message);
+    if (error instanceof IllegalShapeError) {
+      if (error.input) logger.trace(error.message, { input: error.input });
+      else logger.trace(error.message);
       return null;
     }
 
-    throw error;
+    if (error instanceof UnknownRegistryEntry) {
+      logger.trace(error.message, { id: error.id, registry: error.registry });
+      return null;
+    }
+
+    throw throwable;
   }
 }
