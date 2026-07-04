@@ -4,6 +4,7 @@ import type { Ingredient } from "../../common/ingredient/index.js";
 import type { Result } from "../../common/result/index.js";
 import type { PackContext } from "../../loader/context.js";
 import type { RecipeDefinition } from "../../schema/data/recipe.js";
+import type { WithSerializerModules } from "../../serializer/module.js";
 
 export type Replacer<T> = (value: T) => T;
 
@@ -23,12 +24,13 @@ export type RecipeModifier = {
   ingredient: Replacer<Ingredient>;
 };
 
-export class RecipeHolder {
+export class RecipeHolder implements WithSerializerModules {
   private readonly type: NormalizedId;
 
   constructor(
     private readonly definition: RecipeDefinition,
     private readonly recipe: Recipe,
+    private readonly parser: RecipeParser,
   ) {
     this.type = encodeId(definition.type);
   }
@@ -50,7 +52,7 @@ export class RecipeHolder {
 
   modify(modifier: RecipeModifier): RecipeHolder {
     const modified = this.recipe.modify(modifier);
-    return new RecipeHolder(this.definition, modified);
+    return new RecipeHolder(this.definition, modified, this.parser);
   }
 
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
@@ -69,6 +71,14 @@ export class RecipeHolder {
 
   getTypes(): NormalizedId[] {
     return [this.type, ...this.recipe.additionalTypes()];
+  }
+
+  ingredientModules() {
+    return this.parser.ingredientModules();
+  }
+
+  resultModules() {
+    return this.parser.resultModules();
   }
 }
 
@@ -99,9 +109,17 @@ export type RecipeParseContext = Pick<
 };
 
 export default abstract class RecipeParser<
-  TDefinition extends RecipeDefinition,
-  TRecipe extends Recipe,
-> {
+  TDefinition extends RecipeDefinition = RecipeDefinition,
+  TRecipe extends Recipe = Recipe,
+> implements WithSerializerModules {
+  ingredientModules() {
+    return {};
+  }
+
+  resultModules() {
+    return {};
+  }
+
   abstract deserialize(
     definition: TDefinition,
     context: RecipeParseContext,

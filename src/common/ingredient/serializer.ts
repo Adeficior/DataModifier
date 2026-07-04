@@ -17,16 +17,18 @@ import {
   IngredientMap,
   type IngredientMapInput,
 } from "../../parser/recipe/ingredientMap";
+import type { Serializer } from "../../serializer";
+import { hasType, isObjectWith } from "../../serializer/checks";
+import {
+  createSerializerModule,
+  type SerializerModule,
+} from "../../serializer/module";
+import { VersionedSerializer } from "../../serializer/versioned";
+import { WrapperSerializer } from "../../serializer/wrapped";
 import { AmountSchema, CountSchema } from "../fields";
 import { IdSchema, stripTag } from "../id";
-import {
-  createSerializer,
-  hasType,
-  isObjectWith,
-  VersionedSerializer,
-} from "../serializer";
 
-const serializer15 = createSerializer<Ingredient>((builder) => {
+const serializer15 = createSerializerModule<Ingredient>((builder) => {
   builder.deserializer<string>(
     (it) => typeof it === "string",
     (input) => {
@@ -124,14 +126,55 @@ const serializer15 = createSerializer<Ingredient>((builder) => {
   );
 });
 
-export default class IngredientSerializer extends VersionedSerializer<Ingredient> {
+export interface IngredientSerializer extends Serializer<
+  Ingredient,
+  IngredientSerializer
+> {
+  deserializeIngredientMap(input: IngredientMapInput): IngredientMap;
+
+  serializeIngredientMap(map: IngredientMap): IngredientMapInput;
+}
+export class IngredientSerializerImpl
+  extends VersionedSerializer<Ingredient, IngredientSerializer>
+  implements IngredientSerializer
+{
   constructor(packFormat: SemVerInput, lookup: RegistryLookup) {
     super(packFormat, lookup, Ingredient, {
       15: serializer15,
     });
   }
 
-  ingredientMap(input: IngredientMapInput) {
+  deserializeIngredientMap(input: IngredientMapInput) {
     return new IngredientMap(mapValues(input, (it) => this.deserialize(it)));
   }
+
+  serializeIngredientMap(map: IngredientMap) {
+    return mapValues(map.ingredients, (it) => this.serialize(it));
+  }
+
+  override withModule(
+    module: SerializerModule<Ingredient>,
+  ): IngredientSerializer {
+    return new WrappedIngredientSerializer(this, module);
+  }
+}
+
+class WrappedIngredientSerializer extends WrapperSerializer<
+  Ingredient,
+  IngredientSerializer
+> {
+  deserializeIngredientMap(input: IngredientMapInput) {
+    return this.serializer.deserializeIngredientMap(input);
+  }
+
+  serializeIngredientMap(map: IngredientMap) {
+    return this.serializer.serializeIngredientMap(map);
+  }
+}
+
+export function createIngredientSerializer(
+  packFormat: SemVerInput,
+  lookup: RegistryLookup,
+): IngredientSerializer {
+  return new IngredientSerializerImpl(packFormat, lookup);
 }

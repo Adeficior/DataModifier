@@ -38,7 +38,7 @@ export class ShapedRecipe extends Recipe {
     context: RecipeParseContext,
   ): Partial<ShapedRecipeDefinition> {
     return {
-      key: this.ingredients.serialize(context),
+      key: context.ingredients.serializeIngredientMap(this.ingredients),
       result: context.results.serialize(this.result),
     };
   }
@@ -52,7 +52,9 @@ export class ShapedParser extends RecipeParser<
     definition: ShapedRecipeDefinition,
     context: RecipeParseContext,
   ): ShapedRecipe {
-    const ingredients = context.ingredients.ingredientMap(definition.key);
+    const ingredients = context.ingredients.deserializeIngredientMap(
+      definition.key,
+    );
     const result = context.results.deserialize(definition.result);
     return new ShapedRecipe(ingredients, result);
   }

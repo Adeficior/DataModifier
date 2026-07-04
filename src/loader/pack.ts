@@ -14,8 +14,14 @@ import { createMergingAcceptor } from "@adeficior/resource-merger";
 import createIngredientPredicate, {
   type IngredientFilter,
 } from "../common/ingredient/filter.js";
-import IngredientSerializer from "../common/ingredient/serializer.js";
-import ResultSerializer from "../common/result/serializer.js";
+import {
+  createIngredientSerializer,
+  type IngredientSerializer,
+} from "../common/ingredient/serializer.js";
+import {
+  createResultSerializer,
+  type ResultSerializer,
+} from "../common/result/serializer.js";
 import type { BlockstateRules } from "../emit/assets/blockstates.js";
 import BlockstateEmitter from "../emit/assets/blockstates.js";
 import type { LangRules } from "../emit/assets/lang.js";
@@ -100,8 +106,8 @@ export default class PackLoader implements Loader {
 
     this.tags = this.registerEmitter(new TagEmitter(this.tagLoader, options));
 
-    this.results = new ResultSerializer(options.packFormat, this.lookup);
-    this.ingredients = new IngredientSerializer(
+    this.results = createResultSerializer(options.packFormat, this.lookup);
+    this.ingredients = createIngredientSerializer(
       options.packFormat,
       this.lookup,
     );

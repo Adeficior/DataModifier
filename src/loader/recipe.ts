@@ -41,6 +41,7 @@ import type RecipeParser from "../parser/recipe/index.js";
 import {
   RecipeHolder,
   type Recipe,
+  type RecipeParseContext,
   type RecipeSerializer,
 } from "../parser/recipe/index.js";
 import {
@@ -54,6 +55,7 @@ import {
   TreeExtractionRecipeParser,
 } from "../parser/thermal.js";
 import type { RecipeDefinition } from "../schema/data/recipe.js";
+import type { WithSerializerModules } from "../serializer/module.js";
 import type { PackContext } from "./context.js";
 import { JsonLoader } from "./index.js";
 
@@ -70,10 +72,7 @@ export default class RecipeLoader
   extends JsonLoader<RecipeHolder>
   implements RecipeLoaderAccessor, RecipeSerializer
 {
-  private readonly recipeParsers = new Map<
-    string,
-    RecipeParser<RecipeDefinition, Recipe>
-  >();
+  private readonly recipeParsers = new Map<string, RecipeParser>();
 
   private readonly ignoredRecipeTypePatterns: string[] = [];
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
@@ -279,12 +278,20 @@ export default class RecipeLoader
     return [...this._unknownRecipeTypes.values()];
   }
 
-  private recipeParseContext() {
-    return { ...this.serializers, recipes: this };
+  private recipeParseContext(
+    parser: WithSerializerModules,
+  ): RecipeParseContext {
+    return {
+      recipes: this,
+      ingredients: this.serializers.ingredients.selectModule(
+        parser.ingredientModules(),
+      ),
+      results: this.serializers.results.selectModule(parser.resultModules()),
+    };
   }
 
   serialize(recipe: RecipeHolder): RecipeDefinition {
-    const context = this.recipeParseContext();
+    const context = this.recipeParseContext(recipe);
     return recipe.serialize(context);
   }
 
@@ -308,9 +315,12 @@ export default class RecipeLoader
       );
     }
 
-    const parsed = parser.deserialize(definition, this.recipeParseContext());
+    const parsed = parser.deserialize(
+      definition,
+      this.recipeParseContext(parser),
+    );
 
-    return new RecipeHolder(definition, parsed);
+    return new RecipeHolder(definition, parsed, parser);
   }
 
   override parse(definition: RecipeDefinition): RecipeHolder | null {

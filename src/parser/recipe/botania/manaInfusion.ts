@@ -4,7 +4,7 @@ import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import type { RecipeModifier, RecipeParseContext } from "../index.js";
 import RecipeParser, { Recipe } from "../index.js";
-import { deserializeBlockInput, serializeBlockInput } from "./blocks.js";
+import { ingredientSerializerModules } from "./blocks.js";
 
 export type ManaInfusionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -45,7 +45,7 @@ export class ManaInfusionRecipe extends Recipe {
     return {
       input: context.ingredients.serialize(this.ingredient),
       output: context.results.serialize(this.result),
-      catalyst: this.catalyst && serializeBlockInput(this.catalyst),
+      catalyst: context.ingredients.serializeOptional(this.catalyst),
     };
   }
 }
@@ -54,14 +54,17 @@ export class ManaInfusionRecipeParser extends RecipeParser<
   ManaInfusionRecipeDefinition,
   ManaInfusionRecipe
 > {
+  override ingredientModules() {
+    return ingredientSerializerModules;
+  }
+
   deserialize(
     definition: ManaInfusionRecipeDefinition,
     context: RecipeParseContext,
   ): ManaInfusionRecipe {
-    const catalyst =
-      definition.catalyst === undefined
-        ? undefined
-        : deserializeBlockInput(context.ingredients, definition.catalyst);
+    const catalyst = context.ingredients.deserializeOptional(
+      definition.catalyst,
+    );
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.deserialize(definition.output);
     return new ManaInfusionRecipe(ingredient, result, catalyst);

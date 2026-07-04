@@ -18,10 +18,6 @@ const { logger, loader } = setupLoader({
   include: ["data/**/*.json"],
 });
 
-logger.trace.mockImplementation((message, context) => {
-  console.error(message, context.path, context.input);
-});
-
 it("has no unknown recipe loaders", () => {
   expect(loader.recipeLoader.unknownRecipeTypes()).toBeEmpty();
 });

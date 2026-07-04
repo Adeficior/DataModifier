@@ -2,15 +2,18 @@ import z from "zod";
 import { BlockResult, FluidResult, ItemResult, Result } from ".";
 import type RegistryLookup from "../../loader/registry";
 import type { SemVerInput } from "../../packFormat";
+import type { Serializer } from "../../serializer";
+import { isObjectWith } from "../../serializer/checks";
+import {
+  createSerializerModule,
+  type SerializerModule,
+} from "../../serializer/module";
+import { VersionedSerializer } from "../../serializer/versioned";
+import { WrapperSerializer } from "../../serializer/wrapped";
 import { AmountSchema, ChanceSchema, CountSchema } from "../fields";
 import { IdSchema } from "../id";
-import {
-  createSerializer,
-  isObjectWith,
-  VersionedSerializer,
-} from "../serializer";
 
-const serializer15 = createSerializer<Result>((builder) => {
+const serializer15 = createSerializerModule<Result>((builder) => {
   builder.deserializer<string>(
     (it) => typeof it === "string",
     (input) => new ItemResult(input),
@@ -51,10 +54,26 @@ const serializer15 = createSerializer<Result>((builder) => {
   );
 });
 
-export default class ResultSerializer extends VersionedSerializer<Result> {
+export type ResultSerializer = Serializer<Result, ResultSerializer>;
+
+export function createResultSerializer(
+  packFormat: SemVerInput,
+  lookup: RegistryLookup,
+): ResultSerializer {
+  return new ResultSerializerImpl(packFormat, lookup);
+}
+
+class ResultSerializerImpl
+  extends VersionedSerializer<Result, ResultSerializer>
+  implements ResultSerializer
+{
   constructor(packFormat: SemVerInput, lookup: RegistryLookup) {
     super(packFormat, lookup, Result, {
       15: serializer15,
     });
+  }
+
+  withModule(module: SerializerModule<Result>): ResultSerializer {
+    return new WrapperSerializer<Result, ResultSerializer>(this, module);
   }
 }
