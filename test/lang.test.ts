@@ -3,7 +3,10 @@ import { describe, expect, it } from "bun:test";
 import setupLoader from "./shared/loaderSetup.js";
 
 const version = "1.20.1";
-const { loader } = setupLoader({ version, include: "assets/*/lang/*.json" });
+const { loader } = setupLoader({
+  version,
+  include: "assets/*/lang/en_us.json",
+});
 
 describe("replacing translation entries", () => {
   it("replaces using string value", async () => {
