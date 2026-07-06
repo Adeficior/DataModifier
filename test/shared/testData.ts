@@ -11,7 +11,7 @@ import { join } from "node:path";
 export function createTestDataResolver(
   version: string,
   { from, ...options }: Partial<ResolverOptions> = {},
-): Resolver {
+): Promise<Resolver> {
   if (Array.isArray(from))
     throw new Error("only one resolver input supported for TestResolver");
 
@@ -25,7 +25,7 @@ export function createTestDataResolver(
 export function createDumpResolver(
   version: string,
   logger: Logger = createTestLogger(),
-): Resolver {
+): Promise<Resolver> {
   return createResolver({
     from: join("test", "resources", version, "dump"),
     logger,

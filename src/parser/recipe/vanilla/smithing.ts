@@ -1,4 +1,4 @@
-import { exists } from "@adeficior/pack-resolver";
+import { notNull } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
@@ -24,11 +24,11 @@ export class SmithingRecipe extends Recipe {
   }
 
   getIngredients() {
-    return [this.base, this.addition, this.template].filter(exists);
+    return [this.base, this.addition, this.template].filter(notNull);
   }
 
   getResults() {
-    return [this.result].filter(exists);
+    return [this.result].filter(notNull);
   }
 
   override modify(modifier: RecipeModifier) {

@@ -20,7 +20,7 @@ export async function generateDumpTypes(
   const file = resolve(output, "registry.d.ts");
 
   if (dumpDir && existsSync(dumpDir)) {
-    const resolver = createResolver({ from: dumpDir, logger });
+    const resolver = await createResolver({ from: dumpDir, logger });
 
     const registry = new RegistryDumpLoader();
     await resolver.extract(registry);

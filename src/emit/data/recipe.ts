@@ -4,7 +4,7 @@ import type {
   ContextLike,
   Logger,
 } from "@adeficior/pack-resolver";
-import { combineResolvers, exists } from "@adeficior/pack-resolver";
+import { combineResolvers, notNull } from "@adeficior/pack-resolver";
 import {
   resolveIDTest,
   type CommonFilter,
@@ -179,9 +179,9 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
         recipePredicates.id,
         recipePredicates.type,
         [ingredientTests.ingredient, ...recipePredicates.ingredient].filter(
-          exists,
+          notNull,
         ),
-        [ingredientTests.result, ...recipePredicates.result].filter(exists),
+        [ingredientTests.result, ...recipePredicates.result].filter(notNull),
         modifier,
       ),
       recipeTest.optional !== true,

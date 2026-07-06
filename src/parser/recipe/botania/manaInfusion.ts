@@ -1,4 +1,4 @@
-import { exists } from "@adeficior/pack-resolver";
+import { notNull } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
@@ -24,7 +24,7 @@ export class ManaInfusionRecipe extends Recipe {
   }
 
   getIngredients() {
-    return [this.ingredient, this.catalyst].filter(exists);
+    return [this.ingredient, this.catalyst].filter(notNull);
   }
 
   getResults() {

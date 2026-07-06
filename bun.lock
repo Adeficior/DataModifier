@@ -5,7 +5,7 @@
     "": {
       "name": "@adeficior/data-modifier",
       "dependencies": {
-        "@adeficior/resource-merger": "^2.0.0-rc.15",
+        "@adeficior/resource-merger": "^2.0.0-rc.16",
         "arg": "^5.0.2",
         "chalk": "^5.6.2",
         "command-line-usage": "^7.0.4",
@@ -32,9 +32,9 @@
     },
   },
   "packages": {
-    "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0-rc.50", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0", "zip-a-folder": "^6.1.1" } }, "sha512-ApJBBS+dJASjIikCsQYD+kmU5iPaCgEat92fAhI7zrrsUUndi8PtBvV5K6eB5V4NprH4o7ZNPgdX1IQ8AHRXHQ=="],
+    "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0-rc.51", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0", "zip-a-folder": "^6.1.1" } }, "sha512-BND9qFeAKVvXjgDuvC3ZbpN4eASzZpEUnICYxNXCFj7WetWrk8wYfRKO3WjyI+kmaruLPoFwA5msgY3cB7TnGw=="],
 
-    "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.0-rc.15", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0-rc.50", "arg": "^5.0.2", "command-line-usage": "^6.1.3" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-/qFAUYmcSVvK0pbewdPs2et8OZ+s5MpzBNut857t6c08OR88yozsCdLYL0udIQMxqswGE2JC8HRrqAYaR/pt1w=="],
+    "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.0-rc.16", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0-rc.51", "arg": "^5.0.2", "command-line-usage": "^6.1.3" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-VgmwHYzoy3JqBI3PcqGVs35UXdXl9tWoh9eHlObEv0RBtl/U+YJIh3slkALqy0Q1twlDeG9ZAS5aoPL9c3cmPQ=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.9.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ=="],
 

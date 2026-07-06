@@ -16,7 +16,7 @@ import { createTestDataResolver } from "../shared/testData";
 
 const version = basename(import.meta.dir);
 const lookup = setupLookup(version);
-const data = createTestDataResolver(version, {
+const data = await createTestDataResolver(version, {
   include: ["data/*/tags/**/*.json"],
 });
 

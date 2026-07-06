@@ -1,4 +1,4 @@
-import { exists } from "@adeficior/pack-resolver";
+import { notNull } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../../../common/ingredient/index.js";
 import type { Result } from "../../../common/result/index.js";
 import type { RecipeDefinition } from "../../../schema/data/recipe.js";
@@ -25,7 +25,7 @@ export class CookingRecipe extends Recipe {
   }
 
   getIngredients() {
-    return [this.container, ...this.ingredients].filter(exists);
+    return [this.container, ...this.ingredients].filter(notNull);
   }
 
   getResults() {

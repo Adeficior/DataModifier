@@ -19,13 +19,17 @@ export default function setupLoader(
   const logger = createTestLogger();
   const packFormat = packFormatOf(version);
   const loader = new PackLoader(logger, { ...options, packFormat });
-  const loadDump = () => loader.loadRegistryDump(createDumpResolver(version));
+  const loadDump = async () =>
+    loader.loadRegistryDump(await createDumpResolver(version));
 
   block?.(loader);
 
   if (load) {
     beforeEach(async () => {
-      const resolver = createTestDataResolver(version, { ...options, logger });
+      const resolver = await createTestDataResolver(version, {
+        ...options,
+        logger,
+      });
       await loader.loadFrom(resolver);
     }, 15_0000);
   }

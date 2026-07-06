@@ -11,7 +11,7 @@ export default function setupLookup(
   const lookup = new RegistryDumpLoader();
 
   beforeAll(async () => {
-    const resolver = createDumpResolver(version, logger);
+    const resolver = await createDumpResolver(version, logger);
     await resolver.extract(lookup);
   });
 
