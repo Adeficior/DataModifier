@@ -20,7 +20,7 @@ export function tryParseJson(logger: Logger, content: Acceptable) {
     return fromJson(content);
   } catch (error) {
     if (error instanceof SyntaxError) {
-      logger.warn(`unable to parse json: ${error.message}`);
+      logger.trace(`unable to parse json: ${error.message}`);
       return null;
     }
     throw error;
