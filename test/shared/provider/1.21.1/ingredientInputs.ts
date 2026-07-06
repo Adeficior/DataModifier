@@ -1,8 +1,6 @@
 import type { Class } from "../../../../src/common/class";
 import type { Ingredient } from "../../../../src/common/ingredient";
 import {
-  BlockIngredient,
-  BlockTagIngredient,
   FluidIngredient,
   FluidTagIngredient,
   ItemIngredient,
@@ -34,11 +32,6 @@ export function* invalidIngredientInputs(): DataProvider<
     "fluid tag with #",
     { fluidTag: "#test", amount: BUCKET },
     "fluidTag: IDs may not start with a hashtag",
-  ];
-  yield [
-    "block tag with #",
-    { blockTag: "#test" },
-    "blockTag: IDs may not start with a hashtag",
   ];
   yield [
     "item tag with negative count",
@@ -76,12 +69,8 @@ export function* invalidIngredientInputs(): DataProvider<
     { fluid: "minecraft:unknown", amount: BUCKET },
     "unknown minecraft:fluid 'minecraft:unknown'",
   ];
-  yield [
-    "unknown block",
-    { block: "minecraft:unknown" },
-    "unknown minecraft:block 'minecraft:unknown'",
-  ];
 
+  // TODO convert to ingredients instead
   for (const [name, result] of results()) {
     yield [name, result, "unknown ingredient shape"];
   }
@@ -94,11 +83,6 @@ export function* ingredients(): DataProvider<[Ingredient, Class<Ingredient>]> {
     ItemIngredient,
   ];
   yield [
-    "block ingredient",
-    new BlockIngredient("minecraft:oak_stairs"),
-    BlockIngredient,
-  ];
-  yield [
     "item ingredient",
     new FluidIngredient("minecraft:lava"),
     FluidIngredient,
@@ -107,11 +91,6 @@ export function* ingredients(): DataProvider<[Ingredient, Class<Ingredient>]> {
     "item tag ingredient",
     new ItemTagIngredient("redstone_block"),
     ItemTagIngredient,
-  ];
-  yield [
-    "block tag ingredient",
-    new BlockTagIngredient("stairs"),
-    BlockTagIngredient,
   ];
   yield [
     "item tag ingredient",
@@ -144,10 +123,6 @@ export function* ingredientInputs(): DataProvider<
     { tag: "minecraft:carrot", count: 20 },
     ItemTagIngredient,
   ];
-
-  yield ["block", { block: "minecraft:gold_block" }, BlockIngredient];
-
-  yield ["block tag", { blockTag: "mineable/pickaxe" }, BlockTagIngredient];
 
   yield ["fluid", { fluid: "lava", amount: BUCKET }, FluidIngredient];
 
