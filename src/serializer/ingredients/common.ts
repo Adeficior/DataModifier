@@ -4,12 +4,18 @@ import {
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
+  Result,
 } from "../../";
 import type { SerializerBuilder } from "../module";
 
 export default function commonSerialization(
   builder: SerializerBuilder<Ingredient>,
 ) {
+  builder.deserializer<Result>(
+    (it) => it instanceof Result,
+    (it) => it.asIngredient(),
+  );
+
   builder.deserializer<string>(
     (it) => typeof it === "string",
     (input) => {

@@ -9,8 +9,8 @@ import {
   ItemTagIngredient,
 } from "../../../../src/common/ingredient";
 import { BUCKET } from "../../../../src/common/units";
+import { ingredientLikeResults } from "../ingredientInputs";
 import type { DataProvider } from "../providers";
-import { results } from "./resultInputs";
 
 export function* invalidIngredientInputs(): DataProvider<
   [unknown, Class<Error> | string]
@@ -81,12 +81,9 @@ export function* invalidIngredientInputs(): DataProvider<
     { block: "minecraft:unknown" },
     "unknown minecraft:block 'minecraft:unknown'",
   ];
-
-  for (const [name, result] of results()) {
-    yield [name, result, "unknown ingredient shape"];
-  }
 }
 
+// TODO move to common after I figure blocks out
 export function* ingredients(): DataProvider<[Ingredient, Class<Ingredient>]> {
   yield [
     "item ingredient",
@@ -159,5 +156,9 @@ export function* ingredientInputs(): DataProvider<
 
   for (const ingredient of ingredients()) {
     yield ingredient;
+  }
+
+  for (const result of ingredientLikeResults()) {
+    yield result;
   }
 }

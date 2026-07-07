@@ -3,7 +3,7 @@ import type { Result } from "../../../../src/common/result";
 import { FluidResult, ItemResult } from "../../../../src/common/result";
 import { BUCKET } from "../../../../src/common/units";
 import type { DataProvider } from "../providers";
-import { ingredients } from "./ingredientInputs";
+import { resultLikeIngredients } from "../resultInputs";
 
 export function* invalidResultInputs(): DataProvider<
   [unknown, Class<Error> | string]
@@ -54,11 +54,6 @@ export function* invalidResultInputs(): DataProvider<
     { id: "minecraft:unknown", amount: BUCKET },
     "unknown minecraft:fluid 'minecraft:unknown'",
   ];
-
-  // TODO convert to results instead
-  for (const [name, ingredient] of ingredients()) {
-    yield [name, ingredient, "unknown result shape"];
-  }
 }
 
 export function* results(): DataProvider<[Result, Class<Result>]> {
@@ -76,5 +71,9 @@ export function* resultInputs(): DataProvider<[unknown, Class<Result>]> {
 
   for (const result of results()) {
     yield result;
+  }
+
+  for (const ingredient of resultLikeIngredients()) {
+    yield ingredient;
   }
 }
