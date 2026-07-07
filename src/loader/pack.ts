@@ -33,6 +33,7 @@ import RecipeEmitter from "../emit/data/recipe.js";
 import type { TagEmitterOptions, TagRules } from "../emit/data/tags.js";
 import TagEmitter from "../emit/data/tags.js";
 import type { ClearableEmitter } from "../emit/index.js";
+import { overwritePackMetadata } from "../emit/packMetadata.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
 import {
@@ -62,6 +63,11 @@ import TagsLoader from "./tags.js";
 export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
   packFormat: SemVerInput;
 }
+
+// TODO icon?
+export type LoaderEmitOptions = {
+  description?: string;
+};
 
 export default class PackLoader implements Loader {
   private readonly lookup = new WrappedRegistryLookup();
@@ -96,10 +102,13 @@ export default class PackLoader implements Loader {
   private readonly acceptor: Acceptor;
   private readonly context: PackContext;
 
+  private readonly packFormat: SemVerInput;
+
   constructor(
     readonly logger: Logger,
     options: PackLoaderOptions,
   ) {
+    this.packFormat = options.packFormat;
     this.tagLoader = new TagsLoader(options.packFormat);
     this.lootLoader = new LootTableLoader();
     this.langLoader = new LangLoader();
@@ -229,17 +238,22 @@ export default class PackLoader implements Loader {
     this.emitters.forEach((it) => it.clear());
   }
 
-  private resolver(context: BaseContext) {
-    return combineResolvers(
+  private resolver(context: BaseContext & LoaderEmitOptions) {
+    const emittersResolver = combineResolvers(
       this.emitters.map((it) =>
         it.resolver(extendContext(context, { emitter: it.constructor.name })),
       ),
       { async: true },
     );
+
+    return overwritePackMetadata(emittersResolver, {
+      ...context,
+      packFormat: this.packFormat,
+    });
   }
 
-  async emit(to: Acceptor) {
-    await this.resolver({ logger: this.logger }).extract(to);
+  async emit(to: Acceptor, options: LoaderEmitOptions = {}) {
+    await this.resolver({ ...options, logger: this.logger }).extract(to);
   }
 
   async run(from: Resolver, to: Acceptor) {
