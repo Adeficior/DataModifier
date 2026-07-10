@@ -24,15 +24,14 @@ export type RecipeModifier = {
   ingredient: Replacer<Ingredient>;
 };
 
-export class RecipeHolder implements WithSerializerModules {
-  private readonly type: NormalizedId;
+export class RecipeHolder {
+  readonly serializerType: NormalizedId;
 
   constructor(
     private readonly definition: RecipeDefinition,
     private readonly recipe: Recipe,
-    private readonly modules?: WithSerializerModules,
   ) {
-    this.type = encodeId(definition.type);
+    this.serializerType = encodeId(definition.type);
   }
 
   serialize(context: RecipeParseContext) {
@@ -52,7 +51,7 @@ export class RecipeHolder implements WithSerializerModules {
 
   modify(modifier: RecipeModifier): RecipeHolder {
     const modified = this.recipe.modify(modifier);
-    return new RecipeHolder(this.definition, modified, this.modules);
+    return new RecipeHolder(this.definition, modified);
   }
 
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
@@ -70,16 +69,7 @@ export class RecipeHolder implements WithSerializerModules {
   }
 
   getTypes(): NormalizedId[] {
-    return [this.type, ...this.recipe.additionalTypes()];
-  }
-
-  ingredientModules() {
-    return this.modules?.ingredientModules() ?? {};
-  }
-
-  resultModules() {
-    // TODO this will not work with custom recipes, serialize needs to be done by RecipeParser
-    return this.modules?.resultModules() ?? {};
+    return [this.serializerType, ...this.recipe.additionalTypes()];
   }
 }
 

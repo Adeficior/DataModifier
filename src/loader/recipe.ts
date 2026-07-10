@@ -291,7 +291,14 @@ export default class RecipeLoader
   }
 
   serialize(recipe: RecipeHolder): RecipeDefinition {
-    const context = this.recipeParseContext(recipe);
+    const parser = this.recipeParsers.get(recipe.serializerType);
+
+    if (!parser)
+      throw new Error(
+        `Unable to find parser for type '${recipe.serializerType}'`,
+      );
+
+    const context = this.recipeParseContext(parser);
     return recipe.serialize(context);
   }
 
@@ -320,7 +327,7 @@ export default class RecipeLoader
       this.recipeParseContext(parser),
     );
 
-    return new RecipeHolder(definition, parsed, parser);
+    return new RecipeHolder(definition, parsed);
   }
 
   override parse(definition: RecipeDefinition): RecipeHolder | null {
