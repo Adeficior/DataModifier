@@ -1,4 +1,11 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`blacklist tests generated a jei blacklist config file: jei blacklist config file 1`] = `
+"forge:milk
+minecraft:ice
+minecraft:stone
+minecraft:water"
+`;
 
 exports[`blacklist tests generated a blacklist using dumped ids: jei blacklist config file using registry dump 1`] = `
 "minecraft:dark_oak_boat
@@ -45,13 +52,6 @@ minecraft:stripped_dark_oak_log
 minecraft:stripped_dark_oak_wood
 minecraft:stripped_oak_log
 minecraft:stripped_oak_wood"
-`;
-
-exports[`blacklist tests generated a jei blacklist config file: jei blacklist config file 1`] = `
-"forge:milk
-minecraft:ice
-minecraft:stone
-minecraft:water"
 `;
 
 exports[`blacklist tests validates custom registry ids: jei blacklist config file using biome registry 1`] = `

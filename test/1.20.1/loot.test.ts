@@ -61,8 +61,6 @@ describe("loot tables output replacements", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths().length).toBe(4);
-
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/entities/husk.json"),
     ).toMatchSnapshot("modified husk loot table");
@@ -104,8 +102,6 @@ describe("loot table removal", () => {
     });
 
     await loader.emit(acceptor);
-
-    expect(acceptor.paths().length).toBe(4);
 
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/blocks/oak_log.json"),

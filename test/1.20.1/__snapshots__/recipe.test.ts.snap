@@ -91,6 +91,7 @@ exports[`recipe ingredient replacement replaces ingredients: recipes including r
   "data/minecraft/recipes/redstone_torch.json",
   "data/minecraft/recipes/repeater.json",
   "data/minecraft/recipes/target.json",
+  "pack.mcmeta",
 ]
 `;
 

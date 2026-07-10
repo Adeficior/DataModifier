@@ -73,7 +73,7 @@ describe("replacing translation entries", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths()).toHaveLength(2);
+    expect(acceptor.paths()).toHaveLength(3);
   });
 
   it("respects keepCase option", async () => {

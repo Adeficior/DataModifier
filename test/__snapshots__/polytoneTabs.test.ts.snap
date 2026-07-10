@@ -1,33 +1,17 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`create new tabs emits and mergers csv: tab csv 1 for something 1`] = `"test_tab,another_tab"`;
+exports[`creates addition entries emits per tab key: addition modifier 2 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
+}
+"
+`;
 
-exports[`create new tabs emits and mergers csv: tab csv for minecraft 1`] = `"more_blocks"`;
-
-exports[`create removal entries resolves filter correctly: removal modifier 1 1`] = `
+exports[`creates addition entries emits per tab key: addition modifier 1 1`] = `
 "{
   "targets": ["example:food"],
-  "removals": [
-    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
-  ]
-}
-"
-`;
-
-exports[`create removal entries resolves filter correctly: removal modifier 2 1`] = `
-"{
-  "targets": ["something:test_tab"],
-  "removals": [
-    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
-  ]
-}
-"
-`;
-
-exports[`create removal entries uses custom file name: removal modifier with custom file name 1`] = `
-"{
-  "targets": ["something:test_tab"],
-  "removals": [{ "type": "items_match", "items": ["minecraft:diamond"] }]
+  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
 }
 "
 `;
@@ -60,22 +44,6 @@ exports[`creates addition entries adds before predicate: addition modifier with 
 "
 `;
 
-exports[`creates addition entries emits per tab key: addition modifier 1 1`] = `
-"{
-  "targets": ["example:food"],
-  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
-}
-"
-`;
-
-exports[`creates addition entries emits per tab key: addition modifier 2 1`] = `
-"{
-  "targets": ["something:test_tab"],
-  "additions": [{ "items": ["minecraft:diamond", "forge:the_logo"] }]
-}
-"
-`;
-
 exports[`creates addition entries uses custom file name: removal modifier with custom file name 1`] = `
 "{
   "targets": ["something:test_tab"],
@@ -83,3 +51,35 @@ exports[`creates addition entries uses custom file name: removal modifier with c
 }
 "
 `;
+
+exports[`create removal entries resolves filter correctly: removal modifier 2 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "removals": [
+    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
+  ]
+}
+"
+`;
+
+exports[`create removal entries resolves filter correctly: removal modifier 1 1`] = `
+"{
+  "targets": ["example:food"],
+  "removals": [
+    { "type": "items_match", "items": ["minecraft:diamond", "forge:the_logo"] }
+  ]
+}
+"
+`;
+
+exports[`create removal entries uses custom file name: removal modifier with custom file name 1`] = `
+"{
+  "targets": ["something:test_tab"],
+  "removals": [{ "type": "items_match", "items": ["minecraft:diamond"] }]
+}
+"
+`;
+
+exports[`create new tabs emits and mergers csv: tab csv 1 for something 1`] = `"test_tab,another_tab"`;
+
+exports[`create new tabs emits and mergers csv: tab csv for minecraft 1`] = `"more_blocks"`;

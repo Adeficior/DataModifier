@@ -552,6 +552,7 @@ exports[`loot table removal removes loot table with output filter: loot tables c
   "data/minecraft/loot_tables/chests/pillager_outpost.json",
   "data/minecraft/loot_tables/chests/spawn_bonus_chest.json",
   "data/minecraft/loot_tables/chests/village/village_taiga_house.json",
+  "pack.mcmeta",
 ]
 `;
 

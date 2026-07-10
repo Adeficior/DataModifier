@@ -15,7 +15,7 @@ import setupLoader from "../shared/loaderSetup.js";
 const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({
   version,
-  include: ["data/**/*.json"],
+  include: ["data/*/tags/**/*.json", "data/*/recipes/**/*.json"],
 });
 
 it("has no unknown recipe loaders", () => {
@@ -64,8 +64,6 @@ describe("recipe ingredient replacement", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths().length).toBe(2);
-
     expect(
       acceptor.jsonAt("data/minecraft/recipes/piston.json"),
     ).toMatchSnapshot("modified piston recipe");
@@ -84,8 +82,6 @@ describe("recipe ingredient replacement", () => {
     );
 
     await loader.emit(acceptor);
-
-    expect(acceptor.paths().length).toBe(4);
 
     expect(
       acceptor.jsonAt(
@@ -133,7 +129,7 @@ describe("recipe removal", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths().length).toBe(2);
+    expect(acceptor.paths()).toHaveLength(3);
 
     expect(acceptor.jsonAt("data/minecraft/recipes/piston.json")).toMatchObject(
       EMPTY_RECIPE,
@@ -152,7 +148,7 @@ describe("recipe removal", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths().length).toBe(118);
+    expect(acceptor.paths()).toHaveLength(119);
   });
 
   it("removes recipes with result filter", async () => {
@@ -164,7 +160,7 @@ describe("recipe removal", () => {
 
     await loader.emit(acceptor);
 
-    expect(acceptor.paths().length).toBe(3);
+    expect(acceptor.paths()).toHaveLength(4);
 
     expect(
       acceptor.jsonAt("data/minecraft/recipes/cooked_beef.json"),

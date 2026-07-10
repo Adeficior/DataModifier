@@ -5,7 +5,7 @@ import setupLoader from "../shared/loaderSetup.js";
 const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({
   version,
-  include: ["data/**/*.json"],
+  include: ["data/*/tags/**/*.json", "data/*/recipe/**/*.json"],
 });
 
 it("has no unknown recipe loaders", () => {

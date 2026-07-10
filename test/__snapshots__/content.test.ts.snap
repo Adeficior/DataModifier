@@ -1,11 +1,4 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`integration with content packs mod correctly resolves copy reference for block properties: block definition using reference for properties 1`] = `
-{
-  "properties": "minecraft:emerald_ore",
-  "type": "basic",
-}
-`;
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`integration with content packs mod generates additional resources for block definitions: basic block definition 1`] = `
 {
@@ -13,25 +6,6 @@ exports[`integration with content packs mod generates additional resources for b
     "material": "stone",
   },
   "type": "basic",
-}
-`;
-
-exports[`integration with content packs mod generates additional resources for block definitions: basic block model 1`] = `
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "example:block/ruby_ore",
-  },
-}
-`;
-
-exports[`integration with content packs mod generates additional resources for block definitions: basic blockstate 1`] = `
-{
-  "variants": {
-    "": {
-      "model": "example:block/ruby_ore",
-    },
-  },
 }
 `;
 
@@ -54,6 +28,25 @@ exports[`integration with content packs mod generates additional resources for b
     },
   ],
   "type": "minecraft:block",
+}
+`;
+
+exports[`integration with content packs mod generates additional resources for block definitions: basic blockstate 1`] = `
+{
+  "variants": {
+    "": {
+      "model": "example:block/ruby_ore",
+    },
+  },
+}
+`;
+
+exports[`integration with content packs mod generates additional resources for block definitions: basic block model 1`] = `
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "example:block/ruby_ore",
+  },
 }
 `;
 
@@ -97,6 +90,16 @@ exports[`integration with content packs mod generates block resources for block 
 }
 `;
 
+exports[`integration with content packs mod generates block resources for block item definitions: included blockstate 1`] = `
+{
+  "variants": {
+    "": {
+      "model": "example:block/ruby_block",
+    },
+  },
+}
+`;
+
 exports[`integration with content packs mod generates block resources for block item definitions: included block model 1`] = `
 {
   "parent": "minecraft:block/cube_all",
@@ -106,12 +109,9 @@ exports[`integration with content packs mod generates block resources for block 
 }
 `;
 
-exports[`integration with content packs mod generates block resources for block item definitions: included blockstate 1`] = `
+exports[`integration with content packs mod correctly resolves copy reference for block properties: block definition using reference for properties 1`] = `
 {
-  "variants": {
-    "": {
-      "model": "example:block/ruby_block",
-    },
-  },
+  "properties": "minecraft:emerald_ore",
+  "type": "basic",
 }
 `;
