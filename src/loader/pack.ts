@@ -37,6 +37,10 @@ import { overwritePackMetadata } from "../emit/packMetadata.js";
 import type { PolytoneTabs } from "../emit/polytoneTabs.js";
 import PolytoneTabsEmitter from "../emit/polytoneTabs.js";
 import {
+  RecipeGraphEmitter,
+  type RecipeGraphAccessor,
+} from "../emit/recipeGraph.js";
+import {
   lootTableFolder,
   recipeFolder,
   type SemVerInput,
@@ -84,7 +88,7 @@ export default class PackLoader implements Loader {
   private readonly blockDefinition: BlockDefinitionRules;
 
   private readonly tagLoader: TagsLoader;
-  private readonly recipesLoader: RecipeLoader;
+  private readonly _recipeLoader: RecipeLoader;
   private readonly lootLoader: LootTableLoader;
   private readonly langLoader: LangLoader;
   readonly blockstates: BlockstateRules = this.registerEmitter(
@@ -104,8 +108,10 @@ export default class PackLoader implements Loader {
 
   private readonly packFormat: SemVerInput;
 
+  readonly recipeGraph: RecipeGraphAccessor;
+
   constructor(
-    readonly logger: Logger,
+    private readonly logger: Logger,
     options: PackLoaderOptions,
   ) {
     this.packFormat = options.packFormat;
@@ -129,14 +135,14 @@ export default class PackLoader implements Loader {
       packFormat: options.packFormat,
     };
 
-    this.recipesLoader = new RecipeLoader(this.context);
+    this._recipeLoader = new RecipeLoader(this.context);
 
     this.recipes = this.registerEmitter(
       new RecipeEmitter(
         logger,
-        this.recipesLoader,
+        this._recipeLoader,
         this.context,
-        this.recipesLoader,
+        this._recipeLoader,
       ),
     );
 
@@ -169,7 +175,7 @@ export default class PackLoader implements Loader {
         distributedAcceptor({
           "data/*/tags/**/*.json": this.tagLoader,
           [`data/*/${recipeFolder(options.packFormat)}/**/*.json`]:
-            this.recipesLoader,
+            this._recipeLoader,
           [`data/*/${lootTableFolder(options.packFormat)}/**/*.json`]:
             this.lootLoader,
           "assets/*/lang/*.json": this.langLoader,
@@ -178,6 +184,10 @@ export default class PackLoader implements Loader {
       {
         include: ["assets/**/*.json", "data/**/*.json"],
       } satisfies FilterOptions,
+    );
+
+    this.recipeGraph = this.registerEmitter(
+      new RecipeGraphEmitter(this._recipeLoader),
     );
   }
 
@@ -205,7 +215,7 @@ export default class PackLoader implements Loader {
   }
 
   get recipeLoader(): RecipeLoaderAccessor {
-    return this.recipesLoader;
+    return this._recipeLoader;
   }
 
   get registries(): RegistryLookup {
@@ -232,7 +242,7 @@ export default class PackLoader implements Loader {
   }
 
   clear() {
-    this.recipesLoader.clear();
+    this._recipeLoader.clear();
     this.lookup.reset();
 
     this.emitters.forEach((it) => it.clear());

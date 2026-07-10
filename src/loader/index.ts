@@ -5,7 +5,7 @@ import type {
   Logger,
   Resolver,
 } from "@adeficior/pack-resolver";
-import type { Id } from "../common/id.js";
+import type { Id, IdInput } from "../common/id.js";
 import Registry from "../common/registry.js";
 import type { RegistryProvider } from "../emit/index.js";
 import { tryCatching } from "../error.js";
@@ -28,9 +28,13 @@ export function tryParseJson(logger: Logger, content: Acceptable) {
 }
 
 export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
-  protected readonly registry = new Registry<T>();
+  private readonly registry = new Registry<T>();
 
   protected abstract parse(json: unknown, id: Id): T | null;
+
+  get(id: IdInput): T | undefined {
+    return this.registry.get(id);
+  }
 
   forEach(consumer: (recipe: T, id: Id) => void): void {
     this.registry.forEach(consumer);

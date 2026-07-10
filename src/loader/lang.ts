@@ -6,7 +6,7 @@ import { JsonLoader } from "./index.js";
 export default class LangLoader extends JsonLoader<LangDefinition> {
   protected parse(json: unknown, id: Id): LangDefinition | null {
     const parsed = LangSchema.parse(json);
-    const existing = this.registry.get(id);
+    const existing = this.get(id);
     if (!existing) return parsed;
     return { ...existing, ...parsed };
   }
