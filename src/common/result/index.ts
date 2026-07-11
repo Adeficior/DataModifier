@@ -12,14 +12,12 @@ import {
   ItemIngredient,
   type Ingredient,
 } from "../ingredient";
-import type { InputOutput } from "../inputOutput";
+import type { InputOutput, RegistryIds } from "../inputOutput";
 import { BUCKET } from "../units";
 
 export abstract class Result implements InputOutput {
   validate(_: RegistryLookup): void {}
-  abstract idsFor(
-    registry: NormalizedId<RegistryId>,
-  ): NormalizedId<RegistryId>[];
+  abstract ids(): RegistryIds;
   abstract asIngredient(): Ingredient;
 }
 
@@ -34,9 +32,8 @@ export abstract class RegistryEntryResult<T extends string> extends Result {
     this.id = encodeId(input);
   }
 
-  override idsFor(registry: NormalizedId<RegistryId>) {
-    if (this.registry === registry) return [this.id];
-    return [];
+  override ids(): RegistryIds {
+    return { [this.registry]: [this.id] };
   }
 }
 
@@ -99,7 +96,7 @@ export class IgnoredResult extends Result {
     throw new Error("ignored result cannot be transformed into a ingredient");
   }
 
-  override idsFor() {
-    return [];
+  override ids(): RegistryIds {
+    return {};
   }
 }

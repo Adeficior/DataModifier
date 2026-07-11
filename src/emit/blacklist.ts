@@ -86,13 +86,7 @@ export default class BlacklistEmitter
 
     const ingredient = this.context.ingredients.deserialize(input);
 
-    const registries: NormalizedId<RegistryId>[] = [
-      "minecraft:item",
-      "minecraft:fluid",
-      "minecraft:block",
-    ];
-
-    return registries.flatMap((registry) => ingredient.idsFor(registry));
+    return Object.values(ingredient.ids()).flat();
   }
 
   resolver(context: BaseContext) {

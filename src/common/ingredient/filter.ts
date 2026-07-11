@@ -83,7 +83,7 @@ function filterByRegistry(
 ): Predicate<Ingredient> {
   return createIdPredicate<Ingredient, NormalizedId>(
     test,
-    (it) => it.idsFor(registry),
+    (it) => it.ids()[registry] ?? [],
     context.tags.registry(registry),
   );
 }

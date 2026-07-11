@@ -4,6 +4,7 @@ import type {
   ItemId,
   RegistryId,
 } from "@adeficior/data-modifier/generated";
+import { uniq } from "lodash-es";
 import type RegistryLookup from "../../loader/registry";
 import {
   encodeId,
@@ -12,15 +13,13 @@ import {
   type NormalizedId,
   type TagId,
 } from "../id";
-import type { InputOutput } from "../inputOutput";
+import type { InputOutput, RegistryIds } from "../inputOutput";
 import { BlockResult, FluidResult, ItemResult, type Result } from "../result";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements InputOutput {
   validate(_: RegistryLookup): void {}
-  abstract idsFor(
-    registry: NormalizedId<RegistryId>,
-  ): NormalizedId<RegistryId>[];
+  abstract ids(): RegistryIds;
   abstract asResult(): Result;
 }
 
@@ -36,9 +35,8 @@ export abstract class TagIngredient extends Ingredient {
     this.tag = toTag(input);
   }
 
-  override idsFor(registry: NormalizedId<RegistryId>) {
-    if (this.registry === registry) return [this.tag];
-    return [];
+  override ids(): RegistryIds {
+    return { [this.registry]: [this.tag] };
   }
 
   override asResult(): Result {
@@ -83,9 +81,8 @@ export abstract class RegistryEntryIngredient<
     this.id = encodeId(input);
   }
 
-  override idsFor(registry: NormalizedId<RegistryId>) {
-    if (this.registry === registry) return [this.id];
-    return [];
+  override ids(): RegistryIds {
+    return { [this.registry]: [this.id] };
   }
 }
 
@@ -150,8 +147,23 @@ export class ListIngredient extends Ingredient {
     this.entries.forEach((it) => it.validate(lookup));
   }
 
-  override idsFor(registry: NormalizedId<RegistryId>) {
-    return this.entries.flatMap((it) => it.idsFor(registry));
+  override ids(): RegistryIds {
+    return this.entries
+      .map((it) => it.ids())
+      .reduce((a, b) => {
+        const keys = uniq([
+          ...Object.keys(a),
+          ...Object.keys(b),
+        ]) as NormalizedId<RegistryId>[];
+
+        const out: RegistryIds = {};
+
+        keys.forEach((key) => {
+          out[key] = uniq([...(a[key] ?? []), ...(b[key] ?? [])]);
+        });
+
+        return out;
+      }, {});
   }
 
   override asResult(): Result {
@@ -174,8 +186,8 @@ export class ToolActionIngredient extends Ingredient {
     );
   }
 
-  override idsFor() {
-    return [];
+  override ids(): RegistryIds {
+    return {};
   }
 }
 
@@ -188,7 +200,7 @@ export class IgnoredIngredient extends Ingredient {
     throw new Error("ignored ingredient cannot be transformed into a result");
   }
 
-  override idsFor() {
-    return [];
+  override ids(): RegistryIds {
+    return {};
   }
 }

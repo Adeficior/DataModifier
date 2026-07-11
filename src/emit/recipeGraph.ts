@@ -11,13 +11,14 @@ import {
   prefix,
   type IdInput,
   type NormalizedId,
+  type TagInput,
 } from "../common/id";
 import type { InputOutput } from "../common/inputOutput";
 import Registry from "../common/registry";
 import type { JsonLoader } from "../loader";
 import { type TagRegistryHolder } from "../loader/tags";
 import type { RecipeHolder } from "../parser";
-import type { ItemId, RecipeSerializerId } from "../stubTypes";
+import type { ItemId, RecipeSerializerId, RegistryId } from "../stubTypes";
 import { toJson } from "../textHelper";
 
 type Node = {
@@ -25,6 +26,8 @@ type Node = {
   shape?: string;
   image?: string;
   label?: string;
+  registry: NormalizedId<RegistryId>;
+  isTag?: boolean;
 };
 
 type Edge = {
@@ -56,9 +59,8 @@ type RecipeTypeRepresentation = {
 export class RecipeGraphEmitter
   implements ClearableEmitter, RecipeGraphAccessor
 {
-  private readonly nodes = new Registry<Node>();
+  private readonly shown = new Registry<RecipeHolder>();
   private representations: RecipeTypeRepresentation[] = [];
-  private edges: Edge[] = [];
 
   constructor(
     private readonly recipes: JsonLoader<RecipeHolder>,
@@ -114,28 +116,58 @@ export class RecipeGraphEmitter
     if (!recipe)
       throw new Error(`cannot generate graph for unknown recipe '${id}'`);
 
-    const recipeNodeId = prefix(id, "recipe/");
-    this.addRecipeNode(recipeNodeId, recipe);
-    recipe
-      .getIngredients()
-      .forEach((it) => this.addIONode(recipeNodeId, it, true));
-    recipe
-      .getResults()
-      .forEach((it) => this.addIONode(recipeNodeId, it, false));
+    this.shown.set(id, recipe);
   }
 
+  clear(): void {
+    this.shown.clear();
+    this.representations = [];
+  }
+
+  resolver(context: BaseContext) {
+    return simpleResolver(async (acceptor) => {
+      const builder = new GraphBuilder(
+        this.tags,
+        this.representations,
+        this.options,
+      );
+
+      const { edges, nodes } = builder.build(this.shown);
+
+      if (edges.length === 0) return;
+
+      await Promise.all([
+        acceptor("graph/nodes.json", toJson(nodes.values())),
+        acceptor("graph/edges.json", toJson(edges)),
+      ]);
+    }, context);
+  }
+}
+
+class GraphBuilder {
+  private readonly nodes = new Registry<Node>();
+  private edges: Edge[] = [];
+
+  constructor(
+    private readonly tags: TagRegistryHolder,
+    private readonly representations: RecipeTypeRepresentation[],
+    private readonly options: RecipeGraphOptions,
+  ) {}
+
   private addIONode(recipeId: NormalizedId, from: InputOutput, input: boolean) {
-    // TODO just use first ID of whatever
-    const [id] = [
-      ...from.idsFor("minecraft:item"),
-      ...from.idsFor("minecraft:fluid"),
-      ...from.idsFor("minecraft:block"),
-    ];
-    if (!id) return;
-    const { namespace, path } = createId(id);
+    const entry = Object.entries(from.ids()).find((it) => it[1].length > 0);
+    if (!entry) return;
+
+    const registry = entry[0] as NormalizedId<RegistryId>;
+    const id = entry[1][0]!;
+
+    const { namespace, path, isTag } = createId(id);
+
     this.nodes.set(id, {
       id,
       shape: "image",
+      isTag,
+      registry,
       image: `https://icons.macarena.ceo/icons/${namespace}/${path}.png`,
     });
 
@@ -151,35 +183,54 @@ export class RecipeGraphEmitter
       it.test(recipe.serializerType),
     );
 
+    const common = {
+      id,
+      registry: "minecraft:recipe_serializer",
+    } satisfies Partial<Node>;
+
     if (representation) {
       this.nodes.set(id, {
-        id,
+        ...common,
         shape: "image",
         image: representation.icon,
         label: representation.label,
       });
     } else {
       this.nodes.set(id, {
-        id,
+        ...common,
         label: id,
       });
     }
   }
 
-  clear(): void {
-    this.nodes.clear();
-    this.representations = [];
-    this.edges = [];
+  private addRecipe(id: IdInput, recipe: RecipeHolder) {
+    const recipeNodeId = prefix(id, "recipe/");
+    this.addRecipeNode(recipeNodeId, recipe);
+    recipe
+      .getIngredients()
+      .forEach((it) => this.addIONode(recipeNodeId, it, true));
+    recipe
+      .getResults()
+      .forEach((it) => this.addIONode(recipeNodeId, it, false));
   }
 
-  resolver(context: BaseContext) {
-    return simpleResolver(async (acceptor) => {
-      if (this.edges.length === 0) return;
+  private sanitize() {
+    if (!this.options.keepTags) {
+      this.nodes.forEach((it) => {
+        if (it.isTag) {
+          const tags = this.tags.registry(it.registry);
+          const entries = tags.resolve(it.id as TagInput);
+          console.log(entries);
 
-      await Promise.all([
-        acceptor("graph/nodes.json", toJson(this.nodes.values())),
-        acceptor("graph/edges.json", toJson(this.edges)),
-      ]);
-    }, context);
+          delete it.isTag;
+        }
+      });
+    }
+  }
+
+  build(shown: Registry<RecipeHolder>) {
+    shown.forEach((recipe, id) => this.addRecipe(id, recipe));
+    this.sanitize();
+    return { edges: this.edges, nodes: this.nodes };
   }
 }
