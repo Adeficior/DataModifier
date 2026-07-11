@@ -1,6 +1,11 @@
 import { simpleResolver, type BaseContext } from "@adeficior/pack-resolver";
 import type { ClearableEmitter } from ".";
 import {
+  resolveIDTest,
+  type CommonFilter,
+  type Predicate,
+} from "../common/filters";
+import {
   createId,
   encodeId,
   prefix,
@@ -10,6 +15,7 @@ import {
 import type { InputOutput } from "../common/inputOutput";
 import Registry from "../common/registry";
 import type { JsonLoader } from "../loader";
+import { type TagRegistryHolder } from "../loader/tags";
 import type { RecipeHolder } from "../parser";
 import type { ItemId, RecipeSerializerId } from "../stubTypes";
 import { toJson } from "../textHelper";
@@ -27,22 +33,79 @@ type Edge = {
   arrows?: string;
 };
 
+export interface RecipeGraphOptions {
+  // output: "visjs"
+  keepTags?: boolean;
+}
+
 export interface RecipeGraphAccessor {
-  represent(type: RecipeSerializerId, icon: IdInput<ItemId>): void;
+  represent(
+    type: CommonFilter<NormalizedId<RecipeSerializerId>>,
+    icon: IdInput<ItemId>,
+    label?: string,
+  ): void;
   show(id: IdInput): void;
 }
+
+type RecipeTypeRepresentation = {
+  test: Predicate<RecipeSerializerId>;
+  icon: NormalizedId<ItemId>;
+  label?: string;
+};
 
 export class RecipeGraphEmitter
   implements ClearableEmitter, RecipeGraphAccessor
 {
   private readonly nodes = new Registry<Node>();
-  private readonly icons = new Registry<NormalizedId<ItemId>>();
+  private representations: RecipeTypeRepresentation[] = [];
   private edges: Edge[] = [];
 
-  constructor(private readonly recipes: JsonLoader<RecipeHolder>) {}
+  constructor(
+    private readonly recipes: JsonLoader<RecipeHolder>,
+    private readonly tags: TagRegistryHolder,
+    private readonly options: RecipeGraphOptions = {},
+  ) {
+    this.represent(/minecraft:crafting_.+/, "minecraft:crafting_bench");
+    this.represent(/.+:crafting_special_.+/, "minecraft:crafting_bench");
+    this.represent("minecraft:smelting", "minecraft:furnace");
+    this.represent("minecraft:smoking", "minecraft:smoker");
+    this.represent("minecraft:blasting", "minecraft:blast_furnace");
+    this.represent("minecraft:campfire_cooking", "minecraft:campfire");
+    this.represent("minecraft:stonecutting", "minecraft:stonecutter");
+    this.represent(/minecraft:smithing.+/, "minecraft:smithing_table");
 
-  represent(type: RecipeSerializerId, icon: IdInput<ItemId>) {
-    this.icons.set(type, encodeId(icon));
+    this.represent("create:crushing", "create:crushing_wheel");
+    this.represent("create:milling", "create:crushing_wheel");
+    this.represent("create:mixing", "create:mechanical_mixer");
+    this.represent("create:splashing", "create:encased_fan");
+    this.represent("create:compacting", "create:mechanical_press");
+    this.represent("create:pressing", "create:mechanical_press");
+    this.represent("create:cutting", "create:mechanical_saw");
+    this.represent("create:deploying", "create:deployer");
+    this.represent("create:emptying", "create:spout");
+    this.represent("create:filling", "create:spout");
+    this.represent("create:haunting", "create:encased_fan");
+    this.represent("create:mechanical_crafting", "create:mechanical_crafter");
+    this.represent("create:sandpaper_polishing", "create:sand_paper");
+
+    this.represent("farmersdelight:cooking", "farmersdelight:cooking_pot");
+    this.represent("farmersdelight:cutting", "farmersdelight:cutting_board");
+
+    this.represent("clayworks:baking", "clayworks:kiln");
+
+    this.represent("sliceanddice:cutting", "sliceanddice:slicer");
+  }
+
+  represent(
+    type: CommonFilter<NormalizedId<RecipeSerializerId>>,
+    icon: IdInput<ItemId>,
+    label?: string,
+  ) {
+    this.representations.push({
+      test: resolveIDTest(type),
+      icon: encodeId(icon),
+      label,
+    });
   }
 
   show(id: IdInput) {
@@ -84,12 +147,16 @@ export class RecipeGraphEmitter
   }
 
   private addRecipeNode(id: NormalizedId, recipe: RecipeHolder) {
-    const icon = this.icons.get(recipe.serializerType);
-    if (icon) {
+    const representation = this.representations.find((it) =>
+      it.test(recipe.serializerType),
+    );
+
+    if (representation) {
       this.nodes.set(id, {
         id,
         shape: "image",
-        image: icon,
+        image: representation.icon,
+        label: representation.label,
       });
     } else {
       this.nodes.set(id, {
@@ -101,7 +168,7 @@ export class RecipeGraphEmitter
 
   clear(): void {
     this.nodes.clear();
-    this.icons.clear();
+    this.representations = [];
     this.edges = [];
   }
 

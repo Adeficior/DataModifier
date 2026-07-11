@@ -187,7 +187,7 @@ export default class PackLoader implements Loader {
     );
 
     this.recipeGraph = this.registerEmitter(
-      new RecipeGraphEmitter(this._recipeLoader),
+      new RecipeGraphEmitter(this._recipeLoader, this.tagLoader),
     );
   }
 

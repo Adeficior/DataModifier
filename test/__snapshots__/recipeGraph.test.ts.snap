@@ -29,7 +29,8 @@ exports[`recipe graph generated nodes & edges: nodes.json 1`] = `
   },
   {
     "id": "minecraft:recipe/oak_planks",
-    "label": "minecraft:recipe/oak_planks",
+    "image": "minecraft:crafting_bench",
+    "shape": "image",
   },
   {
     "id": "#minecraft:oak_logs",

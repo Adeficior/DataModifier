@@ -11,11 +11,6 @@ describe("recipe graph", () => {
   it("generated nodes & edges", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.recipeGraph.represent(
-      "minecraft:crafting_shaped",
-      "minecraft:crafting_bench",
-    );
-
     loader.recipeGraph.show("minecraft:oak_stairs");
     loader.recipeGraph.show("minecraft:oak_slab");
     loader.recipeGraph.show("minecraft:oak_planks");
