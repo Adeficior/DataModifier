@@ -4,13 +4,14 @@ import setupLoader from "./shared/loaderSetup";
 
 const { loader } = setupLoader({
   version: "1.21.1",
-  include: "data/*/recipe/**/*.json",
+  include: ["data/*/recipe/**/*.json", "data/*/tags/**/*.json"],
 });
 
 describe("recipe graph", () => {
   it("generated nodes & edges", async () => {
     const acceptor = createTestAcceptor();
 
+    loader.recipeGraph.show("minecraft:chest");
     loader.recipeGraph.show("minecraft:oak_stairs");
     loader.recipeGraph.show("minecraft:oak_slab");
     loader.recipeGraph.show("minecraft:oak_planks");

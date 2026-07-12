@@ -11,7 +11,6 @@ import {
   prefix,
   type IdInput,
   type NormalizedId,
-  type TagInput,
 } from "../common/id";
 import type { InputOutput } from "../common/inputOutput";
 import Registry from "../common/registry";
@@ -27,13 +26,13 @@ type Node = {
   image?: string;
   label?: string;
   registry: NormalizedId<RegistryId>;
-  isTag?: boolean;
 };
 
 type Edge = {
   from: NormalizedId;
   to: NormalizedId;
   arrows?: string;
+  label?: string;
 };
 
 export interface RecipeGraphOptions {
@@ -137,7 +136,7 @@ export class RecipeGraphEmitter
       if (edges.length === 0) return;
 
       await Promise.all([
-        acceptor("graph/nodes.json", toJson(nodes.values())),
+        acceptor("graph/nodes.json", toJson(nodes)),
         acceptor("graph/edges.json", toJson(edges)),
       ]);
     }, context);
@@ -145,8 +144,8 @@ export class RecipeGraphEmitter
 }
 
 class GraphBuilder {
-  private readonly nodes = new Registry<Node>();
-  private edges: Edge[] = [];
+  private readonly nodes = new Registry<Omit<Node, "id">>();
+  private readonly edges = new Registry<Edge>();
 
   constructor(
     private readonly tags: TagRegistryHolder,
@@ -161,20 +160,32 @@ class GraphBuilder {
     const registry = entry[0] as NormalizedId<RegistryId>;
     const id = entry[1][0]!;
 
-    const { namespace, path, isTag } = createId(id);
+    const { namespace, path } = createId(id);
 
     this.nodes.set(id, {
-      id,
       shape: "image",
-      isTag,
       registry,
       image: `https://icons.macarena.ceo/icons/${namespace}/${path}.png`,
     });
 
+    this.addIOEdge(recipeId, id, input);
+  }
+
+  private addEdge(edge: Edge) {
+    this.edges.set(Bun.randomUUIDv7().replaceAll("-", ""), edge);
+  }
+
+  private addIOEdge(
+    recipeId: NormalizedId,
+    id: NormalizedId,
+    input: boolean,
+    label?: string,
+  ) {
+    const common: Partial<Edge> = { label, arrows: "to" };
     if (input) {
-      this.edges.push({ from: recipeId, to: id, arrows: "to" });
+      this.addEdge({ ...common, from: id, to: recipeId });
     } else {
-      this.edges.push({ from: id, to: recipeId, arrows: "to" });
+      this.addEdge({ ...common, from: recipeId, to: id });
     }
   }
 
@@ -216,13 +227,35 @@ class GraphBuilder {
 
   private sanitize() {
     if (!this.options.keepTags) {
-      this.nodes.forEach((it) => {
-        if (it.isTag) {
-          const tags = this.tags.registry(it.registry);
-          const entries = tags.resolve(it.id as TagInput);
-          console.log(entries);
+      this.nodes.forEach((node, id) => {
+        if (id.isTag) {
+          const tags = this.tags.registry(node.registry);
+          const entries = tags.resolve(id);
+          const replacements = entries
+            .map((it) => (typeof it === "string" ? it : it.id))
+            .map(encodeId)
+            .filter((id) => this.nodes.get(id));
 
-          delete it.isTag;
+          if (replacements.length == 0) return;
+          // TODO delete tag
+          // TODO add tag info to edge
+
+          const nodeId = encodeId(id);
+          const from = this.edges.filter((it) => it.from === nodeId);
+          const to = this.edges.filter((it) => it.to === nodeId);
+
+          const label = `uses any ${nodeId}`;
+          replacements.forEach((id) => {
+            from.forEach(([, edge]) =>
+              this.addIOEdge(edge.to, id, true, label),
+            );
+            to.forEach(([, edge]) =>
+              this.addIOEdge(edge.from, id, false, label),
+            );
+          });
+
+          from.forEach(([id]) => this.edges.delete(id));
+          to.forEach(([id]) => this.edges.delete(id));
         }
       });
     }
@@ -231,6 +264,6 @@ class GraphBuilder {
   build(shown: Registry<RecipeHolder>) {
     shown.forEach((recipe, id) => this.addRecipe(id, recipe));
     this.sanitize();
-    return { edges: this.edges, nodes: this.nodes };
+    return { edges: this.edges.values(), nodes: this.nodes.values() };
   }
 }

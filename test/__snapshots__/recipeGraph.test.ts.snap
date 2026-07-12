@@ -3,38 +3,57 @@
 exports[`recipe graph generated nodes & edges: nodes.json 1`] = `
 [
   {
+    "id": "minecraft:recipe/chest",
+    "image": "minecraft:crafting_bench",
+    "registry": "minecraft:recipe_serializer",
+    "shape": "image",
+  },
+  {
+    "image": "https://icons.macarena.ceo/icons/minecraft/planks.png",
+    "registry": "minecraft:item",
+    "shape": "image",
+  },
+  {
+    "image": "https://icons.macarena.ceo/icons/minecraft/chest.png",
+    "registry": "minecraft:item",
+    "shape": "image",
+  },
+  {
     "id": "minecraft:recipe/oak_stairs",
     "image": "minecraft:crafting_bench",
+    "registry": "minecraft:recipe_serializer",
     "shape": "image",
   },
   {
-    "id": "minecraft:oak_planks",
     "image": "https://icons.macarena.ceo/icons/minecraft/oak_planks.png",
+    "registry": "minecraft:item",
     "shape": "image",
   },
   {
-    "id": "minecraft:oak_stairs",
     "image": "https://icons.macarena.ceo/icons/minecraft/oak_stairs.png",
+    "registry": "minecraft:item",
     "shape": "image",
   },
   {
     "id": "minecraft:recipe/oak_slab",
     "image": "minecraft:crafting_bench",
+    "registry": "minecraft:recipe_serializer",
     "shape": "image",
   },
   {
-    "id": "minecraft:oak_slab",
     "image": "https://icons.macarena.ceo/icons/minecraft/oak_slab.png",
+    "registry": "minecraft:item",
     "shape": "image",
   },
   {
     "id": "minecraft:recipe/oak_planks",
     "image": "minecraft:crafting_bench",
+    "registry": "minecraft:recipe_serializer",
     "shape": "image",
   },
   {
-    "id": "#minecraft:oak_logs",
     "image": "https://icons.macarena.ceo/icons/minecraft/oak_logs.png",
+    "registry": "minecraft:item",
     "shape": "image",
   },
 ]
@@ -44,33 +63,44 @@ exports[`recipe graph generated nodes & edges: edges.json 1`] = `
 [
   {
     "arrows": "to",
-    "from": "minecraft:recipe/oak_stairs",
-    "to": "minecraft:oak_planks",
-  },
-  {
-    "arrows": "to",
-    "from": "minecraft:oak_stairs",
-    "to": "minecraft:recipe/oak_stairs",
-  },
-  {
-    "arrows": "to",
-    "from": "minecraft:recipe/oak_slab",
-    "to": "minecraft:oak_planks",
-  },
-  {
-    "arrows": "to",
-    "from": "minecraft:oak_slab",
-    "to": "minecraft:recipe/oak_slab",
-  },
-  {
-    "arrows": "to",
-    "from": "minecraft:recipe/oak_planks",
-    "to": "#minecraft:oak_logs",
+    "from": "minecraft:recipe/chest",
+    "to": "minecraft:chest",
   },
   {
     "arrows": "to",
     "from": "minecraft:oak_planks",
+    "to": "minecraft:recipe/oak_stairs",
+  },
+  {
+    "arrows": "to",
+    "from": "minecraft:recipe/oak_stairs",
+    "to": "minecraft:oak_stairs",
+  },
+  {
+    "arrows": "to",
+    "from": "minecraft:oak_planks",
+    "to": "minecraft:recipe/oak_slab",
+  },
+  {
+    "arrows": "to",
+    "from": "minecraft:recipe/oak_slab",
+    "to": "minecraft:oak_slab",
+  },
+  {
+    "arrows": "to",
+    "from": "#minecraft:oak_logs",
     "to": "minecraft:recipe/oak_planks",
+  },
+  {
+    "arrows": "to",
+    "from": "minecraft:recipe/oak_planks",
+    "to": "minecraft:oak_planks",
+  },
+  {
+    "arrows": "to",
+    "from": "minecraft:oak_planks",
+    "label": "uses any #minecraft:planks",
+    "to": "minecraft:recipe/chest",
   },
 ]
 `;

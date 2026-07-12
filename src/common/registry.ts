@@ -33,6 +33,18 @@ export default class Registry<TEntry, TId extends string = string> {
     await Promise.all(promises);
   }
 
+  filter(
+    predicate: (value: TEntry, key: Id) => boolean,
+  ): [NormalizedId<TId>, TEntry][] {
+    return [...this.entries.entries()].filter(([id, v]) =>
+      predicate(v, createId(id)),
+    );
+  }
+
+  delete(id: IdInput<TId>) {
+    this.entries.delete(encodeId(id));
+  }
+
   clear() {
     this.entries.clear();
   }
