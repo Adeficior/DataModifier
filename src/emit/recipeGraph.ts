@@ -155,8 +155,8 @@ export class RecipeGraphEmitter
       if (edges.length === 0) return;
 
       await Promise.all([
-        acceptor("graph/nodes.json", toJson(nodes)),
-        acceptor("graph/edges.json", toJson(edges)),
+        acceptor("graph/recipe/nodes.json", toJson(nodes)),
+        acceptor("graph/recipe/edges.json", toJson(edges)),
       ]);
     }, context);
   }
