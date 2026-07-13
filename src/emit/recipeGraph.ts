@@ -9,6 +9,7 @@ import {
   createId,
   encodeId,
   prefix,
+  suffix,
   type IdInput,
   type NormalizedId,
 } from "../common/id";
@@ -49,7 +50,8 @@ export interface RecipeGraphOptions {
 const defaultOptions: Required<RecipeGraphOptions> = {
   resolveTags: true,
   brokenIcon: `https://icons.macarena.ceo/icons/minecraft/bedrock.png`,
-  iconProvider: (id) => {
+  iconProvider: (id, registry) => {
+    if (registry === "minecraft:fluid") id = suffix(id, "_bucket");
     const { namespace, path } = createId(id);
     return `https://icons.macarena.ceo/icons/${namespace}/${path}.png`;
   },
@@ -179,12 +181,21 @@ class GraphBuilder {
     const registry = entry[0] as NormalizedId<RegistryId>;
     const id = entry[1][0]!;
 
-    this.nodes.set(id, {
-      shape: "image",
+    const common = {
       registry,
-      brokenImage: this.options.brokenIcon,
-      image: this.options.iconProvider(id, registry),
-    });
+      label: id,
+    } satisfies Partial<Node>;
+
+    if (id.startsWith("#")) {
+      this.nodes.set(id, common);
+    } else {
+      this.nodes.set(id, {
+        ...common,
+        shape: "image",
+        brokenImage: this.options.brokenIcon,
+        image: this.options.iconProvider(id, registry),
+      });
+    }
 
     this.addIOEdge(recipeId, id, input);
   }
@@ -249,15 +260,22 @@ class GraphBuilder {
       this.nodes.forEach((node, id) => {
         if (id.isTag) {
           const tags = this.tags.registry(node.registry);
-          const entries = tags.resolve(id);
-          const replacements = entries
+          const entries = tags
+            .resolve(id)
             .map((it) => (typeof it === "string" ? it : it.id))
-            .map(encodeId)
-            .filter((id) => this.nodes.get(id));
+            .map(encodeId);
 
-          if (replacements.length == 0) return;
-          // TODO delete tag
-          // TODO add tag info to edge
+          const replacements = entries.filter((id) => this.nodes.get(id));
+
+          if (replacements.length == 0) {
+            const [entry] = entries;
+            if (entry) {
+              node.image = this.options.iconProvider(entry, node.registry);
+              node.shape = "image";
+              node.brokenImage = this.options.brokenIcon;
+            }
+            return;
+          }
 
           const nodeId = encodeId(id);
           const from = this.edges.filter((it) => it.from === nodeId);
