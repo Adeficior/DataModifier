@@ -57,6 +57,10 @@ export default class Registry<TEntry, TId extends string = string> {
     return [...this.entries.values()];
   }
 
+  valuesWithId() {
+    return [...this.entries.entries()].map(([id, value]) => ({ ...value, id }));
+  }
+
   has(key: IdInput<TId>) {
     return this.entries.has(encodeId(key));
   }

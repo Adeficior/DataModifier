@@ -37,8 +37,20 @@ type Edge = {
 
 export interface RecipeGraphOptions {
   // output: "visjs"
-  keepTags?: boolean;
+  resolveTags?: boolean;
+  iconProvider?: (
+    id: NormalizedId,
+    registry: NormalizedId<RegistryId>,
+  ) => string;
 }
+
+const defaultOptions: Required<RecipeGraphOptions> = {
+  resolveTags: true,
+  iconProvider: (id) => {
+    const { namespace, path } = createId(id);
+    return `https://icons.macarena.ceo/icons/${namespace}/${path}.png`;
+  },
+};
 
 export interface RecipeGraphAccessor {
   represent(
@@ -61,11 +73,15 @@ export class RecipeGraphEmitter
   private readonly shown = new Registry<RecipeHolder>();
   private representations: RecipeTypeRepresentation[] = [];
 
+  private readonly options: Required<RecipeGraphOptions>;
+
   constructor(
     private readonly recipes: JsonLoader<RecipeHolder>,
     private readonly tags: TagRegistryHolder,
-    private readonly options: RecipeGraphOptions = {},
+    options: RecipeGraphOptions = {},
   ) {
+    this.options = { ...defaultOptions, ...options };
+
     this.represent(/minecraft:crafting_.+/, "minecraft:crafting_bench");
     this.represent(/.+:crafting_special_.+/, "minecraft:crafting_bench");
     this.represent("minecraft:smelting", "minecraft:furnace");
@@ -150,7 +166,7 @@ class GraphBuilder {
   constructor(
     private readonly tags: TagRegistryHolder,
     private readonly representations: RecipeTypeRepresentation[],
-    private readonly options: RecipeGraphOptions,
+    private readonly options: Required<RecipeGraphOptions>,
   ) {}
 
   private addIONode(recipeId: NormalizedId, from: InputOutput, input: boolean) {
@@ -160,12 +176,10 @@ class GraphBuilder {
     const registry = entry[0] as NormalizedId<RegistryId>;
     const id = entry[1][0]!;
 
-    const { namespace, path } = createId(id);
-
     this.nodes.set(id, {
       shape: "image",
       registry,
-      image: `https://icons.macarena.ceo/icons/${namespace}/${path}.png`,
+      image: this.options.iconProvider(id, registry),
     });
 
     this.addIOEdge(recipeId, id, input);
@@ -203,7 +217,7 @@ class GraphBuilder {
       this.nodes.set(id, {
         ...common,
         shape: "image",
-        image: representation.icon,
+        image: this.options.iconProvider(representation.icon, "minecraft:item"),
         label: representation.label,
       });
     } else {
@@ -226,7 +240,7 @@ class GraphBuilder {
   }
 
   private sanitize() {
-    if (!this.options.keepTags) {
+    if (this.options.resolveTags) {
       this.nodes.forEach((node, id) => {
         if (id.isTag) {
           const tags = this.tags.registry(node.registry);
@@ -261,9 +275,9 @@ class GraphBuilder {
     }
   }
 
-  build(shown: Registry<RecipeHolder>) {
+  build(shown: Registry<RecipeHolder>): { nodes: Node[]; edges: Edge[] } {
     shown.forEach((recipe, id) => this.addRecipe(id, recipe));
     this.sanitize();
-    return { edges: this.edges.values(), nodes: this.nodes.values() };
+    return { edges: this.edges.values(), nodes: this.nodes.valuesWithId() };
   }
 }
