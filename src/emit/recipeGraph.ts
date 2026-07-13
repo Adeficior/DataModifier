@@ -96,8 +96,8 @@ export class RecipeGraphEmitter
     this.represent("minecraft:stonecutting", "minecraft:stonecutter");
     this.represent(/minecraft:smithing.+/, "minecraft:smithing_table");
 
-    this.represent("create:crushing", "create:crushing_wheel");
-    this.represent("create:milling", "create:crushing_wheel");
+    this.represent("create:crushing", "create:millstone");
+    this.represent("create:milling", "create:millstone");
     this.represent("create:mixing", "create:mechanical_mixer");
     this.represent("create:splashing", "create:encased_fan");
     this.represent("create:compacting", "create:mechanical_press");
@@ -267,7 +267,7 @@ class GraphBuilder {
 
           const replacements = entries.filter((id) => this.nodes.get(id));
 
-          if (replacements.length == 0) {
+          if (replacements.length === 0) {
             const [entry] = entries;
             if (entry) {
               node.image = this.options.iconProvider(entry, node.registry);
@@ -293,6 +293,7 @@ class GraphBuilder {
 
           from.forEach(([id]) => this.edges.delete(id));
           to.forEach(([id]) => this.edges.delete(id));
+          this.nodes.delete(id);
         }
       });
     }
