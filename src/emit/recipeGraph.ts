@@ -23,6 +23,7 @@ import { toJson } from "../textHelper";
 type Node = {
   id: NormalizedId;
   shape?: string;
+  brokenImage?: string;
   image?: string;
   label?: string;
   registry: NormalizedId<RegistryId>;
@@ -38,6 +39,7 @@ type Edge = {
 export interface RecipeGraphOptions {
   // output: "visjs"
   resolveTags?: boolean;
+  brokenIcon?: string;
   iconProvider?: (
     id: NormalizedId,
     registry: NormalizedId<RegistryId>,
@@ -46,6 +48,7 @@ export interface RecipeGraphOptions {
 
 const defaultOptions: Required<RecipeGraphOptions> = {
   resolveTags: true,
+  brokenIcon: `https://icons.macarena.ceo/icons/minecraft/bedrock.png`,
   iconProvider: (id) => {
     const { namespace, path } = createId(id);
     return `https://icons.macarena.ceo/icons/${namespace}/${path}.png`;
@@ -179,6 +182,7 @@ class GraphBuilder {
     this.nodes.set(id, {
       shape: "image",
       registry,
+      brokenImage: this.options.brokenIcon,
       image: this.options.iconProvider(id, registry),
     });
 
@@ -217,6 +221,7 @@ class GraphBuilder {
       this.nodes.set(id, {
         ...common,
         shape: "image",
+        brokenImage: this.options.brokenIcon,
         image: this.options.iconProvider(representation.icon, "minecraft:item"),
         label: representation.label,
       });
