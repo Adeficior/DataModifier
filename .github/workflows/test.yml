@@ -1,8 +1,8 @@
 # <meta>
 #    <source>@pssbletrngle/github-meta-generator</source>
-#    <version>1.0.104</version>
-#    <timestamp>2026-06-28T15:40:20.593Z</timestamp>
-#    <hash>fb4929d01e21b567</hash>
+#    <version>1.0.107</version>
+#    <timestamp>2026-07-24T11:28:41.812Z</timestamp>
+#    <hash>f76b8f53a0bbde39</hash>
 # </meta>
 
 name: Test
@@ -22,7 +22,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           lfs: true
