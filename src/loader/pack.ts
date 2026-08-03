@@ -6,7 +6,6 @@ import {
   filterAcceptor,
   type Acceptor,
   type BaseContext,
-  type FilterOptions,
   type Logger,
   type Resolver,
 } from "@adeficior/pack-resolver";
@@ -77,6 +76,7 @@ export default class PackLoader implements Loader {
   private readonly lookup = new WrappedRegistryLookup();
 
   private readonly emitters: ClearableEmitter[] = [];
+  private readonly loaders: Record<string, Acceptor> = {};
 
   readonly tags: TagRules;
   readonly recipes: RecipeRules;
@@ -103,7 +103,6 @@ export default class PackLoader implements Loader {
   private readonly results: ResultSerializer;
   private readonly ingredients: IngredientSerializer;
 
-  private readonly acceptor: Acceptor;
   private readonly context: PackContext;
 
   private readonly packFormat: SemVerInput;
@@ -115,9 +114,18 @@ export default class PackLoader implements Loader {
     options: PackLoaderOptions,
   ) {
     this.packFormat = options.packFormat;
-    this.tagLoader = new TagsLoader(options.packFormat);
-    this.lootLoader = new LootTableLoader();
-    this.langLoader = new LangLoader();
+    this.tagLoader = this.registerLoader(
+      "data/*/tags/**/*.json",
+      new TagsLoader(options.packFormat),
+    );
+    this.lootLoader = this.registerLoader(
+      `data/*/${lootTableFolder(this.packFormat)}/**/*.json`,
+      new LootTableLoader(),
+    );
+    this.langLoader = this.registerLoader(
+      "assets/*/lang/*.json",
+      new LangLoader(),
+    );
 
     this.tags = this.registerEmitter(new TagEmitter(this.tagLoader, options));
 
@@ -135,7 +143,10 @@ export default class PackLoader implements Loader {
       packFormat: options.packFormat,
     };
 
-    this._recipeLoader = new RecipeLoader(this.context);
+    this._recipeLoader = this.registerLoader(
+      `data/*/${recipeFolder(this.packFormat)}/**/*.json`,
+      new RecipeLoader(this.context),
+    );
 
     this.recipes = this.registerEmitter(
       new RecipeEmitter(
@@ -170,25 +181,14 @@ export default class PackLoader implements Loader {
       ),
     );
 
-    this.acceptor = filterAcceptor(
-      createMergingAcceptor(
-        distributedAcceptor({
-          "data/*/tags/**/*.json": this.tagLoader,
-          [`data/*/${recipeFolder(options.packFormat)}/**/*.json`]:
-            this._recipeLoader,
-          [`data/*/${lootTableFolder(options.packFormat)}/**/*.json`]:
-            this.lootLoader,
-          "assets/*/lang/*.json": this.langLoader,
-        }),
-      ),
-      {
-        include: ["assets/**/*.json", "data/**/*.json"],
-      } satisfies FilterOptions,
-    );
-
     this.recipeGraph = this.registerEmitter(
       new RecipeGraphEmitter(this._recipeLoader, this.tagLoader),
     );
+  }
+
+  registerLoader<T extends Acceptor>(filePattern: string, loader: T): T {
+    this.loaders[filePattern] = loader;
+    return loader;
   }
 
   registerEmitter<T extends ClearableEmitter>(emitter: T): T {
@@ -232,7 +232,14 @@ export default class PackLoader implements Loader {
   }
 
   async loadFrom(resolver: Resolver) {
-    await resolver.extract(this.acceptor);
+    const acceptor: Acceptor = filterAcceptor(
+      createMergingAcceptor(distributedAcceptor(this.loaders)),
+      {
+        include: ["assets/**/*.json", "data/**/*.json"],
+      },
+    );
+
+    await resolver.extract(acceptor);
   }
 
   async loadRegistryDump(resolver: Resolver) {

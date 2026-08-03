@@ -37,6 +37,7 @@ export type {
 } from "./emit/index.js";
 export { default as RuledEmitter } from "./emit/ruled.js";
 export { IllegalShapeError, UnknownRegistryEntry } from "./error.js";
+export { JsonLoader } from "./loader/index.js";
 export {
   default as PackLoader,
   type LoaderEmitOptions,
