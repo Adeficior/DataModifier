@@ -1,8 +1,9 @@
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { Result } from "../../../common/result";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
-import type { IngredientMap, IngredientMapInput } from "../ingredientMap";
+import type { Result } from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import type { IngredientMap, IngredientMapInput } from "../../ingredientMap";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 export type ShapedRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -44,7 +45,7 @@ export class ShapedRecipe extends Recipe {
   }
 }
 
-export class ShapedParser extends RecipeSerializer<
+export class ShapedParser extends RecipeParser<
   ShapedRecipeDefinition,
   ShapedRecipe
 > {

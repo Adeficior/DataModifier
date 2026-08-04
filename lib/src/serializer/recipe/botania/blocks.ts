@@ -1,16 +1,17 @@
 import * as z from "zod";
-import RecipeSerializer, { type RecipeParseContext } from "..";
+import { type RecipeParseContext } from "..";
 import { IdSchema } from "../../../common/id";
-import type { Ingredient } from "../../../common/ingredient";
 import {
   BlockIngredient,
+  BlockResult,
   BlockTagIngredient,
-} from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
-import { BlockResult } from "../../../common/result";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+  type Ingredient,
+  type Result,
+} from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
 import { hasType } from "../../../serializer/checks";
 import { createSerializerModule } from "../../../serializer/module";
+import { RecipeParser } from "../abstract";
 import { OneToOneRecipe } from "../oneToOne";
 
 export type BotaniaBlockRecipeDefinition = RecipeDefinition &
@@ -78,9 +79,9 @@ export const ingredientSerializerModules = {
   15: ingredientSerializer15,
 };
 
-export default class BotaniaBlockRecipeParser<
+export class BotaniaBlockRecipeParser<
   TDefinition extends BotaniaBlockRecipeDefinition,
-> extends RecipeSerializer<TDefinition, BotaniaBlockRecipe> {
+> extends RecipeParser<TDefinition, BotaniaBlockRecipe> {
   override resultModules() {
     return resultSerializerModules;
   }

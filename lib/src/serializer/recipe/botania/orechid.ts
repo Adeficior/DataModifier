@@ -1,4 +1,5 @@
-import BotaniaBlockRecipeParser, {
+import {
+  BotaniaBlockRecipeParser,
   type BotaniaBlockRecipeDefinition,
 } from "./blocks";
 

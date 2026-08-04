@@ -1,6 +1,8 @@
-import type { RecipeHolder, RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeHolder } from "../holder";
+import type { RecipeModifier } from "../modifier";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -34,7 +36,7 @@ export class NbtWrapperRecipe extends Recipe {
   }
 }
 
-export class NbtWrapperRecipeParser extends RecipeSerializer<
+export class NbtWrapperRecipeParser extends RecipeParser<
   NbtWrapperRecipeDefinition,
   NbtWrapperRecipe
 > {

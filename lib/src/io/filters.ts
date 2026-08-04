@@ -1,7 +1,7 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { TagRegistry } from "../loader/tags";
-import type { IdInput, NormalizedId, TagInput } from "./id";
-import { encodeId } from "./id";
+import type { IdInput, NormalizedId, TagInput } from "../common";
+import { encodeId } from "../common";
+import type { TagRegistry } from "../loader";
 
 export type Predicate<T> = (value: T) => boolean;
 export type CommonFilter<T> = RegExp | Predicate<T> | T;

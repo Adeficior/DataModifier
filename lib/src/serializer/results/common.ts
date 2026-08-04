@@ -1,9 +1,7 @@
 import { IgnoredResult, Ingredient, ItemResult, type Result } from "../../";
 import type { SerializerBuilder } from "../module";
 
-export default function commonSerialization(
-  builder: SerializerBuilder<Result>,
-) {
+export function commonSerialization(builder: SerializerBuilder<Result>) {
   builder.deserializer<Ingredient>(
     (it) => it instanceof Ingredient,
     (it) => it.asResult(),

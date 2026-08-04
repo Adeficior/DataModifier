@@ -65,7 +65,7 @@ function createCurriedEmitter(id: IdInput, emitter: BlockDefinitionRules) {
 
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-export default function createInnerBlockDefinitionBuilder(
+export function createInnerBlockDefinitionBuilder(
   id: IdInput,
   models: ModelRules,
   blockstates: BlockstateRules,

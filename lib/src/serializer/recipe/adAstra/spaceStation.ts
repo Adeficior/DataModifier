@@ -1,14 +1,15 @@
 import { omit } from "lodash-es";
 import * as z from "zod";
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
+import { IllegalShapeError } from "../../../common";
 import {
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
-} from "../../../common/ingredient";
-import { IllegalShapeError } from "../../../error";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+} from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 const WrappedIngredientSchema = z.object({
   ingredient: z.record(z.string(), z.unknown()),
@@ -59,7 +60,7 @@ export class SpaceStationRecipe extends Recipe {
   }
 }
 
-export class SpaceStationRecipeParser extends RecipeSerializer<
+export class SpaceStationRecipeParser extends RecipeParser<
   SpaceStationRecipeDefinition,
   SpaceStationRecipe
 > {

@@ -1,13 +1,11 @@
-import RecipeSerializer, {
-  type RecipeModifier,
-  type RecipeParseContext,
-} from "..";
-import type { Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
+import type { Ingredient, Result } from "../../../io";
+import { RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
 import {
   ManyToManyRecipe,
   type ManyToManyRecipeDefinition,
 } from "../manyToMany";
+import type { RecipeModifier } from "../modifier";
 
 export type ToolInput = Readonly<{
   type: "farmersdelight:tool_action";
@@ -66,7 +64,7 @@ export class CuttingRecipe extends ManyToManyRecipe {
   }
 }
 
-export default class CuttingRecipeParser extends RecipeSerializer<
+export class CuttingRecipeParser extends RecipeParser<
   CuttingRecipeDefinition,
   CuttingRecipe
 > {

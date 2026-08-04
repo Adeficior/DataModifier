@@ -1,5 +1,6 @@
-import RecipeSerializer, { type RecipeParseContext } from "..";
+import { type RecipeParseContext } from "..";
 import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { RecipeParser } from "../abstract";
 import { ManyToManyRecipe } from "../manyToMany";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
@@ -18,7 +19,7 @@ export class ElvenTradeRecipe extends ManyToManyRecipe {
   }
 }
 
-export class ElvenTradeRecipeParser extends RecipeSerializer<
+export class ElvenTradeRecipeParser extends RecipeParser<
   ElvenTradeRecipeDefinition,
   ElvenTradeRecipe
 > {

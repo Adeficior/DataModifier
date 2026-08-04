@@ -1,14 +1,10 @@
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
 import type { Modifier } from ".";
-import Rule from ".";
-import type { Predicate } from "../../common/filters";
+import { Rule } from ".";
+import { IllegalShapeError, tryCatching } from "../../common";
 import type { Id } from "../../common/id";
-import {
-  ItemIngredient,
-  ItemTagIngredient,
-  type Ingredient,
-} from "../../common/ingredient";
-import { IllegalShapeError, tryCatching } from "../../error";
+import type { Predicate } from "../../io";
+import { ItemIngredient, ItemTagIngredient, type Ingredient } from "../../io";
 import type { LootEntryBase, LootTable } from "../../schema/data/loot";
 import { extendLootEntry } from "../../schema/data/loot";
 
@@ -47,7 +43,7 @@ function hasOutput(
   );
 }
 
-export default class LootTableRule extends Rule<LootTable> {
+export class LootTableRule extends Rule<LootTable> {
   constructor(
     private readonly context: ContextLike,
     private readonly idTests: Predicate<Id>[],

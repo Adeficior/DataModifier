@@ -1,11 +1,5 @@
-import type { Class } from "../../../../src/common/class";
-import type { Result } from "../../../../src/common/result";
-import {
-  BlockResult,
-  FluidResult,
-  ItemResult,
-} from "../../../../src/common/result";
-import { BUCKET } from "../../../../src/common/units";
+import type { Class, Result } from "../../../../src";
+import { BlockResult, BUCKET, FluidResult, ItemResult } from "../../../../src";
 import type { DataProvider } from "../providers";
 import { resultLikeIngredients } from "../resultInputs";
 

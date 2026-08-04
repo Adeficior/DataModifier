@@ -1,13 +1,13 @@
-import type { Predicate } from "../common/filters";
 import { encodeId, stripTag } from "../common/id";
+import type { Predicate } from "../io";
 import {
   ItemIngredient,
+  ItemResult,
   ItemTagIngredient,
   type Ingredient,
   type ItemLikeIngredient,
-} from "../common/ingredient";
-import { ItemResult } from "../common/result";
-import type RegistryLookup from "../loader/registry";
+} from "../io";
+import type { RegistryLookup } from "../loader";
 import type { LootEntry, LootEntryBase, LootTable } from "../schema/data/loot";
 import { extendLootEntry } from "../schema/data/loot";
 

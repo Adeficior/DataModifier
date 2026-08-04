@@ -1,6 +1,8 @@
-import type { RecipeHolder, RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeHolder } from "../holder";
+import type { RecipeModifier } from "../modifier";
 
 type WithConditions<T> = {
   conditions: unknown[];
@@ -50,7 +52,7 @@ export class ForgeConditionalRecipe extends Recipe {
   }
 }
 
-export default class ForgeConditionalRecipeParser extends RecipeSerializer<
+export class ForgeConditionalRecipeParser extends RecipeParser<
   ForgeConditionalRecipeDefinition,
   ForgeConditionalRecipe
 > {

@@ -1,16 +1,13 @@
-import type { LoaderContext } from "@/common";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { DataConsumer } from "@adeficior/pack-resolver";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 import type { ClearableEmitter } from ".";
-import type { NormalizedId } from "../common/id";
-import { encodeId } from "../common/id";
-import { ItemIngredient } from "../common/ingredient";
-import type { IngredientFilter } from "../common/ingredient/filter";
-import createIngredientPredicate from "../common/ingredient/filter";
+import type { LoaderContext, NormalizedId } from "../common";
+import { encodeId, toJson } from "../common";
+import type { IngredientFilter } from "../io";
+import { createIngredientPredicate, ItemIngredient } from "../io";
 import type { PackContext } from "../loader/context";
-import { toJson } from "../textHelper";
 
 export type HideMode = "jei" | "polytone";
 export interface BlacklistOptions {
@@ -27,9 +24,7 @@ export interface BlacklistRules {
 
 type RegistryIdInput<T extends RegistryId> = InferIds<T> | RegExp;
 
-export default class BlacklistEmitter
-  implements BlacklistRules, ClearableEmitter
-{
+export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
   private hidden: NormalizedId[] = [];
   private readonly hideModes: HideMode[];
 

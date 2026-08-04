@@ -1,4 +1,3 @@
-import type { LoaderContext } from "@/common";
 import type {
   CreativeModeTabId,
   ItemId,
@@ -6,10 +5,11 @@ import type {
 import { arrayOrSelf, combineResolvers } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";
 import type { ClearableEmitter } from ".";
+import type { LoaderContext } from "../common";
 import type { IdInput, NormalizedId } from "../common/id";
 import { createId, encodeId } from "../common/id";
-import type RegistryLookup from "../loader/registry";
-import CustomEmitter from "./custom";
+import type { RegistryLookup } from "../loader";
+import { CustomEmitter } from "./custom";
 
 interface TabModifications {
   icon?: IdInput<ItemId>;
@@ -127,9 +127,7 @@ function translateOptions(options: AddOptions = {}): Partial<AdditionEntry> {
   }
 }
 
-export default class PolytoneTabsEmitter
-  implements PolytoneTabs, ClearableEmitter
-{
+export class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitter {
   private readonly entries = new CustomEmitter<PolytoneTabModifier>(
     (id) =>
       `assets/${id.namespace}/polytone/creative_tab_modifiers/${id.path}.json`,

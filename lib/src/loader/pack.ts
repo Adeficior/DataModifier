@@ -1,4 +1,3 @@
-import type { LoaderContext } from "@/common";
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {
   combineResolvers,
@@ -10,37 +9,35 @@ import {
   type Resolver,
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
-import type Loader from ".";
-import createIngredientPredicate, {
-  type IngredientFilter,
-} from "../common/ingredient/filter";
+import type { LoaderContext } from "../common";
+import { lootTableFolder, recipeFolder, type SemVerInput } from "../common";
 import type { ClearableEmitter } from "../emit";
 import type { BlockstateRules } from "../emit/assets/blockstates";
-import BlockstateEmitter from "../emit/assets/blockstates";
+import { BlockstateEmitter } from "../emit/assets/blockstates";
 import type { LangRules } from "../emit/assets/lang";
-import LangEmitter from "../emit/assets/lang";
+import { LangEmitter } from "../emit/assets/lang";
 import type { ModelRulesGroup } from "../emit/assets/models";
-import ModelEmitter from "../emit/assets/models";
+import { ModelEmitter } from "../emit/assets/models";
 import type { BlacklistOptions, BlacklistRules } from "../emit/blacklist";
-import BlacklistEmitter from "../emit/blacklist";
+import { BlacklistEmitter } from "../emit/blacklist";
 import type { BlockDefinitionRules } from "../emit/content/blockDefinition";
-import BlockDefinitionEmitter from "../emit/content/blockDefinition";
+import { BlockDefinitionEmitter } from "../emit/content/blockDefinition";
 import type { ItemDefinitionRules } from "../emit/content/itemDefinition";
-import ItemDefinitionEmitter from "../emit/content/itemDefinition";
+import { ItemDefinitionEmitter } from "../emit/content/itemDefinition";
 import type { LootRules } from "../emit/data/loot";
-import LootTableEmitter from "../emit/data/loot";
+import { LootTableEmitter } from "../emit/data/loot";
 import type { RecipeRules } from "../emit/data/recipe";
-import RecipeEmitter from "../emit/data/recipe";
+import { RecipeEmitter } from "../emit/data/recipe";
 import type { TagEmitterOptions, TagRules } from "../emit/data/tags";
-import TagEmitter from "../emit/data/tags";
+import { TagEmitter } from "../emit/data/tags";
 import { overwritePackMetadata } from "../emit/packMetadata";
 import type { PolytoneTabs } from "../emit/polytoneTabs";
-import PolytoneTabsEmitter from "../emit/polytoneTabs";
+import { PolytoneTabsEmitter } from "../emit/polytoneTabs";
 import {
   RecipeGraphEmitter,
   type RecipeGraphAccessor,
 } from "../emit/recipeGraph";
-import { lootTableFolder, recipeFolder, type SemVerInput } from "../packFormat";
+import { createIngredientPredicate, type IngredientFilter } from "../io";
 import {
   createIngredientSerializer,
   type IngredientSerializer,
@@ -50,14 +47,14 @@ import {
   type ResultSerializer,
 } from "../serializer/results";
 import type { PackContext } from "./context";
-import LangLoader from "./lang";
-import LootTableLoader from "./loot";
+import { LangLoader } from "./lang";
+import { LootTableLoader } from "./loot";
 import type { RecipeLoaderAccessor } from "./recipe";
-import RecipeLoader from "./recipe";
-import type RegistryLookup from "./registry";
-import RegistryDumpLoader from "./registry/dump";
-import WrappedRegistryLookup from "./registry/wrapped";
-import TagsLoader from "./tags";
+import { RecipeLoader } from "./recipe";
+import type { RegistryLookup } from "./registry";
+import { RegistryDumpLoader } from "./registry/dump";
+import { WrappedRegistryLookup } from "./registry/wrapped";
+import { TagsLoader } from "./tags";
 
 export interface PackLoaderOptions extends TagEmitterOptions, BlacklistOptions {
   packFormat: SemVerInput;
@@ -68,7 +65,7 @@ export type LoaderEmitOptions = {
   description?: string;
 };
 
-export default class PackLoader implements Loader {
+export class PackLoader {
   private readonly lookup = new WrappedRegistryLookup();
 
   private readonly emitters: ClearableEmitter[] = [];

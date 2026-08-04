@@ -95,6 +95,7 @@
       "zod": "^4.4.3"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "*"
+      "@adeficior/pack-resolver": "*",
+      "typescript": "^7"
    }
 }

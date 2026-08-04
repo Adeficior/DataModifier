@@ -1,6 +1,6 @@
-import type { LoaderContext } from "@/common";
 import type { BlockId } from "@adeficior/data-modifier/generated";
 import type { ClearableEmitter } from "..";
+import type { LoaderContext } from "../../common";
 import type { Id, IdInput } from "../../common/id";
 import type {
   BlockDefinition,
@@ -8,7 +8,7 @@ import type {
 } from "../../schema/content/blockDefinition";
 import type { BlockstateRules } from "../assets/blockstates";
 import type { ModelRules } from "../assets/models";
-import CustomEmitter from "../custom";
+import { CustomEmitter } from "../custom";
 import type { LootRules } from "../data/loot";
 
 export type BlockDefinitionOptions = Readonly<{
@@ -93,7 +93,7 @@ export abstract class AbstractBlockDefinitionRules implements BlockDefinitionRul
   }
 }
 
-export default class BlockDefinitionEmitter
+export class BlockDefinitionEmitter
   extends AbstractBlockDefinitionRules
   implements ClearableEmitter
 {

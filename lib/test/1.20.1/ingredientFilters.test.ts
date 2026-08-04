@@ -1,10 +1,13 @@
 import { beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { packFormatOf, UnknownRegistryEntry } from "../../src";
-import { ItemIngredient } from "../../src/common/ingredient";
-import createIngredientPredicate from "../../src/common/ingredient/filter";
-import TagsLoader from "../../src/loader/tags";
-import { createIngredientSerializer } from "../../src/serializer/ingredients";
+import {
+  createIngredientPredicate,
+  createIngredientSerializer,
+  ItemIngredient,
+  packFormatOf,
+  TagsLoader,
+  UnknownRegistryEntry,
+} from "../../src";
 import setupLookup from "../shared/dump";
 import {
   invalidIngredientFilters,

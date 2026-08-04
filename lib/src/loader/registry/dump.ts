@@ -1,17 +1,20 @@
-import type { LoaderContext } from "@/common";
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import zod from "zod";
-import type RegistryLookup from ".";
-import { tryParseJson } from "..";
+import {
+  type LoaderContext,
+  tryCatching,
+  tryParseJson,
+  UnknownRegistryEntry,
+} from "../../common";
 import type { IdInput, NormalizedId } from "../../common/id";
 import { encodeId } from "../../common/id";
-import Registry from "../../common/registry";
-import { tryCatching, UnknownRegistryEntry } from "../../error";
+import { Registry } from "../../common/registry";
+import type { RegistryLookup } from "./lookup";
 
 const schema = zod.array(zod.string());
 
-export default class RegistryDumpLoader implements RegistryLookup, Acceptor {
+export class RegistryDumpLoader implements RegistryLookup, Acceptor {
   private readonly registry = new Registry<Set<NormalizedId>, RegistryId>();
 
   private registryOf(registry: RegistryId) {

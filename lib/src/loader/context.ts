@@ -1,7 +1,7 @@
-import type { SemVerInput } from "../packFormat";
+import type { SemVerInput } from "../common";
 import type { IngredientSerializer } from "../serializer/ingredients";
 import type { ResultSerializer } from "../serializer/results";
-import type RegistryLookup from "./registry";
+import type { RegistryLookup } from "./registry";
 import type { TagRegistryHolder } from "./tags";
 
 export type PackContext = {

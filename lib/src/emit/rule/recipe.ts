@@ -1,14 +1,12 @@
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
 import type { Modifier } from ".";
-import Rule from ".";
-import type { Predicate } from "../../common/filters";
+import { Rule } from ".";
 import type { Id } from "../../common/id";
 import { createId } from "../../common/id";
-import type { Ingredient } from "../../common/ingredient";
-import type { Result } from "../../common/result";
-import type { RecipeHolder } from "../../parser/recipe";
+import type { Ingredient, Predicate, Result } from "../../io";
+import type { RecipeHolder } from "../../serializer";
 
-export default class RecipeRule extends Rule<RecipeHolder> {
+export class RecipeRule extends Rule<RecipeHolder> {
   constructor(
     private readonly context: ContextLike,
     private readonly idsTests: Predicate<Id>[],

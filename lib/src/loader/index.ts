@@ -1,8 +1,10 @@
 export type * from "./abstract";
+export type * from "./context";
 export * from "./json";
 export {
-  default as PackLoader,
+  PackLoader,
   type LoaderEmitOptions,
   type PackLoaderOptions,
 } from "./pack";
-export type { TagRegistry, TagRegistryHolder } from "./tags";
+export * from "./registry";
+export { TagsLoader, type TagRegistry, type TagRegistryHolder } from "./tags";

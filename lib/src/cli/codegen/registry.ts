@@ -3,7 +3,7 @@ import { camelCase } from "lodash-es";
 import { format } from "prettier";
 import type { Id, IdInput } from "../../common/id";
 import { createId, encodeId } from "../../common/id";
-import type RegistryLookup from "../../loader/registry";
+import type { RegistryLookup } from "../../loader/registry";
 
 const module = "@adeficior/data-modifier/generated";
 

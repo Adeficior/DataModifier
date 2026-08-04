@@ -1,7 +1,6 @@
 import { describe, expect } from "bun:test";
 import { basename } from "node:path";
-import { packFormatOf } from "../../src";
-import { createIngredientSerializer } from "../../src/serializer/ingredients";
+import { createIngredientSerializer, packFormatOf } from "../../src";
 import setupLookup from "../shared/dump";
 import {
   ingredientInputs,

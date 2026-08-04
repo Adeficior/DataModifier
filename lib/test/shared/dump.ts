@@ -1,7 +1,7 @@
 import type { Logger } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { beforeAll } from "bun:test";
-import RegistryDumpLoader from "../../src/loader/registry/dump";
+import { RegistryDumpLoader } from "../../src";
 import { createDumpResolver } from "./testData";
 
 export default function setupLookup(

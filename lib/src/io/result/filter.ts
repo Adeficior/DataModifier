@@ -1,10 +1,12 @@
 import type { Result } from ".";
-import type { PackContext } from "../../loader/context";
+import type { PackContext } from "../../loader";
 import { type Predicate } from "../filters";
-import type { IngredientFilter } from "../ingredient/filter";
-import createIngredientPredicate from "../ingredient/filter";
+import {
+  createIngredientPredicate,
+  type IngredientFilter,
+} from "../ingredient";
 
-export default function createResultFilter(
+export function createResultPredicate(
   test: IngredientFilter,
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
 ): Predicate<Result> {

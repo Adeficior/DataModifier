@@ -1,14 +1,13 @@
-import type { Class } from "../../../../src/common/class";
-import type { Ingredient } from "../../../../src/common/ingredient";
+import type { Class, Ingredient } from "../../../../src";
 import {
   BlockIngredient,
   BlockTagIngredient,
+  BUCKET,
   FluidIngredient,
   FluidTagIngredient,
   ItemIngredient,
   ItemTagIngredient,
-} from "../../../../src/common/ingredient";
-import { BUCKET } from "../../../../src/common/units";
+} from "../../../../src";
 import { ingredientLikeResults } from "../ingredientInputs";
 import type { DataProvider } from "../providers";
 

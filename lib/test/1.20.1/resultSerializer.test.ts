@@ -1,7 +1,6 @@
 import { describe, expect } from "bun:test";
 import { basename } from "node:path";
-import { packFormatOf } from "../../src";
-import { createResultSerializer } from "../../src/serializer/results";
+import { createResultSerializer, packFormatOf } from "../../src";
 import setupLookup from "../shared/dump";
 import { serializedResults } from "../shared/provider/1.20.1/resultOutputs";
 import { provided } from "../shared/provider/providers";

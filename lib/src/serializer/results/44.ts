@@ -1,10 +1,10 @@
 import * as z from "zod";
 import { FluidResult, ItemResult, type Result } from "../..";
-import { AmountSchema, ChanceSchema, CountSchema } from "../../common/fields";
 import { IdSchema } from "../../common/id";
+import { AmountSchema, ChanceSchema, CountSchema } from "../../io";
 import { isObjectWith } from "../checks";
 import { createSerializerModule } from "../module";
-import commonSerialization from "./common";
+import { commonSerialization } from "./common";
 
 export const serializer44 = createSerializerModule<Result>((builder) => {
   commonSerialization(builder);

@@ -1,8 +1,8 @@
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer from "..";
-import type { Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
+import type { Ingredient, Result } from "../../../io";
+import { RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
 import { ManyToOneRecipe, type ManyToOneRecipeDefinition } from "../manyToOne";
+import type { RecipeModifier } from "../modifier";
 
 export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &
   Readonly<{
@@ -34,7 +34,7 @@ export class RootRitualRecipe extends ManyToOneRecipe {
   }
 }
 
-export class RootRitualRecipeParser extends RecipeSerializer<
+export class RootRitualRecipeParser extends RecipeParser<
   RootRitualRecipeDefinition,
   RootRitualRecipe
 > {

@@ -3,7 +3,7 @@ import type { Id } from "../../common/id";
 
 export type Modifier<T> = (recipe: T) => T | null;
 
-export default abstract class Rule<T> {
+export abstract class Rule<T> {
   protected constructor(private readonly modifier: Modifier<T>) {}
 
   abstract matches(id: Id, recipe: T, logger: Logger): boolean;

@@ -4,7 +4,7 @@ import commandLineUsage from "command-line-usage";
 
 export type CliAction = "help" | "codegen";
 
-export default interface CliConfig {
+export interface CliConfig {
   resources: string[];
   output: string;
   registryDump?: string;

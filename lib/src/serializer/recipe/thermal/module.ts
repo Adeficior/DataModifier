@@ -1,13 +1,14 @@
 import * as z from "zod";
-import { AmountSchema, CountSchema } from "../../../common/fields";
 import { IdSchema } from "../../../common/id";
 import {
+  AmountSchema,
+  CountSchema,
   FluidTagIngredient,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
   type Ingredient,
-} from "../../../common/ingredient";
+} from "../../../io";
 import { isObjectWith } from "../../../serializer/checks";
 import { createSerializerModule } from "../../../serializer/module";
 

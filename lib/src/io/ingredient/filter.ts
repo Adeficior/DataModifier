@@ -7,22 +7,19 @@ import {
   RegistryEntryIngredient,
   TagIngredient,
 } from ".";
-import { IllegalShapeError } from "../../error";
+import { IllegalShapeError, type NormalizedId } from "../../common";
 import type { PackContext } from "../../loader/context";
 import {
   createIdPredicate,
   type CommonFilter,
   type Predicate,
 } from "../filters";
-import { type NormalizedId } from "../id";
 import type { IngredientInput } from "./input";
 
 export type IngredientFilter =
-  | CommonFilter<Ingredient>
-  | IngredientInput
-  | `#${string}`;
+  CommonFilter<Ingredient> | IngredientInput | `#${string}`;
 
-export default function createIngredientPredicate(
+export function createIngredientPredicate(
   test: IngredientFilter,
   context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
 ): Predicate<Ingredient> {

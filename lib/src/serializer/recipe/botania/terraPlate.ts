@@ -3,7 +3,6 @@ import {
   type ManyToOneRecipeDefinition,
 } from "../manyToOne";
 
-export type ShapelessRecipeDefinition = ManyToOneRecipeDefinition;
 export type TerraPlateRecipeDefinition = ManyToOneRecipeDefinition &
   Readonly<{
     mana?: number;

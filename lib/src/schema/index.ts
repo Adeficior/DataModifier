@@ -11,8 +11,7 @@ export type {
   ItemProperties,
   Rarity,
 } from "./content/itemDefinition";
-export { EmptyLootEntry } from "./data/loot";
-export type { LootEntry, LootModifier, LootPool, LootTable } from "./data/loot";
+export * from "./data/loot";
 export type {
   FabricCondition,
   ForgeCondition,

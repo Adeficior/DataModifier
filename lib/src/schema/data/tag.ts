@@ -1,4 +1,4 @@
-import { type IdInput, createId } from "@/common";
+import { type IdInput, createId } from "../../common";
 
 export type TagEntry<T extends string = string> =
   | T

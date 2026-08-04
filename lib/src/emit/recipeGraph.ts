@@ -1,4 +1,3 @@
-import type { LoaderContext } from "@/common";
 import type {
   ItemId,
   RecipeSerializerId,
@@ -7,24 +6,21 @@ import type {
 import { simpleResolver } from "@adeficior/pack-resolver";
 import type { ClearableEmitter } from ".";
 import {
-  resolveIDTest,
-  type CommonFilter,
-  type Predicate,
-} from "../common/filters";
-import {
   createId,
   encodeId,
   prefix,
+  Registry,
   suffix,
+  toJson,
   type IdInput,
+  type LoaderContext,
   type NormalizedId,
-} from "../common/id";
-import type { InputOutput } from "../common/inputOutput";
-import Registry from "../common/registry";
+} from "../common";
+import type { InputOutput } from "../io";
+import { resolveIDTest, type CommonFilter, type Predicate } from "../io";
 import type { JsonLoader } from "../loader";
-import { type TagRegistryHolder } from "../loader/tags";
-import type { RecipeHolder } from "../parser";
-import { toJson } from "../textHelper";
+import { type TagRegistryHolder } from "../loader";
+import type { RecipeHolder } from "../serializer";
 
 type Node = {
   id: NormalizedId;

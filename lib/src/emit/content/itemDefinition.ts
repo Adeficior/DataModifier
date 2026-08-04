@@ -1,5 +1,5 @@
-import type { LoaderContext } from "@/common";
 import type { ClearableEmitter } from "..";
+import type { LoaderContext } from "../../common";
 import type { Id, IdInput } from "../../common/id";
 import { prefix } from "../../common/id";
 import type { BlockDefinition } from "../../schema/content/blockDefinition";
@@ -9,10 +9,10 @@ import type {
 } from "../../schema/content/itemDefinition";
 import type { BlockstateRules } from "../assets/blockstates";
 import type { ModelRulesGroup } from "../assets/models";
-import CustomEmitter from "../custom";
+import { CustomEmitter } from "../custom";
 import type { LootRules } from "../data/loot";
 import type { BlockDefinitionRulesWithoutId } from "./innerBlockDefinition";
-import createInnerBlockDefinitionBuilder from "./innerBlockDefinition";
+import { createInnerBlockDefinitionBuilder } from "./innerBlockDefinition";
 
 export type ItemDefinitionOptions = Readonly<{
   model?: boolean;
@@ -43,7 +43,7 @@ export interface ItemDefinitionRules {
   ): ItemDefinition;
 }
 
-export default class ItemDefinitionEmitter
+export class ItemDefinitionEmitter
   implements ItemDefinitionRules, ClearableEmitter
 {
   private readonly custom = new CustomEmitter<ItemDefinition>(this.filePath);

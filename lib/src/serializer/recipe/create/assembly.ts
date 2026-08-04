@@ -1,8 +1,9 @@
-import type { RecipeHolder, RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { Ingredient, Result } from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeHolder } from "../holder";
+import type { RecipeModifier } from "../modifier";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -59,7 +60,7 @@ export class AssemblyRecipe extends Recipe {
   }
 }
 
-export class AssemblyRecipeParser extends RecipeSerializer<
+export class AssemblyRecipeParser extends RecipeParser<
   AssemblyRecipeDefinition,
   AssemblyRecipe
 > {

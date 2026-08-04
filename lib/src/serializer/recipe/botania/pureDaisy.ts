@@ -1,9 +1,10 @@
 import * as z from "zod";
 import { IdSchema } from "../../../common/id";
-import { BlockResult, type Result } from "../../../common/result";
+import { BlockResult, type Result } from "../../../io";
 import { isObjectWith } from "../../../serializer/checks";
 import { createSerializerModule } from "../../../serializer/module";
-import BotaniaBlockRecipeParser, {
+import {
+  BotaniaBlockRecipeParser,
   type BotaniaBlockRecipeDefinition,
 } from "./blocks";
 

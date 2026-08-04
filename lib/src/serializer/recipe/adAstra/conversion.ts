@@ -1,11 +1,15 @@
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
+import { IllegalShapeError } from "../../../common";
 import { encodeId } from "../../../common/id";
-import { FluidIngredient, type Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
-import { FluidResult } from "../../../common/result";
-import { IllegalShapeError } from "../../../error";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import {
+  FluidIngredient,
+  FluidResult,
+  type Ingredient,
+  type Result,
+} from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -53,7 +57,7 @@ export class FluidConversionRecipe extends Recipe {
   }
 }
 
-export class FluidConversionRecipeParser extends RecipeSerializer<
+export class FluidConversionRecipeParser extends RecipeParser<
   FluidConversionRecipeDefinition,
   FluidConversionRecipe
 > {

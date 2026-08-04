@@ -1,14 +1,14 @@
-import type { Ingredient } from "../../../../src/common/ingredient";
+import type { Ingredient } from "../../../../src";
 import {
   BlockIngredient,
   BlockTagIngredient,
+  BUCKET,
   FluidIngredient,
   FluidTagIngredient,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
-} from "../../../../src/common/ingredient";
-import { BUCKET } from "../../../../src/common/units";
+} from "../../../../src";
 import type { DataProvider } from "../providers";
 
 export function* serializedIngredients(): DataProvider<[Ingredient, object]> {

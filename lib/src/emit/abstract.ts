@@ -1,5 +1,5 @@
-import type { Id, LoaderContext } from "@/common";
 import type { Acceptable, Resolver } from "@adeficior/pack-resolver";
+import type { Id, LoaderContext } from "../common";
 
 export type PathProvider = (id: Id) => string;
 

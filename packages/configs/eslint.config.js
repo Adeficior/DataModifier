@@ -37,7 +37,7 @@ export function eslintConfig(tsconfigRootDir) {
         importPlugin.flatConfigs.typescript,
       ],
       rules: {
-        "import/no-relative-parent-imports": "error",
+        "import/no-relative-parent-imports": "warn",
       },
     },
   ]);

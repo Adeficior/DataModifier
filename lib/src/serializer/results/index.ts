@@ -1,7 +1,7 @@
-import type { Serializer } from "..";
-import { Result } from "../..";
-import type RegistryLookup from "../../loader/registry";
-import type { SemVerInput } from "../../packFormat";
+import { type SemVerInput } from "../../common";
+import { Result } from "../../io";
+import type { RegistryLookup } from "../../loader";
+import type { Serializer } from "../abstract";
 import { type SerializerModule } from "../module";
 import { VersionedSerializer } from "../versioned";
 import { WrapperSerializer } from "../wrapped";

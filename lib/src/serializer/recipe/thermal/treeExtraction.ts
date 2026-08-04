@@ -1,14 +1,11 @@
 import type { BlockId } from "@adeficior/data-modifier/generated";
-import RecipeSerializer, {
-  Recipe,
-  type RecipeModifier,
-  type RecipeParseContext,
-} from "..";
+import { IllegalShapeError } from "../../../common";
 import { encodeId } from "../../../common/id";
-import { BlockIngredient, type Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
-import { IllegalShapeError } from "../../../error";
+import { BlockIngredient, type Ingredient, type Result } from "../../../io";
 import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -64,7 +61,7 @@ export class TreeExtractionRecipe extends Recipe {
   }
 }
 
-export class TreeExtractionRecipeParser extends RecipeSerializer<
+export class TreeExtractionRecipeParser extends RecipeParser<
   TreeExtractionRecipeDefinition,
   TreeExtractionRecipe
 > {

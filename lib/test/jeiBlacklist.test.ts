@@ -1,11 +1,7 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import type { Ingredient } from "../src/common/ingredient";
-import {
-  BlockIngredient,
-  FluidIngredient,
-  ItemIngredient,
-} from "../src/common/ingredient";
+import type { Ingredient } from "../src";
+import { BlockIngredient, FluidIngredient, ItemIngredient } from "../src";
 import setupLoader from "./shared/loaderSetup";
 
 const version = "1.20.1";

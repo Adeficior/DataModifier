@@ -1,7 +1,8 @@
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { Ingredient } from "../../../common/ingredient";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { Ingredient } from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -35,7 +36,7 @@ export class BrewRecipe extends Recipe {
   }
 }
 
-export class BrewRecipeParser extends RecipeSerializer<
+export class BrewRecipeParser extends RecipeParser<
   BrewRecipeDefinition,
   BrewRecipe
 > {

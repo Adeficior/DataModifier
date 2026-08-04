@@ -1,9 +1,9 @@
 import { notNull } from "@adeficior/pack-resolver";
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { Ingredient } from "../../../common/ingredient";
-import type { Result } from "../../../common/result";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { Ingredient, Result } from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 import { ingredientSerializerModules } from "./blocks";
 
 export type ManaInfusionRecipeDefinition = RecipeDefinition &
@@ -50,7 +50,7 @@ export class ManaInfusionRecipe extends Recipe {
   }
 }
 
-export class ManaInfusionRecipeParser extends RecipeSerializer<
+export class ManaInfusionRecipeParser extends RecipeParser<
   ManaInfusionRecipeDefinition,
   ManaInfusionRecipe
 > {

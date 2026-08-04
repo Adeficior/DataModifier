@@ -1,7 +1,8 @@
-import type { RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { Ingredient } from "../../../common/ingredient";
+import type { Ingredient } from "../../../io";
 import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 
 export type ThermalCatalystRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -39,7 +40,7 @@ export class ThermalCatalystRecipe extends Recipe {
   }
 }
 
-export class ThermalCatalystRecipeParser extends RecipeSerializer<
+export class ThermalCatalystRecipeParser extends RecipeParser<
   ThermalCatalystRecipeDefinition,
   ThermalCatalystRecipe
 > {

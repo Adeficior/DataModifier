@@ -1,6 +1,6 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { ItemResult } from "../src/common/result";
+import { ItemResult } from "../src";
 import setupLoader from "./shared/loaderSetup";
 
 const version = "1.20.1";

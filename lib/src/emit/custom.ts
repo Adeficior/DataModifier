@@ -1,9 +1,9 @@
-import type { IdInput, LoaderContext } from "@/common";
-import { Registry, createId, toJson } from "@/common";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import type { ClearableEmitter, PathProvider } from ".";
+import type { IdInput, LoaderContext } from "../common";
+import { Registry, createId, toJson } from "../common";
 
-export default class CustomEmitter<TEntry> implements ClearableEmitter {
+export class CustomEmitter<TEntry> implements ClearableEmitter {
   constructor(
     private readonly pathProvider: PathProvider,
     private readonly encoder: (

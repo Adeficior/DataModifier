@@ -1,14 +1,12 @@
 import * as z from "zod";
-import RecipeSerializer, {
-  Recipe,
-  type RecipeModifier,
-  type RecipeParseContext,
-} from "..";
 import { encodeId, IdSchema } from "../../../common/id";
-import type { Ingredient } from "../../../common/ingredient";
-import { ItemResult } from "../../../common/result";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { Ingredient } from "../../../io";
+import { ItemResult } from "../../../io";
+import type { RecipeDefinition } from "../../../schema";
 import type { ResultSerializer } from "../../../serializer/results";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeModifier } from "../modifier";
 import { OneToOneRecipe } from "../oneToOne";
 
 // TODO this will also be the new item format, can re-use that
@@ -71,7 +69,7 @@ export class InputOutputRecipe extends Recipe {
   }
 }
 
-export class InputOutputRecipeParser extends RecipeSerializer<
+export class InputOutputRecipeParser extends RecipeParser<
   InputOutputRecipeDefinition,
   InputOutputRecipe
 > {

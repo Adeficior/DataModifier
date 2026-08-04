@@ -1,10 +1,14 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { ItemIngredient, ItemTagIngredient } from "../../src/common/ingredient";
-import { ItemResult } from "../../src/common/result";
-import { EMPTY_LOOT_TABLE } from "../../src/emit/data/loot";
-import { LootEntrySchema, LootTableSchema } from "../../src/schema/data/loot";
+import {
+  EMPTY_LOOT_TABLE,
+  ItemIngredient,
+  ItemResult,
+  ItemTagIngredient,
+  LootTableSchema,
+  parseLootEntry,
+} from "../../src";
 import setupLoader from "../shared/loaderSetup";
 
 const version = basename(import.meta.dir);
@@ -137,16 +141,16 @@ it("creates custom loot tables", async () => {
       {
         rolls: 4,
         entries: [
-          LootEntrySchema.parse({
+          parseLootEntry({
             type: "minecraft:alternatives",
             children: [
-              LootEntrySchema.parse({
+              parseLootEntry({
                 type: "minecraft:item",
                 name: "minecraft:diamond",
               }),
             ],
           }),
-          LootEntrySchema.parse({
+          parseLootEntry({
             type: "minecraft:tag",
             name: "minecraft:logs",
           }),

@@ -1,10 +1,10 @@
 import {
   type Result,
   BlockResult,
+  BUCKET,
   FluidResult,
   ItemResult,
-} from "../../../../src/common/result";
-import { BUCKET } from "../../../../src/common/units";
+} from "../../../../src";
 import type { DataProvider } from "../providers";
 
 export function* serializedResults(): DataProvider<[Result, object]> {

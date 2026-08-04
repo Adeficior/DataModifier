@@ -1,11 +1,11 @@
-import type { LoaderContext } from "@/common";
 import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
-import type { ClearableEmitter, PathProvider, RegistryProvider } from ".";
+import type { ClearableEmitter, PathProvider } from ".";
+import type { LoaderContext, RegistryProvider } from "../common";
+import { toJson } from "../common";
 import type { Id } from "../common/id";
-import { toJson } from "../textHelper";
-import type Rule from "./rule";
+import type { Rule } from "./rule";
 
-export default class RuledEmitter<
+export class RuledEmitter<
   TEntry,
   TRule extends Rule<TEntry>,
 > implements ClearableEmitter {

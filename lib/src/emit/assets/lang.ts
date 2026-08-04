@@ -1,15 +1,17 @@
-import type { LoaderContext } from "@/common";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
-import type { ClearableEmitter, RegistryProvider } from "..";
-import type { Predicate } from "../../common/filters";
-import type { Id, IdInput } from "../../common/id";
-import { createId, encodeId } from "../../common/id";
-import Registry from "../../common/registry";
-import type { Replacer } from "../../parser/recipe";
+import type {
+  Id,
+  IdInput,
+  LoaderContext,
+  RegistryProvider,
+} from "../../common";
+import { createId, encodeId, toJson } from "../../common";
+import { Registry } from "../../common/registry";
+import type { Predicate, Replacer } from "../../io";
 import type { LangDefinition } from "../../schema/assets/lang";
-import { toJson } from "../../textHelper";
+import type { ClearableEmitter } from "../abstract";
 
 type LangRule = Readonly<{
   languages: string[];
@@ -47,7 +49,7 @@ export interface LangRules {
   ): void;
 }
 
-export default class LangEmitter implements LangRules, ClearableEmitter {
+export class LangEmitter implements LangRules, ClearableEmitter {
   private custom = new Registry<LangDefinition>();
   private rules: LangRule[] = [];
 

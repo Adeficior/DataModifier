@@ -1,116 +1,42 @@
-import type { Ingredient, PackContext, Result } from "@/common";
-import { encodeId, type NormalizedId } from "@/common";
-import type { Predicate } from "@/io";
-import type { RecipeDefinition } from "@/schema";
-import type { WithSerializerModules } from "../module";
+export * from "./abstract";
+export type * from "./context";
+export * from "./holder";
+export * from "./manyToMany";
+export * from "./manyToOne";
+export * from "./oneToOne";
+export * from "./vanilla";
 
-export type Replacer<T> = (value: T) => T;
+export * from "./adAstra/conversion";
+export * from "./adAstra/hammering";
+export * from "./adAstra/inputOutput";
+export * from "./adAstra/nasaWorkbench";
+export * from "./adAstra/spaceStation";
 
-export function createReplacer<T>(from: Predicate<T>, to: T): Replacer<T> {
-  return (it: T) => {
-    if (from(it)) return to;
-    return it;
-  };
-}
+export * from "./thermal";
+export * from "./thermal/catalyst";
+export * from "./thermal/fuel";
+export * from "./thermal/treeExtraction";
 
-function keep<T>(): Replacer<T> {
-  return (t) => t;
-}
+export * from "./botania/apothecary";
+export * from "./botania/brew";
+export * from "./botania/elvenTrade";
+export * from "./botania/gogWrapper";
+export * from "./botania/manaInfusion";
+export * from "./botania/nbtWrapper";
+export * from "./botania/orechid";
+export * from "./botania/pureDaisy";
+export * from "./botania/runicAltar";
+export * from "./botania/terraPlate";
 
-export type RecipeModifier = {
-  result: Replacer<Result>;
-  ingredient: Replacer<Ingredient>;
-};
+export * from "./roots/component";
+export * from "./roots/ritual";
 
-export class RecipeHolder {
-  readonly serializerType: NormalizedId;
+export * from "./create/assembly";
+export * from "./create/processing";
 
-  constructor(
-    private readonly definition: RecipeDefinition,
-    private readonly recipe: Recipe,
-  ) {
-    this.serializerType = encodeId(definition.type);
-  }
+export * from "./farmersdelight/cooking";
+export * from "./farmersdelight/cutting";
 
-  serialize(context: RecipeParseContext) {
-    return {
-      ...this.definition,
-      ...this.recipe.serialize(context),
-    };
-  }
+export * from "./forge/conditional";
 
-  getIngredients() {
-    return this.recipe.getIngredients();
-  }
-
-  getResults() {
-    return this.recipe.getResults();
-  }
-
-  modify(modifier: RecipeModifier): RecipeHolder {
-    const modified = this.recipe.modify(modifier);
-    return new RecipeHolder(this.definition, modified);
-  }
-
-  replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
-    return this.modify({
-      ingredient: replace,
-      result: keep(),
-    });
-  }
-
-  replaceResult(replace: Replacer<Result>): RecipeHolder {
-    return this.modify({
-      ingredient: keep(),
-      result: replace,
-    });
-  }
-
-  getTypes(): NormalizedId[] {
-    return [this.serializerType, ...this.recipe.additionalTypes()];
-  }
-}
-
-export abstract class Recipe {
-  abstract getIngredients(): Ingredient[];
-
-  abstract getResults(): Result[];
-
-  abstract modify(modifier: RecipeModifier): Recipe;
-
-  additionalTypes(): NormalizedId[] {
-    return [];
-  }
-
-  abstract serialize(context: RecipeParseContext): Partial<RecipeDefinition>;
-}
-
-export type RecipeSerializer = {
-  deserialize(definition: RecipeDefinition): RecipeHolder;
-  serialize(recipe: RecipeHolder): RecipeDefinition;
-};
-
-export type RecipeParseContext = Pick<
-  PackContext,
-  "ingredients" | "results"
-> & {
-  recipes: RecipeSerializer;
-};
-
-export default abstract class RecipeParser<
-  TDefinition extends RecipeDefinition = RecipeDefinition,
-  TRecipe extends Recipe = Recipe,
-> implements WithSerializerModules {
-  ingredientModules() {
-    return {};
-  }
-
-  resultModules() {
-    return {};
-  }
-
-  abstract deserialize(
-    definition: TDefinition,
-    context: RecipeParseContext,
-  ): TRecipe;
-}
+export * from "./sullys/polishing";

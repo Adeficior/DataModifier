@@ -1,5 +1,6 @@
-import RecipeSerializer, { type RecipeParseContext } from "..";
+import { type RecipeParseContext } from "..";
 import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { RecipeParser } from "../abstract";
 import { ManyToOneRecipe } from "../manyToOne";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
@@ -18,7 +19,7 @@ export class RunicAltarRecipe extends ManyToOneRecipe {
   }
 }
 
-export class RunicAltarRecipeParser extends RecipeSerializer<
+export class RunicAltarRecipeParser extends RecipeParser<
   RunicAltarRecipeDefinition,
   RunicAltarRecipe
 > {

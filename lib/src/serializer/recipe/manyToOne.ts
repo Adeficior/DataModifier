@@ -1,11 +1,8 @@
-import RecipeSerializer, {
-  Recipe,
-  type RecipeModifier,
-  type RecipeParseContext,
-} from ".";
-import type { Ingredient } from "../../common/ingredient";
-import type { Result } from "../../common/result";
+import type { Ingredient, Result } from "../../io";
 import type { RecipeDefinition } from "../../schema/data/recipe";
+import { Recipe, RecipeParser } from "./abstract";
+import type { RecipeParseContext } from "./context";
+import type { RecipeModifier } from "./modifier";
 
 export type ManyToOneRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -48,7 +45,7 @@ export class ManyToOneRecipe extends Recipe {
 
 export class ManyToOneRecipeParser<
   TDefinition extends ManyToOneRecipeDefinition,
-> extends RecipeSerializer<TDefinition, ManyToOneRecipe> {
+> extends RecipeParser<TDefinition, ManyToOneRecipe> {
   deserialize(
     definition: TDefinition,
     context: RecipeParseContext,

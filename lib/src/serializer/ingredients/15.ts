@@ -9,11 +9,11 @@ import {
   ItemTagIngredient,
   ToolActionIngredient,
 } from "../../";
-import { AmountSchema, CountSchema } from "../../common/fields";
 import { IdSchema, stripTag } from "../../common/id";
+import { AmountSchema, CountSchema } from "../../io";
 import { hasType, isObjectWith } from "../checks";
 import { createSerializerModule } from "../module";
-import commonSerialization from "./common";
+import { commonSerialization } from "./common";
 
 export const serializer15 = createSerializerModule<Ingredient>((builder) => {
   commonSerialization(builder);

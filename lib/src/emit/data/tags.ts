@@ -1,17 +1,15 @@
-import type { LoaderContext } from "@/common";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import type { ClearableEmitter } from "..";
-import { resolveIDTest, type CommonFilter } from "../../common/filters";
+import type { LoaderContext } from "../../common";
+import { Registry, toJson } from "../../common";
 import type { Id, NormalizedId, TagInput } from "../../common/id";
 import { createId, encodeId } from "../../common/id";
-import Registry from "../../common/registry";
-import type TagsLoader from "../../loader/tags";
-import type { TagRegistry } from "../../loader/tags";
+import { resolveIDTest, type CommonFilter } from "../../io";
+import type { TagRegistry, TagsLoader } from "../../loader/tags";
 import { entryId, orderTagEntries } from "../../loader/tags";
 import type { TagDefinition, TagEntry } from "../../schema/data/tag";
 import { tagFolderOf } from "../../schema/data/tag";
-import { toJson } from "../../textHelper";
 
 export interface TagRules {
   add<T extends RegistryId>(
@@ -141,7 +139,7 @@ export interface TagEmitterOptions {
   advancedTags?: boolean;
 }
 
-export default class TagEmitter implements TagRules, ClearableEmitter {
+export class TagEmitter implements TagRules, ClearableEmitter {
   private readonly emitters = new Map<string, ScopedEmitter<RegistryId>>();
 
   readonly blocks: ScopedTagRules<"minecraft:block">;

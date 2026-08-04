@@ -1,13 +1,16 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { orderBy, uniqBy } from "lodash-es";
-import type { IdInput, NormalizedId, TagInput } from "../common/id";
-import { encodeId } from "../common/id";
-import Registry from "../common/registry";
-import { isAtLeastVersion, type SemVerInput } from "../packFormat";
-import type { TagDefinition, TagEntry } from "../schema/data/tag";
+import type { IdInput, NormalizedId, TagInput } from "../common";
+import {
+  encodeId,
+  fromJson,
+  isAtLeastVersion,
+  Registry,
+  type SemVerInput,
+} from "../common";
+import type { TagDefinition, TagEntry } from "../schema";
 import { tagFolderOf } from "../schema/data/tag";
-import { fromJson } from "../textHelper";
 
 export function entryId(entry: TagEntry) {
   if (typeof entry === "string") return entry;
@@ -106,7 +109,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   }
 }
 
-export default class TagsLoader implements TagRegistryHolder, Acceptor {
+export class TagsLoader implements TagRegistryHolder, Acceptor {
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
 

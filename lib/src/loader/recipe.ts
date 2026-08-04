@@ -1,61 +1,49 @@
 import { omit } from "lodash-es";
+import { IllegalShapeError } from "../common";
 import { encodeId } from "../common/id";
-import { IllegalShapeError } from "../error";
 
 import minimatch from "minimatch";
 import { JsonLoader } from ".";
+import type { RecipeDefinition } from "../schema/data/recipe";
+import type { RecipeParser } from "../serializer";
 import {
+  ApothecaryRecipeParser,
+  AssemblyRecipeParser,
+  BrewRecipeParser,
+  CookingRecipeParser,
+  CreateProcessingRecipeParser,
+  CuttingRecipeParser,
+  ElvenTradeRecipeParser,
+  FluidConversionRecipeParser,
+  ForgeConditionalRecipeParser,
+  GogWrapperRecipeParser,
   GrindstonePolishingParser,
+  HammeringRecipeParser,
+  InputOutputRecipeParser,
+  ManaInfusionRecipeParser,
+  NasaWorkbenchRecipeParser,
+  NbtWrapperRecipeParser,
+  OrechidRecipeParser,
+  PureDaisyRecipeParser,
+  RecipeHolder,
+  RootComponentRecipeParser,
+  RootRitualRecipeParser,
+  RunicAltarRecipeParser,
   ShapedParser,
   ShapelessParser,
   SmeltingParser,
   SmithingParser,
-  StonecuttingParser,
-} from "../parser";
-import {
-  FluidConversionRecipeParser,
-  HammeringRecipeParser,
-  InputOutputRecipeParser,
-  NasaWorkbenchRecipeParser,
   SpaceStationRecipeParser,
-} from "../parser/adAstra";
-import {
-  ApothecaryRecipeParser,
-  BrewRecipeParser,
-  ElvenTradeRecipeParser,
-  GogWrapperRecipeParser,
-  ManaInfusionRecipeParser,
-  NbtWrapperRecipeParser,
-  OrechidRecipeParser,
-  PureDaisyRecipeParser,
-  RunicAltarRecipeParser,
+  StonecuttingParser,
   TerraPlateRecipeParser,
-} from "../parser/botania";
-import {
-  AssemblyRecipeParser,
-  CreateProcessingRecipeParser,
-} from "../parser/create";
-import type RecipeParser from "../parser/recipe";
-import {
-  RecipeHolder,
-  type Recipe,
-  type RecipeParseContext,
-  type RecipeSerializer,
-} from "../parser/recipe";
-import CookingRecipeParser from "../parser/recipe/farmersdelight/cooking";
-import CuttingRecipeParser from "../parser/recipe/farmersdelight/cutting";
-import ForgeConditionalRecipeParser from "../parser/recipe/forge/conditional";
-import {
-  RootComponentRecipeParser,
-  RootRitualRecipeParser,
-} from "../parser/roots";
-import {
   ThermalCatalystRecipeParser,
   ThermalFuelRecipeParser,
   ThermalRecipeParser,
   TreeExtractionRecipeParser,
-} from "../parser/thermal";
-import type { RecipeDefinition } from "../schema/data/recipe";
+  type Recipe,
+  type RecipeParseContext,
+  type RecipeSerializer,
+} from "../serializer";
 import type { WithSerializerModules } from "../serializer/module";
 import type { PackContext } from "./context";
 
@@ -68,7 +56,7 @@ export interface RecipeLoaderAccessor {
   ignoreType(recipeType: string): void;
 }
 
-export default class RecipeLoader
+export class RecipeLoader
   extends JsonLoader<RecipeHolder>
   implements RecipeLoaderAccessor, RecipeSerializer
 {

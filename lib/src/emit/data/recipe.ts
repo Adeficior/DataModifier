@@ -1,35 +1,37 @@
-import type { LoaderContext } from "@/common";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
 import { combineResolvers, notNull } from "@adeficior/pack-resolver";
-import type { ClearableEmitter, RegistryProvider } from "..";
+import type { LoaderContext, RegistryProvider } from "../../common";
+import { recipeFolder } from "../../common";
+import type { Id, IdInput, NormalizedId } from "../../common/id";
+import { encodeId } from "../../common/id";
+import type {
+  Ingredient,
+  IngredientFilter,
+  IngredientInput,
+  Result,
+  ResultInput,
+} from "../../io";
 import {
+  createIngredientPredicate,
+  createReplacer,
+  createResultPredicate,
   resolveIDTest,
   type CommonFilter,
   type Predicate,
-} from "../../common/filters";
-import type { Id, IdInput, NormalizedId } from "../../common/id";
-import { encodeId } from "../../common/id";
-import type { Ingredient } from "../../common/ingredient";
-import type { IngredientFilter } from "../../common/ingredient/filter";
-import createIngredientPredicate from "../../common/ingredient/filter";
-import type { IngredientInput } from "../../common/ingredient/input";
-import type { Result } from "../../common/result";
-import createResultFilter from "../../common/result/filter";
-import type { ResultInput } from "../../common/result/input";
+} from "../../io";
 import type { PackContext } from "../../loader/context";
-import { recipeFolder } from "../../packFormat";
+import type { RecipeDefinition } from "../../schema/data/recipe";
 import {
-  createReplacer,
   RecipeHolder,
   type Recipe,
   type RecipeSerializer,
-} from "../../parser/recipe";
-import type { RecipeDefinition } from "../../schema/data/recipe";
-import CustomEmitter from "../custom";
+} from "../../serializer";
+import type { ClearableEmitter } from "../abstract";
+import { CustomEmitter } from "../custom";
 import type { Modifier } from "../rule";
-import RecipeRule from "../rule/recipe";
-import RuledEmitter from "../ruled";
+import { RecipeRule } from "../rule/recipe";
+import { RuledEmitter } from "../ruled";
 
 export type RecipeTest = Readonly<{
   id?: CommonFilter<NormalizedId>;
@@ -79,7 +81,7 @@ export const EMPTY_RECIPE: RecipeDefinition = {
   ],
 };
 
-export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
+export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>
     this.recipePath(it),
   );
@@ -120,7 +122,7 @@ export default class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
   private createResultPredicate(filter?: IngredientFilter) {
     if (!filter) return () => true;
-    return createResultFilter(filter, this.context);
+    return createResultPredicate(filter, this.context);
   }
 
   private resolveRecipeTest(test: RecipeTest) {

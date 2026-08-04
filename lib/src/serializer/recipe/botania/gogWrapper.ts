@@ -1,6 +1,8 @@
-import type { RecipeHolder, RecipeModifier, RecipeParseContext } from "..";
-import RecipeSerializer, { Recipe } from "..";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { RecipeDefinition } from "../../../schema";
+import { Recipe, RecipeParser } from "../abstract";
+import type { RecipeParseContext } from "../context";
+import type { RecipeHolder } from "../holder";
+import type { RecipeModifier } from "../modifier";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -42,7 +44,7 @@ export class GogWrapperRecipe extends Recipe {
   }
 }
 
-export class GogWrapperRecipeParser extends RecipeSerializer<
+export class GogWrapperRecipeParser extends RecipeParser<
   GogWrapperRecipeDefinition,
   GogWrapperRecipe
 > {

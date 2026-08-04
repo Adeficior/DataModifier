@@ -62,7 +62,7 @@ const LootEntryReferenceSchema = zod.object({
   name: zod.string(),
 });
 
-export const LootEntrySchema = LootEntryBaseSchema.and(
+const LootEntrySchema = LootEntryBaseSchema.and(
   zod.discriminatedUnion("type", [
     LootEntryAlternativeSchema,
     LootEntryItemSchema,
@@ -71,6 +71,14 @@ export const LootEntrySchema = LootEntryBaseSchema.and(
     LootEntryEmptySchema,
   ]),
 );
+
+export function parseLootEntry(input: unknown) {
+  return LootEntrySchema.parse(input);
+}
+
+export function parseLootTable(input: unknown) {
+  return LootTableSchema.parse(input);
+}
 
 export type LootEntry = zod.infer<typeof LootEntrySchema>;
 

@@ -4,7 +4,6 @@
 //    <timestamp>2026-07-24T11:28:41.812Z</timestamp>
 //    <hash>9d04e6dbddea2b2e</hash>
 // </meta>
-
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -13,5 +12,7 @@
     "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

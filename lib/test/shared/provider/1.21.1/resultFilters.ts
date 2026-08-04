@@ -1,21 +1,18 @@
-import type { Class } from "../../../../src/common/class";
+import type { Class, IngredientFilter } from "../../../../src";
 import {
   BlockIngredient,
+  BlockResult,
   BlockTagIngredient,
+  BUCKET,
   FluidIngredient,
+  FluidResult,
   FluidTagIngredient,
   ItemIngredient,
+  ItemResult,
   ItemTagIngredient,
   ListIngredient,
-} from "../../../../src/common/ingredient";
-import type { IngredientFilter } from "../../../../src/common/ingredient/filter";
-import {
-  BlockResult,
-  FluidResult,
-  ItemResult,
   type Result,
-} from "../../../../src/common/result";
-import { BUCKET } from "../../../../src/common/units";
+} from "../../../../src";
 import type { DataProvider } from "../providers";
 
 export function* matchingResultFilters(): DataProvider<

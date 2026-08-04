@@ -1,12 +1,9 @@
 import { mapValues } from "lodash-es";
 import type { Serializer } from "..";
-import { Ingredient } from "../../common/ingredient";
-import type RegistryLookup from "../../loader/registry";
-import type { SemVerInput } from "../../packFormat";
-import {
-  IngredientMap,
-  type IngredientMapInput,
-} from "../../parser/recipe/ingredientMap";
+import type { SemVerInput } from "../../common";
+import { Ingredient } from "../../io";
+import type { RegistryLookup } from "../../loader";
+import { IngredientMap, type IngredientMapInput } from "../ingredientMap";
 import type { SerializerModule } from "../module";
 import { VersionedSerializer } from "../versioned";
 import { WrapperSerializer } from "../wrapped";

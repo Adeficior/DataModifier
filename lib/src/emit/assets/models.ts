@@ -1,9 +1,9 @@
-import type { LoaderContext } from "@/common";
 import type { ClearableEmitter } from "..";
+import type { LoaderContext } from "../../common";
 import type { IdInput, NormalizedId } from "../../common/id";
 import { encodeId, prefix, suffix } from "../../common/id";
 import type { Model } from "../../schema/assets/model";
-import CustomEmitter from "../custom";
+import { CustomEmitter } from "../custom";
 
 export interface ModelRules {
   add(id: IdInput, blockstate: Model): NormalizedId;
@@ -20,7 +20,7 @@ export interface ModelRulesGroup {
   items: ModelRules;
 }
 
-export default class ModelEmitter implements ModelRules, ClearableEmitter {
+export class ModelEmitter implements ModelRules, ClearableEmitter {
   private readonly custom;
 
   constructor(type: string) {

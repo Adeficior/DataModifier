@@ -1,3 +1,4 @@
+import type { Class } from "../../../src";
 import {
   BlockIngredient,
   BlockResult,
@@ -8,7 +9,6 @@ import {
   type Ingredient,
   type Result,
 } from "../../../src";
-import type { Class } from "../../../src/common/class";
 import type { DataProvider } from "./providers";
 
 export function* resultLikeIngredients(): DataProvider<

@@ -8,9 +8,7 @@ import {
 } from "../../";
 import type { SerializerBuilder } from "../module";
 
-export default function commonSerialization(
-  builder: SerializerBuilder<Ingredient>,
-) {
+export function commonSerialization(builder: SerializerBuilder<Ingredient>) {
   builder.deserializer<Result>(
     (it) => it instanceof Result,
     (it) => it.asIngredient(),

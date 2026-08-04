@@ -1,9 +1,9 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type RegistryLookup from ".";
+import type { RegistryLookup } from ".";
 import type { IdInput, NormalizedId } from "../../common/id";
 import { encodeId } from "../../common/id";
 
-export default class EmptyRegistryLookup implements RegistryLookup {
+export class EmptyRegistryLookup implements RegistryLookup {
   isKnown(): boolean {
     return false;
   }

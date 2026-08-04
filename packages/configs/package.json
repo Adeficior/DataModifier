@@ -4,7 +4,8 @@
    "type": "module",
    "exports": {
       "./eslint": "./eslint.config.js",
-      "./tsconfig": "./tsconfig.json"
+      "./tsconfig": "./tsconfig.json",
+      "./tsconfig/build": "./tsconfig.build.json"
    },
    "scripts": {
       "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  *.js || true"
@@ -17,6 +18,6 @@
       "typescript-eslint": "^8.61.0"
    },
    "peerDependencies": {
-      "typescript": "^5"
+      "typescript": "^7"
    }
 }

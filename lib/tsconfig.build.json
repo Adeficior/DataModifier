@@ -1,0 +1,10 @@
+{
+  "extends": "@adeficior/configs/tsconfig/build",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": [
+    "src"
+  ]
+}

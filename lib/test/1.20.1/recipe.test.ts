@@ -1,12 +1,17 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import type { NormalizedId } from "../../src";
-import { ItemIngredient, ItemTagIngredient } from "../../src/common/ingredient";
-import { ItemResult } from "../../src/common/result";
-import type { RecipeTest } from "../../src/emit/data/recipe";
-import { EMPTY_RECIPE } from "../../src/emit/data/recipe";
-import type { ShapedRecipeDefinition } from "../../src/parser";
+import type {
+  NormalizedId,
+  RecipeTest,
+  ShapedRecipeDefinition,
+} from "../../src";
+import {
+  EMPTY_RECIPE,
+  ItemIngredient,
+  ItemResult,
+  ItemTagIngredient,
+} from "../../src";
 import setupLoader from "../shared/loaderSetup";
 
 const version = basename(import.meta.dir);

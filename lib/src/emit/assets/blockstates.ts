@@ -1,9 +1,9 @@
-import type { LoaderContext } from "@/common";
 import type { ClearableEmitter } from "..";
+import type { LoaderContext } from "../../common";
 import type { Id, IdInput } from "../../common/id";
 import { prefix } from "../../common/id";
 import type { Blockstate } from "../../schema/assets/blockstate";
-import CustomEmitter from "../custom";
+import { CustomEmitter } from "../custom";
 
 export interface BlockstateRules {
   add(id: IdInput, blockstate: Blockstate): void;
@@ -11,9 +11,7 @@ export interface BlockstateRules {
   cog(id: IdInput, model?: string): void;
 }
 
-export default class BlockstateEmitter
-  implements BlockstateRules, ClearableEmitter
-{
+export class BlockstateEmitter implements BlockstateRules, ClearableEmitter {
   private readonly custom = new CustomEmitter<Blockstate>(this.filePath);
 
   private filePath(id: Id) {

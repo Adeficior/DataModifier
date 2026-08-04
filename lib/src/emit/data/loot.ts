@@ -1,25 +1,24 @@
-import type { LoaderContext } from "@/common";
 import { combineResolvers } from "@adeficior/pack-resolver";
-import type { ClearableEmitter, RegistryProvider } from "..";
+import type { LoaderContext, RegistryProvider } from "../../common";
+import { lootTableFolder } from "../../common";
+import type { Id, IdInput, NormalizedId } from "../../common/id";
+import { encodeId, prefix } from "../../common/id";
+import type { Ingredient, IngredientFilter } from "../../io";
 import {
+  createIngredientPredicate,
   resolveIDTest,
   type CommonFilter,
   type Predicate,
-} from "../../common/filters";
-import type { Id, IdInput, NormalizedId } from "../../common/id";
-import { encodeId, prefix } from "../../common/id";
-import type { Ingredient } from "../../common/ingredient";
-import type { IngredientFilter } from "../../common/ingredient/filter";
-import createIngredientPredicate from "../../common/ingredient/filter";
+} from "../../io";
 import type { PackContext } from "../../loader/context";
-import { lootTableFolder } from "../../packFormat";
 import type { LootItemInput } from "../../parser/lootTable";
 import { createLootEntry, replaceItemInTable } from "../../parser/lootTable";
 import type { LootModifier, LootTable } from "../../schema/data/loot";
 import { EmptyLootEntry, LootTableSchema } from "../../schema/data/loot";
-import CustomEmitter from "../custom";
-import LootTableRule from "../rule/lootTable";
-import RuledEmitter from "../ruled";
+import type { ClearableEmitter } from "../abstract";
+import { CustomEmitter } from "../custom";
+import { LootTableRule } from "../rule/lootTable";
+import { RuledEmitter } from "../ruled";
 
 export const EMPTY_LOOT_TABLE: LootTable = {
   type: "minecraft:empty",
@@ -55,7 +54,7 @@ export interface LootRules {
   disabledModifier(id: IdInput): void;
 }
 
-export default class LootTableEmitter implements LootRules, ClearableEmitter {
+export class LootTableEmitter implements LootRules, ClearableEmitter {
   private readonly customTables = new CustomEmitter<LootTable>((it) =>
     this.tablePath(it),
   );
