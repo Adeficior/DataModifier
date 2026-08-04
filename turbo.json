@@ -6,13 +6,17 @@
             "^build"
          ],
          "outputs": [
-            "dist/**",
+            "dist/**"
          ]
       },
       "check": {
          "dependsOn": [
             "^check"
          ]
+      },
+      "dev": {
+         "persistent": true,
+         "cache": false
       }
    }
 }

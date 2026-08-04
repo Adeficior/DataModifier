@@ -1,5 +1,5 @@
 {
-   "name": "@adeficior/data-modifier-core",
+   "name": "@adeficior/data-modifier-tags",
    "version": "0.0.0-dev",
    "main": "dist/index.js",
    "exports": {
@@ -22,7 +22,7 @@
    "repository": {
       "type": "git",
       "url": "git+https://github.com/Adeficior/DataModifier.git",
-      "directory": "core"
+      "directory": "modules/tags"
    },
    "license": "ISC",
    "bugs": {
@@ -30,20 +30,12 @@
    },
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
-      "@adeficior/configs": "workspace:*",
-      "@types/lodash-es": "^4.17.12"
-   },
-   "dependencies": {
-      "@adeficior/resource-merger": "^2.0.0-rc.16",
-      "json5": "^2.2.3",
-      "lodash-es": "^4.18.1",
-      "minimatch": "^5.1.9",
-      "prettier": "^3.8.4",
-      "prismarine-nbt": "^2.8.0",
-      "zod": "^4.4.3"
+      "@adeficior/configs": "workspace:*"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",
-      "typescript": "^7"
+      "typescript": "^7",
+      "lodash-es": "^4",
+      "@adeficior/data-modifier-core": "workspace:*"
    }
 }

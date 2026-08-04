@@ -1,7 +1,11 @@
-import type { Id, IdInput, NormalizedId } from "./id";
-import { createId, encodeId } from "./id";
+import type { Id, IdInput, NormalizedId } from "../common/id";
+import { createId, encodeId } from "../common/id";
+import type { RegistryProvider } from "../registry/abstract";
 
-export class Registry<TEntry, TId extends string = string> {
+export class Registry<
+  TEntry,
+  TId extends string = string,
+> implements RegistryProvider<TEntry> {
   private readonly entries = new Map<NormalizedId<TId>, TEntry>();
 
   set(key: IdInput<TId>, value: TEntry) {

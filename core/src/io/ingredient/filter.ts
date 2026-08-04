@@ -7,8 +7,8 @@ import {
   RegistryEntryIngredient,
   TagIngredient,
 } from ".";
-import { IllegalShapeError, type NormalizedId } from "../../common";
-import type { PackContext } from "../../loader/context";
+import { IllegalShapeError } from "../../common/error";
+import type { NormalizedId } from "../../common/id";
 import {
   createIdPredicate,
   type CommonFilter,

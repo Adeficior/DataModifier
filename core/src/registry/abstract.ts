@@ -1,4 +1,4 @@
-import type { Id } from "./id";
+import type { Id } from "../common/id";
 
 export interface RegistryProvider<T> {
   forEach(consumer: (recipe: T, id: Id) => void): void;

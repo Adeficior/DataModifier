@@ -1,9 +1,28 @@
-import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
-import type { ClearableEmitter, PathProvider } from ".";
-import type { LoaderContext, RegistryProvider } from "../common";
-import { toJson } from "../common";
+import {
+  extendLoggerContext,
+  simpleResolver,
+  type Logger,
+} from "@adeficior/pack-resolver";
+import type { LoaderContext } from "../common/context";
 import type { Id } from "../common/id";
-import type { Rule } from "./rule";
+import { toJson } from "../common/textHelper";
+import type { RegistryProvider } from "../registry/abstract";
+import type { ClearableEmitter, PathProvider } from "./abstract";
+
+export type Modifier<T> = (recipe: T) => T | null;
+
+export abstract class Rule<T> {
+  protected constructor(private readonly modifier: Modifier<T>) {}
+
+  // TODO why logger?
+  abstract matches(id: Id, recipe: T, logger: Logger): boolean;
+
+  abstract printWarning(logger: Logger): void;
+
+  modify(value: T) {
+    return this.modifier(value);
+  }
+}
 
 export class RuledEmitter<
   TEntry,

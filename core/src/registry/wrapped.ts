@@ -1,7 +1,7 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { RegistryLookup } from ".";
-import type { IdInput } from "../../common/id";
+import type { IdInput } from "../common/id";
 import { EmptyRegistryLookup } from "./empty";
+import type { RegistryLookup } from "./lookup";
 
 export class WrappedRegistryLookup implements RegistryLookup {
   private inner: RegistryLookup = new EmptyRegistryLookup();

@@ -1,41 +1,33 @@
-import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
-import { orderBy, uniqBy } from "lodash-es";
-import type { IdInput, NormalizedId, TagInput } from "../common";
+import type {
+  IdInput,
+  NormalizedId,
+  TagContentChecker,
+  TagInput,
+} from "@adeficior/data-modifier-core";
 import {
   encodeId,
   fromJson,
   isAtLeastVersion,
   Registry,
   type SemVerInput,
-} from "../common";
-import type { TagDefinition, TagEntry } from "../schema";
-import { tagFolderOf } from "../schema/data/tag";
-
-export function entryId(entry: TagEntry) {
-  if (typeof entry === "string") return entry;
-  else return encodeId(entry.id);
-}
-
-export function orderTagEntries(entries: TagEntry[]) {
-  return orderBy(
-    uniqBy(entries, (it) => entryId(it)),
-    (it) => entryId(it),
-  );
-}
+} from "@adeficior/data-modifier-core";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
+import { entryId, orderTagEntries, tagFolderOf } from "./helper";
+import type { TagDefinition, TagEntry } from "./schema";
 
 export interface TagRegistryHolder {
   registry<T extends RegistryId>(key: T): TagRegistry<T>;
 }
 
-export interface TagRegistry<T extends RegistryId> {
+export interface TagRegistry<
+  T extends RegistryId,
+> extends TagContentChecker<T> {
   list(): string[];
 
   get(id: TagInput): TagEntry<InferIds<T>>[] | undefined;
 
   resolve(id: TagInput): TagEntry<InferIds<T>>[];
-
-  contains(id: TagInput, entry: IdInput<InferIds<T>>): boolean;
 }
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {

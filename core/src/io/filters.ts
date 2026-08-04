@@ -1,15 +1,22 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { IdInput, NormalizedId, TagInput } from "../common";
-import { encodeId } from "../common";
-import type { TagRegistry } from "../loader";
+import {
+  encodeId,
+  type IdInput,
+  type NormalizedId,
+  type TagInput,
+} from "../common/id";
 
 export type Predicate<T> = (value: T) => boolean;
 export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
+export type TagContentChecker<TId extends RegistryId> = {
+  contains(id: TagInput, entry: IdInput<InferIds<TId>>): boolean;
+};
+
 export function createIdPredicate<TEntry, TId extends string>(
   test: CommonFilter<TId>,
   resolve: (value: TEntry) => NormalizedId<TId>[],
-  tags?: TagRegistry<RegistryId>,
+  tags?: TagContentChecker<RegistryId>,
 ): Predicate<TEntry> {
   if (typeof test === "function") {
     return (entry) => resolve(entry).some((id) => test(id as TId));
@@ -32,9 +39,9 @@ export function createIdPredicate<TEntry, TId extends string>(
   }
 }
 
-export function resolveIDTest<T extends RegistryId>(
+export function resolveIdTest<T extends RegistryId>(
   test: CommonFilter<NormalizedId<InferIds<T>>>,
-  tags?: TagRegistry<T>,
+  tags?: TagContentChecker<T>,
 ): Predicate<IdInput<InferIds<T>>> {
   return createIdPredicate<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
     test,

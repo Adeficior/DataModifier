@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "dev": "turbo run dev",
     "prepare": "husky && bun run scripts/prepare.ts"
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "turbo": "^2.10.8"
+    "turbo": "^2.10.7"
   },
   "workspaces": [
     "lib",
