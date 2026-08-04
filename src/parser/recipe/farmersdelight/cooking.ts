@@ -1,9 +1,9 @@
 import { notNull } from "@adeficior/pack-resolver";
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 export type CookingRecipeDefinition = RecipeDefinition &
   Readonly<{

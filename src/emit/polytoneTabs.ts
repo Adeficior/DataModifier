@@ -8,11 +8,11 @@ import {
   type BaseContext,
 } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";
-import type { IdInput, NormalizedId } from "../common/id.js";
-import { createId, encodeId } from "../common/id.js";
-import type RegistryLookup from "../loader/registry/index.js";
-import CustomEmitter from "./custom.js";
-import type { ClearableEmitter } from "./index.js";
+import type { ClearableEmitter } from ".";
+import type { IdInput, NormalizedId } from "../common/id";
+import { createId, encodeId } from "../common/id";
+import type RegistryLookup from "../loader/registry";
+import CustomEmitter from "./custom";
 
 interface TabModifications {
   icon?: IdInput<ItemId>;

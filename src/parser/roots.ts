@@ -1,2 +1,2 @@
-export * from "./recipe/roots/component.js";
-export * from "./recipe/roots/ritual.js";
+export * from "./recipe/roots/component";
+export * from "./recipe/roots/ritual";

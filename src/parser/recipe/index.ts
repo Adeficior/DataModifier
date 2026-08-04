@@ -1,10 +1,10 @@
-import type { Predicate } from "../../common/filters.js";
-import { encodeId, type NormalizedId } from "../../common/id.js";
-import type { Ingredient } from "../../common/ingredient/index.js";
-import type { Result } from "../../common/result/index.js";
-import type { PackContext } from "../../loader/context.js";
-import type { RecipeDefinition } from "../../schema/data/recipe.js";
-import type { WithSerializerModules } from "../../serializer/module.js";
+import type { Predicate } from "../../common/filters";
+import { encodeId, type NormalizedId } from "../../common/id";
+import type { Ingredient } from "../../common/ingredient";
+import type { Result } from "../../common/result";
+import type { PackContext } from "../../loader/context";
+import type { RecipeDefinition } from "../../schema/data/recipe";
+import type { WithSerializerModules } from "../../serializer/module";
 
 export type Replacer<T> = (value: T) => T;
 

@@ -1,13 +1,13 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { orderBy, uniqBy } from "lodash-es";
-import type { IdInput, NormalizedId, TagInput } from "../common/id.js";
-import { encodeId } from "../common/id.js";
-import Registry from "../common/registry.js";
-import { isAtLeastVersion, type SemVerInput } from "../packFormat.js";
-import type { TagDefinition, TagEntry } from "../schema/data/tag.js";
-import { tagFolderOf } from "../schema/data/tag.js";
-import { fromJson } from "../textHelper.js";
+import type { IdInput, NormalizedId, TagInput } from "../common/id";
+import { encodeId } from "../common/id";
+import Registry from "../common/registry";
+import { isAtLeastVersion, type SemVerInput } from "../packFormat";
+import type { TagDefinition, TagEntry } from "../schema/data/tag";
+import { tagFolderOf } from "../schema/data/tag";
+import { fromJson } from "../textHelper";
 
 export function entryId(entry: TagEntry) {
   if (typeof entry === "string") return entry;

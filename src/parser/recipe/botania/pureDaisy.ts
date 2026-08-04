@@ -1,11 +1,11 @@
-import z from "zod";
-import { IdSchema } from "../../../common/id.js";
-import { BlockResult, type Result } from "../../../common/result/index.js";
-import { isObjectWith } from "../../../serializer/checks.js";
-import { createSerializerModule } from "../../../serializer/module.js";
+import * as z from "zod";
+import { IdSchema } from "../../../common/id";
+import { BlockResult, type Result } from "../../../common/result";
+import { isObjectWith } from "../../../serializer/checks";
+import { createSerializerModule } from "../../../serializer/module";
 import BotaniaBlockRecipeParser, {
   type BotaniaBlockRecipeDefinition,
-} from "./blocks.js";
+} from "./blocks";
 
 export type PureDaisyRecipeDefinition = BotaniaBlockRecipeDefinition;
 

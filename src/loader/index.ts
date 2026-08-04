@@ -5,11 +5,11 @@ import type {
   Logger,
   Resolver,
 } from "@adeficior/pack-resolver";
-import type { Id, IdInput } from "../common/id.js";
-import Registry from "../common/registry.js";
-import type { RegistryProvider } from "../emit/index.js";
-import { tryCatching } from "../error.js";
-import { fromJson } from "../textHelper.js";
+import type { Id, IdInput } from "../common/id";
+import Registry from "../common/registry";
+import type { RegistryProvider } from "../emit";
+import { tryCatching } from "../error";
+import { fromJson } from "../textHelper";
 
 export default interface Loader {
   loadFrom(resolver: Resolver): Promise<void>;

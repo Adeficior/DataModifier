@@ -1,17 +1,11 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import {
-  ItemIngredient,
-  ItemTagIngredient,
-} from "../../src/common/ingredient/index.js";
-import { ItemResult } from "../../src/common/result/index.js";
-import { EMPTY_LOOT_TABLE } from "../../src/emit/data/loot.js";
-import {
-  LootEntrySchema,
-  LootTableSchema,
-} from "../../src/schema/data/loot.js";
-import setupLoader from "../shared/loaderSetup.js";
+import { ItemIngredient, ItemTagIngredient } from "../../src/common/ingredient";
+import { ItemResult } from "../../src/common/result";
+import { EMPTY_LOOT_TABLE } from "../../src/emit/data/loot";
+import { LootEntrySchema, LootTableSchema } from "../../src/schema/data/loot";
+import setupLoader from "../shared/loaderSetup";
 
 const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({

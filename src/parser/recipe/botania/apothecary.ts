@@ -1,11 +1,11 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
   type RecipeModifier,
   type RecipeParseContext,
-} from "../index.js";
+} from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 export type ApothecaryRecipeDefinition = RecipeDefinition &
   Readonly<{

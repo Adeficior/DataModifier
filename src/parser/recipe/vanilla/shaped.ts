@@ -1,8 +1,8 @@
-import type { Result } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import type { IngredientMap, IngredientMapInput } from "../ingredientMap.js";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
+import type { Result } from "../../../common/result";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { IngredientMap, IngredientMapInput } from "../ingredientMap";
 
 export type ShapedRecipeDefinition = RecipeDefinition &
   Readonly<{

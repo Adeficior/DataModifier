@@ -1,18 +1,18 @@
 import type { BaseContext } from "@adeficior/pack-resolver";
-import type { Id, IdInput } from "../../common/id.js";
-import { prefix } from "../../common/id.js";
-import type { BlockDefinition } from "../../schema/content/blockDefinition.js";
+import type { ClearableEmitter } from "..";
+import type { Id, IdInput } from "../../common/id";
+import { prefix } from "../../common/id";
+import type { BlockDefinition } from "../../schema/content/blockDefinition";
 import type {
   ItemDefinition,
   ItemProperties,
-} from "../../schema/content/itemDefinition.js";
-import type { BlockstateRules } from "../assets/blockstates.js";
-import type { ModelRulesGroup } from "../assets/models.js";
-import CustomEmitter from "../custom.js";
-import type { LootRules } from "../data/loot.js";
-import type { ClearableEmitter } from "../index.js";
-import type { BlockDefinitionRulesWithoutId } from "./innerBlockDefinition.js";
-import createInnerBlockDefinitionBuilder from "./innerBlockDefinition.js";
+} from "../../schema/content/itemDefinition";
+import type { BlockstateRules } from "../assets/blockstates";
+import type { ModelRulesGroup } from "../assets/models";
+import CustomEmitter from "../custom";
+import type { LootRules } from "../data/loot";
+import type { BlockDefinitionRulesWithoutId } from "./innerBlockDefinition";
+import createInnerBlockDefinitionBuilder from "./innerBlockDefinition";
 
 export type ItemDefinitionOptions = Readonly<{
   model?: boolean;

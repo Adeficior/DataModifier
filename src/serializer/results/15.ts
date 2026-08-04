@@ -1,4 +1,4 @@
-import z from "zod";
+import * as z from "zod";
 import { BlockResult, FluidResult, ItemResult, type Result } from "../..";
 import { AmountSchema, ChanceSchema, CountSchema } from "../../common/fields";
 import { IdSchema } from "../../common/id";

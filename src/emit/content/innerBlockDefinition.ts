@@ -1,10 +1,10 @@
-import type { IdInput } from "../../common/id.js";
-import type { BlockDefinition } from "../../schema/content/blockDefinition.js";
-import type { BlockstateRules } from "../assets/blockstates.js";
-import type { ModelRules } from "../assets/models.js";
-import type { LootRules } from "../data/loot.js";
-import type { BlockDefinitionRules } from "./blockDefinition.js";
-import { AbstractBlockDefinitionRules } from "./blockDefinition.js";
+import type { IdInput } from "../../common/id";
+import type { BlockDefinition } from "../../schema/content/blockDefinition";
+import type { BlockstateRules } from "../assets/blockstates";
+import type { ModelRules } from "../assets/models";
+import type { LootRules } from "../data/loot";
+import type { BlockDefinitionRules } from "./blockDefinition";
+import { AbstractBlockDefinitionRules } from "./blockDefinition";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

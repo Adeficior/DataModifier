@@ -1,16 +1,16 @@
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import type { Predicate } from "../../common/filters.js";
-import type { Id } from "../../common/id.js";
+import type { Modifier } from ".";
+import Rule from ".";
+import type { Predicate } from "../../common/filters";
+import type { Id } from "../../common/id";
 import {
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
-} from "../../common/ingredient/index.js";
-import { IllegalShapeError, tryCatching } from "../../error.js";
-import type { LootEntryBase, LootTable } from "../../schema/data/loot.js";
-import { extendLootEntry } from "../../schema/data/loot.js";
-import type { Modifier } from "./index.js";
-import Rule from "./index.js";
+} from "../../common/ingredient";
+import { IllegalShapeError, tryCatching } from "../../error";
+import type { LootEntryBase, LootTable } from "../../schema/data/loot";
+import { extendLootEntry } from "../../schema/data/loot";
 
 // TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
 

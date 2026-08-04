@@ -1,14 +1,14 @@
 import { omit } from "lodash-es";
-import z from "zod";
+import * as z from "zod";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
 import {
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
-} from "../../../common/ingredient/index.js";
-import { IllegalShapeError } from "../../../error.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
+} from "../../../common/ingredient";
+import { IllegalShapeError } from "../../../error";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 const WrappedIngredientSchema = z.object({
   ingredient: z.record(z.string(), z.unknown()),

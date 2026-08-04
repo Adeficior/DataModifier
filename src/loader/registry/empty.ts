@@ -1,7 +1,7 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId } from "../../common/id.js";
-import type RegistryLookup from "./index.js";
+import type RegistryLookup from ".";
+import type { IdInput, NormalizedId } from "../../common/id";
+import { encodeId } from "../../common/id";
 
 export default class EmptyRegistryLookup implements RegistryLookup {
   isKnown(): boolean {

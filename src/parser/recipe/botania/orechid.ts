@@ -1,6 +1,6 @@
 import BotaniaBlockRecipeParser, {
   type BotaniaBlockRecipeDefinition,
-} from "./blocks.js";
+} from "./blocks";
 
 export type OrechidRecipeDefinition = BotaniaBlockRecipeDefinition &
   Readonly<{

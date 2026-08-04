@@ -4,8 +4,8 @@ import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
-} from "../src/common/ingredient/index.js";
-import setupLoader from "./shared/loaderSetup.js";
+} from "../src/common/ingredient";
+import setupLoader from "./shared/loaderSetup";
 
 const version = "1.20.1";
 const { loader, loadDump } = setupLoader({

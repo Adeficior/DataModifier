@@ -1,2 +1,2 @@
-export * from "./recipe/create/assembly.js";
-export * from "./recipe/create/processing.js";
+export * from "./recipe/create/assembly";
+export * from "./recipe/create/processing";

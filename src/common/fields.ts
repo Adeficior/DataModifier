@@ -1,4 +1,4 @@
-import z from "zod";
+import * as z from "zod";
 
 export const CountSchema = z.codec(
   z.number().int().positive().optional(),

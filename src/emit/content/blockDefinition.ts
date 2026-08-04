@@ -1,15 +1,15 @@
 import type { BlockId } from "@adeficior/data-modifier/generated";
 import type { BaseContext } from "@adeficior/pack-resolver";
-import type { Id, IdInput } from "../../common/id.js";
+import type { ClearableEmitter } from "..";
+import type { Id, IdInput } from "../../common/id";
 import type {
   BlockDefinition,
   BlockProperties,
-} from "../../schema/content/blockDefinition.js";
-import type { BlockstateRules } from "../assets/blockstates.js";
-import type { ModelRules } from "../assets/models.js";
-import CustomEmitter from "../custom.js";
-import type { LootRules } from "../data/loot.js";
-import type { ClearableEmitter } from "../index.js";
+} from "../../schema/content/blockDefinition";
+import type { BlockstateRules } from "../assets/blockstates";
+import type { ModelRules } from "../assets/models";
+import CustomEmitter from "../custom";
+import type { LootRules } from "../data/loot";
 
 export type BlockDefinitionOptions = Readonly<{
   blockstate?: boolean;

@@ -1,12 +1,12 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import type { Ingredient } from "../src/common/ingredient/index.js";
+import type { Ingredient } from "../src/common/ingredient";
 import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
-} from "../src/common/ingredient/index.js";
-import setupLoader from "./shared/loaderSetup.js";
+} from "../src/common/ingredient";
+import setupLoader from "./shared/loaderSetup";
 
 const version = "1.20.1";
 const { loader, loadDump } = setupLoader({

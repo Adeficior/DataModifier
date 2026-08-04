@@ -1,9 +1,9 @@
 import type { BaseContext } from "@adeficior/pack-resolver";
-import type { Id, IdInput } from "../../common/id.js";
-import { prefix } from "../../common/id.js";
-import type { Blockstate } from "../../schema/assets/blockstate.js";
-import CustomEmitter from "../custom.js";
-import type { ClearableEmitter } from "../index.js";
+import type { ClearableEmitter } from "..";
+import type { Id, IdInput } from "../../common/id";
+import { prefix } from "../../common/id";
+import type { Blockstate } from "../../schema/assets/blockstate";
+import CustomEmitter from "../custom";
 
 export interface BlockstateRules {
   add(id: IdInput, blockstate: Blockstate): void;

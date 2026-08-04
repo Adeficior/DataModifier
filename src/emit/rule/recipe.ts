@@ -1,12 +1,12 @@
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import type { Predicate } from "../../common/filters.js";
-import type { Id } from "../../common/id.js";
-import { createId } from "../../common/id.js";
-import type { Ingredient } from "../../common/ingredient/index.js";
-import type { Result } from "../../common/result/index.js";
-import type { RecipeHolder } from "../../parser/recipe/index.js";
-import type { Modifier } from "./index.js";
-import Rule from "./index.js";
+import type { Modifier } from ".";
+import Rule from ".";
+import type { Predicate } from "../../common/filters";
+import type { Id } from "../../common/id";
+import { createId } from "../../common/id";
+import type { Ingredient } from "../../common/ingredient";
+import type { Result } from "../../common/result";
+import type { RecipeHolder } from "../../parser/recipe";
 
 export default class RecipeRule extends Rule<RecipeHolder> {
   constructor(

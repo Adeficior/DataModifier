@@ -1,5 +1,5 @@
-import type { ManyToOneRecipeDefinition } from "../manyToOne.js";
-import { ManyToOneRecipeParser } from "../manyToOne.js";
+import type { ManyToOneRecipeDefinition } from "../manyToOne";
+import { ManyToOneRecipeParser } from "../manyToOne";
 
 export type GrindstonePolishingDefinition = ManyToOneRecipeDefinition &
   Readonly<{

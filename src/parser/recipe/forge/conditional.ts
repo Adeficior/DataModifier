@@ -1,10 +1,6 @@
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type {
-  RecipeHolder,
-  RecipeModifier,
-  RecipeParseContext,
-} from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
+import type { RecipeHolder, RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 type WithConditions<T> = {
   conditions: unknown[];

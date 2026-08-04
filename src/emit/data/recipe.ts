@@ -5,34 +5,34 @@ import type {
   Logger,
 } from "@adeficior/pack-resolver";
 import { combineResolvers, notNull } from "@adeficior/pack-resolver";
+import type { ClearableEmitter, RegistryProvider } from "..";
 import {
   resolveIDTest,
   type CommonFilter,
   type Predicate,
-} from "../../common/filters.js";
-import type { Id, IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId } from "../../common/id.js";
-import type { IngredientFilter } from "../../common/ingredient/filter.js";
-import createIngredientPredicate from "../../common/ingredient/filter.js";
-import type { Ingredient } from "../../common/ingredient/index.js";
-import type { IngredientInput } from "../../common/ingredient/input.js";
-import createResultFilter from "../../common/result/filter.js";
-import type { Result } from "../../common/result/index.js";
-import type { ResultInput } from "../../common/result/input.js";
-import type { PackContext } from "../../loader/context.js";
-import { recipeFolder } from "../../packFormat.js";
+} from "../../common/filters";
+import type { Id, IdInput, NormalizedId } from "../../common/id";
+import { encodeId } from "../../common/id";
+import type { Ingredient } from "../../common/ingredient";
+import type { IngredientFilter } from "../../common/ingredient/filter";
+import createIngredientPredicate from "../../common/ingredient/filter";
+import type { IngredientInput } from "../../common/ingredient/input";
+import type { Result } from "../../common/result";
+import createResultFilter from "../../common/result/filter";
+import type { ResultInput } from "../../common/result/input";
+import type { PackContext } from "../../loader/context";
+import { recipeFolder } from "../../packFormat";
 import {
   createReplacer,
   RecipeHolder,
   type Recipe,
   type RecipeSerializer,
-} from "../../parser/recipe/index.js";
-import type { RecipeDefinition } from "../../schema/data/recipe.js";
-import CustomEmitter from "../custom.js";
-import type { ClearableEmitter, RegistryProvider } from "../index.js";
-import type { Modifier } from "../rule/index.js";
-import RecipeRule from "../rule/recipe.js";
-import RuledEmitter from "../ruled.js";
+} from "../../parser/recipe";
+import type { RecipeDefinition } from "../../schema/data/recipe";
+import CustomEmitter from "../custom";
+import type { Modifier } from "../rule";
+import RecipeRule from "../rule/recipe";
+import RuledEmitter from "../ruled";
 
 export type RecipeTest = Readonly<{
   id?: CommonFilter<NormalizedId>;

@@ -1,24 +1,24 @@
 import { combineResolvers, type BaseContext } from "@adeficior/pack-resolver";
+import type { ClearableEmitter, RegistryProvider } from "..";
 import {
   resolveIDTest,
   type CommonFilter,
   type Predicate,
-} from "../../common/filters.js";
-import type { Id, IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId, prefix } from "../../common/id.js";
-import type { IngredientFilter } from "../../common/ingredient/filter.js";
-import createIngredientPredicate from "../../common/ingredient/filter.js";
-import type { Ingredient } from "../../common/ingredient/index.js";
-import type { PackContext } from "../../loader/context.js";
-import { lootTableFolder } from "../../packFormat.js";
-import type { LootItemInput } from "../../parser/lootTable.js";
-import { createLootEntry, replaceItemInTable } from "../../parser/lootTable.js";
-import type { LootModifier, LootTable } from "../../schema/data/loot.js";
-import { EmptyLootEntry, LootTableSchema } from "../../schema/data/loot.js";
-import CustomEmitter from "../custom.js";
-import type { ClearableEmitter, RegistryProvider } from "../index.js";
-import LootTableRule from "../rule/lootTable.js";
-import RuledEmitter from "../ruled.js";
+} from "../../common/filters";
+import type { Id, IdInput, NormalizedId } from "../../common/id";
+import { encodeId, prefix } from "../../common/id";
+import type { Ingredient } from "../../common/ingredient";
+import type { IngredientFilter } from "../../common/ingredient/filter";
+import createIngredientPredicate from "../../common/ingredient/filter";
+import type { PackContext } from "../../loader/context";
+import { lootTableFolder } from "../../packFormat";
+import type { LootItemInput } from "../../parser/lootTable";
+import { createLootEntry, replaceItemInTable } from "../../parser/lootTable";
+import type { LootModifier, LootTable } from "../../schema/data/loot";
+import { EmptyLootEntry, LootTableSchema } from "../../schema/data/loot";
+import CustomEmitter from "../custom";
+import LootTableRule from "../rule/lootTable";
+import RuledEmitter from "../ruled";
 
 export const EMPTY_LOOT_TABLE: LootTable = {
   type: "minecraft:empty",

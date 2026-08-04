@@ -1,17 +1,17 @@
-import z from "zod";
-import { IdSchema } from "../../../common/id.js";
-import type { Ingredient } from "../../../common/ingredient/index.js";
+import * as z from "zod";
+import RecipeParser, { type RecipeParseContext } from "..";
+import { IdSchema } from "../../../common/id";
+import type { Ingredient } from "../../../common/ingredient";
 import {
   BlockIngredient,
   BlockTagIngredient,
-} from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import { BlockResult } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import { hasType } from "../../../serializer/checks.js";
-import { createSerializerModule } from "../../../serializer/module.js";
-import RecipeParser, { type RecipeParseContext } from "../index.js";
-import { OneToOneRecipe } from "../oneToOne.js";
+} from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import { BlockResult } from "../../../common/result";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { hasType } from "../../../serializer/checks";
+import { createSerializerModule } from "../../../serializer/module";
+import { OneToOneRecipe } from "../oneToOne";
 
 export type BotaniaBlockRecipeDefinition = RecipeDefinition &
   Readonly<{

@@ -1,6 +1,6 @@
 import { createLogger } from "@adeficior/pack-resolver";
-import { fromArgs, printHelp } from "./config.js";
-import { generateDumpTypes } from "./index.js";
+import { generateDumpTypes } from ".";
+import { fromArgs, printHelp } from "./config";
 
 const logger = createLogger();
 

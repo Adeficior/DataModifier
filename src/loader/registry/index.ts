@@ -1,5 +1,5 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { IdInput, NormalizedId } from "../../common/id.js";
+import type { IdInput, NormalizedId } from "../../common/id";
 
 export default interface RegistryLookup {
   registries(): NormalizedId<RegistryId>[];

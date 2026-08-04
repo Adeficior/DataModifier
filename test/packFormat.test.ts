@@ -1,7 +1,7 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { EMPTY_LOOT_TABLE, EMPTY_RECIPE } from "../src/index.js";
-import setupLoader from "./shared/loaderSetup.js";
+import { EMPTY_LOOT_TABLE, EMPTY_RECIPE } from "../src";
+import setupLoader from "./shared/loaderSetup";
 
 const version = "1.21.1";
 const { loader } = setupLoader({ load: false, version });

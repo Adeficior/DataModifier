@@ -1,15 +1,24 @@
 import { omit } from "lodash-es";
-import { encodeId } from "../common/id.js";
-import { IllegalShapeError } from "../error.js";
+import { encodeId } from "../common/id";
+import { IllegalShapeError } from "../error";
 
 import minimatch from "minimatch";
+import { JsonLoader } from ".";
+import {
+  GrindstonePolishingParser,
+  ShapedParser,
+  ShapelessParser,
+  SmeltingParser,
+  SmithingParser,
+  StonecuttingParser,
+} from "../parser";
 import {
   FluidConversionRecipeParser,
   HammeringRecipeParser,
   InputOutputRecipeParser,
   NasaWorkbenchRecipeParser,
   SpaceStationRecipeParser,
-} from "../parser/adAstra.js";
+} from "../parser/adAstra";
 import {
   ApothecaryRecipeParser,
   BrewRecipeParser,
@@ -21,43 +30,34 @@ import {
   PureDaisyRecipeParser,
   RunicAltarRecipeParser,
   TerraPlateRecipeParser,
-} from "../parser/botania.js";
+} from "../parser/botania";
 import {
   AssemblyRecipeParser,
   CreateProcessingRecipeParser,
-} from "../parser/create.js";
-import {
-  GrindstonePolishingParser,
-  ShapedParser,
-  ShapelessParser,
-  SmeltingParser,
-  SmithingParser,
-  StonecuttingParser,
-} from "../parser/index.js";
-import CookingRecipeParser from "../parser/recipe/farmersdelight/cooking.js";
-import CuttingRecipeParser from "../parser/recipe/farmersdelight/cutting.js";
-import ForgeConditionalRecipeParser from "../parser/recipe/forge/conditional.js";
-import type RecipeParser from "../parser/recipe/index.js";
+} from "../parser/create";
+import type RecipeParser from "../parser/recipe";
 import {
   RecipeHolder,
   type Recipe,
   type RecipeParseContext,
   type RecipeSerializer,
-} from "../parser/recipe/index.js";
+} from "../parser/recipe";
+import CookingRecipeParser from "../parser/recipe/farmersdelight/cooking";
+import CuttingRecipeParser from "../parser/recipe/farmersdelight/cutting";
+import ForgeConditionalRecipeParser from "../parser/recipe/forge/conditional";
 import {
   RootComponentRecipeParser,
   RootRitualRecipeParser,
-} from "../parser/roots.js";
+} from "../parser/roots";
 import {
   ThermalCatalystRecipeParser,
   ThermalFuelRecipeParser,
   ThermalRecipeParser,
   TreeExtractionRecipeParser,
-} from "../parser/thermal.js";
-import type { RecipeDefinition } from "../schema/data/recipe.js";
-import type { WithSerializerModules } from "../serializer/module.js";
-import type { PackContext } from "./context.js";
-import { JsonLoader } from "./index.js";
+} from "../parser/thermal";
+import type { RecipeDefinition } from "../schema/data/recipe";
+import type { WithSerializerModules } from "../serializer/module";
+import type { PackContext } from "./context";
 
 export interface RecipeLoaderAccessor {
   unknownRecipeTypes(): RecipeDefinition[];

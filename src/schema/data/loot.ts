@@ -1,5 +1,5 @@
 import zod from "zod";
-import { encodeId } from "../../common/id.js";
+import { encodeId } from "../../common/id";
 
 const NumberProviderSchema = zod.union([
   zod.number(),

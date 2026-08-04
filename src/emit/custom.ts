@@ -1,9 +1,9 @@
 import { simpleResolver, type BaseContext } from "@adeficior/pack-resolver";
-import type { IdInput } from "../common/id.js";
-import { createId } from "../common/id.js";
-import Registry from "../common/registry.js";
-import { toJson } from "../textHelper.js";
-import type { ClearableEmitter, PathProvider } from "./index.js";
+import type { ClearableEmitter, PathProvider } from ".";
+import type { IdInput } from "../common/id";
+import { createId } from "../common/id";
+import Registry from "../common/registry";
+import { toJson } from "../textHelper";
 
 export default class CustomEmitter<TEntry> implements ClearableEmitter {
   constructor(

@@ -1,9 +1,9 @@
 import type { BaseContext } from "@adeficior/pack-resolver";
-import type { IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId, prefix, suffix } from "../../common/id.js";
-import type { Model } from "../../schema/assets/model.js";
-import CustomEmitter from "../custom.js";
-import type { ClearableEmitter } from "../index.js";
+import type { ClearableEmitter } from "..";
+import type { IdInput, NormalizedId } from "../../common/id";
+import { encodeId, prefix, suffix } from "../../common/id";
+import type { Model } from "../../schema/assets/model";
+import CustomEmitter from "../custom";
 
 export interface ModelRules {
   add(id: IdInput, blockstate: Model): NormalizedId;

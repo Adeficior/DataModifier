@@ -1,13 +1,10 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import RecipeParser, {
-  type RecipeModifier,
-  type RecipeParseContext,
-} from "../index.js";
+import RecipeParser, { type RecipeModifier, type RecipeParseContext } from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
 import {
   ManyToManyRecipe,
   type ManyToManyRecipeDefinition,
-} from "../manyToMany.js";
+} from "../manyToMany";
 
 export type ToolInput = Readonly<{
   type: "farmersdelight:tool_action";

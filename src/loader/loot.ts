@@ -1,6 +1,6 @@
-import type { LootTable } from "../schema/data/loot.js";
-import { LootTableSchema } from "../schema/data/loot.js";
-import { JsonLoader } from "./index.js";
+import { JsonLoader } from ".";
+import type { LootTable } from "../schema/data/loot";
+import { LootTableSchema } from "../schema/data/loot";
 
 export default class LootTableLoader extends JsonLoader<LootTable> {
   protected parse(json: unknown): LootTable | null {

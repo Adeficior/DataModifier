@@ -1,5 +1,6 @@
 //@ts-check
 import js from "@eslint/js";
+import importPlugin from "eslint-plugin-import";
 import { defineConfig } from "eslint/config";
 import ts from "typescript-eslint";
 
@@ -23,6 +24,16 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
         projectService: true,
       },
+    },
+  },
+  {
+    files: ["src/**/*.ts"],
+    extends: [
+      importPlugin.flatConfigs.recommended,
+      importPlugin.flatConfigs.typescript,
+    ],
+    rules: {
+      // "import/no-relative-parent-imports": "error",
     },
   },
 ]);

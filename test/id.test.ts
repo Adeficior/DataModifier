@@ -1,8 +1,8 @@
 import { expect, it } from "bun:test";
-import { resolveIDTest } from "../src/common/filters.js";
-import type { Id, NormalizedId } from "../src/common/id.js";
-import { createId, encodeId } from "../src/common/id.js";
-import Registry from "../src/common/registry.js";
+import { resolveIDTest } from "../src/common/filters";
+import type { Id, NormalizedId } from "../src/common/id";
+import { createId, encodeId } from "../src/common/id";
+import Registry from "../src/common/registry";
 
 it("parses id from string", () => {
   expect(createId("minecraft:stone")).toMatchObject({

@@ -1,19 +1,15 @@
-import type { Predicate } from "../common/filters.js";
-import { encodeId, stripTag } from "../common/id.js";
+import type { Predicate } from "../common/filters";
+import { encodeId, stripTag } from "../common/id";
 import {
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
   type ItemLikeIngredient,
-} from "../common/ingredient/index.js";
-import { ItemResult } from "../common/result/index.js";
-import type RegistryLookup from "../loader/registry/index.js";
-import type {
-  LootEntry,
-  LootEntryBase,
-  LootTable,
-} from "../schema/data/loot.js";
-import { extendLootEntry } from "../schema/data/loot.js";
+} from "../common/ingredient";
+import { ItemResult } from "../common/result";
+import type RegistryLookup from "../loader/registry";
+import type { LootEntry, LootEntryBase, LootTable } from "../schema/data/loot";
+import { extendLootEntry } from "../schema/data/loot";
 
 export type LootItemInput = ItemLikeIngredient | ItemResult | LootEntry;
 

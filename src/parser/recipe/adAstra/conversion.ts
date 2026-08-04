@@ -1,14 +1,11 @@
-import { encodeId } from "../../../common/id.js";
-import {
-  FluidIngredient,
-  type Ingredient,
-} from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import { FluidResult } from "../../../common/result/index.js";
-import { IllegalShapeError } from "../../../error.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
+import { encodeId } from "../../../common/id";
+import { FluidIngredient, type Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import { FluidResult } from "../../../common/result";
+import { IllegalShapeError } from "../../../error";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{

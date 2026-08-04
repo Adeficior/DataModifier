@@ -1,7 +1,7 @@
-import type { Id } from "../common/id.js";
-import type { LangDefinition } from "../schema/assets/lang.js";
-import { LangSchema } from "../schema/assets/lang.js";
-import { JsonLoader } from "./index.js";
+import { JsonLoader } from ".";
+import type { Id } from "../common/id";
+import type { LangDefinition } from "../schema/assets/lang";
+import { LangSchema } from "../schema/assets/lang";
 
 export default class LangLoader extends JsonLoader<LangDefinition> {
   protected parse(json: unknown, id: Id): LangDefinition | null {

@@ -1,9 +1,9 @@
 import { writeFileSync } from "fs";
 import { camelCase } from "lodash-es";
 import { format } from "prettier";
-import type { Id, IdInput } from "../../common/id.js";
-import { createId, encodeId } from "../../common/id.js";
-import type RegistryLookup from "../../loader/registry/index.js";
+import type { Id, IdInput } from "../../common/id";
+import { createId, encodeId } from "../../common/id";
+import type RegistryLookup from "../../loader/registry";
 
 const module = "@adeficior/data-modifier/generated";
 

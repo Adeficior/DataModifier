@@ -5,12 +5,12 @@ import type {
   BaseContext,
 } from "@adeficior/pack-resolver";
 import zod from "zod";
-import type { IdInput, NormalizedId } from "../../common/id.js";
-import { encodeId } from "../../common/id.js";
-import Registry from "../../common/registry.js";
-import { tryCatching, UnknownRegistryEntry } from "../../error.js";
-import { tryParseJson } from "../index.js";
-import type RegistryLookup from "./index.js";
+import type RegistryLookup from ".";
+import { tryParseJson } from "..";
+import type { IdInput, NormalizedId } from "../../common/id";
+import { encodeId } from "../../common/id";
+import Registry from "../../common/registry";
+import { tryCatching, UnknownRegistryEntry } from "../../error";
 
 const schema = zod.array(zod.string());
 

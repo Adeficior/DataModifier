@@ -1,6 +1,6 @@
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import RecipeParser, { type RecipeParseContext } from "../index.js";
-import { ManyToOneRecipe } from "../manyToOne.js";
+import RecipeParser, { type RecipeParseContext } from "..";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { ManyToOneRecipe } from "../manyToOne";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
   Readonly<{

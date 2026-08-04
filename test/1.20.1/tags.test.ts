@@ -1,7 +1,7 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import setupLoader from "../shared/loaderSetup.js";
+import setupLoader from "../shared/loaderSetup";
 
 const version = basename(import.meta.dir);
 const { loader } = setupLoader({ version, include: ["data/*/tags/**/*.json"] });

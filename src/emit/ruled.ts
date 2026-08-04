@@ -3,14 +3,10 @@ import {
   simpleResolver,
   type BaseContext,
 } from "@adeficior/pack-resolver";
-import type { Id } from "../common/id.js";
-import { toJson } from "../textHelper.js";
-import type {
-  ClearableEmitter,
-  PathProvider,
-  RegistryProvider,
-} from "./index.js";
-import type Rule from "./rule/index.js";
+import type { ClearableEmitter, PathProvider, RegistryProvider } from ".";
+import type { Id } from "../common/id";
+import { toJson } from "../textHelper";
+import type Rule from "./rule";
 
 export default class RuledEmitter<
   TEntry,

@@ -5,14 +5,14 @@ import {
   type BaseContext,
 } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
-import type { Predicate } from "../../common/filters.js";
-import type { Id, IdInput } from "../../common/id.js";
-import { createId, encodeId } from "../../common/id.js";
-import Registry from "../../common/registry.js";
-import type { Replacer } from "../../parser/recipe/index.js";
-import type { LangDefinition } from "../../schema/assets/lang.js";
-import { toJson } from "../../textHelper.js";
-import type { ClearableEmitter, RegistryProvider } from "../index.js";
+import type { ClearableEmitter, RegistryProvider } from "..";
+import type { Predicate } from "../../common/filters";
+import type { Id, IdInput } from "../../common/id";
+import { createId, encodeId } from "../../common/id";
+import Registry from "../../common/registry";
+import type { Replacer } from "../../parser/recipe";
+import type { LangDefinition } from "../../schema/assets/lang";
+import { toJson } from "../../textHelper";
 
 type LangRule = Readonly<{
   languages: string[];

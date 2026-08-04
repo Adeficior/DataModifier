@@ -1,15 +1,15 @@
-import z from "zod";
-import { encodeId, IdSchema } from "../../../common/id.js";
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import { ItemResult } from "../../../common/result/index.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { ResultSerializer } from "../../../serializer/results/index.js";
+import * as z from "zod";
 import RecipeParser, {
   Recipe,
   type RecipeModifier,
   type RecipeParseContext,
-} from "../index.js";
-import { OneToOneRecipe } from "../oneToOne.js";
+} from "..";
+import { encodeId, IdSchema } from "../../../common/id";
+import type { Ingredient } from "../../../common/ingredient";
+import { ItemResult } from "../../../common/result";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { ResultSerializer } from "../../../serializer/results";
+import { OneToOneRecipe } from "../oneToOne";
 
 // TODO this will also be the new item format, can re-use that
 const IdResultSchema = z.object({

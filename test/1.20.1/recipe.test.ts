@@ -1,16 +1,13 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import {
-  ItemIngredient,
-  ItemTagIngredient,
-} from "../../src/common/ingredient/index.js";
-import { ItemResult } from "../../src/common/result/index.js";
-import type { RecipeTest } from "../../src/emit/data/recipe.js";
-import { EMPTY_RECIPE } from "../../src/emit/data/recipe.js";
-import type { NormalizedId } from "../../src/index.js";
-import type { ShapedRecipeDefinition } from "../../src/parser/index.js";
-import setupLoader from "../shared/loaderSetup.js";
+import type { NormalizedId } from "../../src";
+import { ItemIngredient, ItemTagIngredient } from "../../src/common/ingredient";
+import { ItemResult } from "../../src/common/result";
+import type { RecipeTest } from "../../src/emit/data/recipe";
+import { EMPTY_RECIPE } from "../../src/emit/data/recipe";
+import type { ShapedRecipeDefinition } from "../../src/parser";
+import setupLoader from "../shared/loaderSetup";
 
 const version = basename(import.meta.dir);
 const { logger, loader } = setupLoader({

@@ -1,6 +1,6 @@
-import z from "zod";
-import { AmountSchema, CountSchema } from "../../../common/fields.js";
-import { IdSchema } from "../../../common/id.js";
+import * as z from "zod";
+import { AmountSchema, CountSchema } from "../../../common/fields";
+import { IdSchema } from "../../../common/id";
 import {
   FluidTagIngredient,
   ItemIngredient,
@@ -8,8 +8,8 @@ import {
   ListIngredient,
   type Ingredient,
 } from "../../../common/ingredient";
-import { isObjectWith } from "../../../serializer/checks.js";
-import { createSerializerModule } from "../../../serializer/module.js";
+import { isObjectWith } from "../../../serializer/checks";
+import { createSerializerModule } from "../../../serializer/module";
 
 const ThermalFluidTagSchema = z.object({
   fluid_tag: IdSchema,

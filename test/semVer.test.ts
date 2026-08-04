@@ -4,7 +4,7 @@ import {
   isAtLeastVersion,
   packFormatOf,
   parseSemVer,
-} from "../src/index.js";
+} from "../src";
 
 describe("semantic versions", () => {
   it("parses semantic versions correctly", async () => {

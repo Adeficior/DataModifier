@@ -1,17 +1,14 @@
 import type { BlockId } from "@adeficior/data-modifier/generated";
-import { encodeId } from "../../../common/id.js";
-import {
-  BlockIngredient,
-  type Ingredient,
-} from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import { IllegalShapeError } from "../../../error.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
 import RecipeParser, {
   Recipe,
   type RecipeModifier,
   type RecipeParseContext,
-} from "../index.js";
+} from "..";
+import { encodeId } from "../../../common/id";
+import { BlockIngredient, type Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import { IllegalShapeError } from "../../../error";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &
   Readonly<{

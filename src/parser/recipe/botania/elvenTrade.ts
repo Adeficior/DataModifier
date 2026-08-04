@@ -1,6 +1,6 @@
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import RecipeParser, { type RecipeParseContext } from "../index.js";
-import { ManyToManyRecipe } from "../manyToMany.js";
+import RecipeParser, { type RecipeParseContext } from "..";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { ManyToManyRecipe } from "../manyToMany";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
   Readonly<{

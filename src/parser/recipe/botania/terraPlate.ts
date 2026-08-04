@@ -1,7 +1,7 @@
 import {
   ManyToOneRecipeParser,
   type ManyToOneRecipeDefinition,
-} from "../manyToOne.js";
+} from "../manyToOne";
 
 export type ShapelessRecipeDefinition = ManyToOneRecipeDefinition;
 export type TerraPlateRecipeDefinition = ManyToOneRecipeDefinition &

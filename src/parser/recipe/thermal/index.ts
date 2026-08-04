@@ -1,10 +1,10 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import { IllegalShapeError } from "../../../error.js";
-import type { RecipeDefinition } from "../../../schema/data/recipe.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser, { Recipe } from "../index.js";
-import { ingredientSerializerModules } from "./module.js";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser, { Recipe } from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import { IllegalShapeError } from "../../../error";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+import { ingredientSerializerModules } from "./module";
 
 type Writeable<T> = {
   -readonly [P in keyof T]: T[P];

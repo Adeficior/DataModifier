@@ -1,5 +1,5 @@
-import type { ManyToManyRecipeDefinition } from "../manyToMany.js";
-import { ManyToManyRecipeParser } from "../manyToMany.js";
+import type { ManyToManyRecipeDefinition } from "../manyToMany";
+import { ManyToManyRecipeParser } from "../manyToMany";
 
 export type CreateProcessingRecipeDefinition = ManyToManyRecipeDefinition &
   Readonly<{

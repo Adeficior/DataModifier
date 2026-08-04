@@ -1,11 +1,8 @@
-import type { Ingredient } from "../../../common/ingredient/index.js";
-import type { Result } from "../../../common/result/index.js";
-import type { RecipeModifier, RecipeParseContext } from "../index.js";
-import RecipeParser from "../index.js";
-import {
-  ManyToOneRecipe,
-  type ManyToOneRecipeDefinition,
-} from "../manyToOne.js";
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeParser from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { Result } from "../../../common/result";
+import { ManyToOneRecipe, type ManyToOneRecipeDefinition } from "../manyToOne";
 
 export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &
   Readonly<{

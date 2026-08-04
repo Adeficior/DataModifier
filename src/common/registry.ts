@@ -1,5 +1,5 @@
-import type { Id, IdInput, NormalizedId } from "./id.js";
-import { createId, encodeId } from "./id.js";
+import type { Id, IdInput, NormalizedId } from "./id";
+import { createId, encodeId } from "./id";
 
 export default class Registry<TEntry, TId extends string = string> {
   private readonly entries = new Map<NormalizedId<TId>, TEntry>();

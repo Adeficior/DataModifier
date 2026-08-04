@@ -5,11 +5,8 @@ import {
 } from "@adeficior/pack-resolver";
 import { existsSync, mkdirSync } from "fs";
 import { resolve } from "path";
-import RegistryDumpLoader from "../loader/registry/dump.js";
-import {
-  generateRegistryTypes,
-  generateStubTypes,
-} from "./codegen/registry.js";
+import RegistryDumpLoader from "../loader/registry/dump";
+import { generateRegistryTypes, generateStubTypes } from "./codegen/registry";
 
 export async function generateDumpTypes(
   dumpDir: string | undefined,

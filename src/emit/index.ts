@@ -3,7 +3,7 @@ import type {
   BaseContext,
   Resolver,
 } from "@adeficior/pack-resolver";
-import type { Id } from "../common/id.js";
+import type { Id } from "../common/id";
 
 export interface RegistryProvider<T> {
   forEach(consumer: (recipe: T, id: Id) => void): void;

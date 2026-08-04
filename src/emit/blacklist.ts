@@ -2,14 +2,14 @@ import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { BaseContext, DataConsumer } from "@adeficior/pack-resolver";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
-import type { NormalizedId } from "../common/id.js";
-import { encodeId } from "../common/id.js";
-import type { IngredientFilter } from "../common/ingredient/filter.js";
-import createIngredientPredicate from "../common/ingredient/filter.js";
-import { ItemIngredient } from "../common/ingredient/index.js";
-import type { PackContext } from "../loader/context.js";
-import { toJson } from "../textHelper.js";
-import type { ClearableEmitter } from "./index.js";
+import type { ClearableEmitter } from ".";
+import type { NormalizedId } from "../common/id";
+import { encodeId } from "../common/id";
+import { ItemIngredient } from "../common/ingredient";
+import type { IngredientFilter } from "../common/ingredient/filter";
+import createIngredientPredicate from "../common/ingredient/filter";
+import type { PackContext } from "../loader/context";
+import { toJson } from "../textHelper";
 
 export type HideMode = "jei" | "polytone";
 export interface BlacklistOptions {
