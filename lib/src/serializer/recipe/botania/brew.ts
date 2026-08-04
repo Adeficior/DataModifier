@@ -1,0 +1,51 @@
+import type { RecipeModifier, RecipeParseContext } from "..";
+import RecipeSerializer, { Recipe } from "..";
+import type { Ingredient } from "../../../common/ingredient";
+import type { RecipeDefinition } from "../../../schema/data/recipe";
+
+export type BrewRecipeDefinition = RecipeDefinition &
+  Readonly<{
+    ingredients: unknown[];
+    brew: string;
+  }>;
+
+export class BrewRecipe extends Recipe {
+  constructor(private readonly ingredients: Ingredient[]) {
+    super();
+  }
+
+  getIngredients() {
+    return this.ingredients;
+  }
+
+  getResults() {
+    return [];
+  }
+
+  override modify(modifier: RecipeModifier) {
+    return new BrewRecipe(this.ingredients.map(modifier.ingredient));
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<BrewRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+    };
+  }
+}
+
+export class BrewRecipeParser extends RecipeSerializer<
+  BrewRecipeDefinition,
+  BrewRecipe
+> {
+  deserialize(
+    definition: BrewRecipeDefinition,
+    context: RecipeParseContext,
+  ): BrewRecipe {
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
+    return new BrewRecipe(ingredients);
+  }
+}
