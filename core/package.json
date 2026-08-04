@@ -1,0 +1,47 @@
+{
+   "name": "@adeficior/data-modifier-core",
+   "version": "0.0.0-dev",
+   "main": "dist/index.js",
+   "exports": {
+      ".": "./dist/index.js"
+   },
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "test": "bun test",
+      "lint": "eslint {src,test}",
+      "format": "prettier --write {src,test}",
+      "test:ci": "bun run lint && bun run check && bun run test --coverage"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Adeficior/DataModifier.git",
+      "directory": "core"
+   },
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/Adeficior/DataModifier/issues"
+   },
+   "homepage": "https://github.com/Adeficior/DataModifier#readme",
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*"
+   },
+   "dependencies": {
+      "@adeficior/resource-merger": "^2.0.0-rc.16",
+      "json5": "^2.2.3",
+      "lodash-es": "^4.18.1",
+      "minimatch": "^5.1.9",
+      "prettier": "^3.8.4",
+      "prismarine-nbt": "^2.8.0",
+      "zod": "^4.4.3"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "*",
+      "typescript": "^7"
+   }
+}

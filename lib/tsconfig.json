@@ -1,7 +1,0 @@
-{
-  "extends": "@adeficior/configs/tsconfig",
-  "include": [
-    "src",
-    "test"
-  ]
-}
