@@ -1,12 +1,9 @@
-import { AbstractSerializer, type Serializer } from ".";
-import {
-  IllegalShapeError,
-  transformErrors,
-  type Class,
-  type SemVerInput,
-} from "../common";
-import type { InputOutput } from "../io";
-import type { RegistryLookup } from "../loader";
+import type { Class } from "../common/class";
+import { IllegalShapeError, transformErrors } from "../common/error";
+import { type SemVerInput } from "../common/packFormat";
+import type { InputOutput } from "../io/subject";
+import type { RegistryLookup } from "../registry/lookup";
+import { AbstractSerializer, type Serializer } from "./abstract";
 import { selectSerializerModule, type SerializerModule } from "./module";
 
 export abstract class VersionedSerializer<

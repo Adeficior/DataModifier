@@ -1,4 +1,4 @@
-import { AbstractSerializer, type Serializer } from ".";
+import { AbstractSerializer, type Serializer } from "./abstract";
 import type { SerializerModule } from "./module";
 
 export class WrapperSerializer<

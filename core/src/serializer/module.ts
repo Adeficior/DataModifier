@@ -1,7 +1,9 @@
 import { type ZodType } from "zod";
-import type { Class } from "../common";
-import { isAtLeastVersion, type SemVerInput } from "../common";
-import type { Ingredient, Predicate, Result } from "../io";
+import type { Class } from "../common/class";
+import { isAtLeastVersion, type SemVerInput } from "../common/packFormat";
+import type { Predicate } from "../io/filters";
+import type { Ingredient } from "../io/ingredient/impl";
+import type { Result } from "../io/result/impl";
 
 type Mapper<From extends Out, To extends In, Out, In> = (
   it: From,

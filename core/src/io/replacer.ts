@@ -1,4 +1,4 @@
-import type { Predicate } from "../io";
+import type { Predicate } from "../io/filters";
 
 export type Replacer<T> = (value: T) => T;
 

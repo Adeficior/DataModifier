@@ -1,12 +1,11 @@
 import type { PackLoaderOptions } from "../config";
+import type { Container } from "../container";
 import type { ClearableEmitter } from "../emit/abstract";
 import type { Loader } from "../load/abstract";
 
-type SetupEvent<T> = {
-  options: PackLoaderOptions;
+type SetupEvent<T> = Container & {
   register<R extends T>(key: string, loader: R): R;
-  get<R>(key: string): R;
-  getOrNull<R>(key: string): R | null;
+  options: PackLoaderOptions;
 };
 
 export type SetupLoadersEvent = SetupEvent<Loader>;
@@ -20,4 +19,4 @@ export type ModuleConfig = {
   setupEmitters?: EventHandler<SetupEmittersEvent>;
 };
 
-export function defineModule(config: ModuleConfig) {}
+export function defineModule(_config: ModuleConfig) {}

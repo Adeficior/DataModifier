@@ -93,6 +93,6 @@
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",
-      "typescript": "^7"
+      "typescript": "catalog:"
    }
 }

@@ -1,8 +1,9 @@
 import type {
   IdInput,
   NormalizedId,
-  TagContentChecker,
   TagInput,
+  TagRegistry,
+  TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
 import {
   encodeId,
@@ -15,20 +16,6 @@ import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { entryId, orderTagEntries, tagFolderOf } from "./helper";
 import type { TagDefinition, TagEntry } from "./schema";
-
-export interface TagRegistryHolder {
-  registry<T extends RegistryId>(key: T): TagRegistry<T>;
-}
-
-export interface TagRegistry<
-  T extends RegistryId,
-> extends TagContentChecker<T> {
-  list(): string[];
-
-  get(id: TagInput): TagEntry<InferIds<T>>[] | undefined;
-
-  resolve(id: TagInput): TagEntry<InferIds<T>>[];
-}
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   private readonly entries = new Registry<TagEntry[]>();

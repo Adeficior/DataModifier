@@ -9,8 +9,8 @@ import {
   ListIngredient,
   ToolActionIngredient,
 } from "../../";
-import { IdSchema, stripTag } from "../../common";
-import { AmountSchema, CountSchema } from "../../io";
+import { IdSchema, stripTag } from "../../common/id";
+import { AmountSchema, CountSchema } from "../../io/fields";
 import { hasType, isObjectWith } from "../checks";
 import { createSerializerModule } from "../module";
 import { commonSerialization } from "./common";

@@ -4,14 +4,14 @@ import type {
   ItemId,
   RegistryId,
 } from "@adeficior/data-modifier/generated";
-import { encodeId, type IdInput, type NormalizedId } from "../../common";
-import type { RegistryLookup } from "../../loader/registry";
+import { encodeId, type IdInput, type NormalizedId } from "../../common/id";
+import type { RegistryLookup } from "../../registry/lookup";
 import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
   type Ingredient,
-} from "../ingredient";
+} from "../ingredient/impl";
 import type { InputOutput, RegistryIds } from "../subject";
 import { BUCKET } from "../units";
 

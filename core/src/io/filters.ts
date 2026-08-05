@@ -5,18 +5,15 @@ import {
   type NormalizedId,
   type TagInput,
 } from "../common/id";
+import type { TagRegistry } from "../interface/tags";
 
 export type Predicate<T> = (value: T) => boolean;
 export type CommonFilter<T> = RegExp | Predicate<T> | T;
 
-export type TagContentChecker<TId extends RegistryId> = {
-  contains(id: TagInput, entry: IdInput<InferIds<TId>>): boolean;
-};
-
 export function createIdPredicate<TEntry, TId extends string>(
   test: CommonFilter<TId>,
   resolve: (value: TEntry) => NormalizedId<TId>[],
-  tags?: TagContentChecker<RegistryId>,
+  tags?: TagRegistry<RegistryId>,
 ): Predicate<TEntry> {
   if (typeof test === "function") {
     return (entry) => resolve(entry).some((id) => test(id as TId));
@@ -41,7 +38,7 @@ export function createIdPredicate<TEntry, TId extends string>(
 
 export function resolveIdTest<T extends RegistryId>(
   test: CommonFilter<NormalizedId<InferIds<T>>>,
-  tags?: TagContentChecker<T>,
+  tags?: TagRegistry<T>,
 ): Predicate<IdInput<InferIds<T>>> {
   return createIdPredicate<IdInput<InferIds<T>>, NormalizedId<InferIds<T>>>(
     test,

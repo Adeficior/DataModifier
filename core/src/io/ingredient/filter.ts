@@ -1,4 +1,12 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
+import { IllegalShapeError } from "../../common/error";
+import type { NormalizedId } from "../../common/id";
+import type { Container } from "../../container";
+import {
+  createIdPredicate,
+  type CommonFilter,
+  type Predicate,
+} from "../filters";
 import {
   Ingredient,
   ItemIngredient,
@@ -6,14 +14,7 @@ import {
   ListIngredient,
   RegistryEntryIngredient,
   TagIngredient,
-} from ".";
-import { IllegalShapeError } from "../../common/error";
-import type { NormalizedId } from "../../common/id";
-import {
-  createIdPredicate,
-  type CommonFilter,
-  type Predicate,
-} from "../filters";
+} from "./impl";
 import type { IngredientInput } from "./input";
 
 export type IngredientFilter =
@@ -21,51 +22,53 @@ export type IngredientFilter =
 
 export function createIngredientPredicate(
   test: IngredientFilter,
-  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
+  container: Container,
 ): Predicate<Ingredient> {
-  const unvalidated = createUnvalidatedFilter(test, context);
-  return (it) => unvalidated(context.ingredients.validated(it));
+  const ingredients = container.get("serializer:ingredients");
+  const unvalidated = createUnvalidatedFilter(test, container);
+  return (it) => unvalidated(ingredients.validated(it));
 }
 
 function createUnvalidatedFilter(
   test: IngredientFilter,
-  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
+  container: Container,
 ): Predicate<Ingredient> {
   if (typeof test === "string") {
     if (test.startsWith("#")) {
       return createIngredientPredicate(
         new ItemTagIngredient(test.substring(1)),
-        context,
+        container,
       );
     }
 
-    return createIngredientPredicate(new ItemIngredient(test), context);
+    return createIngredientPredicate(new ItemIngredient(test), container);
   }
 
   if (test instanceof RegExp) {
-    return filterByRegistry(test, context, "minecraft:item");
+    return filterByRegistry(test, container, "minecraft:item");
   }
 
   if (typeof test === "function") {
-    // TODO ingredients.create not needed if function wrapped
-    return (it) => test(context.ingredients.deserialize(it));
+    const ingredients = container.get("serializer:ingredients");
+    return (it) => test(ingredients.deserialize(it));
   }
 
   if (test instanceof Ingredient) {
-    test.validate(context.lookup);
+    const lookup = container.get("registries");
+    test.validate(lookup);
   }
 
   if (test instanceof TagIngredient) {
-    return filterByRegistry(test.tag, context, test.registry);
+    return filterByRegistry(test.tag, container, test.registry);
   }
 
   if (test instanceof RegistryEntryIngredient) {
-    return filterByRegistry(test.id, context, test.registry);
+    return filterByRegistry(test.id, container, test.registry);
   }
 
   if (test instanceof ListIngredient) {
     const predicates = test.entries.map((it) =>
-      createIngredientPredicate(it, context),
+      createIngredientPredicate(it, container),
     );
     return (it) => predicates.some((predicate) => predicate(it));
   }
@@ -75,12 +78,12 @@ function createUnvalidatedFilter(
 
 function filterByRegistry(
   test: NormalizedId | RegExp,
-  context: Pick<PackContext, "ingredients" | "tags" | "lookup">,
+  tags: TagRegistryHolder,
   registry: NormalizedId<RegistryId>,
 ): Predicate<Ingredient> {
   return createIdPredicate<Ingredient, NormalizedId>(
     test,
     (it) => it.ids()[registry] ?? [],
-    context.tags.registry(registry),
+    tags.registry(registry),
   );
 }

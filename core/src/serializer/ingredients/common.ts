@@ -4,8 +4,8 @@ import {
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
-  Result,
-} from "../../";
+} from "../../io/ingredient/impl";
+import { Result } from "../../io/result/impl";
 import type { SerializerBuilder } from "../module";
 
 export function commonSerialization(builder: SerializerBuilder<Ingredient>) {

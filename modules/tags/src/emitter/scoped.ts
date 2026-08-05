@@ -1,16 +1,16 @@
 import {
   createId,
-  createIdPredicate,
   Registry,
+  resolveIdTest,
   type CommonFilter,
   type Id,
   type NormalizedId,
   type Replacer,
   type TagInput,
+  type TagRegistry,
 } from "@adeficior/data-modifier-core";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import type { TagRegistry } from "../loader";
 import type { TagDefinition, TagEntry } from "../schema";
 import type { TagEmitterOptions } from "./options";
 
@@ -81,7 +81,7 @@ export class ScopedEmitter<T extends RegistryId> implements ScopedTagRules<T> {
         };
       });
     } else {
-      const predicate = createIdPredicate(test, this.registry);
+      const predicate = resolveIdTest(test, this.registry);
       this.modify(id, (previous) => {
         const defaultValues =
           (previous.replace ? undefined : this.registry.resolve(id)) ?? [];

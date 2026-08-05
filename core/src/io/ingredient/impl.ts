@@ -11,9 +11,14 @@ import {
   type IdInput,
   type NormalizedId,
   type TagId,
-} from "../../common";
-import type { RegistryLookup } from "../../loader/registry";
-import { BlockResult, FluidResult, ItemResult, type Result } from "../result";
+} from "../../common/id";
+import type { RegistryLookup } from "../../registry/lookup";
+import {
+  BlockResult,
+  FluidResult,
+  ItemResult,
+  type Result,
+} from "../result/impl";
 import type { InputOutput, RegistryIds } from "../subject";
 import { BUCKET } from "../units";
 

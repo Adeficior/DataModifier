@@ -7,6 +7,9 @@
     "dev": "turbo run dev",
     "prepare": "husky && bun run scripts/prepare.ts"
   },
+  "catalog": {
+    "typescript": "^5"
+  },
   "devDependencies": {
     "husky": "^9.1.7",
     "turbo": "^2.10.7"

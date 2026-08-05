@@ -1,14 +1,14 @@
 import { mapValues } from "lodash-es";
-import type { Serializer } from "..";
-import type { SemVerInput } from "../../common";
-import { Ingredient } from "../../io";
-import type { RegistryLookup } from "../../loader";
-import { IngredientMap, type IngredientMapInput } from "../ingredientMap";
+import type { SemVerInput } from "../../common/packFormat";
+import { Ingredient } from "../../io/ingredient/impl";
+import type { RegistryLookup } from "../../registry/lookup";
+import type { Serializer } from "../abstract";
 import type { SerializerModule } from "../module";
 import { VersionedSerializer } from "../versioned";
 import { WrapperSerializer } from "../wrapped";
 import { serializer15 } from "./15";
 import { serializer44 } from "./44";
+import { IngredientMap, type IngredientMapInput } from "./ingredientMap";
 
 export interface IngredientSerializer extends Serializer<
   Ingredient,
