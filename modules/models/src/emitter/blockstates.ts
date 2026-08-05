@@ -1,9 +1,12 @@
-import type { ClearableEmitter } from "..";
-import type { LoaderContext } from "../../common";
-import type { Id, IdInput } from "../../common/id";
-import { prefix } from "../../common/id";
-import type { Blockstate } from "../../schema/assets/blockstate";
-import { CustomEmitter } from "../custom";
+import {
+  type ClearableEmitter,
+  CustomEmitter,
+  type Id,
+  type IdInput,
+  type LoaderContext,
+  prefix,
+} from "@adeficior/data-modifier-core";
+import type { Blockstate } from "../schema";
 
 export interface BlockstateRules {
   add(id: IdInput, blockstate: Blockstate): void;

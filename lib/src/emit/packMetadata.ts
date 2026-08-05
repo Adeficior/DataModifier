@@ -1,10 +1,14 @@
 import {
+  parseSemVer,
+  toJson,
+  type SemVerInput,
+} from "@adeficior/data-modifier-core";
+import {
   combineResolvers,
   simpleResolver,
   type Logger,
   type Resolver,
 } from "@adeficior/pack-resolver";
-import { parseSemVer, toJson, type SemVerInput } from "../common";
 
 export type PackMetadata = {
   pack: {

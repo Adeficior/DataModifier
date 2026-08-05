@@ -16,8 +16,6 @@ export type * from "./load/abstract";
 export * from "./load/json";
 
 export * from "./io/fields";
-export * from "./io/filters";
-export type { IngredientFilter } from "./io/ingredient/filter";
 export * from "./io/ingredient/impl";
 export type * from "./io/ingredient/input";
 export * from "./io/replacer";
@@ -31,3 +29,14 @@ export * from "./registry/impl";
 export type * from "./registry/lookup";
 
 export type * from "./interface/tags";
+
+export type { Serializer } from "./serializer/abstract";
+export type { hasType, isObjectWith } from "./serializer/checks";
+export type { IngredientSerializer } from "./serializer/ingredients/index";
+export * from "./serializer/ingredients/ingredientMap";
+export * from "./serializer/module";
+export type { ResultSerializer } from "./serializer/results/index";
+
+export type { Predicates } from "./predicates";
+export type { CommonFilter, Predicate } from "./predicates/id";
+export type { IngredientFilter } from "./predicates/ingredients";

@@ -1,8 +1,10 @@
-import type { IdInput } from "../../common/id";
-import type { BlockDefinition } from "../../schema/content/blockDefinition";
-import type { BlockstateRules } from "../assets/blockstates";
-import type { ModelRules } from "../assets/models";
-import type { LootRules } from "../data/loot";
+import type { IdInput } from "@adeficior/data-modifier-core";
+import type { LootRules } from "@adeficior/data-modifier-loot";
+import type {
+  BlockstateRules,
+  ModelRules,
+} from "@adeficior/data-modifier-models";
+import type { BlockDefinition } from "../schema/blockDefinition";
 import type { BlockDefinitionRules } from "./blockDefinition";
 import { AbstractBlockDefinitionRules } from "./blockDefinition";
 

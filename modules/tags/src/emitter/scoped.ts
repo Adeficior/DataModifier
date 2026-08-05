@@ -6,12 +6,13 @@ import {
   type Id,
   type NormalizedId,
   type Replacer,
+  type TagEntry,
   type TagInput,
   type TagRegistry,
 } from "@adeficior/data-modifier-core";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import type { TagDefinition, TagEntry } from "../schema";
+import type { TagDefinition } from "../schema";
 import type { TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;

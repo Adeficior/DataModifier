@@ -14,8 +14,9 @@ import {
 } from "@adeficior/data-modifier-core";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
+import type { TagEntry } from "../../../core/src";
 import { entryId, orderTagEntries, tagFolderOf } from "./helper";
-import type { TagDefinition, TagEntry } from "./schema";
+import type { TagDefinition } from "./schema";
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   private readonly entries = new Registry<TagEntry[]>();

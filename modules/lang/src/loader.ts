@@ -1,7 +1,5 @@
-import { JsonLoader } from ".";
-import type { Id } from "../common/id";
-import type { LangDefinition } from "../schema/assets/lang";
-import { LangSchema } from "../schema/assets/lang";
+import { JsonLoader, type Id } from "@adeficior/data-modifier-core";
+import { LangSchema, type LangDefinition } from "./schema";
 
 export class LangLoader extends JsonLoader<LangDefinition> {
   protected parse(json: unknown, id: Id): LangDefinition | null {

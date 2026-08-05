@@ -1,7 +1,6 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import type { RegistryLookup } from ".";
-import type { IdInput, NormalizedId } from "../../common/id";
-import { encodeId } from "../../common/id";
+import { encodeId, type IdInput, type NormalizedId } from "../common/id";
+import type { RegistryLookup } from "./lookup";
 
 export class EmptyRegistryLookup implements RegistryLookup {
   isKnown(): boolean {
@@ -24,7 +23,7 @@ export class EmptyRegistryLookup implements RegistryLookup {
     // Nothing done
   }
 
-  addCustom(key: RegistryId, id: IdInput) {
+  addCustom(_key: RegistryId, id: IdInput) {
     return encodeId(id);
   }
 }

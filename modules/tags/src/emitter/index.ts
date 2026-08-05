@@ -4,13 +4,13 @@ import {
   type CommonFilter,
   type LoaderContext,
   type NormalizedId,
+  type TagEntry,
   type TagInput,
+  type TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
-import type { TagRegistryHolder } from "../loader";
-import { type TagEntry } from "../schema";
 import type { TagEmitterOptions } from "./options";
 import { ScopedEmitter, type ScopedTagRules } from "./scoped";
 
@@ -50,6 +50,7 @@ export class TagEmitter implements TagRules, ClearableEmitter {
   readonly fluids: ScopedTagRules<"minecraft:fluid">;
 
   constructor(
+    // TODO use container or inject?
     private readonly registry: TagRegistryHolder,
     private readonly options: TagEmitterOptions,
   ) {

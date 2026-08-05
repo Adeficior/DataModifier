@@ -1,16 +1,17 @@
-import type { ClearableEmitter } from "..";
-import type { LoaderContext } from "../../common";
-import type { Id, IdInput } from "../../common/id";
-import { prefix } from "../../common/id";
-import type { BlockDefinition } from "../../schema/content/blockDefinition";
 import type {
-  ItemDefinition,
-  ItemProperties,
-} from "../../schema/content/itemDefinition";
-import type { BlockstateRules } from "../assets/blockstates";
-import type { ModelRulesGroup } from "../assets/models";
-import { CustomEmitter } from "../custom";
-import type { LootRules } from "../data/loot";
+  ClearableEmitter,
+  Id,
+  IdInput,
+  LoaderContext,
+} from "@adeficior/data-modifier-core";
+import { CustomEmitter, prefix } from "@adeficior/data-modifier-core";
+import type { LootRules } from "@adeficior/data-modifier-loot";
+import type {
+  BlockstateRules,
+  ModelRules,
+} from "@adeficior/data-modifier-models";
+import type { BlockDefinition } from "../schema/blockDefinition";
+import type { ItemDefinition, ItemProperties } from "../schema/itemDefinition";
 import type { BlockDefinitionRulesWithoutId } from "./innerBlockDefinition";
 import { createInnerBlockDefinitionBuilder } from "./innerBlockDefinition";
 
@@ -49,7 +50,9 @@ export class ItemDefinitionEmitter
   private readonly custom = new CustomEmitter<ItemDefinition>(this.filePath);
 
   constructor(
-    private readonly models: ModelRulesGroup,
+    // TODO inject
+    private readonly itemModels: ModelRules,
+    private readonly blockModels: ModelRules,
     private readonly blockstates: BlockstateRules,
     private readonly loot: LootRules,
   ) {}
@@ -76,7 +79,7 @@ export class ItemDefinitionEmitter
     { type, ...properties }: ExtendedItemProperties = {},
     options?: ItemDefinitionOptions,
   ) {
-    if (options?.model !== false) this.models.items.flat(id);
+    if (options?.model !== false) this.itemModels.flat(id);
 
     return this.add(id, {
       type: type ?? "basic",
@@ -88,7 +91,7 @@ export class ItemDefinitionEmitter
     if (typeof input !== "function") return input;
     const blockBuilder = createInnerBlockDefinitionBuilder(
       id,
-      this.models.blocks,
+      this.blockModels,
       this.blockstates,
       this.loot,
     );
@@ -108,7 +111,7 @@ export class ItemDefinitionEmitter
   ) {
     if (options?.model !== false) {
       const parent = prefix(id, "block/");
-      this.models.items.add(id, { parent });
+      this.itemModels.add(id, { parent });
     }
 
     const blockDefinition = this.createBlockDefinition(id, block);

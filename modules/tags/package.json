@@ -35,7 +35,6 @@
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",
       "typescript": "catalog:",
-      "lodash-es": "^4",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

@@ -1,5 +1,5 @@
 import type { SemVerInput } from "../../common/packFormat";
-import type { Result } from "../../io/result";
+import { Result } from "../../io/result/impl";
 import type { RegistryLookup } from "../../registry/lookup";
 import type { Serializer } from "../abstract";
 import { type SerializerModule } from "../module";

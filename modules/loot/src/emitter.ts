@@ -1,24 +1,31 @@
-import { combineResolvers } from "@adeficior/pack-resolver";
-import type { LoaderContext, RegistryProvider } from "../../common";
-import { lootTableFolder } from "../../common";
-import type { Id, IdInput, NormalizedId } from "../../common/id";
-import { encodeId, prefix } from "../../common/id";
-import type { Ingredient, IngredientFilter } from "../../io";
+import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
+  Ingredient,
+  IngredientFilter,
+  LoaderContext,
+  NormalizedId,
+  RegistryLookup,
+  RegistryProvider,
+  SemVerInput,
+} from "@adeficior/data-modifier-core";
 import {
-  createIngredientPredicate,
-  resolveIDTest,
+  CustomEmitter,
+  encodeId,
+  prefix,
+  resolveIdTest,
+  RuledEmitter,
   type CommonFilter,
   type Predicate,
-} from "../../io";
-import type { PackContext } from "../../loader/context";
-import type { LootItemInput } from "../../parser/lootTable";
-import { createLootEntry, replaceItemInTable } from "../../parser/lootTable";
-import type { LootModifier, LootTable } from "../../schema/data/loot";
-import { EmptyLootEntry, LootTableSchema } from "../../schema/data/loot";
-import type { ClearableEmitter } from "../abstract";
-import { CustomEmitter } from "../custom";
-import { LootTableRule } from "../rule/lootTable";
-import { RuledEmitter } from "../ruled";
+  type Predicates,
+} from "@adeficior/data-modifier-core";
+import { combineResolvers } from "@adeficior/pack-resolver";
+import { lootTableFolder } from "./helper";
+import { LootTableRule } from "./rule";
+import type { LootItemInput, LootModifier, LootTable } from "./schema";
+import { EmptyLootEntry, LootTableSchema } from "./schema";
+import { createLootEntry, replaceItemInTable } from "./serializer";
 
 export const EMPTY_LOOT_TABLE: LootTable = {
   type: "minecraft:empty",
@@ -65,8 +72,11 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
   private readonly ruled: RuledEmitter<LootTable, LootTableRule>;
 
   constructor(
+    // TODO inject
+    private readonly packFormat: SemVerInput,
     private readonly lootTables: RegistryProvider<LootTable>,
-    private readonly context: PackContext,
+    private readonly lookup: RegistryLookup,
+    private readonly predicates: Predicates,
   ) {
     this.ruled = new RuledEmitter<LootTable, LootTableRule>(
       this.lootTables,
@@ -90,7 +100,7 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
   }
 
   private tablePath(id: Id) {
-    const folder = lootTableFolder(this.context.packFormat);
+    const folder = lootTableFolder(this.packFormat);
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
@@ -104,16 +114,12 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
     this.ruled.clear();
   }
 
-  resolveIngredientTest(test: IngredientFilter) {
-    return createIngredientPredicate(test, this.context);
-  }
-
   private resolveLootTableTest(test: LootTableTest) {
     const id: Predicate<Id>[] = [];
     const output: Predicate<Ingredient>[] = [];
 
-    if (test.id) id.push(resolveIDTest(test.id));
-    if (test.output) output.push(this.resolveIngredientTest(test.output));
+    if (test.id) id.push(resolveIdTest(test.id));
+    if (test.output) output.push(this.predicates.ingredient(test.output));
 
     return { id, output };
   }
@@ -140,10 +146,10 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
     additionalTests: LootTableTest = {},
   ): void {
     const predicates = this.resolveLootTableTest(additionalTests);
-    const outputPredicate = this.resolveIngredientTest(from);
+    const outputPredicate = this.predicates.ingredient(from);
     const replacer = replaceItemInTable(
       outputPredicate,
-      createLootEntry(to, this.context.lookup),
+      createLootEntry(to, this.lookup),
     );
     this.ruled.addRule(
       new LootTableRule(

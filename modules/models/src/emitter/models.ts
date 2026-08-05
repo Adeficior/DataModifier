@@ -1,9 +1,14 @@
-import type { ClearableEmitter } from "..";
-import type { LoaderContext } from "../../common";
-import type { IdInput, NormalizedId } from "../../common/id";
-import { encodeId, prefix, suffix } from "../../common/id";
-import type { Model } from "../../schema/assets/model";
-import { CustomEmitter } from "../custom";
+import {
+  type ClearableEmitter,
+  CustomEmitter,
+  encodeId,
+  type IdInput,
+  type LoaderContext,
+  type NormalizedId,
+  prefix,
+  suffix,
+} from "@adeficior/data-modifier-core";
+import type { Model } from "../schema";
 
 export interface ModelRules {
   add(id: IdInput, blockstate: Model): NormalizedId;
@@ -13,11 +18,6 @@ export interface ModelRules {
   flat(id: IdInput, texture?: string): NormalizedId;
 
   cog(id: IdInput, large: boolean, texture?: string): NormalizedId;
-}
-
-export interface ModelRulesGroup {
-  blocks: ModelRules;
-  items: ModelRules;
 }
 
 export class ModelEmitter implements ModelRules, ClearableEmitter {

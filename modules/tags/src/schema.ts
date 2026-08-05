@@ -1,10 +1,4 @@
-export type TagEntry<T extends string = string> =
-  | T
-  | `#${string}`
-  | Readonly<{
-      required?: boolean;
-      id: T | `#${string}`;
-    }>;
+import type { TagEntry } from "@adeficior/data-modifier-core";
 
 export type TagDefinition = Readonly<{
   replace?: boolean;

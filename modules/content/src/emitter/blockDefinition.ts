@@ -1,15 +1,20 @@
+import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
+  LoaderContext,
+} from "@adeficior/data-modifier-core";
+import { CustomEmitter } from "@adeficior/data-modifier-core";
+import type { LootRules } from "@adeficior/data-modifier-loot";
+import type {
+  BlockstateRules,
+  ModelRules,
+} from "@adeficior/data-modifier-models";
 import type { BlockId } from "@adeficior/data-modifier/generated";
-import type { ClearableEmitter } from "..";
-import type { LoaderContext } from "../../common";
-import type { Id, IdInput } from "../../common/id";
 import type {
   BlockDefinition,
   BlockProperties,
-} from "../../schema/content/blockDefinition";
-import type { BlockstateRules } from "../assets/blockstates";
-import type { ModelRules } from "../assets/models";
-import { CustomEmitter } from "../custom";
-import type { LootRules } from "../data/loot";
+} from "../schema/blockDefinition";
 
 export type BlockDefinitionOptions = Readonly<{
   blockstate?: boolean;
@@ -46,6 +51,7 @@ function resolveProperties(from: PropertiesOrCopy): BlockProperties | string {
 
 export abstract class AbstractBlockDefinitionRules implements BlockDefinitionRules {
   constructor(
+    // TODO inject
     private readonly models: ModelRules,
     private readonly blockstates: BlockstateRules,
     private readonly loot: LootRules,

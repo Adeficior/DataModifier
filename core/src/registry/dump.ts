@@ -1,6 +1,7 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import z from "zod";
+import type { LoaderContext } from "../common/context";
 import { tryCatching, UnknownRegistryEntry } from "../common/error";
 import { encodeId, type IdInput, type NormalizedId } from "../common/id";
 import { tryParseJson } from "../common/textHelper";
