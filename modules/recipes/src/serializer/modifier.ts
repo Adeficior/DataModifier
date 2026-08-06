@@ -1,4 +1,8 @@
-import type { Ingredient, Replacer, Result } from "../../io";
+import type {
+  Ingredient,
+  Replacer,
+  Result,
+} from "@adeficior/data-modifier-core";
 
 export type RecipeModifier = {
   result: Replacer<Result>;

@@ -1,51 +1,27 @@
-import { omit } from "lodash-es";
-import { IllegalShapeError } from "../common";
-import { encodeId } from "../common/id";
-
-import minimatch from "minimatch";
-import { JsonLoader } from ".";
-import type { RecipeDefinition } from "../schema/data/recipe";
-import type { RecipeParser } from "../serializer";
+import type {
+  IngredientSerializer,
+  ResultSerializer,
+  WithSerializerModules,
+} from "@adeficior/data-modifier-core";
 import {
-  ApothecaryRecipeParser,
-  AssemblyRecipeParser,
-  BrewRecipeParser,
-  CookingRecipeParser,
-  CreateProcessingRecipeParser,
-  CuttingRecipeParser,
-  ElvenTradeRecipeParser,
-  FluidConversionRecipeParser,
-  ForgeConditionalRecipeParser,
-  GogWrapperRecipeParser,
-  GrindstonePolishingParser,
-  HammeringRecipeParser,
-  InputOutputRecipeParser,
-  ManaInfusionRecipeParser,
-  NasaWorkbenchRecipeParser,
-  NbtWrapperRecipeParser,
-  OrechidRecipeParser,
-  PureDaisyRecipeParser,
-  RecipeHolder,
-  RootComponentRecipeParser,
-  RootRitualRecipeParser,
-  RunicAltarRecipeParser,
-  ShapedParser,
-  ShapelessParser,
-  SmeltingParser,
-  SmithingParser,
-  SpaceStationRecipeParser,
-  StonecuttingParser,
-  TerraPlateRecipeParser,
-  ThermalCatalystRecipeParser,
-  ThermalFuelRecipeParser,
-  ThermalRecipeParser,
-  TreeExtractionRecipeParser,
-  type Recipe,
-  type RecipeParseContext,
-  type RecipeSerializer,
-} from "../serializer";
-import type { WithSerializerModules } from "../serializer/module";
-import type { PackContext } from "./context";
+  encodeId,
+  IllegalShapeError,
+  JsonLoader,
+} from "@adeficior/data-modifier-core";
+import { omit } from "lodash-es";
+import { minimatch } from "minimatch";
+import type { RecipeDefinition } from "./schema";
+import type { Recipe, RecipeParser } from "./serializer/abstract";
+import type {
+  RecipeParseContext,
+  RecipeSerializer,
+} from "./serializer/context";
+import { RecipeHolder } from "./serializer/holder";
+import { ShapedParser } from "./serializer/vanilla/shaped";
+import { ShapelessParser } from "./serializer/vanilla/shapeless";
+import { SmeltingParser } from "./serializer/vanilla/smelting";
+import { SmithingParser } from "./serializer/vanilla/smithing";
+import { StonecuttingParser } from "./serializer/vanilla/stonecutting";
 
 export interface RecipeLoaderAccessor {
   unknownRecipeTypes(): RecipeDefinition[];
@@ -56,6 +32,7 @@ export interface RecipeLoaderAccessor {
   ignoreType(recipeType: string): void;
 }
 
+// Split serializer into seperate class
 export class RecipeLoader
   extends JsonLoader<RecipeHolder>
   implements RecipeLoaderAccessor, RecipeSerializer
@@ -66,7 +43,8 @@ export class RecipeLoader
   private readonly _unknownRecipeTypes = new Map<string, RecipeDefinition>();
 
   constructor(
-    private readonly serializers: Pick<PackContext, "results" | "ingredients">,
+    private readonly resultSerializer: ResultSerializer,
+    private readonly ingredientSerializer: IngredientSerializer,
   ) {
     super();
 
@@ -81,6 +59,8 @@ export class RecipeLoader
     this.registerParser("minecraft:smithing_transform", new SmithingParser());
     this.registerParser("minecraft:stonecutting", new StonecuttingParser());
 
+    /*
+    TODO move to seperate modules
     this.registerParser("create:mixing", new CreateProcessingRecipeParser());
     this.registerParser("create:pressing", new CreateProcessingRecipeParser());
     this.registerParser("create:emptying", new CreateProcessingRecipeParser());
@@ -256,6 +236,7 @@ export class RecipeLoader
 
     this.ignoreType("jeed:*");
     this.ignoreType("immersiveengineering:*");
+    */
   }
 
   ignoreType(pattern: string) {
@@ -271,10 +252,10 @@ export class RecipeLoader
   ): RecipeParseContext {
     return {
       recipes: this,
-      ingredients: this.serializers.ingredients.selectModule(
+      ingredients: this.ingredientSerializer.selectModule(
         parser.ingredientModules(),
       ),
-      results: this.serializers.results.selectModule(parser.resultModules()),
+      results: this.resultSerializer.selectModule(parser.resultModules()),
     };
   }
 

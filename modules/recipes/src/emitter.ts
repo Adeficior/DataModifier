@@ -1,37 +1,39 @@
-import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import { combineResolvers, notNull } from "@adeficior/pack-resolver";
-import type { LoaderContext, RegistryProvider } from "../../common";
-import { recipeFolder } from "../../common";
-import type { Id, IdInput, NormalizedId } from "../../common/id";
-import { encodeId } from "../../common/id";
 import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
   Ingredient,
   IngredientFilter,
   IngredientInput,
+  IngredientSerializer,
+  LoaderContext,
+  Modifier,
+  NormalizedId,
+  RegistryProvider,
   Result,
   ResultInput,
-} from "../../io";
+  ResultSerializer,
+  SemVerInput,
+} from "@adeficior/data-modifier-core";
 import {
-  createIngredientPredicate,
   createReplacer,
-  createResultPredicate,
-  resolveIDTest,
+  CustomEmitter,
+  encodeId,
+  recipeFolder,
+  resolveIdTest,
+  RuledEmitter,
   type CommonFilter,
   type Predicate,
-} from "../../io";
-import type { PackContext } from "../../loader/context";
-import type { RecipeDefinition } from "../../schema/data/recipe";
-import {
-  RecipeHolder,
-  type Recipe,
-  type RecipeSerializer,
-} from "../../serializer";
-import type { ClearableEmitter } from "../abstract";
-import { CustomEmitter } from "../custom";
-import type { Modifier } from "../rule";
-import { RecipeRule } from "../rule/recipe";
-import { RuledEmitter } from "../ruled";
+  type Predicates,
+} from "@adeficior/data-modifier-core";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import { combineResolvers, notNull } from "@adeficior/pack-resolver";
+import { RecipeRule } from "./rule";
+import type { RecipeDefinition } from "./schema";
+import { type Recipe } from "./serializer/abstract";
+import type { RecipeSerializer } from "./serializer/context";
+import { RecipeHolder } from "./serializer/holder";
 
 export type RecipeTest = Readonly<{
   id?: CommonFilter<NormalizedId>;
@@ -89,9 +91,13 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   private readonly ruled: RuledEmitter<RecipeHolder, RecipeRule>;
 
   constructor(
+    // TODO inject
     private readonly logger: Logger,
+    private readonly packFormat: SemVerInput,
     private readonly registry: RegistryProvider<RecipeHolder>,
-    private readonly context: PackContext,
+    private readonly resultSerializer: ResultSerializer,
+    private readonly ingredientSerializer: IngredientSerializer,
+    private readonly predicates: Predicates,
     private readonly serializer: RecipeSerializer,
   ) {
     this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
@@ -111,18 +117,18 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   }
 
   private recipePath(id: Id) {
-    const folder = recipeFolder(this.context.packFormat);
+    const folder = recipeFolder(this.packFormat);
     return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
   private createIngredientPredicate(filter?: IngredientFilter) {
     if (!filter) return () => true;
-    return createIngredientPredicate(filter, this.context);
+    return this.predicates.ingredient(filter);
   }
 
   private createResultPredicate(filter?: IngredientFilter) {
     if (!filter) return () => true;
-    return createResultPredicate(filter, this.context);
+    return this.predicates.result(filter);
   }
 
   private resolveRecipeTest(test: RecipeTest) {
@@ -131,8 +137,8 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
     const ingredient: Predicate<Ingredient>[] = [];
     const result: Predicate<Result>[] = [];
 
-    if (test.id) id.push(resolveIDTest(test.id));
-    if (test.type) type.push(resolveIDTest(test.type));
+    if (test.id) id.push(resolveIdTest(test.id));
+    if (test.type) type.push(resolveIdTest(test.type));
     if (test.namespace) id.push((id) => id.namespace === test.namespace);
     if (test.output) result.push(this.createResultPredicate(test.output));
     if (test.input) ingredient.push(this.createIngredientPredicate(test.input));
@@ -198,7 +204,7 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.createResultPredicate(test);
 
-    const value = this.context.results.deserialize(input);
+    const value = this.resultSerializer.deserialize(input);
 
     const replace = createReplacer(predicate, value);
 
@@ -222,7 +228,7 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     const predicate = this.createIngredientPredicate(test);
 
-    const value = this.context.ingredients.deserialize(input);
+    const value = this.ingredientSerializer.deserialize(input);
 
     const replace = createReplacer(predicate, value);
 

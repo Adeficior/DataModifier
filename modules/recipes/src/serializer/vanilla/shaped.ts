@@ -1,6 +1,9 @@
-import type { Result } from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import type { IngredientMap, IngredientMapInput } from "../../ingredientMap";
+import type {
+  IngredientMap,
+  IngredientMapInput,
+  Result,
+} from "@adeficior/data-modifier-core";
+import type { RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";

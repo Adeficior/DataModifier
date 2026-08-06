@@ -1,10 +1,13 @@
+import type {
+  Id,
+  Ingredient,
+  Modifier,
+  Predicate,
+  Result,
+} from "@adeficior/data-modifier-core";
+import { createId, Rule } from "@adeficior/data-modifier-core";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import type { Modifier } from ".";
-import { Rule } from ".";
-import type { Id } from "../../common/id";
-import { createId } from "../../common/id";
-import type { Ingredient, Predicate, Result } from "../../io";
-import type { RecipeHolder } from "../../serializer";
+import type { RecipeHolder } from "./serializer/holder";
 
 export class RecipeRule extends Rule<RecipeHolder> {
   constructor(

@@ -1,19 +1,19 @@
-import type { Ingredient, Result } from "../../io";
-import type { RecipeDefinition } from "../../schema/data/recipe";
+import type { Ingredient, Result } from "@adeficior/data-modifier-core";
+import type { RecipeDefinition } from "../schema";
 import { Recipe, RecipeParser } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";
 
-export type ManyToOneRecipeDefinition = RecipeDefinition &
+export type ManyToManyRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredients: unknown[];
-    result: unknown;
+    results: unknown[];
   }>;
 
-export class ManyToOneRecipe extends Recipe {
+export class ManyToManyRecipe extends Recipe {
   constructor(
     protected readonly ingredients: Ingredient[],
-    protected readonly result: Result,
+    protected readonly results: Result[],
   ) {
     super();
   }
@@ -23,37 +23,37 @@ export class ManyToOneRecipe extends Recipe {
   }
 
   getResults() {
-    return [this.result];
+    return this.results;
   }
 
   override modify(modifier: RecipeModifier) {
-    return new ManyToOneRecipe(
+    return new ManyToManyRecipe(
       this.ingredients.map(modifier.ingredient),
-      modifier.result(this.result),
+      this.results.map(modifier.result),
     );
   }
 
   override serialize(
     context: RecipeParseContext,
-  ): Partial<ManyToOneRecipeDefinition> {
+  ): Partial<ManyToManyRecipeDefinition> {
     return {
-      result: context.results.serialize(this.result),
+      results: context.results.serializeList(this.results),
       ingredients: context.ingredients.serializeList(this.ingredients),
     };
   }
 }
 
-export class ManyToOneRecipeParser<
-  TDefinition extends ManyToOneRecipeDefinition,
-> extends RecipeParser<TDefinition, ManyToOneRecipe> {
+export class ManyToManyRecipeParser<
+  TDefinition extends ManyToManyRecipeDefinition,
+> extends RecipeParser<TDefinition, ManyToManyRecipe> {
   deserialize(
     definition: TDefinition,
     context: RecipeParseContext,
-  ): ManyToOneRecipe {
+  ): ManyToManyRecipe {
     const ingredients = context.ingredients.deserializeList(
       definition.ingredients,
     );
-    const result = context.results.deserialize(definition.result);
-    return new ManyToOneRecipe(ingredients, result);
+    const results = context.results.deserializeList(definition.results);
+    return new ManyToManyRecipe(ingredients, results);
   }
 }

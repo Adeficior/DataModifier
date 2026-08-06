@@ -4,6 +4,7 @@ export type ForgeCondition = Readonly<{
   type: string;
   [key: string]: unknown;
 }>;
+
 export type FabricCondition = Readonly<{
   condition: string;
   [key: string]: unknown;

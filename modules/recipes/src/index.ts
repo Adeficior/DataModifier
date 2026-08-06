@@ -1,2 +1,12 @@
 export { default } from "./module";
 export type * from "./schema";
+export * from "./serializer/abstract";
+export type * from "./serializer/context";
+export * from "./serializer/manyToMany";
+export * from "./serializer/manyToOne";
+export * from "./serializer/oneToOne";
+export * from "./serializer/vanilla/shaped";
+export * from "./serializer/vanilla/shapeless";
+export * from "./serializer/vanilla/smelting";
+export * from "./serializer/vanilla/smithing";
+export * from "./serializer/vanilla/stonecutting";

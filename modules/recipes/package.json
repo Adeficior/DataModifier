@@ -30,11 +30,14 @@
    },
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
-      "@adeficior/configs": "workspace:*"
+      "@adeficior/configs": "workspace:*",
+      "@types/lodash-es": "catalog:"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",
       "typescript": "catalog:",
+      "minimatch": "catalog:",
+      "lodash-es": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

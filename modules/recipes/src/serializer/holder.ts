@@ -1,6 +1,10 @@
-import { encodeId, type NormalizedId } from "../../common";
-import type { Ingredient, Replacer, Result } from "../../io";
-import type { RecipeDefinition } from "../../schema";
+import type {
+  Ingredient,
+  Replacer,
+  Result,
+} from "@adeficior/data-modifier-core";
+import { encodeId, type NormalizedId } from "@adeficior/data-modifier-core";
+import type { RecipeDefinition } from "../schema";
 import type { Recipe } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";

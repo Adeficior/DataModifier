@@ -75,7 +75,6 @@
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
       "@types/command-line-usage": "^5.0.4",
-      "@types/minimatch": "^3.0.5",
       "@types/prettier": "^2.7.3"
    },
    "dependencies": {

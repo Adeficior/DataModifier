@@ -1,6 +1,6 @@
+import type { Ingredient, Result } from "@adeficior/data-modifier-core";
 import { notNull } from "@adeficior/pack-resolver";
-import type { Ingredient, Result } from "../../../io";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
+import type { RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
