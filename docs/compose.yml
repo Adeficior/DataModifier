@@ -1,0 +1,11 @@
+name: data-modifier-docs
+
+services:
+  app:
+    image: squidfunk/mkdocs-material:latest
+    container_name: gradle-helper-docs
+    volumes:
+      - ./:/docs
+    ports:
+      - 8000:8000
+    entrypoint: ["sh", "setup.sh"]
