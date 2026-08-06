@@ -61,7 +61,6 @@
       "cli": "bun run build && node dist/cli/index.js",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "format": "prettier --write {src,test}",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "repository": {
@@ -75,8 +74,7 @@
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
-      "@types/command-line-usage": "^5.0.4",
-      "@types/prettier": "^2.7.3"
+      "@types/command-line-usage": "^5.0.4"
    },
    "dependencies": {
       "@adeficior/resource-merger": "^2.0.0-rc.16",
@@ -86,9 +84,7 @@
       "@adeficior/data-modifier-loot": "workspace:*",
       "arg": "^5.0.2",
       "chalk": "^5.6.2",
-      "command-line-usage": "^7.0.4",
-      "json5": "^2.2.3",
-      "prettier": "^3.8.4"
+      "command-line-usage": "^7.0.4"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",

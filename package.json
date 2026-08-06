@@ -5,6 +5,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "turbo run lint",
     "prepare": "husky && bun run scripts/prepare.ts"
   },
   "catalog": {
@@ -17,7 +19,8 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "turbo": "^2.10.7"
+    "turbo": "^2.10.7",
+    "prettier": "catalog:"
   },
   "workspaces": [
     "lib",

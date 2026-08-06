@@ -15,7 +15,6 @@
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
       "lint": "eslint {src}",
-      "format": "prettier --write {src}",
       "test:ci": "bun run lint && bun run check"
    },
    "repository": {
