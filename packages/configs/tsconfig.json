@@ -6,7 +6,6 @@
 // </meta>
 
 {
-  "extends": "./tsconfig.extensions.json",
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],

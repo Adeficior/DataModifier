@@ -1,5 +1,5 @@
 import { exists, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { format } from "prettier";
 
 async function writeJson(path: string, content: unknown) {
@@ -23,14 +23,19 @@ export default async function generateConfigs(dir: string) {
 
   await writeJson(join(dir, "tsconfig.json"), {
     extends: "@adeficior/configs/tsconfig",
+    compilerOptions: {
+      paths: createPaths(dir),
+    },
     include,
   });
 
   await writeJson(join(dir, "tsconfig.build.json"), {
-    extends: "@adeficior/configs/tsconfig-build",
+    extends: "./tsconfig.json",
     compilerOptions: {
       rootDir: "./src",
       outDir: "./dist",
+      declaration: true,
+      sourceMap: true,
     },
     include: ["src"],
   });
@@ -45,4 +50,22 @@ export default async function generateConfigs(dir: string) {
       export default defineConfig(eslintConfig(import.meta.dirname));
   `,
   );
+}
+
+function createPaths(dir: string) {
+  const isModule = !dir.startsWith("packages");
+
+  const paths: Record<string, [string]> = {
+    "@adeficior/data-modifier/generated": [
+      relative(dir, "@types/generated.d.ts").replaceAll(/\\/g, "/"),
+    ],
+  };
+
+  if (isModule) {
+    paths["@adeficior/data-modifier-core/generated"] = [
+      "./@types/modules.d.ts",
+    ];
+  }
+
+  return paths;
 }
