@@ -1,7 +1,12 @@
 import * as z from "zod";
-import { BlockResult, FluidResult, ItemResult, type Result } from "../..";
 import { IdSchema } from "../../common/id";
 import { AmountSchema, ChanceSchema, CountSchema } from "../../io/fields";
+import {
+  BlockResult,
+  FluidResult,
+  ItemResult,
+  type Result,
+} from "../../io/result/impl";
 import { isObjectWith } from "../checks";
 import { createSerializerModule } from "../module";
 import { commonSerialization } from "./common";

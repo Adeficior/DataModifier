@@ -1,4 +1,6 @@
 import * as z from "zod";
+import { IdSchema, stripTag } from "../../common/id";
+import { AmountSchema, CountSchema } from "../../io/fields";
 import {
   FluidIngredient,
   FluidTagIngredient,
@@ -8,9 +10,7 @@ import {
   ItemTagIngredient,
   ListIngredient,
   ToolActionIngredient,
-} from "../../";
-import { IdSchema, stripTag } from "../../common/id";
-import { AmountSchema, CountSchema } from "../../io/fields";
+} from "../../io/ingredient/impl";
 import { hasType, isObjectWith } from "../checks";
 import { createSerializerModule } from "../module";
 import { commonSerialization } from "./common";
