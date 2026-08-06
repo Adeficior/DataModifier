@@ -1,9 +1,12 @@
+export type * from "./hooks";
 export { default } from "./module";
 export type * from "./schema";
 export * from "./serializer/abstract";
 export type * from "./serializer/context";
+export type * from "./serializer/holder";
 export * from "./serializer/manyToMany";
 export * from "./serializer/manyToOne";
+export type * from "./serializer/modifier";
 export * from "./serializer/oneToOne";
 export * from "./serializer/vanilla/shaped";
 export * from "./serializer/vanilla/shapeless";

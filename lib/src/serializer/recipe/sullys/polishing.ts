@@ -1,5 +1,7 @@
-import type { ManyToOneRecipeDefinition } from "../manyToOne";
-import { ManyToOneRecipeParser } from "../manyToOne";
+import {
+  ManyToOneRecipeParser,
+  type ManyToOneRecipeDefinition,
+} from "@adeficior/data-modifier-recipes";
 
 export type GrindstonePolishingDefinition = ManyToOneRecipeDefinition &
   Readonly<{

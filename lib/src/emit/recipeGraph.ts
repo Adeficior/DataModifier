@@ -1,26 +1,28 @@
+import {
+  createId,
+  encodeId,
+  prefix,
+  Registry,
+  resolveIdTest,
+  suffix,
+  toJson,
+  type ClearableEmitter,
+  type CommonFilter,
+  type IdInput,
+  type InputOutput,
+  type LoaderContext,
+  type NormalizedId,
+  type Predicate,
+  type RegistryProvider,
+  type TagRegistryHolder,
+} from "@adeficior/data-modifier-core";
+import type { RecipeHolder } from "@adeficior/data-modifier-recipes";
 import type {
   ItemId,
   RecipeSerializerId,
   RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
-import type { ClearableEmitter } from ".";
-import {
-  createId,
-  encodeId,
-  prefix,
-  Registry,
-  suffix,
-  toJson,
-  type IdInput,
-  type LoaderContext,
-  type NormalizedId,
-} from "../common";
-import type { InputOutput } from "../io";
-import { resolveIDTest, type CommonFilter, type Predicate } from "../io";
-import type { JsonLoader } from "../loader";
-import { type TagRegistryHolder } from "../loader";
-import type { RecipeHolder } from "../serializer";
 
 type Node = {
   id: NormalizedId;
@@ -82,7 +84,7 @@ export class RecipeGraphEmitter
   private readonly options: Required<RecipeGraphOptions>;
 
   constructor(
-    private readonly recipes: JsonLoader<RecipeHolder>,
+    private readonly recipes: RegistryProvider<RecipeHolder>,
     private readonly tags: TagRegistryHolder,
     options: RecipeGraphOptions = {},
   ) {
@@ -125,7 +127,7 @@ export class RecipeGraphEmitter
     label?: string,
   ) {
     this.representations.push({
-      test: resolveIDTest(type),
+      test: resolveIdTest(type),
       icon: encodeId(icon),
       label,
     });

@@ -1,18 +1,20 @@
-import * as z from "zod";
-import { type RecipeParseContext } from "..";
-import { IdSchema } from "../../../common/id";
 import {
   BlockIngredient,
   BlockResult,
   BlockTagIngredient,
+  createSerializerModule,
+  hasType,
+  IdSchema,
   type Ingredient,
   type Result,
-} from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import { hasType } from "../../../serializer/checks";
-import { createSerializerModule } from "../../../serializer/module";
-import { RecipeParser } from "../abstract";
-import { OneToOneRecipe } from "../oneToOne";
+} from "@adeficior/data-modifier-core";
+import {
+  OneToOneRecipe,
+  RecipeParser,
+  type RecipeDefinition,
+  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import * as z from "zod";
 
 export type BotaniaBlockRecipeDefinition = RecipeDefinition &
   Readonly<{

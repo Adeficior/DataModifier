@@ -1,4 +1,4 @@
-import zod from "zod";
+import * as z from "zod";
 
 export type Id = Readonly<{
   namespace: string;
@@ -19,7 +19,7 @@ export type TagId = NormalizedId<`#${string}`>;
 
 export type TagInput = IdInput<`#${string}`>;
 
-export const IdSchema = zod
+export const IdSchema = z
   .string()
   .regex(
     /^#?([a-z0-9_.-]+:)?[a-z0-9_.-/]+$/i,

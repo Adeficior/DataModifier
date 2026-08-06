@@ -1,16 +1,16 @@
-import * as z from "zod";
-import { IdSchema } from "../../../common/id";
 import {
   AmountSchema,
   CountSchema,
+  createSerializerModule,
   FluidTagIngredient,
+  IdSchema,
+  isObjectWith,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
   type Ingredient,
-} from "../../../io";
-import { isObjectWith } from "../../../serializer/checks";
-import { createSerializerModule } from "../../../serializer/module";
+} from "@adeficior/data-modifier-core";
+import * as z from "zod";
 
 const ThermalFluidTagSchema = z.object({
   fluid_tag: IdSchema,

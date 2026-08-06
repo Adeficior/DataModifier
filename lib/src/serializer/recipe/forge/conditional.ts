@@ -1,8 +1,10 @@
-import type { RecipeDefinition } from "../../../schema";
-import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeHolder } from "../holder";
-import type { RecipeModifier } from "../modifier";
+import type {
+  RecipeDefinition,
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 
 type WithConditions<T> = {
   conditions: unknown[];

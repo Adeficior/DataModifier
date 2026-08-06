@@ -25,13 +25,15 @@ export type * from "./io/subject";
 export * from "./io/units";
 
 export type * from "./registry/abstract";
+export * from "./registry/dump";
+export * from "./registry/empty";
 export * from "./registry/impl";
 export type * from "./registry/lookup";
 
 export type * from "./interface/tags";
 
 export type { Serializer } from "./serializer/abstract";
-export type { hasType, isObjectWith } from "./serializer/checks";
+export * from "./serializer/checks";
 export type { IngredientSerializer } from "./serializer/ingredients/index";
 export * from "./serializer/ingredients/ingredientMap";
 export * from "./serializer/module";

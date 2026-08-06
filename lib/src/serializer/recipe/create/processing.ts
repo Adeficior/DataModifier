@@ -1,5 +1,7 @@
-import type { ManyToManyRecipeDefinition } from "../manyToMany";
-import { ManyToManyRecipeParser } from "../manyToMany";
+import {
+  ManyToManyRecipeParser,
+  type ManyToManyRecipeDefinition,
+} from "@adeficior/data-modifier-recipes";
 
 export type CreateProcessingRecipeDefinition = ManyToManyRecipeDefinition &
   Readonly<{

@@ -1,15 +1,17 @@
-import { IllegalShapeError } from "../../../common";
-import { encodeId } from "../../../common/id";
 import {
+  encodeId,
   FluidIngredient,
   FluidResult,
+  IllegalShapeError,
   type Ingredient,
   type Result,
-} from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeModifier } from "../modifier";
+} from "@adeficior/data-modifier-core";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{

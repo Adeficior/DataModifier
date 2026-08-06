@@ -1,13 +1,19 @@
+import {
+  encodeId,
+  IdSchema,
+  ItemResult,
+  type Ingredient,
+  type ResultSerializer,
+} from "@adeficior/data-modifier-core";
+import {
+  OneToOneRecipe,
+  Recipe,
+  RecipeParser,
+  type RecipeDefinition,
+  type RecipeModifier,
+  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
 import * as z from "zod";
-import { encodeId, IdSchema } from "../../../common/id";
-import type { Ingredient } from "../../../io";
-import { ItemResult } from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import type { ResultSerializer } from "../../../serializer/results";
-import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeModifier } from "../modifier";
-import { OneToOneRecipe } from "../oneToOne";
 
 // TODO this will also be the new item format, can re-use that
 const IdResultSchema = z.object({

@@ -1,9 +1,11 @@
+import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import { notNull } from "@adeficior/pack-resolver";
-import type { Ingredient, Result } from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeModifier } from "../modifier";
 
 export type CookingRecipeDefinition = RecipeDefinition &
   Readonly<{

@@ -1,7 +1,9 @@
-import { type RecipeParseContext } from "..";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
-import { RecipeParser } from "../abstract";
-import { ManyToManyRecipe } from "../manyToMany";
+import {
+  ManyToManyRecipe,
+  RecipeParser,
+  type RecipeDefinition,
+  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
   Readonly<{

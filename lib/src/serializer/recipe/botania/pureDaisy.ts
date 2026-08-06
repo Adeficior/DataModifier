@@ -1,8 +1,11 @@
+import {
+  BlockResult,
+  createSerializerModule,
+  IdSchema,
+  isObjectWith,
+  type Result,
+} from "@adeficior/data-modifier-core";
 import * as z from "zod";
-import { IdSchema } from "../../../common/id";
-import { BlockResult, type Result } from "../../../io";
-import { isObjectWith } from "../../../serializer/checks";
-import { createSerializerModule } from "../../../serializer/module";
 import {
   BotaniaBlockRecipeParser,
   type BotaniaBlockRecipeDefinition,

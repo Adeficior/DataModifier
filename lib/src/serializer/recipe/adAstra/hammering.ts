@@ -1,7 +1,7 @@
 import {
   ManyToOneRecipeParser,
   type ManyToOneRecipeDefinition,
-} from "../manyToOne";
+} from "@adeficior/data-modifier-recipes";
 
 export type HammeringRecipeDefinition = ManyToOneRecipeDefinition;
 

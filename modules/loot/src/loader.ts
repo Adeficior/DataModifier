@@ -1,6 +1,6 @@
-import { JsonLoader } from ".";
-import type { LootTable } from "../schema/data/loot";
-import { LootTableSchema } from "../schema/data/loot";
+import { JsonLoader } from "@adeficior/data-modifier-core";
+import type { LootTable } from "./schema";
+import { LootTableSchema } from "./schema";
 
 export class LootTableLoader extends JsonLoader<LootTable> {
   protected parse(json: unknown): LootTable | null {

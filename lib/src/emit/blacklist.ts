@@ -1,13 +1,21 @@
+import type {
+  ClearableEmitter,
+  IngredientFilter,
+  IngredientSerializer,
+  LoaderContext,
+  NormalizedId,
+  Predicates,
+  RegistryLookup,
+} from "@adeficior/data-modifier-core";
+import {
+  encodeId,
+  ItemIngredient,
+  toJson,
+} from "@adeficior/data-modifier-core";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { DataConsumer } from "@adeficior/pack-resolver";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
-import type { ClearableEmitter } from ".";
-import type { LoaderContext, NormalizedId } from "../common";
-import { encodeId, toJson } from "../common";
-import type { IngredientFilter } from "../io";
-import { createIngredientPredicate, ItemIngredient } from "../io";
-import type { PackContext } from "../loader/context";
 
 export type HideMode = "jei" | "polytone";
 export interface BlacklistOptions {
@@ -29,7 +37,9 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
   private readonly hideModes: HideMode[];
 
   constructor(
-    private readonly context: PackContext,
+    private readonly registries: RegistryLookup,
+    private readonly predicates: Predicates,
+    private readonly ingredientSerializer: IngredientSerializer,
     options: BlacklistOptions,
   ) {
     this.hideModes = arrayOrSelf(options.hideFrom);
@@ -45,10 +55,10 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
     const ids = entries
       .flatMap((entry) => {
         if (typeof entry === "string") {
-          this.context.lookup.validateEntry(type, entry);
+          this.registries.validateEntry(type, entry);
           return [entry];
         } else {
-          const keys = this.context.lookup.keys(type);
+          const keys = this.registries.keys(type);
           if (!keys)
             throw new Error(
               `cannot hide using regex/predicates, registry ${encodeId(
@@ -64,13 +74,13 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
   }
 
   private filterItemIds(test: IngredientFilter) {
-    const keys = this.context.lookup.keys("minecraft:item");
+    const keys = this.registries.keys("minecraft:item");
     if (!keys)
       throw new Error(
         "you can only use regex/predicates to blacklist items if a registry dump is loaded",
       );
 
-    const predicate = createIngredientPredicate(test, this.context);
+    const predicate = this.predicates.ingredient(test);
 
     return [...keys.keys()].filter((it) => predicate(new ItemIngredient(it)));
   }
@@ -80,7 +90,7 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
       return this.filterItemIds(input);
     }
 
-    const ingredient = this.context.ingredients.deserialize(input);
+    const ingredient = this.ingredientSerializer.deserialize(input);
 
     return Object.values(ingredient.ids()).flat();
   }
@@ -114,7 +124,7 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
     hiddenIds: NormalizedId[],
     context: LoaderContext,
   ) {
-    const tabs = this.context.lookup.keys("minecraft:creative_mode_tab");
+    const tabs = this.registries.keys("minecraft:creative_mode_tab");
 
     if (!tabs)
       throw new Error(

@@ -1,10 +1,18 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import { RecipeEmitter } from "./emitter";
+import type { RegisterRecipeParser } from "./hooks";
 import { RecipeLoader } from "./loader";
 
-export default defineModule({
+export default defineModule<{
+  hooks: {
+    "recipes:register-parser": RegisterRecipeParser;
+  };
+}>({
   importModule: name,
+  hooks: {
+    "recipes:register-parser": { name: "RegisterRecipeParser" },
+  },
   setup: (pack) => {
     const loader = pack.loader(
       "recipes",
@@ -30,5 +38,12 @@ export default defineModule({
         ),
       { import: { name: "RecipeRules" } },
     );
+
+    // TODO after everyting else (done event?)
+    pack.callHook("recipes:register-parser", {
+      register: (_type, _parser) => {
+        // TODO register on loader
+      },
+    });
   },
 });

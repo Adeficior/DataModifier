@@ -1,3 +1,4 @@
-import type { Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
+import type { LoaderContext } from "../common/context";
 
-export interface Loader extends Acceptor {}
+export type Loader = Acceptor<Acceptable, LoaderContext>;

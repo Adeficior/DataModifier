@@ -1,11 +1,13 @@
-import type { Ingredient, Result } from "../../../io";
-import { RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
+import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
+import type {
+  ManyToManyRecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
 import {
   ManyToManyRecipe,
-  type ManyToManyRecipeDefinition,
-} from "../manyToMany";
-import type { RecipeModifier } from "../modifier";
+  RecipeParser,
+} from "@adeficior/data-modifier-recipes";
 
 export type ToolInput = Readonly<{
   type: "farmersdelight:tool_action";

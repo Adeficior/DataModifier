@@ -1,15 +1,17 @@
-import { omit } from "lodash-es";
-import * as z from "zod";
-import { IllegalShapeError } from "../../../common";
 import {
+  IllegalShapeError,
   ItemIngredient,
   ItemTagIngredient,
   type Ingredient,
-} from "../../../io";
-import type { RecipeDefinition } from "../../../schema";
-import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeModifier } from "../modifier";
+} from "@adeficior/data-modifier-core";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import { omit } from "lodash-es";
+import * as z from "zod";
 
 const WrappedIngredientSchema = z.object({
   ingredient: z.record(z.string(), z.unknown()),

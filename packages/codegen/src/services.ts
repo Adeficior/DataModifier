@@ -50,6 +50,8 @@ function gatherServices(modules: ModuleConfig[], options: PackLoaderOptions) {
       },
       emitter: (key, ...args) => event.service(`emitter:${key}`, ...args),
       loader: (key, ...args) => event.service(`loader:${key}`, ...args),
+      callHook: async () => {},
+      hook: () => {},
     };
 
     module.setup?.(event);

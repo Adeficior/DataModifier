@@ -1,7 +1,9 @@
-import { type RecipeParseContext } from "..";
-import type { RecipeDefinition } from "../../../schema/data/recipe";
-import { RecipeParser } from "../abstract";
-import { ManyToOneRecipe } from "../manyToOne";
+import {
+  ManyToOneRecipe,
+  RecipeParser,
+  type RecipeDefinition,
+  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
   Readonly<{
