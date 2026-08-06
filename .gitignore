@@ -140,6 +140,7 @@ test-output
 eslint.config.js
 tsconfig.json
 tsconfig.*.json
+**/@types/modules.d.ts
 
 !packages/configs/tsconfig.json
 !packages/configs/tsconfig.*.json

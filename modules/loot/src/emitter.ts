@@ -14,7 +14,6 @@ import {
   CustomEmitter,
   encodeId,
   prefix,
-  resolveIdTest,
   RuledEmitter,
   type CommonFilter,
   type Predicate,
@@ -118,7 +117,7 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
     const id: Predicate<Id>[] = [];
     const output: Predicate<Ingredient>[] = [];
 
-    if (test.id) id.push(resolveIdTest(test.id));
+    if (test.id) id.push(this.predicates.id(test.id, "minecraft:item"));
     if (test.output) output.push(this.predicates.ingredient(test.output));
 
     return { id, output };

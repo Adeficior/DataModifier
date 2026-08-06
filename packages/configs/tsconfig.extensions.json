@@ -3,9 +3,6 @@
       "paths": {
          "@adeficior/data-modifier/generated": [
             "../../@types/generated.d.ts"
-         ],
-         "@adeficior/data-modifier-core/generated": [
-            "../../@types/modules.d.ts"
          ]
       }
    }

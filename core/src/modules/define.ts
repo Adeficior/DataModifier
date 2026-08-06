@@ -3,20 +3,35 @@ import type { Container } from "../container";
 import type { ClearableEmitter } from "../emit/abstract";
 import type { Loader } from "../load/abstract";
 
-type SetupEvent<T> = Container & {
-  register<R extends T>(key: string, loader: R): R;
-  options: PackLoaderOptions;
+export type ImportOptions = {
+  module?: string;
+  name?: string;
 };
 
-export type SetupLoadersEvent = SetupEvent<Loader>;
+export type ServiceOptions = {
+  import?: ImportOptions;
+};
 
-export type SetupEmittersEvent = SetupEvent<ClearableEmitter>;
+type Registration<T = unknown> = <R extends T>(
+  key: string,
+  factory: (container: Container) => R,
+  options?: ServiceOptions,
+) => () => R;
+
+export type SetupEvent = {
+  service: Registration;
+  loader: Registration<Loader>;
+  emitter: Registration<ClearableEmitter>;
+  options: PackLoaderOptions;
+};
 
 type EventHandler<T> = (event: T) => Promise<void> | void;
 
 export type ModuleConfig = {
-  setupLoaders?: EventHandler<SetupLoadersEvent>;
-  setupEmitters?: EventHandler<SetupEmittersEvent>;
+  importModule?: string;
+  setup?: EventHandler<SetupEvent>;
 };
 
-export function defineModule(_config: ModuleConfig) {}
+export function defineModule(config: ModuleConfig): ModuleConfig {
+  return config;
+}

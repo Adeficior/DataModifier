@@ -1,5 +1,5 @@
 {
-   "name": "@adeficior/data-modifier-core",
+   "name": "@adeficior/data-modifier-codegen",
    "version": "0.0.0-dev",
    "main": "dist/index.js",
    "exports": {
@@ -14,15 +14,14 @@
       "build": "tsc --project tsconfig.build.json",
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
-      "test": "bun test",
-      "lint": "eslint {src,test}",
-      "format": "prettier --write {src,test}",
-      "test:ci": "bun run lint && bun run check && bun run test --coverage"
+      "lint": "eslint {src}",
+      "format": "prettier --write {src}",
+      "test:ci": "bun run lint && bun run check"
    },
    "repository": {
       "type": "git",
       "url": "git+https://github.com/Adeficior/DataModifier.git",
-      "directory": "core"
+      "directory": "packages/codegen"
    },
    "license": "ISC",
    "bugs": {
@@ -30,19 +29,11 @@
    },
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
-      "@adeficior/configs": "workspace:*",
-      "@types/lodash-es": "catalog:"
-   },
-   "dependencies": {
-      "@adeficior/resource-merger": "^2.0.0-rc.16",
-      "json5": "^2.2.3",
-      "lodash-es": "catalog:",
-      "minimatch": "catalog:",
-      "prettier": "catalog:",
-      "zod": "catalog:"
+      "@adeficior/configs": "workspace:*"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "*",
-      "typescript": "catalog:"
+      "typescript": "catalog:",
+      "prettier": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*"
    }
 }

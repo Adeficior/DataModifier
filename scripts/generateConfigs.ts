@@ -1,7 +1,6 @@
-import { exists, readdir, writeFile } from "node:fs/promises";
+import { exists, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { format } from "prettier";
-import { workspaces } from "../package.json";
 
 async function writeJson(path: string, content: unknown) {
   const json = JSON.stringify(content, null, 2);
@@ -14,7 +13,7 @@ async function writeJs(path: string, content: string) {
   await writeFile(path, formatted);
 }
 
-async function generateConfigsIn(dir: string) {
+export default async function generateConfigs(dir: string) {
   if (dir.endsWith("configs")) return;
 
   const include = ["src"];
@@ -28,7 +27,7 @@ async function generateConfigsIn(dir: string) {
   });
 
   await writeJson(join(dir, "tsconfig.build.json"), {
-    extends: "@adeficior/configs/tsconfig/build",
+    extends: "@adeficior/configs/tsconfig-build",
     compilerOptions: {
       rootDir: "./src",
       outDir: "./dist",
@@ -46,18 +45,4 @@ async function generateConfigsIn(dir: string) {
       export default defineConfig(eslintConfig(import.meta.dirname));
   `,
   );
-}
-
-export default async function generateConfigs() {
-  for (const workspace of workspaces) {
-    if (workspace.endsWith("/*")) {
-      const folder = workspace.substring(0, workspace.length - 2);
-      const children = await readdir(folder);
-      for (const child of children) {
-        await generateConfigsIn(join(folder, child));
-      }
-    } else {
-      await generateConfigsIn(workspace);
-    }
-  }
 }

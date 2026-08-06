@@ -17,7 +17,7 @@
         "json5": "^2.2.3",
         "lodash-es": "catalog:",
         "minimatch": "catalog:",
-        "prettier": "^3.8.4",
+        "prettier": "catalog:",
         "zod": "catalog:",
       },
       "devDependencies": {
@@ -136,6 +136,18 @@
         "typescript": "catalog:",
       },
     },
+    "packages/codegen": {
+      "name": "@adeficior/data-modifier-codegen",
+      "version": "0.0.0-dev",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "prettier": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "packages/configs": {
       "name": "@adeficior/configs",
       "devDependencies": {
@@ -154,6 +166,7 @@
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.18.1",
     "minimatch": "^5.1.9",
+    "prettier": "^3.8.4",
     "typescript": "^5",
     "zod": "^4.4.3",
   },
@@ -161,6 +174,8 @@
     "@adeficior/configs": ["@adeficior/configs@workspace:packages/configs"],
 
     "@adeficior/data-modifier": ["@adeficior/data-modifier@workspace:lib"],
+
+    "@adeficior/data-modifier-codegen": ["@adeficior/data-modifier-codegen@workspace:packages/codegen"],
 
     "@adeficior/data-modifier-content": ["@adeficior/data-modifier-content@workspace:modules/content"],
 

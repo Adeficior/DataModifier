@@ -5,7 +5,7 @@
    "exports": {
       "./eslint": "./eslint.config.js",
       "./tsconfig": "./tsconfig.json",
-      "./tsconfig/build": "./tsconfig.build.json"
+      "./tsconfig-build": "./tsconfig.build.json"
    },
    "scripts": {
       "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  *.js || true"
