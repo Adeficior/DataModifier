@@ -94,11 +94,11 @@ class DataModifierImpl implements DataModifier {
 }
 
 export async function createDataModifier({
-  modules,
+  modules = [],
   logger = createLogger(),
   ...options
 }: PackLoaderOptions & {
-  modules: ModuleConfig[];
+  modules?: ModuleConfig[];
   logger?: Logger;
 }): Promise<DataModifier> {
   const instance = new DataModifierImpl(options, logger);

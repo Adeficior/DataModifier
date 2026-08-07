@@ -1,10 +1,10 @@
-import type {
-  Id,
-  IdInput,
-  RegistryLookup,
+import  {
+  type Id,
+  type IdInput,
+  type RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import { createId, encodeId } from "@adeficior/data-modifier-core";
-import { writeFile } from "fs/promises";
+import { writeFile } from "node:fs/promises";
 import { camelCase } from "lodash-es";
 import { format } from "prettier";
 

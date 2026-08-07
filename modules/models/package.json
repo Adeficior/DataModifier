@@ -1,7 +1,6 @@
 {
    "name": "@adeficior/data-modifier-models",
    "version": "0.0.0-dev",
-   "main": "dist/index.js",
    "exports": {
       ".": "./dist/index.js"
    },

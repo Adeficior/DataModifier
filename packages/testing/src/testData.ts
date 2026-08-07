@@ -8,6 +8,15 @@ import {
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { join } from "node:path";
 
+const resourcesDir = join(
+  import.meta.dir,
+  "..",
+  "..",
+  "..",
+  "test",
+  "resources",
+);
+
 export function createTestDataResolver(
   version: string,
   { from, ...options }: Partial<ResolverOptions> = {},
@@ -16,7 +25,7 @@ export function createTestDataResolver(
     throw new Error("only one resolver input supported for TestResolver");
 
   return createCombinedResolver({
-    from: join("test", "resources", version, from ?? "default"),
+    from: join(resourcesDir, version, from ?? "default"),
     logger: false,
     ...options,
   });
@@ -27,7 +36,7 @@ export function createDumpResolver(
   logger: Logger = createTestLogger(),
 ): Promise<Resolver> {
   return createResolver({
-    from: join("test", "resources", version, "dump"),
+    from: join(resourcesDir, version, "dump"),
     logger,
   });
 }

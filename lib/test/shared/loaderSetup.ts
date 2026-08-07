@@ -1,11 +1,13 @@
+import type { PackLoaderOptions } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { afterEach, beforeEach } from "bun:test";
-import type { PackLoaderOptions } from "../../src";
-import { packFormatOf, PackLoader } from "../../src";
+import { createDataModifier, type DataModifier } from "../../src";
 import { createDumpResolver, createTestDataResolver } from "./testData";
 
-export default function setupLoader(
+// TODO rename
+export default async function setupLoader(
   {
     load = true,
     version,
@@ -14,11 +16,11 @@ export default function setupLoader(
     load?: boolean;
     version: string;
   },
-  block?: (loader: PackLoader) => void,
+  block?: (loader: DataModifier) => void,
 ) {
   const logger = createTestLogger();
   const packFormat = packFormatOf(version);
-  const loader = new PackLoader(logger, { ...options, packFormat });
+  const loader = await createDataModifier({ ...options, logger, packFormat });
   const loadDump = async () =>
     loader.loadRegistryDump(await createDumpResolver(version));
 
@@ -35,7 +37,8 @@ export default function setupLoader(
   }
 
   afterEach(() => {
-    loader.clear();
+    // TODO re-add?
+    // loader.clear();
     logger.reset();
   });
 

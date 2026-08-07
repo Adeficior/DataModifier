@@ -1,21 +1,13 @@
 {
-   "name": "@adeficior/data-modifier-codegen",
+   "name": "@adeficior/testing",
+   "private": true,
    "version": "0.0.0-dev",
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./src/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "files": [
-      "dist"
-   ],
    "type": "module",
-   "bin": {
-      "datamod-codegen": "./dist/cli.js"
-   },
    "scripts": {
-      "build": "tsc --project tsconfig.build.json",
       "check": "tsc --noEmit",
-      "dev": "bun run build --watch",
       "lint": "eslint src",
       "prepare": "create-configs",
       "test:ci": "bun run lint && bun run check"
@@ -23,7 +15,7 @@
    "repository": {
       "type": "git",
       "url": "git+https://github.com/Adeficior/DataModifier.git",
-      "directory": "packages/codegen"
+      "directory": "packages/testing"
    },
    "license": "ISC",
    "bugs": {
@@ -35,8 +27,7 @@
    },
    "peerDependencies": {
       "typescript": "catalog:",
-      "prettier": "catalog:",
-      "lodash-es": "catalog:",
+      "@adeficior/pack-resolver": "*",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

@@ -1,7 +1,6 @@
 {
    "name": "@adeficior/data-modifier-content",
    "version": "0.0.0-dev",
-   "main": "dist/index.js",
    "exports": {
       ".": "./dist/index.js"
    },
@@ -31,6 +30,7 @@
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
       "@adeficior/data-modifier-codegen": "workspace:*",
       "@adeficior/data-modifier-models": "workspace:*",
       "@adeficior/data-modifier-loot": "workspace:*"

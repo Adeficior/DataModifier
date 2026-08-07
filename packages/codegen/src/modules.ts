@@ -6,8 +6,7 @@ import { generateTypes } from "./types";
 export async function readModule(dir: string) {
   const moduleFile = join(dir, "src", "module.ts");
   if (!(await exists(moduleFile))) {
-    console.warn("could not find module for", dir);
-    return;
+    throw new Error(`could not find module in ${dir}`);
   }
 
   const url = relative(import.meta.dirname, moduleFile);
@@ -26,7 +25,6 @@ export async function getDependencies(dir: string) {
 
       const message = `missing ${type} dependency module '${name}'`;
       if (type === "required") throw new Error(message);
-      else if (type === "optional") console.warn(message);
     }),
   );
 

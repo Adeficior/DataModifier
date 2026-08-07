@@ -37,7 +37,12 @@ export function eslintConfig(tsconfigRootDir) {
         importPlugin.flatConfigs.typescript,
       ],
       rules: {
-        "import/no-relative-parent-imports": "warn",
+        "import/no-unresolved": "off",
+        "import/no-extraneous-dependencies": "error",
+        "import/enforce-node-protocol-usage": ["error", "always"],
+        "import/no-useless-path-segments": "error",
+        "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+        "import/extensions": ["error", "never", { json: "always" }],
       },
     },
   ]);

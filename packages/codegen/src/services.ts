@@ -1,9 +1,4 @@
-import {
-  type ImportOptions,
-  type ModuleConfig,
-  type PackLoaderOptions,
-  type SetupEvent,
-} from "@adeficior/data-modifier-core";
+import  {type ImportOptions, type ModuleConfig, type PackLoaderOptions, type SetupEvent} from "@adeficior/data-modifier-core";
 
 function hasNeccessaryOptions(
   options: ImportOptions,

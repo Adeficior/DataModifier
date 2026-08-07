@@ -67,6 +67,7 @@
         "@adeficior/data-modifier-codegen": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-models": "workspace:*",
+        "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -81,6 +82,7 @@
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
@@ -142,6 +144,7 @@
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -181,6 +184,18 @@
         "typescript": "catalog:",
       },
     },
+    "packages/testing": {
+      "name": "@adeficior/testing",
+      "version": "0.0.0-dev",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/pack-resolver": "*",
+        "typescript": "catalog:",
+      },
+    },
   },
   "catalog": {
     "@types/lodash-es": "^4.17.12",
@@ -214,6 +229,8 @@
     "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0-rc.52", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0", "zip-a-folder": "^6.1.1" } }, "sha512-MPGK4c3+3gC72C/QEH/oDDc3EABioqxJUTTSbSK9OKhCMzwPhWjoiIfQsJ4aLPQoOcdnG0A7VyLHhCyeXtpeeQ=="],
 
     "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.0-rc.17", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0-rc.51", "arg": "^5.0.2", "command-line-usage": "^6.1.3" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-rE92kw96BO8d7rD/m9iirPbAzlrwAaDLJcqECdiA/9yguB9rzwqHco9agI8l8OESZhbkpvnkxh7/gs6HLoQRjA=="],
+
+    "@adeficior/testing": ["@adeficior/testing@workspace:packages/testing"],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.10.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg=="],
 

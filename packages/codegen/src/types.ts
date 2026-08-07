@@ -1,6 +1,6 @@
-import type {
-  ModuleConfig,
-  PackLoaderOptions,
+import  {
+  type ModuleConfig,
+  type PackLoaderOptions,
 } from "@adeficior/data-modifier-core";
 import { join } from "node:path";
 import { generateServices } from "./services";
