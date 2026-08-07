@@ -8,7 +8,7 @@ import {
   prefix,
   suffix,
 } from "@adeficior/data-modifier-core";
-import type { Model } from "../schema";
+import { type Model } from "../schema";
 
 export interface ModelRules {
   add(id: IdInput, blockstate: Model): NormalizedId;

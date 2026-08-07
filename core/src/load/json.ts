@@ -1,9 +1,9 @@
-import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
-import type { LoaderContext } from "../common/context";
+import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
+import { type LoaderContext } from "../common/context";
 import { tryCatching } from "../common/error";
-import type { Id, IdInput } from "../common/id";
+import { type Id, type IdInput } from "../common/id";
 import { tryParseJson } from "../common/textHelper";
-import type { RegistryProvider } from "../registry/abstract";
+import { type RegistryProvider } from "../registry/abstract";
 import { Registry } from "../registry/impl";
 
 export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {

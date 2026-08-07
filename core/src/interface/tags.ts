@@ -1,5 +1,8 @@
-import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { IdInput, TagInput } from "../common/id";
+import {
+  type InferIds,
+  type RegistryId,
+} from "@adeficior/data-modifier/generated";
+import { type IdInput, type TagInput } from "../common/id";
 
 // TODO value object?
 export type TagEntry<T extends string = string> =

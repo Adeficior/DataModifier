@@ -1,11 +1,9 @@
-import type {
-  Ingredient,
-  IngredientSerializer,
-  Result,
-  ResultSerializer,
-  Serializer,
-} from "@adeficior/data-modifier-core";
 import {
+  type Ingredient,
+  type IngredientSerializer,
+  type Result,
+  type ResultSerializer,
+  type Serializer,
   type Predicates,
   type RegistryLookup,
   type RegistryProvider,

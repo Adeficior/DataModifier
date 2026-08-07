@@ -1,7 +1,7 @@
-import type {
-  IngredientSerializer,
-  ResultSerializer,
-  WithSerializerModules,
+import {
+  type IngredientSerializer,
+  type ResultSerializer,
+  type WithSerializerModules,
 } from "@adeficior/data-modifier-core";
 import {
   encodeId,
@@ -10,11 +10,11 @@ import {
 } from "@adeficior/data-modifier-core";
 import { omit } from "lodash-es";
 import { minimatch } from "minimatch";
-import type { RecipeDefinition } from "./schema";
-import type { Recipe, RecipeParser } from "./serializer/abstract";
-import type {
-  RecipeParseContext,
-  RecipeSerializer,
+import { type RecipeDefinition } from "./schema";
+import { type Recipe, type RecipeParser } from "./serializer/abstract";
+import {
+  type RecipeParseContext,
+  type RecipeSerializer,
 } from "./serializer/context";
 import { RecipeHolder } from "./serializer/holder";
 import { ShapedParser } from "./serializer/vanilla/shaped";

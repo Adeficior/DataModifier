@@ -1,8 +1,8 @@
-import type {
-  BlockId,
-  FluidId,
-  ItemId,
-  RegistryId,
+import {
+  type BlockId,
+  type FluidId,
+  type ItemId,
+  type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { uniq } from "lodash-es";
 import {
@@ -12,14 +12,14 @@ import {
   type NormalizedId,
   type TagId,
 } from "../../common/id";
-import type { RegistryLookup } from "../../registry/lookup";
+import { type RegistryLookup } from "../../registry/lookup";
 import {
   BlockResult,
   FluidResult,
   ItemResult,
   type Result,
 } from "../result/impl";
-import type { InputOutput, RegistryIds } from "../subject";
+import { type InputOutput, type RegistryIds } from "../subject";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements InputOutput {

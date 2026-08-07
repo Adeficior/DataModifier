@@ -1,6 +1,6 @@
 import { mapValues } from "lodash-es";
-import type { Ingredient } from "../../io/ingredient/impl";
-import type { Replacer } from "../../io/replacer";
+import { type Ingredient } from "../../io/ingredient/impl";
+import { type Replacer } from "../../io/replacer";
 
 export type IngredientMapInput = Record<string, unknown>;
 

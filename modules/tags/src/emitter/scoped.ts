@@ -10,10 +10,13 @@ import {
   type TagInput,
   type TagRegistry,
 } from "@adeficior/data-modifier-core";
-import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import {
+  type InferIds,
+  type RegistryId,
+} from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import type { TagDefinition } from "../schema";
-import type { TagEmitterOptions } from "./options";
+import { type TagDefinition } from "../schema";
+import { type TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;
 

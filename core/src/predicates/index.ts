@@ -1,12 +1,14 @@
-import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import type { IdInput, NormalizedId } from "../common/id";
-import type { TagRegistry, TagRegistryHolder } from "../interface/tags";
-import type { Ingredient } from "../io/ingredient/impl";
-import type { Result } from "../io/result/impl";
-import type { CommonFilter } from "../predicates/id";
-import type { RegistryLookup } from "../registry/lookup";
-import type { IngredientSerializer } from "../serializer/ingredients";
-import { resolveIdTest, type Predicate } from "./id";
+import {
+  type InferIds,
+  type RegistryId,
+} from "@adeficior/data-modifier/generated";
+import { type IdInput, type NormalizedId } from "../common/id";
+import { type TagRegistry, type TagRegistryHolder } from "../interface/tags";
+import { type Ingredient } from "../io/ingredient/impl";
+import { type Result } from "../io/result/impl";
+import { type CommonFilter, resolveIdTest, type Predicate } from "./id";
+import { type RegistryLookup } from "../registry/lookup";
+import { type IngredientSerializer } from "../serializer/ingredients";
 import {
   createIngredientPredicate,
   type IngredientFilter,

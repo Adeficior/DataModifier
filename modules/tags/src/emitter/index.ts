@@ -8,10 +8,13 @@ import {
   type TagInput,
   type TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
-import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import {
+  type InferIds,
+  type RegistryId,
+} from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
-import type { TagEmitterOptions } from "./options";
+import { type TagEmitterOptions } from "./options";
 import { ScopedEmitter, type ScopedTagRules } from "./scoped";
 
 export interface TagRules {

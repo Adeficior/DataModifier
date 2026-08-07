@@ -16,11 +16,11 @@ import {
   type RegistryProvider,
   type TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
-import type { RecipeHolder } from "@adeficior/data-modifier-recipes";
-import type {
-  ItemId,
-  RecipeSerializerId,
-  RegistryId,
+import { type RecipeHolder } from "@adeficior/data-modifier-recipes";
+import {
+  type ItemId,
+  type RecipeSerializerId,
+  type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 

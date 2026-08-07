@@ -6,7 +6,7 @@ import {
   type LoaderContext,
   prefix,
 } from "@adeficior/data-modifier-core";
-import type { Blockstate } from "../schema";
+import { type Blockstate } from "../schema";
 
 export interface BlockstateRules {
   add(id: IdInput, blockstate: Blockstate): void;

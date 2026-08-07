@@ -1,6 +1,6 @@
 import {
+  type ItemResult,
   encodeId,
-  ItemResult,
   type ItemLikeIngredient,
 } from "@adeficior/data-modifier-core";
 import * as z from "zod";

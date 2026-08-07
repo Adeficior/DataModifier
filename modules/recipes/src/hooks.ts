@@ -1,6 +1,6 @@
-import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { RecipeDefinition } from "./schema";
-import type { Recipe, RecipeParser } from "./serializer/abstract";
+import { type RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import { type RecipeDefinition } from "./schema";
+import { type Recipe, type RecipeParser } from "./serializer/abstract";
 
 export type RegisterRecipeParser = {
   register(

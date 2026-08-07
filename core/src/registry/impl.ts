@@ -1,6 +1,6 @@
-import type { Id, IdInput, NormalizedId } from "../common/id";
+import { type Id, type IdInput, type NormalizedId } from "../common/id";
 import { createId, encodeId } from "../common/id";
-import type { RegistryProvider } from "../registry/abstract";
+import { type RegistryProvider } from "./abstract";
 
 export class Registry<
   TEntry,

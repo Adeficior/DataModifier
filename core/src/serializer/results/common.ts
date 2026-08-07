@@ -1,6 +1,6 @@
 import { Ingredient } from "../../io/ingredient/impl";
 import { IgnoredResult, ItemResult, type Result } from "../../io/result/impl";
-import type { SerializerBuilder } from "../module";
+import { type SerializerBuilder } from "../module";
 
 export function commonSerialization(builder: SerializerBuilder<Result>) {
   builder.deserializer<Ingredient>(

@@ -3,11 +3,11 @@ import {
   simpleResolver,
   type Logger,
 } from "@adeficior/pack-resolver";
-import type { LoaderContext } from "../common/context";
-import type { Id } from "../common/id";
+import { type LoaderContext } from "../common/context";
+import { type Id } from "../common/id";
 import { toJson } from "../common/textHelper";
-import type { RegistryProvider } from "../registry/abstract";
-import type { ClearableEmitter, PathProvider } from "./abstract";
+import { type RegistryProvider } from "../registry/abstract";
+import { type ClearableEmitter, type PathProvider } from "./abstract";
 
 export type Modifier<T> = (recipe: T) => T | null;
 

@@ -1,4 +1,4 @@
-import type { Services } from "@adeficior/data-modifier-core/generated";
+import { type Services } from "@adeficior/data-modifier-core/generated";
 
 export type Container<TServices extends Record<string, unknown> = Services> = {
   get<TKey extends keyof TServices>(key: TKey): TServices[TKey];

@@ -1,7 +1,7 @@
-import type {
-  Ingredient,
-  Replacer,
-  Result,
+import {
+  type Ingredient,
+  type Replacer,
+  type Result,
 } from "@adeficior/data-modifier-core";
 
 export type RecipeModifier = {

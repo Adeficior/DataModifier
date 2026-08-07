@@ -1,16 +1,14 @@
-import type {
-  ClearableEmitter,
-  Id,
-  IdInput,
-  Ingredient,
-  IngredientFilter,
-  LoaderContext,
-  NormalizedId,
-  RegistryLookup,
-  RegistryProvider,
-  SemVerInput,
-} from "@adeficior/data-modifier-core";
 import {
+  type ClearableEmitter,
+  type Id,
+  type IdInput,
+  type Ingredient,
+  type IngredientFilter,
+  type LoaderContext,
+  type NormalizedId,
+  type RegistryLookup,
+  type RegistryProvider,
+  type SemVerInput,
   CustomEmitter,
   encodeId,
   prefix,
@@ -22,7 +20,11 @@ import {
 import { combineResolvers } from "@adeficior/pack-resolver";
 import { lootTableFolder } from "./helper";
 import { LootTableRule } from "./rule";
-import type { LootItemInput, LootModifier, LootTable } from "./schema";
+import {
+  type LootItemInput,
+  type LootModifier,
+  type LootTable,
+} from "./schema";
 import { EmptyLootEntry, LootTableSchema } from "./schema";
 import { createLootEntry, replaceItemInTable } from "./serializer";
 

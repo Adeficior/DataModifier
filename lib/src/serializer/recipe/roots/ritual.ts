@@ -1,8 +1,8 @@
 import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
-import type {
-  ManyToOneRecipeDefinition,
-  RecipeModifier,
-  RecipeParseContext,
+import {
+  type ManyToOneRecipeDefinition,
+  type RecipeModifier,
+  type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import {
   ManyToOneRecipe,

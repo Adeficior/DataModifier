@@ -1,18 +1,18 @@
-import type {
-  ClearableEmitter,
-  IdInput,
-  LoaderContext,
-  NormalizedId,
-  RegistryLookup,
+import {
+  type ClearableEmitter,
+  type IdInput,
+  type LoaderContext,
+  type NormalizedId,
+  type RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import {
   createId,
   CustomEmitter,
   encodeId,
 } from "@adeficior/data-modifier-core";
-import type {
-  CreativeModeTabId,
-  ItemId,
+import {
+  type CreativeModeTabId,
+  type ItemId,
 } from "@adeficior/data-modifier/generated";
 import { arrayOrSelf, combineResolvers } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";

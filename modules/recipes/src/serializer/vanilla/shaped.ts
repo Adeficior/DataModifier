@@ -1,12 +1,12 @@
-import type {
-  IngredientMap,
-  IngredientMapInput,
-  Result,
+import {
+  type IngredientMap,
+  type IngredientMapInput,
+  type Result,
 } from "@adeficior/data-modifier-core";
-import type { RecipeDefinition } from "../../schema";
+import { type RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";
-import type { RecipeParseContext } from "../context";
-import type { RecipeModifier } from "../modifier";
+import { type RecipeParseContext } from "../context";
+import { type RecipeModifier } from "../modifier";
 
 export type ShapedRecipeDefinition = RecipeDefinition &
   Readonly<{

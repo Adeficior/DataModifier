@@ -1,9 +1,9 @@
-import type {
-  IngredientSerializer,
-  ResultSerializer,
+import {
+  type IngredientSerializer,
+  type ResultSerializer,
 } from "@adeficior/data-modifier-core";
-import type { RecipeDefinition } from "../schema";
-import type { RecipeHolder } from "./holder";
+import { type RecipeDefinition } from "../schema";
+import { type RecipeHolder } from "./holder";
 
 export type RecipeSerializer = {
   deserialize(definition: RecipeDefinition): RecipeHolder;

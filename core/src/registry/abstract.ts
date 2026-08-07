@@ -1,4 +1,4 @@
-import type { Id, IdInput } from "../common/id";
+import { type Id, type IdInput } from "../common/id";
 
 export interface RegistryProvider<T> {
   get(id: IdInput): T | undefined;

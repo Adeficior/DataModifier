@@ -1,11 +1,11 @@
-import type { IdInput } from "@adeficior/data-modifier-core";
-import type { LootRules } from "@adeficior/data-modifier-loot";
-import type {
-  BlockstateRules,
-  ModelRules,
+import { type IdInput } from "@adeficior/data-modifier-core";
+import { type LootRules } from "@adeficior/data-modifier-loot";
+import {
+  type BlockstateRules,
+  type ModelRules,
 } from "@adeficior/data-modifier-models";
-import type { BlockDefinition } from "../schema/blockDefinition";
-import type { BlockDefinitionRules } from "./blockDefinition";
+import { type BlockDefinition } from "../schema/blockDefinition";
+import { type BlockDefinitionRules } from "./blockDefinition";
 import { AbstractBlockDefinitionRules } from "./blockDefinition";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

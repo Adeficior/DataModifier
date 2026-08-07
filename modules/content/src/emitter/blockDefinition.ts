@@ -1,19 +1,19 @@
-import type {
-  ClearableEmitter,
-  Id,
-  IdInput,
-  LoaderContext,
+import {
+  type ClearableEmitter,
+  type Id,
+  type IdInput,
+  type LoaderContext,
 } from "@adeficior/data-modifier-core";
 import { CustomEmitter } from "@adeficior/data-modifier-core";
-import type { LootRules } from "@adeficior/data-modifier-loot";
-import type {
-  BlockstateRules,
-  ModelRules,
+import { type LootRules } from "@adeficior/data-modifier-loot";
+import {
+  type BlockstateRules,
+  type ModelRules,
 } from "@adeficior/data-modifier-models";
-import type { BlockId } from "@adeficior/data-modifier/generated";
-import type {
-  BlockDefinition,
-  BlockProperties,
+import { type BlockId } from "@adeficior/data-modifier/generated";
+import {
+  type BlockDefinition,
+  type BlockProperties,
 } from "../schema/blockDefinition";
 
 export type BlockDefinitionOptions = Readonly<{

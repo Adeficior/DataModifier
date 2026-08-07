@@ -7,6 +7,7 @@
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "turbo run lint",
+    "check": "turbo run check",
     "prepare": "husky"
   },
   "catalog": {

@@ -1,5 +1,5 @@
 import { AbstractSerializer, type Serializer } from "./abstract";
-import type { SerializerModule } from "./module";
+import { type SerializerModule } from "./module";
 
 export class WrapperSerializer<
   Out,

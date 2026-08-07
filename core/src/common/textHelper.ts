@@ -1,4 +1,4 @@
-import type { Acceptable, Logger } from "@adeficior/pack-resolver";
+import { type Acceptable, type Logger } from "@adeficior/pack-resolver";
 import json from "json5";
 import { format } from "prettier";
 

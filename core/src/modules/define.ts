@@ -1,7 +1,7 @@
-import type { PackLoaderOptions } from "../config";
-import type { Container } from "../container";
-import type { ClearableEmitter } from "../emit/abstract";
-import type { Loader } from "../load/abstract";
+import { type PackLoaderOptions } from "../config";
+import { type Container } from "../container";
+import { type ClearableEmitter } from "../emit/abstract";
+import { type Loader } from "../load/abstract";
 
 export type ImportOptions = {
   module?: string;

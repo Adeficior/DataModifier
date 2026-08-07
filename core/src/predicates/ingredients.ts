@@ -1,7 +1,7 @@
-import type { RegistryId } from "@adeficior/data-modifier/generated";
+import { type RegistryId } from "@adeficior/data-modifier/generated";
 import { IllegalShapeError } from "../common/error";
-import type { NormalizedId } from "../common/id";
-import type { TagRegistryHolder } from "../interface/tags";
+import { type NormalizedId } from "../common/id";
+import { type TagRegistryHolder } from "../interface/tags";
 import {
   Ingredient,
   ItemIngredient,
@@ -10,9 +10,9 @@ import {
   RegistryEntryIngredient,
   TagIngredient,
 } from "../io/ingredient/impl";
-import type { IngredientInput } from "../io/ingredient/input";
-import type { RegistryLookup } from "../registry/lookup";
-import type { IngredientSerializer } from "../serializer/ingredients";
+import { type IngredientInput } from "../io/ingredient/input";
+import { type RegistryLookup } from "../registry/lookup";
+import { type IngredientSerializer } from "../serializer/ingredients";
 import { createIdPredicate, type CommonFilter, type Predicate } from "./id";
 
 export type IngredientFilter =

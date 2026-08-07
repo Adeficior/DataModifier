@@ -1,18 +1,18 @@
-import type {
-  BlockId,
-  FluidId,
-  ItemId,
-  RegistryId,
+import {
+  type BlockId,
+  type FluidId,
+  type ItemId,
+  type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { encodeId, type IdInput, type NormalizedId } from "../../common/id";
-import type { RegistryLookup } from "../../registry/lookup";
+import { type RegistryLookup } from "../../registry/lookup";
 import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
   type Ingredient,
 } from "../ingredient/impl";
-import type { InputOutput, RegistryIds } from "../subject";
+import { type InputOutput, type RegistryIds } from "../subject";
 import { BUCKET } from "../units";
 
 export abstract class Result implements InputOutput {

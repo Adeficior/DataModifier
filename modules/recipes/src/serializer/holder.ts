@@ -1,13 +1,14 @@
-import type {
-  Ingredient,
-  Replacer,
-  Result,
+import {
+  type Ingredient,
+  type Replacer,
+  type Result,
+  encodeId,
+  type NormalizedId,
 } from "@adeficior/data-modifier-core";
-import { encodeId, type NormalizedId } from "@adeficior/data-modifier-core";
-import type { RecipeDefinition } from "../schema";
-import type { Recipe } from "./abstract";
-import type { RecipeParseContext } from "./context";
-import type { RecipeModifier } from "./modifier";
+import { type RecipeDefinition } from "../schema";
+import { type Recipe } from "./abstract";
+import { type RecipeParseContext } from "./context";
+import { type RecipeModifier } from "./modifier";
 
 function keep<T>(): Replacer<T> {
   return (it) => it;

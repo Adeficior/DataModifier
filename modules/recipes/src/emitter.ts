@@ -1,21 +1,19 @@
-import type {
-  ClearableEmitter,
-  Id,
-  IdInput,
-  Ingredient,
-  IngredientFilter,
-  IngredientInput,
-  IngredientSerializer,
-  LoaderContext,
-  Modifier,
-  NormalizedId,
-  RegistryProvider,
-  Result,
-  ResultInput,
-  ResultSerializer,
-  SemVerInput,
-} from "@adeficior/data-modifier-core";
 import {
+  type ClearableEmitter,
+  type Id,
+  type IdInput,
+  type Ingredient,
+  type IngredientFilter,
+  type IngredientInput,
+  type IngredientSerializer,
+  type LoaderContext,
+  type Modifier,
+  type NormalizedId,
+  type RegistryProvider,
+  type Result,
+  type ResultInput,
+  type ResultSerializer,
+  type SemVerInput,
   createReplacer,
   CustomEmitter,
   encodeId,
@@ -27,13 +25,13 @@ import {
   type Predicate,
   type Predicates,
 } from "@adeficior/data-modifier-core";
-import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import { type RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import { type ContextLike, type Logger } from "@adeficior/pack-resolver";
 import { combineResolvers, notNull } from "@adeficior/pack-resolver";
 import { RecipeRule } from "./rule";
-import type { RecipeDefinition } from "./schema";
+import { type RecipeDefinition } from "./schema";
 import { type Recipe } from "./serializer/abstract";
-import type { RecipeSerializer } from "./serializer/context";
+import { type RecipeSerializer } from "./serializer/context";
 import { RecipeHolder } from "./serializer/holder";
 
 export type RecipeTest = Readonly<{

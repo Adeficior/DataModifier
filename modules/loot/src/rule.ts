@@ -1,5 +1,7 @@
-import type { Id, Modifier, Predicate } from "@adeficior/data-modifier-core";
 import {
+  type Id,
+  type Modifier,
+  type Predicate,
   IllegalShapeError,
   ItemIngredient,
   ItemTagIngredient,
@@ -7,8 +9,8 @@ import {
   tryCatching,
   type Ingredient,
 } from "@adeficior/data-modifier-core";
-import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import type { LootEntryBase, LootTable } from "./schema";
+import { type ContextLike, type Logger } from "@adeficior/pack-resolver";
+import { type LootEntryBase, type LootTable } from "./schema";
 import { extendLootEntry } from "./schema";
 
 // TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
