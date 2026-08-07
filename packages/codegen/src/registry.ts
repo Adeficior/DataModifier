@@ -4,7 +4,7 @@ import type {
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import { createId, encodeId } from "@adeficior/data-modifier-core";
-import { writeFileSync } from "fs";
+import { writeFile } from "fs/promises";
 import { camelCase } from "lodash-es";
 import { format } from "prettier";
 
@@ -58,16 +58,16 @@ export async function generateRegistryTypes(
       return idTemplate(type, keys);
     });
 
-  writeFileSync(
+  await writeFile(
     file,
     await moduleTemplate(registryBlock, ...idBlocks, inferIdBlock),
   );
 }
 
-export async function generateStubTypes(file: string) {
-  const stubIdType = "`${string}:${string}`";
+export async function generateStubTypes(file: string, strictIds = false) {
+  const stubIdType = strictIds ? "`${string}:${string}`" : "string";
 
-  writeFileSync(
+  await writeFile(
     file,
     await format(
       `

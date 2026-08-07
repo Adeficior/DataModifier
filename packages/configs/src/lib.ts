@@ -1,5 +1,5 @@
 import { exists, writeFile } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { format } from "prettier";
 
 async function writeJson(path: string, content: unknown) {
@@ -56,11 +56,8 @@ async function createPaths(dir: string) {
   const type = basename(dirname(resolve(dir)));
   const isModule = type !== "packages";
 
-  const root = resolve(import.meta.dir, "..", "..", "..");
   const paths: Record<string, [string]> = {
-    "@adeficior/data-modifier/generated": [
-      relative(dir, join(root, "@types/generated.d.ts")).replaceAll(/\\/g, "/"),
-    ],
+    "@adeficior/data-modifier/generated": ["./@types/registry.d.ts"],
   };
 
   if (isModule) {

@@ -1,10 +1,9 @@
+import { packFormatOf, type ModuleConfig } from "@adeficior/data-modifier-core";
 import { exists } from "node:fs/promises";
 import { join, relative } from "node:path";
-import { packFormatOf } from "../core/dist/common/packFormat";
-import { ModuleConfig } from "../core/dist/modules/define";
-import { generateTypes } from "../packages/codegen/src";
+import { generateTypes } from "./types";
 
-async function readModule(dir: string) {
+export async function readModule(dir: string) {
   const moduleFile = join(dir, "src", "module.ts");
   if (!(await exists(moduleFile))) {
     console.warn("could not find module for", dir);
@@ -16,7 +15,7 @@ async function readModule(dir: string) {
   return exports.default as ModuleConfig;
 }
 
-async function getDependencies(dir: string) {
+export async function getDependencies(dir: string) {
   const module = await readModule(dir);
   const dependencies = module?.dependencies ?? {};
   const found = await Promise.all(
@@ -37,6 +36,7 @@ async function getDependencies(dir: string) {
 export async function generateModuleTypes(dir: string) {
   const dependencies = await getDependencies(dir);
   await generateTypes(dir, dependencies, {
+    // TODO use actual pack format somehow
     packFormat: packFormatOf("1.21.1"),
   });
 }

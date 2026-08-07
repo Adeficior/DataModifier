@@ -10,6 +10,9 @@
       "dist"
    ],
    "type": "module",
+   "bin": {
+      "datamod-codegen": "./dist/cli.js"
+   },
    "scripts": {
       "build": "tsc --project tsconfig.build.json",
       "check": "tsc --noEmit",
@@ -34,6 +37,7 @@
    "peerDependencies": {
       "typescript": "catalog:",
       "prettier": "catalog:",
+      "lodash-es": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

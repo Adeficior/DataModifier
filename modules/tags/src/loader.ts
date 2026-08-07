@@ -19,7 +19,7 @@ import { entryId, orderTagEntries, tagFolderOf } from "./helper";
 import type { TagDefinition } from "./schema";
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
-  private readonly entries = new Registry<TagEntry[]>();
+  private readonly entries = new Registry<TagEntry<T>[]>();
 
   constructor(public readonly folder: string) {}
 
@@ -38,7 +38,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
     ]);
     // TODO support for advanced-tag-loader packs?
 
-    this.entries.set(id, unique);
+    this.entries.set(id, unique as TagEntry<T>[]);
   }
 
   list() {
@@ -50,7 +50,7 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
     return this.entries.get(id);
   }
 
-  resolve(input: TagInput, level = 0): TagEntry[] {
+  resolve(input: TagInput, level = 0): TagEntry<T>[] {
     const id = encodeId(input);
     if (level >= 100) throw new Error(`Circular TagDefinition: ${id}`);
 

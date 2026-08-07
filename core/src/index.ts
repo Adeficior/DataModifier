@@ -43,3 +43,5 @@ export type { Predicates } from "./predicates";
 export { resolveIdTest } from "./predicates/id";
 export type { CommonFilter, Predicate } from "./predicates/id";
 export type { IngredientFilter } from "./predicates/ingredients";
+
+export * from "./conditions";

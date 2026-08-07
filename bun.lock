@@ -23,6 +23,7 @@
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
@@ -34,9 +35,10 @@
       "name": "@adeficior/data-modifier",
       "version": "0.0.0-dev",
       "bin": {
-        "datamod": "dist/cli/run.js",
+        "datamod": "dist/cli.js",
       },
       "dependencies": {
+        "@adeficior/data-modifier-codegen": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -62,6 +64,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-models": "workspace:*",
       },
@@ -77,6 +80,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
@@ -92,6 +96,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -106,6 +111,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -118,6 +124,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
@@ -134,6 +141,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -144,11 +152,15 @@
     "packages/codegen": {
       "name": "@adeficior/data-modifier-codegen",
       "version": "0.0.0-dev",
+      "bin": {
+        "datamod-codegen": "./dist/cli.js",
+      },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "lodash-es": "catalog:",
         "prettier": "catalog:",
         "typescript": "catalog:",
       },

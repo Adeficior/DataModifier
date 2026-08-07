@@ -11,7 +11,7 @@
       "./tsconfig-build": "./tsconfig.build.json"
    },
    "scripts": {
-      "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  *.js || true"
+      "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  eslint.config.js || true"
    },
    "devDependencies": {
       "@eslint/js": "^10.0.1",

@@ -22,6 +22,7 @@ import {
   recipeFolder,
   resolveIdTest,
   RuledEmitter,
+  withDisabledConditions,
   type CommonFilter,
   type Predicate,
   type Predicates,
@@ -65,23 +66,9 @@ export interface RecipeRules {
   remove(test: RecipeTest): void;
 }
 
-export const EMPTY_RECIPE: RecipeDefinition = {
-  type: "noop",
-  conditions: [
-    {
-      type: "forge:false",
-    },
-  ],
-  "fabric:load_conditions": [
-    {
-      condition: "fabric:not",
-      value: {
-        condition: "fabric:all_mods_loaded",
-        values: ["minecraft"],
-      },
-    },
-  ],
-};
+export const EMPTY_RECIPE: RecipeDefinition = withDisabledConditions({
+  type: "minecraft:disabled",
+});
 
 export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>

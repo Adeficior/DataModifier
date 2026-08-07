@@ -13,7 +13,9 @@ export function entryId(entry: TagEntry): NormalizedId {
   else return encodeId(entry.id);
 }
 
-export function orderTagEntries(entries: TagEntry[]) {
+export function orderTagEntries<T extends string>(
+  entries: TagEntry<T>[],
+): TagEntry<T>[] {
   return orderBy(
     uniqBy(entries, (it) => entryId(it)),
     (it) => entryId(it),
