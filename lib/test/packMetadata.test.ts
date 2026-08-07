@@ -5,7 +5,10 @@ import {
   createTestResolver,
 } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { overwritePackMetadata, type PackMetadata } from "../src";
+import {
+  overwritePackMetadata,
+  type PackMetadata,
+} from "../src/emit/packMetadata";
 
 describe("pack.mcmeta tests", () => {
   it("overwrites existing pack.mcmeta files", async () => {

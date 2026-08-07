@@ -1,3 +1,10 @@
+import type {
+  Ingredient,
+  IngredientSerializer,
+  Result,
+  ResultSerializer,
+  Serializer,
+} from "@adeficior/data-modifier-core";
 import {
   type Predicates,
   type RegistryLookup,
@@ -29,4 +36,31 @@ export function mockPredicates() {
     ingredient: mock(),
     result: mock(),
   } satisfies Predicates;
+}
+
+function mockSerializer<R, T extends Serializer<R, T>>() {
+  return {
+    deserialize: mock(),
+    deserializeList: mock(),
+    serialize: mock(),
+    serializeList: mock(),
+    deserializeOptional: mock(),
+    serializeOptional: mock(),
+    selectModule: mock(),
+    validated: mock().mockImplementation((it) => it),
+    withModule: mock().mockReturnThis(),
+  } satisfies Serializer<R, T>;
+}
+
+export function mockResultSerializer() {
+  return mockSerializer<Result, ResultSerializer>() satisfies ResultSerializer;
+}
+
+export function mockIngredientSerializer() {
+  const base = mockSerializer<Ingredient, IngredientSerializer>();
+  return {
+    ...base,
+    deserializeIngredientMap: mock(),
+    serializeIngredientMap: mock(),
+  } satisfies IngredientSerializer;
 }

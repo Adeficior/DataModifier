@@ -1,4 +1,6 @@
+export { EMPTY_RECIPE, type RecipeRules, type RecipeTest } from "./emitter";
 export type * from "./hooks";
+export type { RecipeLoaderAccessor } from "./loader";
 export { default } from "./module";
 export type * from "./schema";
 export * from "./serializer/abstract";

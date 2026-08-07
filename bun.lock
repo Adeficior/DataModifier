@@ -127,6 +127,7 @@
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {

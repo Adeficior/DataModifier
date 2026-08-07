@@ -1,6 +1,6 @@
 import { expect, it } from "bun:test";
 import type { Id, NormalizedId } from "../src";
-import { Registry, createId, encodeId, resolveIDTest } from "../src";
+import { Registry, createId, encodeId, resolveIdTest } from "../src";
 
 it("parses id from string", () => {
   expect(createId("minecraft:stone")).toMatchObject({
@@ -57,7 +57,7 @@ it("encodes id correctly", () => {
 });
 
 it("correctly tests id using string", () => {
-  const predicate = resolveIDTest<NormalizedId>("minecraft:stone");
+  const predicate = resolveIdTest<NormalizedId>("minecraft:stone");
 
   expect(predicate({ namespace: "minecraft", path: "stone" })).toBeTruthy();
   expect(predicate("minecraft:stone")).toBeTruthy();
@@ -68,7 +68,7 @@ it("correctly tests id using string", () => {
 });
 
 it("correctly tests id using regex", () => {
-  const predicate = resolveIDTest(/.+:oak_.+/);
+  const predicate = resolveIdTest(/.+:oak_.+/);
 
   expect(
     predicate({ namespace: "minecraft", path: "oak_planks" }),
@@ -81,7 +81,7 @@ it("correctly tests id using regex", () => {
 });
 
 it("correctly tests id using predicate", () => {
-  const predicate = resolveIDTest((it) => it.includes("one"));
+  const predicate = resolveIdTest((it) => it.includes("one"));
 
   expect(predicate({ namespace: "minecraft", path: "stone" })).toBeTruthy();
   expect(predicate("minecraft:bone_block")).toBeTruthy();

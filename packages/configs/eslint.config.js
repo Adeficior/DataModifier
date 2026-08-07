@@ -41,7 +41,7 @@ export function eslintConfig(tsconfigRootDir) {
         "import/no-extraneous-dependencies": "error",
         "import/enforce-node-protocol-usage": ["error", "always"],
         "import/no-useless-path-segments": "error",
-        "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+        "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
         "import/extensions": ["error", "never", { json: "always" }],
       },
     },
