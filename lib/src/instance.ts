@@ -1,5 +1,5 @@
 import {
-  type ClearableEmitter,
+  CombinedEmitters,
   type Loader,
   type LoaderContext,
   type ModuleConfig,
@@ -9,7 +9,6 @@ import {
   combineResolvers,
   createLogger,
   distributedAcceptor,
-  extendContext,
   filterAcceptor,
   type Acceptor,
   type Logger,
@@ -28,7 +27,7 @@ export type LoaderEmitOptions = {
 };
 
 class DataModifierImpl implements DataModifier {
-  private readonly emitters: ClearableEmitter[] = [];
+  private readonly emitters = new CombinedEmitters();
   private readonly loaders: Record<string, Loader> = {};
 
   constructor(
@@ -62,12 +61,7 @@ class DataModifierImpl implements DataModifier {
     description,
     ...context
   }: LoaderContext & LoaderEmitOptions) {
-    const emittersResolver = combineResolvers(
-      this.emitters.map((it) =>
-        it.resolver(extendContext(context, { emitter: it.constructor.name })),
-      ),
-      { async: true },
-    );
+    const emittersResolver = this.emitters.resolver(context);
 
     return overwritePackMetadata(emittersResolver, {
       ...context,
@@ -83,6 +77,10 @@ class DataModifierImpl implements DataModifier {
   async run(from: Resolver, to: Acceptor) {
     await this.loadFrom(from);
     await this.emit(to);
+  }
+
+  reset() {
+    this.emitters.clear();
   }
 
   // TODO move to module with options

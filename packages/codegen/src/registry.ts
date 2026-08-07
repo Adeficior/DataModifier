@@ -1,4 +1,4 @@
-import  {
+import {
   type Id,
   type IdInput,
   type RegistryLookup,

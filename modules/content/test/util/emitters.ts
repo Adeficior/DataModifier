@@ -1,5 +1,6 @@
-import type { SemVerInput } from "@adeficior/data-modifier-core";
-import { packFormatOf } from "@adeficior/data-modifier-core";
+import type { LoaderContext, SemVerInput } from "@adeficior/data-modifier-core";
+import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
+import { type Resolver } from "@adeficior/pack-resolver";
 import {
   mockPredicates,
   mockRegistryLookup,
@@ -11,11 +12,21 @@ import { ModelEmitter } from "../../../models/src/emitter/models";
 import { BlockDefinitionEmitter } from "../../src/emitter/blockDefinition";
 import { ItemDefinitionEmitter } from "../../src/emitter/itemDefinition";
 
-export function createBlockDefinitionEmitter(version: SemVerInput) {
-  const emitter = new BlockDefinitionEmitter(
-    // mock instead?
-    new ModelEmitter("block"),
-    new BlockstateEmitter(),
+type ExternalResolver<T> = {
+  emitter: Omit<T, "resolver">;
+  resolver: Resolver;
+  reset: () => void;
+};
+
+export function createBlockDefinitionEmitter(
+  version: SemVerInput,
+  context: LoaderContext,
+): ExternalResolver<BlockDefinitionEmitter> {
+  // TODO mock instead?
+  const emitters = new CombinedEmitters();
+  const blockModels = emitters.add(new ModelEmitter("block"));
+  const blockStates = emitters.add(new BlockstateEmitter());
+  const loot = emitters.add(
     new LootTableEmitter(
       packFormatOf(version),
       mockRegistryProvider(),
@@ -24,15 +35,26 @@ export function createBlockDefinitionEmitter(version: SemVerInput) {
     ),
   );
 
-  return { emitter };
+  const emitter = emitters.add(
+    new BlockDefinitionEmitter(blockModels, blockStates, loot),
+  );
+
+  const resolver = emitters.resolver(context);
+  const reset = () => emitter.clear();
+
+  return { emitter, resolver, reset };
 }
 
-export function createItemDefinitionEmitter(version: SemVerInput) {
-  const emitter = new ItemDefinitionEmitter(
-    // mock instead?
-    new ModelEmitter("item"),
-    new ModelEmitter("block"),
-    new BlockstateEmitter(),
+export function createItemDefinitionEmitter(
+  version: SemVerInput,
+  context: LoaderContext,
+): ExternalResolver<ItemDefinitionEmitter> {
+  // TODO mock instead?
+  const emitters = new CombinedEmitters();
+  const itemModels = emitters.add(new ModelEmitter("item"));
+  const blockModels = emitters.add(new ModelEmitter("block"));
+  const blockStates = emitters.add(new BlockstateEmitter());
+  const loot = emitters.add(
     new LootTableEmitter(
       packFormatOf(version),
       mockRegistryProvider(),
@@ -41,5 +63,18 @@ export function createItemDefinitionEmitter(version: SemVerInput) {
     ),
   );
 
-  return { emitter };
+  const emitter = emitters.add(
+    new ItemDefinitionEmitter(
+      // TODO mock instead?
+      itemModels,
+      blockModels,
+      blockStates,
+      loot,
+    ),
+  );
+
+  const resolver = emitters.resolver(context);
+  const reset = () => emitter.clear();
+
+  return { emitter, resolver, reset };
 }

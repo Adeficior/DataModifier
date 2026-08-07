@@ -6,11 +6,12 @@ import { createBlockDefinitionEmitter } from "./util/emitters";
 
 const version = "1.20.1";
 const context: LoaderContext = { logger: createLogger() };
-const emitter = createBlockDefinitionEmitter(version);
+const { emitter, resolver, reset } = createBlockDefinitionEmitter(
+  version,
+  context,
+);
 
-afterEach(() => {
-  emitter.clear();
-});
+afterEach(reset);
 
 describe("block definitions", () => {
   it("generates additional resources for block definitions", async () => {
@@ -18,7 +19,7 @@ describe("block definitions", () => {
 
     emitter.basic("example:ruby_ore", { material: "stone" });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/ruby_ore.json"),
@@ -42,7 +43,7 @@ describe("block definitions", () => {
       type: "example_block",
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/sapphire_block.json"),
@@ -57,7 +58,7 @@ describe("block definitions", () => {
       copy: "minecraft:emerald_ore",
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/block/ruby_ore.json"),

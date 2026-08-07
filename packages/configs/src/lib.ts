@@ -1,6 +1,7 @@
-import { exists, writeFile } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { exists, readdir, writeFile } from "node:fs/promises";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { format } from "prettier";
+import rootPackage from "../../../package.json";
 
 async function writeJson(path: string, content: unknown) {
   const json = JSON.stringify(content, null, 2);
@@ -13,6 +14,50 @@ async function writeJs(path: string, content: string) {
   await writeFile(path, formatted);
 }
 
+type PackageJson = {
+  name: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+};
+
+async function readPackage(dir: string) {
+  const json = await Bun.file(join(dir, "package.json")).json();
+  return json as PackageJson;
+}
+
+async function findWorkspacePackages() {
+  const rootDir = relative(".", join(import.meta.dir, "../../.."));
+
+  const workspaces = await Promise.all(
+    rootPackage.workspaces.map(async (pattern) => {
+      if (pattern.endsWith("/*")) {
+        const parent = join(rootDir, pattern.substring(0, pattern.length - 2));
+        const children = await readdir(parent);
+        return children.map((it) => join(parent, it));
+      } else {
+        return [join(rootDir, pattern)];
+      }
+    }),
+  ).then((it) => it.flat());
+
+  return Promise.all(
+    workspaces.map(async (dir) => {
+      const json = await readPackage(dir);
+      return { dir, name: json.name };
+    }),
+  );
+}
+
+async function getDependencies(dir: string) {
+  const json = await readPackage(dir);
+  return Object.keys({
+    ...json.devDependencies,
+    ...json.dependencies,
+    ...json.peerDependencies,
+  });
+}
+
 export default async function generateConfigs(dir: string) {
   if (dir.endsWith("configs")) return;
 
@@ -21,21 +66,30 @@ export default async function generateConfigs(dir: string) {
     include.push("test");
   }
 
+  const packages = await findWorkspacePackages();
+  const dependencies = await getDependencies(dir);
+  const packagePaths = Object.fromEntries(
+    packages
+      .filter((it) => dependencies.includes(it.name))
+      .map((it) => [it.name, [`${it.dir.replaceAll(sep, "/")}/src/index.ts`]]),
+  );
+
   await writeJson(join(dir, "tsconfig.json"), {
     extends: "@adeficior/configs/tsconfig",
     compilerOptions: {
-      paths: await createPaths(dir),
+      paths: { ...packagePaths, ...(await createPaths(dir)) },
     },
     include,
   });
 
   await writeJson(join(dir, "tsconfig.build.json"), {
-    extends: "./tsconfig.json",
+    extends: "@adeficior/configs/tsconfig",
     compilerOptions: {
       rootDir: "./src",
       outDir: "./dist",
       declaration: true,
       sourceMap: true,
+      paths: await createPaths(dir),
     },
     include: ["src"],
   });

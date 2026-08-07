@@ -6,11 +6,12 @@ import { createItemDefinitionEmitter } from "./util/emitters";
 
 const version = "1.20.1";
 const context: LoaderContext = { logger: createLogger() };
-const emitter = createItemDefinitionEmitter(version);
+const { emitter, resolver, reset } = createItemDefinitionEmitter(
+  version,
+  context,
+);
 
-afterEach(() => {
-  emitter.clear();
-});
+afterEach(reset);
 
 describe("block item definitions", () => {
   it("generates block resources for block item definitions", async () => {
@@ -21,7 +22,7 @@ describe("block item definitions", () => {
       block: (blocks) => blocks.basic({ material: "metal" }, { loot: false }),
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/item/ruby_block.json"),
@@ -51,7 +52,7 @@ describe("block item definitions", () => {
         blocks.basic({ material: "stone", type: "example_block" }),
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("content/example/item/sapphire_ore.json"),
@@ -78,7 +79,7 @@ describe("block item definitions", () => {
         }),
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.jsonAt("content/example/item/sapphire.json")).toMatchObject(
       { type: "example" },

@@ -1,4 +1,4 @@
-import  {
+import {
   type ModuleConfig,
   type PackLoaderOptions,
 } from "@adeficior/data-modifier-core";

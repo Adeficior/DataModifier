@@ -6,11 +6,12 @@ import { createItemDefinitionEmitter } from "./util/emitters";
 
 const version = "1.20.1";
 const context: LoaderContext = { logger: createLogger() };
-const emitter = createItemDefinitionEmitter(version);
+const { emitter, resolver, reset } = createItemDefinitionEmitter(
+  version,
+  context,
+);
 
-afterEach(() => {
-  emitter.clear();
-});
+afterEach(reset);
 
 describe("item definitions", () => {
   it("generates additional resources for item definitions", async () => {
@@ -21,7 +22,7 @@ describe("item definitions", () => {
       stack_size: 24,
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.jsonAt("content/example/item/ruby.json")).toMatchSnapshot(
       "basic item definition",
@@ -36,7 +37,7 @@ describe("item definitions", () => {
 
     emitter.basic("example:sapphire", { type: "example" });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.jsonAt("content/example/item/sapphire.json")).toMatchObject(
       { type: "example" },

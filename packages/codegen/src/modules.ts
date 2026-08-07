@@ -1,12 +1,12 @@
 import { packFormatOf, type ModuleConfig } from "@adeficior/data-modifier-core";
 import { exists } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { generateTypes } from "./types";
 
 export async function readModule(dir: string) {
   const moduleFile = join(dir, "src", "module.ts");
   if (!(await exists(moduleFile))) {
-    throw new Error(`could not find module in ${dir}`);
+    throw new Error(`could not find module in ${resolve(dir)}`);
   }
 
   const url = relative(import.meta.dirname, moduleFile);

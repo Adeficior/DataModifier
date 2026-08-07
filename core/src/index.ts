@@ -9,6 +9,7 @@ export type * from "./config";
 export * from "./modules/define";
 
 export type * from "./emit/abstract";
+export * from "./emit/combined";
 export * from "./emit/custom";
 export * from "./emit/ruled";
 
