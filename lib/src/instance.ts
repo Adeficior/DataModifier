@@ -1,6 +1,4 @@
-import {
-  CombinedEmitters,
-  type Loader,
+import  { type Container ,
   type LoaderContext,
   type ModuleConfig,
   type PackLoaderOptions,
@@ -16,29 +14,26 @@ import {
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
 import { overwritePackMetadata } from "./emit/packMetadata";
+import { InstallTarget } from "./installTarget";
 
-export interface DataModifier {
+export interface DataModifier extends Container {
   loadFromMultiple(resolvers: Resolver[]): Promise<void>;
   loadFrom(resolvers: Resolver): Promise<void>;
+  reset(): void;
 }
 
 export type LoaderEmitOptions = {
   description?: string;
 };
 
-class DataModifierImpl implements DataModifier {
-  private readonly emitters = new CombinedEmitters();
-  private readonly loaders: Record<string, Loader> = {};
-
+class DataModifierImpl extends InstallTarget implements DataModifier {
   constructor(
     // TODO rename "pack" things
+    // TODO not needed here really
     private readonly options: PackLoaderOptions,
     private readonly logger: Logger,
-  ) {}
-
-  async install(...modules: ModuleConfig[]) {
-    // TODO sort by dependencies or some shit
-    modules.forEach(() => {});
+  ) {
+    super();
   }
 
   loadFromMultiple(resolvers: Resolver[]) {
@@ -100,6 +95,6 @@ export async function createDataModifier({
   logger?: Logger;
 }): Promise<DataModifier> {
   const instance = new DataModifierImpl(options, logger);
-  await instance.install(...modules);
+  await instance.install(options, ...modules);
   return instance;
 }

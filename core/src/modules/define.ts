@@ -33,7 +33,7 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   ): Promise<void>;
 };
 
-type EventHandler<T> = (event: T) => Promise<void> | void;
+export type EventHandler<T> = (event: T) => Promise<void> | void;
 
 export type ModuleTypes = {
   hooks: Record<string, unknown>;

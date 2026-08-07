@@ -6,6 +6,7 @@ export * from "./common/textHelper";
 
 export type * from "./config";
 
+export type * from "./container";
 export * from "./modules/define";
 
 export type * from "./emit/abstract";

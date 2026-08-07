@@ -74,6 +74,7 @@
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
       "@types/command-line-usage": "^5.0.4"
    },
    "dependencies": {

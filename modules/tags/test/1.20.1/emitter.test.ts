@@ -7,9 +7,8 @@ import {
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver } from "@adeficior/testing";
-import { beforeAll, describe, expect, it } from "bun:test";
+import { afterEach, beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { afterEach } from "node:test";
 import { TagEmitter } from "../../src/emitter";
 import { TagsLoader } from "../../src/loader";
 

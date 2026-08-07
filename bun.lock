@@ -24,6 +24,7 @@
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
@@ -50,6 +51,7 @@
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/testing": "workspace:*",
         "@types/command-line-usage": "^5.0.4",
       },
       "peerDependencies": {
