@@ -2,6 +2,9 @@
    "name": "@adeficior/configs",
    "private": true,
    "type": "module",
+   "bin": {
+      "create-configs": "./src/cli.ts"
+   },
    "exports": {
       "./eslint": "./eslint.config.js",
       "./tsconfig": "./tsconfig.json",

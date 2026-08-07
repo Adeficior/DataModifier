@@ -15,6 +15,7 @@
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
       "lint": "eslint {src}",
+      "prepare": "create-configs",
       "test:ci": "bun run lint && bun run check"
    },
    "repository": {
