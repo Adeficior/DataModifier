@@ -95,6 +95,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "typescript": "catalog:",
         "zod": "catalog:",
@@ -121,6 +122,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "lodash-es": "catalog:",
         "minimatch": "catalog:",

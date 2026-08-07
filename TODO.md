@@ -1,0 +1,3 @@
+- move tsconfig gen into @adeficior/configs package as cli to be executed by depending packages
+- move types generation into cli in codegen/core package
+- move ingredients into seperate package to make core agnostic to tags (& ingredients?)?

@@ -35,6 +35,7 @@
       "@adeficior/pack-resolver": "*",
       "typescript": "catalog:",
       "zod": "catalog:",
-      "@adeficior/data-modifier-core": "workspace:*"
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*"
    }
 }

@@ -37,6 +37,7 @@
       "typescript": "catalog:",
       "minimatch": "catalog:",
       "lodash-es": "catalog:",
-      "@adeficior/data-modifier-core": "workspace:*"
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*"
    }
 }

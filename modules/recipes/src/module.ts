@@ -10,6 +10,10 @@ export default defineModule<{
   };
 }>({
   importModule: name,
+  dependencies: {
+    // TODO make optional?
+    "@adeficior/data-modifier-tags": "required",
+  },
   hooks: {
     "recipes:register-parser": { name: "RegisterRecipeParser" },
   },

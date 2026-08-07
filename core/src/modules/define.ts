@@ -39,8 +39,11 @@ export type ModuleTypes = {
   hooks: Record<string, unknown>;
 };
 
+export type DependencyType = "required" | "optional";
+
 export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
   importModule?: string;
+  dependencies?: Record<string, DependencyType>;
   setup?: EventHandler<SetupEvent<T>>;
   hooks?: Record<keyof T["hooks"], ImportOptions>;
 };
