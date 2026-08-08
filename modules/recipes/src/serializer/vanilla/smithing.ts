@@ -1,4 +1,7 @@
-import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
+import {
+  type Ingredient,
+  type Result,
+} from "@adeficior/data-modifier-ingredients";
 import { notNull } from "@adeficior/pack-resolver";
 import { type RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";

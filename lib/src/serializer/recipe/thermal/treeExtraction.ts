@@ -1,16 +1,16 @@
+import { encodeId, IllegalShapeError } from "@adeficior/data-modifier-core";
 import {
   BlockIngredient,
-  encodeId,
-  IllegalShapeError,
   type Ingredient,
   type Result,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
+  Recipe,
   type RecipeDefinition,
   type RecipeModifier,
   type RecipeParseContext,
+  RecipeParser,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import { type BlockId } from "@adeficior/data-modifier/generated";
 
 export type TreeExtractionRecipeDefinition = RecipeDefinition &

@@ -3,13 +3,17 @@
    "version": "0.0.0-dev",
    "exports": {
       ".": "./dist/index.js",
-      "./testing": "./dist/testing/index.js"
+      "./testing": "./dist/testing/index.js",
+      "./serializer": "./dist/serializer/index.js"
    },
    "types": "./dist/index.d.ts",
    "typesVersions": {
       "*": {
          "testing": [
             "./dist/testing/index.d.ts"
+         ],
+         "serializer": [
+            "./dist/serializer/index.d.ts"
          ]
       }
    },
@@ -23,7 +27,7 @@
       "dev": "bun run build --watch",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepare": "datamod-codegen && create-configs",
+      "prepare": "create-configs && datamod-codegen",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "repository": {

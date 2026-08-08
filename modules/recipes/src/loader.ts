@@ -1,13 +1,13 @@
 import {
-  type IngredientSerializer,
-  type ResultSerializer,
-  type WithSerializerModules,
-} from "@adeficior/data-modifier-core";
-import {
   encodeId,
   IllegalShapeError,
   JsonLoader,
 } from "@adeficior/data-modifier-core";
+import {
+  type IngredientSerializer,
+  type ResultSerializer,
+  type WithSerializerModules,
+} from "@adeficior/data-modifier-ingredients";
 import { omit } from "lodash-es";
 import { minimatch } from "minimatch";
 import { type RecipeDefinition } from "./schema";

@@ -17,6 +17,7 @@ export default defineModule<{
 }>({
   importModule: name,
   dependencies: {
+    "@adeficior/data-modifier-ingredients": "required",
     // TODO make optional?
     "@adeficior/data-modifier-tags": "required",
   },

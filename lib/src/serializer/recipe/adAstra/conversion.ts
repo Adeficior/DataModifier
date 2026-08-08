@@ -1,17 +1,17 @@
+import { encodeId, IllegalShapeError } from "@adeficior/data-modifier-core";
 import {
-  encodeId,
-  FluidIngredient,
-  FluidResult,
-  IllegalShapeError,
   type Ingredient,
   type Result,
-} from "@adeficior/data-modifier-core";
+  FluidIngredient,
+  FluidResult,
+} from "@adeficior/data-modifier-ingredients";
 import {
   type RecipeDefinition,
   type RecipeModifier,
   type RecipeParseContext,
+  Recipe,
+  RecipeParser,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{

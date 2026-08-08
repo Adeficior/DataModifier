@@ -1,14 +1,16 @@
 import {
-  type Ingredient,
-  type IngredientSerializer,
-  type Result,
-  type ResultSerializer,
-  type Serializer,
-  type Predicates,
   type RegistryLookup,
   type RegistryProvider,
 } from "@adeficior/data-modifier-core";
+import { type Serializer } from "@adeficior/data-modifier-core/serializer";
 import { mock } from "bun:test";
+import {
+  type Ingredient,
+  type IngredientSerializer,
+  type Predicates,
+  type Result,
+  type ResultSerializer,
+} from "../../../modules/ingredients/src";
 
 export function mockRegistryLookup() {
   return {

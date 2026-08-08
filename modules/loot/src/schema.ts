@@ -1,8 +1,8 @@
+import { encodeId } from "@adeficior/data-modifier-core";
 import {
-  type ItemResult,
-  encodeId,
   type ItemLikeIngredient,
-} from "@adeficior/data-modifier-core";
+  type ItemResult,
+} from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
 
 const NumberProviderSchema = z.union([

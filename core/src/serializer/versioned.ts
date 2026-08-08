@@ -1,13 +1,13 @@
 import { type Class } from "../common/class";
 import { IllegalShapeError, transformErrors } from "../common/error";
 import { type SemVerInput } from "../common/packFormat";
-import { type InputOutput } from "../io/subject";
 import { type RegistryLookup } from "../registry/lookup";
+import { type Registered } from "../registry/registered";
 import { AbstractSerializer, type Serializer } from "./abstract";
 import { selectSerializerModule, type SerializerModule } from "./module";
 
 export abstract class VersionedSerializer<
-  Out extends InputOutput,
+  Out extends Registered,
   S extends Serializer<Out, S>,
 > extends AbstractSerializer<Out, S> {
   private readonly serializer: SerializerModule<Out>;

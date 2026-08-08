@@ -1,11 +1,13 @@
 import {
   type LoaderContext,
   type NormalizedId,
+  packFormatOf,
+} from "@adeficior/data-modifier-core";
+import {
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
-  packFormatOf,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
   createTestAcceptor,
   createTestLogger,
@@ -17,9 +19,9 @@ import {
 } from "@adeficior/testing";
 import { beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { PredicatesImpl } from "../../../../core/src/predicates";
-import { createIngredientSerializer } from "../../../../core/src/serializer/ingredients";
-import { createResultSerializer } from "../../../../core/src/serializer/results";
+import { createPredicates } from "../../../../modules/ingredients/src/predicates";
+import { createIngredientSerializer } from "../../../../modules/ingredients/src/serializer/ingredients";
+import { createResultSerializer } from "../../../../modules/ingredients/src/serializer/results";
 import {
   type RecipeTest,
   type ShapedRecipeDefinition,
@@ -36,7 +38,7 @@ const lookup = setupLookup(version);
 const results = createResultSerializer(packFormatOf(version), lookup);
 const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
 const tags = setupTagRegistry(version);
-const predicates = new PredicatesImpl(lookup, tags, ingredients);
+const predicates = createPredicates(lookup, tags, ingredients);
 
 const loader = new RecipeLoader(results, ingredients);
 const emitter = new RecipeEmitter(

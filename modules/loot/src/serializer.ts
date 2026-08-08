@@ -1,14 +1,18 @@
 import {
   encodeId,
+  type RegistryLookup,
+  stripTag,
+} from "@adeficior/data-modifier-core";
+import {
+  type Predicate,
+  type Replacer,
+} from "@adeficior/data-modifier-core/serializer";
+import {
   type Ingredient,
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
-  type Predicate,
-  type RegistryLookup,
-  type Replacer,
-  stripTag,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
   extendLootEntry,
   type LootEntry,

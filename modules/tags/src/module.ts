@@ -1,10 +1,8 @@
-import {
-  defineModule,
-  type TagRegistryHolder,
-} from "@adeficior/data-modifier-core";
+import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import { TagEmitter, type TagRules } from "./emitter";
 import { TagsLoader } from "./loader";
+import { type TagRegistryHolder } from "./schema";
 
 export default defineModule<{
   loaders: {
@@ -17,10 +15,7 @@ export default defineModule<{
   importModule: name,
   types: {
     loaders: {
-      tags: {
-        module: "@adeficior/data-modifier-core",
-        name: "TagRegistryHolder",
-      },
+      tags: "TagRegistryHolder",
     },
     emitters: {
       tags: "TagRules",

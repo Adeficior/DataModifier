@@ -19,6 +19,7 @@ type PackageJson = {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
+  exports?: Record<string, string>;
 };
 
 async function readPackage(dir: string) {
@@ -44,7 +45,13 @@ async function findWorkspacePackages() {
   return Promise.all(
     workspaces.map(async (dir) => {
       const json = await readPackage(dir);
-      return { dir, name: json.name };
+      const paths = Object.fromEntries(
+        Object.entries(json.exports ?? {}).map(([key, dist]) => [
+          key.substring(1),
+          dist.substring(1).replace("/dist/", "/src/").replace(".js", ".ts"),
+        ]),
+      );
+      return { dir, name: json.name, paths };
     }),
   );
 }
@@ -71,7 +78,14 @@ export default async function generateConfigs(dir: string) {
   const packagePaths = Object.fromEntries(
     packages
       .filter((it) => dependencies.includes(it.name))
-      .map((it) => [it.name, [`${it.dir.replaceAll(sep, "/")}/src/index.ts`]]),
+      .map((it) => ({ ...it, dir: it.dir.replaceAll(sep, "/") }))
+      .flatMap(({ dir, name, paths }) =>
+        Object.entries(paths).map(([path, file]) => [
+          name + path,
+          [dir + file],
+        ]),
+      ),
+    //.map((it) => [it.name, [`${it.dir.replaceAll(sep, "/")}/src/index.ts`]]),
   );
 
   await writeJson(join(dir, "tsconfig.json"), {

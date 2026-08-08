@@ -1,33 +1,41 @@
 import {
+  CustomEmitter,
+  encodeId,
+  recipeFolder,
+  RuledEmitter,
+  withDisabledConditions,
   type ClearableEmitter,
   type Id,
   type IdInput,
-  type Ingredient,
-  type IngredientFilter,
-  type IngredientInput,
-  type IngredientSerializer,
   type LoaderContext,
   type Modifier,
   type NormalizedId,
   type RegistryProvider,
+  type SemVerInput,
+} from "@adeficior/data-modifier-core";
+import {
+  createReplacer,
+  resolveIdTest,
+  type CommonFilter,
+  type Predicate,
+} from "@adeficior/data-modifier-core/serializer";
+import {
+  type Ingredient,
+  type IngredientFilter,
+  type IngredientInput,
+  type IngredientSerializer,
+  type Predicates,
   type Result,
   type ResultInput,
   type ResultSerializer,
-  type SemVerInput,
-  createReplacer,
-  CustomEmitter,
-  encodeId,
-  recipeFolder,
-  resolveIdTest,
-  RuledEmitter,
-  withDisabledConditions,
-  type CommonFilter,
-  type Predicate,
-  type Predicates,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import { type RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import { type ContextLike, type Logger } from "@adeficior/pack-resolver";
-import { combineResolvers, notNull } from "@adeficior/pack-resolver";
+import {
+  combineResolvers,
+  notNull,
+  type ContextLike,
+  type Logger,
+} from "@adeficior/pack-resolver";
 import { RecipeRule } from "./rule";
 import { type RecipeDefinition } from "./schema";
 import { type Recipe } from "./serializer/abstract";

@@ -16,7 +16,6 @@ export type NormalizedId<T extends string = string> =
       : `${string}:${T}`;
 
 export type TagId = NormalizedId<`#${string}`>;
-
 export type TagInput = IdInput<`#${string}`>;
 
 export const IdSchema = z

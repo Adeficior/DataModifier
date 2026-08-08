@@ -1,10 +1,9 @@
+import { encodeId, IdSchema } from "@adeficior/data-modifier-core";
 import {
-  encodeId,
-  IdSchema,
   ItemResult,
   type Ingredient,
   type ResultSerializer,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
   OneToOneRecipe,
   Recipe,

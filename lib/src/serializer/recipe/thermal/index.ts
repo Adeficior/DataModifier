@@ -1,14 +1,15 @@
+import { IllegalShapeError } from "@adeficior/data-modifier-core";
 import {
-  IllegalShapeError,
   type Ingredient,
   type Result,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
+  Recipe,
+  RecipeParser,
   type RecipeDefinition,
   type RecipeModifier,
   type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import { ingredientSerializerModules } from "./module";
 
 type Writeable<T> = {

@@ -1,15 +1,17 @@
+import { IdSchema } from "@adeficior/data-modifier-core";
+import {
+  createSerializerModule,
+  isObjectWith,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   AmountSchema,
   CountSchema,
-  createSerializerModule,
   FluidTagIngredient,
-  IdSchema,
-  isObjectWith,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
   type Ingredient,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
 
 const ThermalFluidTagSchema = z.object({

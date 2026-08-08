@@ -1,25 +1,30 @@
 import {
-  type IdInput,
-  type NormalizedId,
-  type TagEntry,
-  type TagInput,
-  type TagRegistry,
-  type TagRegistryHolder,
   encodeId,
   fromJson,
   isAtLeastVersion,
   Registry,
+  type IdInput,
+  type NormalizedId,
   type SemVerInput,
+  type TagInput,
 } from "@adeficior/data-modifier-core";
+import { type TagChecker } from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
 import { entryId, orderTagEntries, tagFolderOf } from "./helper";
-import { type TagDefinition } from "./schema";
+import {
+  type TagDefinition,
+  type TagEntry,
+  type TagRegistry,
+  type TagRegistryHolder,
+} from "./schema";
 
-class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
+class WriteableTagRegistry<T extends RegistryId>
+  implements TagRegistry<T>, TagChecker<T>
+{
   private readonly entries = new Registry<TagEntry<T>[]>();
 
   constructor(public readonly folder: string) {}

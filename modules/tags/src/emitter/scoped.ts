@@ -1,21 +1,21 @@
 import {
   createId,
   Registry,
-  resolveIdTest,
-  type CommonFilter,
   type Id,
   type NormalizedId,
-  type Replacer,
-  type TagEntry,
   type TagInput,
-  type TagRegistry,
 } from "@adeficior/data-modifier-core";
+import {
+  resolveIdTest,
+  type CommonFilter,
+  type Replacer,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import { type TagDefinition } from "../schema";
+import { type TagDefinition, type TagEntry, type TagRegistry } from "../schema";
 import { type TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;

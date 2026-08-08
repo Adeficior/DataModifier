@@ -76,7 +76,9 @@ class EventBus {
   private readonly handlers = new Map<string, Set<EventHandler<unknown>>>();
 
   subscribe(type: string, handler: EventHandler<unknown>) {
-    this.handlers.getOrInsertComputed(type, () => new Set()).add(handler);
+    const set = this.handlers.get(type);
+    if (set) set.add(handler);
+    else this.handlers.set(type, new Set([handler]));
   }
 
   async dispatch(type: string, event: unknown) {

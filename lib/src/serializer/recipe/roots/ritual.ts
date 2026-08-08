@@ -1,12 +1,13 @@
-import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
 import {
-  type ManyToOneRecipeDefinition,
-  type RecipeModifier,
-  type RecipeParseContext,
-} from "@adeficior/data-modifier-recipes";
+  type Ingredient,
+  type Result,
+} from "@adeficior/data-modifier-ingredients";
 import {
   ManyToOneRecipe,
   RecipeParser,
+  type ManyToOneRecipeDefinition,
+  type RecipeModifier,
+  type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 
 export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &

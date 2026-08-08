@@ -1,6 +1,7 @@
 import { expect, it } from "bun:test";
 import type { Id, NormalizedId } from "../src";
-import { Registry, createId, encodeId, resolveIdTest } from "../src";
+import { Registry, createId, encodeId } from "../src";
+import { resolveIdTest } from "../src/serializer";
 
 it("parses id from string", () => {
   expect(createId("minecraft:stone")).toMatchObject({

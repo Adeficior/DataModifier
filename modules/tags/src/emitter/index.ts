@@ -1,19 +1,18 @@
 import {
   toJson,
   type ClearableEmitter,
-  type CommonFilter,
   type LoaderContext,
   type NormalizedId,
-  type TagEntry,
   type TagInput,
-  type TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
+import { type CommonFilter } from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
+import { type TagEntry, type TagRegistryHolder } from "../schema";
 import { type TagEmitterOptions } from "./options";
 import { ScopedEmitter, type ScopedTagRules } from "./scoped";
 

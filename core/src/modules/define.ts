@@ -41,9 +41,9 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   loader: Registration<NonNullable<T["loaders"]>, Loader, [string]>;
   emitter: Registration<NonNullable<T["emitters"]>, ClearableEmitter>;
   options: PackLoaderOptions;
-  hook: <K extends keyof T["hooks"]>(
+  hook: <K extends keyof NonNullable<T["hooks"]>>(
     type: K,
-    handler: EventHandler<T["hooks"][K]>,
+    handler: EventHandler<NonNullable<T["hooks"]>[K]>,
   ) => void;
   callHook<K extends keyof T["hooks"]>(
     type: K,

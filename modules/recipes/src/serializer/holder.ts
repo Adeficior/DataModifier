@@ -1,10 +1,9 @@
+import { encodeId, type NormalizedId } from "@adeficior/data-modifier-core";
+import { type Replacer } from "@adeficior/data-modifier-core/serializer";
 import {
   type Ingredient,
-  type Replacer,
   type Result,
-  encodeId,
-  type NormalizedId,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import { type RecipeDefinition } from "../schema";
 import { type Recipe } from "./abstract";
 import { type RecipeParseContext } from "./context";

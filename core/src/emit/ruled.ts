@@ -9,6 +9,7 @@ import { toJson } from "../common/textHelper";
 import { type RegistryProvider } from "../registry/abstract";
 import { type ClearableEmitter, type PathProvider } from "./abstract";
 
+// TODO this should be replacer or at least nullable replacer?
 export type Modifier<T> = (recipe: T) => T | null;
 
 export abstract class Rule<T> {

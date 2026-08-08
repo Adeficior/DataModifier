@@ -1,7 +1,7 @@
 import {
   type IngredientSerializer,
   type ResultSerializer,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import { type RecipeDefinition } from "../schema";
 import { type RecipeHolder } from "./holder";
 

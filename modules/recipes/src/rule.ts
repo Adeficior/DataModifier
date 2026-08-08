@@ -1,11 +1,14 @@
 import {
+  createId,
+  Rule,
   type Id,
-  type Ingredient,
   type Modifier,
-  type Predicate,
-  type Result,
 } from "@adeficior/data-modifier-core";
-import { createId, Rule } from "@adeficior/data-modifier-core";
+import { type Predicate } from "@adeficior/data-modifier-core/serializer";
+import {
+  type Ingredient,
+  type Result,
+} from "@adeficior/data-modifier-ingredients";
 import { type ContextLike, type Logger } from "@adeficior/pack-resolver";
 import { type RecipeHolder } from "./serializer/holder";
 

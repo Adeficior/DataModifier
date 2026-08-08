@@ -15,7 +15,7 @@
       "dev": "bun run build --watch",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepare": "datamod-codegen && create-configs",
+      "prepare": "create-configs && datamod-codegen",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "repository": {
@@ -38,6 +38,7 @@
       "typescript": "catalog:",
       "zod": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
       "@adeficior/data-modifier-tags": "workspace:*"
    }
 }

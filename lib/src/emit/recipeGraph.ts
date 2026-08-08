@@ -3,20 +3,22 @@ import {
   encodeId,
   prefix,
   Registry,
-  resolveIdTest,
   suffix,
   toJson,
   type ClearableEmitter,
-  type CommonFilter,
   type IdInput,
-  type InputOutput,
   type LoaderContext,
   type NormalizedId,
-  type Predicate,
+  type Registered,
   type RegistryProvider,
-  type TagRegistryHolder,
 } from "@adeficior/data-modifier-core";
+import {
+  resolveIdTest,
+  type CommonFilter,
+  type Predicate,
+} from "@adeficior/data-modifier-core/serializer";
 import { type RecipeHolder } from "@adeficior/data-modifier-recipes";
+import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import {
   type ItemId,
   type RecipeSerializerId,
@@ -177,7 +179,7 @@ class GraphBuilder {
     private readonly options: Required<RecipeGraphOptions>,
   ) {}
 
-  private addIONode(recipeId: NormalizedId, from: InputOutput, input: boolean) {
+  private addIONode(recipeId: NormalizedId, from: Registered, input: boolean) {
     const entry = Object.entries(from.ids()).find((it) => it[1].length > 0);
     if (!entry) return;
 

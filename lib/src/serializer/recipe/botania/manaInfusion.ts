@@ -1,10 +1,14 @@
-import { type Ingredient, type Result } from "@adeficior/data-modifier-core";
 import {
+  type Ingredient,
+  type Result,
+} from "@adeficior/data-modifier-ingredients";
+import {
+  Recipe,
+  RecipeParser,
   type RecipeDefinition,
   type RecipeModifier,
   type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import { notNull } from "@adeficior/pack-resolver";
 import { ingredientSerializerModules } from "./blocks";
 

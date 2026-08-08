@@ -1,9 +1,7 @@
 import { type ZodType } from "zod";
 import { type Class } from "../common/class";
 import { isAtLeastVersion, type SemVerInput } from "../common/packFormat";
-import { type Ingredient } from "../io/ingredient/impl";
-import { type Result } from "../io/result/impl";
-import { type Predicate } from "../predicates/id";
+import { type Predicate } from "./predicate";
 
 type Mapper<From extends Out, To extends In, Out, In> = (
   it: From,
@@ -92,9 +90,4 @@ export function selectSerializerModule<Out>(
   return Object.entries(serializers).findLast(([it]) =>
     isAtLeastVersion(packFormat, it),
   )?.[1];
-}
-
-export interface WithSerializerModules {
-  ingredientModules(): Record<string, SerializerModule<Ingredient>>;
-  resultModules(): Record<string, SerializerModule<Result>>;
 }

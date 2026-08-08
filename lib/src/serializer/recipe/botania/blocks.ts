@@ -1,13 +1,15 @@
+import { IdSchema } from "@adeficior/data-modifier-core";
+import {
+  createSerializerModule,
+  hasType,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   BlockIngredient,
   BlockResult,
   BlockTagIngredient,
-  createSerializerModule,
-  hasType,
-  IdSchema,
   type Ingredient,
   type Result,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import {
   OneToOneRecipe,
   RecipeParser,

@@ -1,8 +1,8 @@
+import { type Replacer } from "@adeficior/data-modifier-core/serializer";
 import {
   type Ingredient,
-  type Replacer,
   type Result,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 
 export type RecipeModifier = {
   result: Replacer<Result>;

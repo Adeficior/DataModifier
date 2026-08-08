@@ -2,7 +2,7 @@ import {
   type IngredientMap,
   type IngredientMapInput,
   type Result,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-ingredients";
 import { type RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";
 import { type RecipeParseContext } from "../context";

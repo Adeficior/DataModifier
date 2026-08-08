@@ -41,6 +41,7 @@
       "dependencies": {
         "@adeficior/data-modifier-codegen": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
@@ -78,6 +79,23 @@
         "typescript": "catalog:",
       },
     },
+    "modules/ingredients": {
+      "name": "@adeficior/data-modifier-ingredients",
+      "version": "0.0.0-dev",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
+        "@adeficior/pack-resolver": "*",
+        "lodash-es": "catalog:",
+        "typescript": "catalog:",
+        "zod": "catalog:",
+      },
+    },
     "modules/lang": {
       "name": "@adeficior/data-modifier-lang",
       "version": "0.0.0-dev",
@@ -105,6 +123,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "typescript": "catalog:",
@@ -135,6 +154,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "lodash-es": "catalog:",
@@ -220,6 +240,8 @@
     "@adeficior/data-modifier-content": ["@adeficior/data-modifier-content@workspace:modules/content"],
 
     "@adeficior/data-modifier-core": ["@adeficior/data-modifier-core@workspace:core"],
+
+    "@adeficior/data-modifier-ingredients": ["@adeficior/data-modifier-ingredients@workspace:modules/ingredients"],
 
     "@adeficior/data-modifier-lang": ["@adeficior/data-modifier-lang@workspace:modules/lang"],
 

@@ -3,10 +3,10 @@ import {
   encodeId,
   type IdInput,
   type NormalizedId,
-  type TagEntry,
 } from "@adeficior/data-modifier-core";
 import orderBy from "lodash-es/orderBy";
 import uniqBy from "lodash-es/uniqBy";
+import { type TagEntry } from "./schema";
 
 export function entryId(entry: TagEntry): NormalizedId {
   if (typeof entry === "string") return encodeId(entry);
