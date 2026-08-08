@@ -2,7 +2,7 @@ import { name } from "../package.json";
 import { defineModule } from "./modules/define";
 import { PredicatesImpl, type Predicates } from "./predicates";
 import { EmptyRegistryLookup } from "./registry/empty";
-import  { type RegistryLookup } from "./registry/lookup";
+import { type RegistryLookup } from "./registry/lookup";
 import {
   createIngredientSerializer,
   type IngredientSerializer,
@@ -50,6 +50,8 @@ export default defineModule<{
       (container) =>
         new PredicatesImpl(
           registries(),
+          // TODO somehow I depend on tags which does not make sense because tags depends on core
+          // solved if moved to ingredients package?
           container.get("loader:tags"),
           ingredientSerializer(),
         ),

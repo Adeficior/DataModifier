@@ -1,7 +1,10 @@
+import packageJson from "../../package.json";
 import { type PackLoaderOptions } from "../config";
 import { type Container } from "../container";
 import { type ClearableEmitter } from "../emit/abstract";
 import { type Loader } from "../load/abstract";
+
+export type DependencyType = "required" | "optional";
 
 export type ImportOptions =
   | string
@@ -48,8 +51,6 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   ): Promise<void>;
 };
 
-export type DependencyType = "required" | "optional";
-
 type ModuleImports<T extends ModuleTypes> = {
   services: Record<keyof NonNullable<T["services"]>, ImportOptions>;
   emitters: Record<keyof NonNullable<T["emitters"]>, ImportOptions>;
@@ -57,14 +58,23 @@ type ModuleImports<T extends ModuleTypes> = {
   hooks: Record<keyof NonNullable<T["hooks"]>, ImportOptions>;
 };
 
+type PackagedModule = {
+  importModule: string;
+  name?: string;
+};
+
+type LocalModule = {
+  name: string;
+};
+
 export type ModuleConfigInput<T extends ModuleTypes> = {
-  importModule?: string;
   dependencies?: Record<string, DependencyType>;
   setup?: EventHandler<SetupEvent<T>>;
   types?: Partial<ModuleImports<T>>;
-};
+} & (PackagedModule | LocalModule);
 
 export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
+  name: string;
   importModule?: string;
   dependencies: Record<string, DependencyType>;
   setup: EventHandler<SetupEvent<T>>;
@@ -76,11 +86,14 @@ export function defineModule<T extends ModuleTypes>({
   dependencies,
   ...config
 }: ModuleConfigInput<T>): ModuleConfig<T> {
+  const actualDependencies = { ...dependencies };
+  const name = config.name ?? (config as PackagedModule).importModule;
+  if (name !== packageJson.name) {
+    actualDependencies[packageJson.name] = "required";
+  }
+
   return {
-    dependencies: {
-      "@adeficior/data-modifier-core": "required",
-      ...dependencies,
-    },
+    dependencies: actualDependencies,
     setup: () => {},
     types: {
       emitters: types?.emitters ?? {},
@@ -89,5 +102,6 @@ export function defineModule<T extends ModuleTypes>({
       services: types?.services ?? {},
     } as ModuleImports<T>,
     ...config,
+    name,
   };
 }

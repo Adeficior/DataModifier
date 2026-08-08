@@ -1,12 +1,76 @@
 import {
   CombinedEmitters,
   type Container,
+  type DependencyType,
   type EventHandler,
   type Loader,
   type ModuleConfig,
   type PackLoaderOptions,
   type SetupEvent,
 } from "@adeficior/data-modifier-core";
+import { uniqBy } from "lodash-es";
+
+export type Installable = {
+  name: string;
+  dependencies: Record<string, DependencyType>;
+};
+
+function directDependencies(
+  module: Installable,
+  others: Installable[],
+): ReadonlyArray<Installable> {
+  const direct = Object.keys(module.dependencies);
+
+  if (module.name && direct.includes(module.name)) {
+    throw new Error(`module ${module.name} cannot depend on itself`);
+  }
+
+  return direct.map((name) => {
+    const match = others.find((it) => it.name === name);
+    if (match) return match;
+    // TODO skip optional
+    throw new Error(`unable to find module ${name} required by ${module.name}`);
+  });
+}
+
+function recursiveDependencies(
+  module: Installable,
+  others: Installable[],
+  path: string[],
+): ReadonlyArray<Installable> {
+  const direct = directDependencies(module, others);
+  // TODO check path for recursive dependency cycles
+  return uniqBy(
+    [
+      ...direct,
+      ...direct.flatMap((it) =>
+        recursiveDependencies(it, others, [...path, it.name]),
+      ),
+    ],
+    (it) => it.name,
+  );
+}
+
+export function resolveDependencies(
+  module: Installable,
+  others: Installable[],
+) {
+  return recursiveDependencies(module, others, [module.name]);
+}
+
+export function sortModules<T extends Installable>(modules: T[]): T[] {
+  const withDependencies = modules.map((module) => ({
+    module,
+    dependencies: resolveDependencies(module, modules).map((it) => it.name),
+  }));
+  return withDependencies
+    .toSorted((a, b) => {
+      if (a.dependencies.includes(b.module.name)) return 1;
+      if (b.dependencies.includes(a.module.name)) return -1;
+      return a.dependencies.length - b.dependencies.length;
+    })
+    .map((it) => it.module);
+}
 
 class EventBus {
   private readonly handlers = new Map<string, Set<EventHandler<unknown>>>();
@@ -39,8 +103,7 @@ export class InstallTarget implements Container {
   async install(options: PackLoaderOptions, ...modules: ModuleConfig[]) {
     const bus = new EventBus();
 
-    // TODO sort by dependencies or some shit
-    const sorted = modules.toReversed();
+    const sorted = sortModules(modules);
 
     Promise.all(
       sorted.map(async (it) => {
