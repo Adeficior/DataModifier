@@ -1,12 +1,18 @@
-import { defineModule } from "@adeficior/data-modifier-core";
+import { defineModule, recipeFolder } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { RecipeEmitter } from "./emitter";
+import { RecipeEmitter, type RecipeRules } from "./emitter";
 import { type RegisterRecipeParser } from "./hooks";
-import { RecipeLoader } from "./loader";
+import { RecipeLoader, type RecipeLoaderAccessor } from "./loader";
 
 export default defineModule<{
   hooks: {
     "recipes:register-parser": RegisterRecipeParser;
+  };
+  emitters: {
+    recipes: RecipeRules;
+  };
+  loaders: {
+    recipes: RecipeLoaderAccessor;
   };
 }>({
   importModule: name,
@@ -14,8 +20,16 @@ export default defineModule<{
     // TODO make optional?
     "@adeficior/data-modifier-tags": "required",
   },
-  hooks: {
-    "recipes:register-parser": { name: "RegisterRecipeParser" },
+  types: {
+    hooks: {
+      "recipes:register-parser": { name: "RegisterRecipeParser" },
+    },
+    emitters: {
+      recipes: "RecipeLoaderAccessor",
+    },
+    loaders: {
+      recipes: "RecipeRules",
+    },
   },
   setup: (pack) => {
     const loader = pack.loader(
@@ -25,7 +39,7 @@ export default defineModule<{
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
         ),
-      { import: { name: "RecipeLoaderAccessor" } },
+      recipeFolder(pack.options.packFormat),
     );
 
     pack.emitter(
@@ -40,7 +54,6 @@ export default defineModule<{
           container.get("predicates"),
           loader(),
         ),
-      { import: { name: "RecipeRules" } },
     );
 
     // TODO after everyting else (done event?)

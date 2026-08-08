@@ -1,8 +1,46 @@
 import { defineModule } from "@adeficior/data-modifier-core";
+import { name } from "../package.json";
+import { LootTableEmitter, type LootRules } from "./emitter";
+import { lootTableFolder } from "./helper";
+import { LootTableLoader } from "./loader";
 
-export default defineModule({
+export default defineModule<{
+  loaders: {
+    loot: LootTableLoader;
+  };
+  emitters: {
+    loot: LootRules;
+  };
+}>({
+  importModule: name,
   dependencies: {
     // TODO make optional?
     "@adeficior/data-modifier-tags": "required",
+  },
+  types: {
+    loaders: {
+      loot: "LootTableLoader",
+    },
+    emitters: {
+      loot: "LootRules",
+    },
+  },
+  setup(pack) {
+    const loader = pack.loader(
+      "loot",
+      () => new LootTableLoader(),
+      lootTableFolder(pack.options.packFormat),
+    );
+
+    pack.emitter(
+      "loot",
+      (container) =>
+        new LootTableEmitter(
+          pack.options.packFormat,
+          loader(),
+          container.get("registries"),
+          container.get("predicates"),
+        ),
+    );
   },
 });

@@ -161,7 +161,7 @@
       "name": "@adeficior/data-modifier-codegen",
       "version": "0.0.0-dev",
       "bin": {
-        "datamod-codegen": "./dist/cli.js",
+        "datamod-codegen": "./src/cli.ts",
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",

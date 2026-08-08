@@ -1,4 +1,4 @@
-import { packFormatOf, type ModuleConfig } from "@adeficior/data-modifier-core";
+import { type ModuleConfig } from "@adeficior/data-modifier-core";
 import { exists } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { generateTypes } from "./types";
@@ -33,8 +33,5 @@ export async function getDependencies(dir: string) {
 
 export async function generateModuleTypes(dir: string) {
   const dependencies = await getDependencies(dir);
-  await generateTypes(dir, dependencies, {
-    // TODO use actual pack format somehow
-    packFormat: packFormatOf("1.21.1"),
-  });
+  await generateTypes(dir, dependencies);
 }

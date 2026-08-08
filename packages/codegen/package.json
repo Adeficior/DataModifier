@@ -10,7 +10,7 @@
    ],
    "type": "module",
    "bin": {
-      "datamod-codegen": "./dist/cli.js"
+      "datamod-codegen": "./src/cli.ts"
    },
    "scripts": {
       "build": "tsc --project tsconfig.build.json",

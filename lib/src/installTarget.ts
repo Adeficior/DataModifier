@@ -40,8 +40,10 @@ export class InstallTarget implements Container {
     const bus = new EventBus();
 
     // TODO sort by dependencies or some shit
+    const sorted = modules.toReversed();
+
     Promise.all(
-      modules.map(async (it) => {
+      sorted.map(async (it) => {
         const event: SetupEvent = {
           hook: (...args) => bus.subscribe(...args),
           callHook: (...args) => bus.dispatch(...args),
@@ -55,7 +57,7 @@ export class InstallTarget implements Container {
             this.emitters.add(instance());
             return instance;
           },
-          loader: (key, factory) => {
+          loader: (key, factory, pattern) => {
             const instance = event.service(key, factory);
             this.loaders[pattern] = instance();
             return instance;
@@ -63,7 +65,7 @@ export class InstallTarget implements Container {
           options,
         };
 
-        await it.setup?.(event);
+        await it.setup(event);
       }),
     );
   }

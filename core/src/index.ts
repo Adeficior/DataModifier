@@ -47,3 +47,4 @@ export type { CommonFilter, Predicate } from "./predicates/id";
 export type { IngredientFilter } from "./predicates/ingredients";
 
 export * from "./conditions";
+export { default as module } from "./module";

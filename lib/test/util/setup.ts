@@ -12,9 +12,10 @@ export async function setupInstance(
   version: string,
   {
     load = true,
+    from,
     include,
     ...options
-  }: Partial<PackLoaderOptions & Pick<ResolverOptions, "include">> & {
+  }: Partial<PackLoaderOptions & Pick<ResolverOptions, "include" | "from">> & {
     load?: boolean;
   } = {},
 ) {
@@ -27,7 +28,7 @@ export async function setupInstance(
 
   if (load) {
     beforeAll(async () => {
-      const data = await createTestDataResolver(version, { include });
+      const data = await createTestDataResolver(version, { include, from });
       instance.loadFrom(data);
     });
   }
