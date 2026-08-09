@@ -10,19 +10,7 @@ import {
   type Ingredient,
   type Result,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  OneToOneRecipe,
-  RecipeParser,
-  type RecipeDefinition,
-  type RecipeParseContext,
-} from "@adeficior/data-modifier-recipes";
 import * as z from "zod";
-
-export type BotaniaBlockRecipeDefinition = RecipeDefinition &
-  Readonly<{
-    input: unknown;
-    output: unknown;
-  }>;
 
 const ingredientSerializer15 = createSerializerModule<Ingredient>((builder) => {
   const blockType = "block" as const;
@@ -64,17 +52,6 @@ const resultSerializer15 = createSerializerModule<Result>((builder) => {
   );
 });
 
-export class BotaniaBlockRecipe extends OneToOneRecipe {
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<BotaniaBlockRecipeDefinition> {
-    return {
-      output: context.results.serialize(this.result),
-      input: context.ingredients.serialize(this.ingredient),
-    };
-  }
-}
-
 export const resultSerializerModules = {
   15: resultSerializer15,
 };
@@ -82,24 +59,3 @@ export const resultSerializerModules = {
 export const ingredientSerializerModules = {
   15: ingredientSerializer15,
 };
-
-export class BotaniaBlockRecipeParser<
-  TDefinition extends BotaniaBlockRecipeDefinition,
-> extends RecipeParser<TDefinition, BotaniaBlockRecipe> {
-  override resultModules() {
-    return resultSerializerModules;
-  }
-
-  override ingredientModules() {
-    return ingredientSerializerModules;
-  }
-
-  deserialize(
-    definition: TDefinition,
-    context: RecipeParseContext,
-  ): BotaniaBlockRecipe {
-    const ingredient = context.ingredients.deserialize(definition.input);
-    const result = context.results.deserialize(definition.output);
-    return new BotaniaBlockRecipe(ingredient, result);
-  }
-}

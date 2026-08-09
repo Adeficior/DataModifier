@@ -8,7 +8,8 @@
     "format": "prettier --write \"**/*.ts\"",
     "lint": "turbo run lint",
     "check": "turbo run check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "create": "bun run packages/builder/src/cli.ts --path modules"
   },
   "catalog": {
     "typescript": "^5",
@@ -16,7 +17,9 @@
     "lodash-es": "^4.18.1",
     "@types/lodash-es": "^4.17.12",
     "minimatch": "^10.2.6",
-    "prettier": "^3.8.4"
+    "prettier": "^3.8.4",
+    "arg": "^5.0.2",
+    "command-line-usage": "^7.0.4"
   },
   "devDependencies": {
     "husky": "^9.1.7",

@@ -8,11 +8,11 @@ function generateModule(modules: ModuleConfig[]) {
 
   return /* typescript */ `
     declare module "@adeficior/data-modifier-core/generated" {
-      export type Services = {
+      export type Services<T extends ModuleTypes> = {
         ${services}
       }
 
-      export type Hooks = {
+      export type Hooks<T extends ModuleTypes> = {
         ${hooks}
       }
     }

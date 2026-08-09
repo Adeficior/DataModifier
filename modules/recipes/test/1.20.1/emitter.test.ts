@@ -1,68 +1,21 @@
-import {
-  type LoaderContext,
-  type NormalizedId,
-  packFormatOf,
-} from "@adeficior/data-modifier-core";
+import { type NormalizedId } from "@adeficior/data-modifier-core";
 import {
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  createTestAcceptor,
-  createTestLogger,
-} from "@adeficior/pack-resolver/testing";
-import {
-  createTestDataResolver,
-  setupLookup,
-  setupTagRegistry,
-} from "@adeficior/testing";
-import { beforeAll, describe, expect, it } from "bun:test";
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
+import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { afterEach } from "node:test";
-import { createPredicates } from "../../../../modules/ingredients/src/predicates";
-import { createIngredientSerializer } from "../../../../modules/ingredients/src/serializer/ingredients";
-import { createResultSerializer } from "../../../../modules/ingredients/src/serializer/results";
 import {
   type RecipeTest,
   type ShapedRecipeDefinition,
   EMPTY_RECIPE,
 } from "../../src";
-import { RecipeEmitter } from "../../src/emitter";
-import { RecipeLoader } from "../../src/loader";
+import { setupRecipeEmitter } from "../util/setup";
 
 const version = basename(import.meta.dir);
-const context: LoaderContext = { logger: createTestLogger() };
-const lookup = setupLookup(version);
-
-// TODO is dirty depending on core impl, move this test as an "integration" test to lib instead?
-const results = createResultSerializer(packFormatOf(version), lookup);
-const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
-const tags = setupTagRegistry(version);
-const predicates = createPredicates(lookup, tags, ingredients);
-
-const loader = new RecipeLoader(results, ingredients);
-const emitter = new RecipeEmitter(
-  context.logger,
-  packFormatOf(version),
-  loader,
-  results,
-  ingredients,
-  predicates,
-  loader,
-);
-
-beforeAll(async () => {
-  const resolver = await createTestDataResolver(version, {
-    include: ["data/*/recipes/**/*.json"],
-  });
-  //  TODO use distribute for this somehow
-  await resolver.extract(loader);
-});
-
-afterEach(() => {
-  emitter.clear();
-});
+const { emitter, resolver, logger } = setupRecipeEmitter(version);
 
 describe("recipe ingredient replacement", () => {
   it("replaces ingredients", async () => {
@@ -73,7 +26,7 @@ describe("recipe ingredient replacement", () => {
       new ItemIngredient("minecraft:emerald"),
     );
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/recipes/piston.json"),
@@ -98,7 +51,7 @@ describe("recipe ingredient replacement", () => {
       },
     );
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/recipes/piston.json"),
@@ -117,7 +70,7 @@ describe("recipe ingredient replacement", () => {
       new ItemTagIngredient("forge:raw_materials/iron"),
     );
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt(
@@ -147,7 +100,7 @@ describe("recipe ingredient replacement", () => {
       type: "farmersdelight:cutting",
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/custom/recipes/conditional.json"),
@@ -163,7 +116,7 @@ describe("recipe removal", () => {
       id: /minecraft:.*piston/,
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.paths()).toHaveLength(2);
 
@@ -182,7 +135,7 @@ describe("recipe removal", () => {
       type: "minecraft:smelting",
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.paths()).toHaveLength(119);
   });
@@ -194,7 +147,7 @@ describe("recipe removal", () => {
       output: "minecraft:cooked_beef",
     });
 
-    await emitter.resolver(context).extract(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.paths()).toHaveLength(3);
 
@@ -233,7 +186,7 @@ it("creates custom recipes", async () => {
 
   emitter.add("example:custom", recipe);
 
-  await emitter.resolver(context).extract(acceptor);
+  await resolver.extract(acceptor);
 
   expect(acceptor.jsonAt("data/example/recipes/custom.json")).toMatchObject(
     recipe,
@@ -246,7 +199,7 @@ it("warns about duplicate custom recipe IDs", () => {
   emitter.add(id, { type: "example:something" });
   emitter.add(id, { type: "example:something_else" });
 
-  expect(context.logger.error).toHaveBeenCalledWith(
+  expect(logger.error).toHaveBeenCalledWith(
     `Overwriting custom recipe with ID ${id}`,
   );
 });
@@ -259,9 +212,9 @@ it("warns about missing recipe removal matches", async () => {
   emitter.remove(test);
 
   const acceptor = createTestAcceptor();
-  await emitter.resolver(context).extract(acceptor);
+  await resolver.extract(acceptor);
 
-  expect(context.logger.trace).toHaveBeenCalledWith(
+  expect(logger.trace).toHaveBeenCalledWith(
     "could not find any recipes matching",
     expect.objectContaining({
       operation: "remove",
@@ -276,9 +229,9 @@ it("warns about missing recipe replacement matches", async () => {
   emitter.replaceResult(from, to);
 
   const acceptor = createTestAcceptor();
-  await emitter.resolver(context).extract(acceptor);
+  await resolver.extract(acceptor);
 
-  expect(context.logger.trace).toHaveBeenCalledWith(
+  expect(logger.trace).toHaveBeenCalledWith(
     "could not find any recipes matching",
     expect.objectContaining({
       operation: "replace result",
@@ -294,7 +247,7 @@ it("does not warn about optional missing recipe matches", async () => {
   emitter.replaceResult(from, to, { optional: true });
 
   const acceptor = createTestAcceptor();
-  await emitter.resolver(context).extract(acceptor);
+  await resolver.extract(acceptor);
 
-  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
 });

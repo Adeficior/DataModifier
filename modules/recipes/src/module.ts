@@ -58,9 +58,10 @@ export default defineModule<{
     );
 
     pack.hook("setup:after", ({ callHook }) => {
+      const serializer = loader();
       callHook("recipes:register-parser", {
-        register: (_type, _parser) => {
-          // TODO register on loader
+        register: (type, parser) => {
+          serializer.registerParser(type, parser);
         },
       });
     });

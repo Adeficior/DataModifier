@@ -37,12 +37,15 @@ export type ModuleTypes = {
   hooks?: Record<string, unknown>;
 };
 
-type CombinedHooks<T extends ModuleTypes> = Hooks & NonNullable<T["hooks"]>;
+export type ModuleHooks<T extends ModuleTypes> = Hooks<T> &
+  NonNullable<T["hooks"]>;
+
+//  export type ModuleServices<T extends ModuleTypes> = Services<T> & NonNullable<T["services"]>;
 
 export type AfterSetupEvent<T extends ModuleTypes = ModuleTypes> = {
-  callHook<K extends keyof CombinedHooks<T>>(
+  callHook<K extends keyof ModuleHooks<T>>(
     type: K,
-    event: CombinedHooks<T>[K],
+    event: ModuleHooks<T>[K],
   ): Promise<void>;
 };
 
@@ -51,9 +54,9 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   loader: Registration<NonNullable<T["loaders"]>, Loader, [string]>;
   emitter: Registration<NonNullable<T["emitters"]>, ClearableEmitter>;
   options: PackLoaderOptions;
-  hook: <K extends keyof CombinedHooks<T>>(
+  hook: <K extends keyof ModuleHooks<T>>(
     type: K,
-    handler: EventHandler<CombinedHooks<T>[K]>,
+    handler: EventHandler<ModuleHooks<T>[K]>,
   ) => void;
 };
 

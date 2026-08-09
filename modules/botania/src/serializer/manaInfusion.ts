@@ -10,7 +10,7 @@ import {
   type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import { notNull } from "@adeficior/pack-resolver";
-import { ingredientSerializerModules } from "./blocks";
+import { ingredientSerializerModules } from "./module";
 
 export type ManaInfusionRecipeDefinition = RecipeDefinition &
   Readonly<{

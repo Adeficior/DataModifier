@@ -12,6 +12,7 @@ import { ModelEmitter } from "../../../models/src/emitter/models";
 import { BlockDefinitionEmitter } from "../../src/emitter/blockDefinition";
 import { ItemDefinitionEmitter } from "../../src/emitter/itemDefinition";
 
+// TODO move to testing package and use in recipes
 type ExternalResolver<T> = {
   emitter: Omit<T, "resolver">;
   resolver: Resolver;

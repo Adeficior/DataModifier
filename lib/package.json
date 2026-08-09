@@ -84,10 +84,7 @@
       "@adeficior/data-modifier-ingredients": "workspace:*",
       "@adeficior/data-modifier-recipes": "workspace:*",
       "@adeficior/data-modifier-loot": "workspace:*",
-      "@adeficior/data-modifier-codegen": "workspace:*",
-      "arg": "^5.0.2",
-      "chalk": "^5.6.2",
-      "command-line-usage": "^7.0.4"
+      "@adeficior/data-modifier-codegen": "workspace:*"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",

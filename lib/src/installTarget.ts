@@ -111,7 +111,8 @@ export class InstallTarget implements Container {
     await Promise.all(
       sorted.map(async (it) => {
         const event: SetupEvent = {
-          hook: (...args) => bus.subscribe(...args),
+          hook: (type, handler) =>
+            bus.subscribe(type, handler as EventHandler<unknown>),
           service: (key, factory) => {
             const instance = factory(this);
             this.services.set(key, instance);
