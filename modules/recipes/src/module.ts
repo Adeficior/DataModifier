@@ -57,11 +57,12 @@ export default defineModule<{
         ),
     );
 
-    // TODO after everyting else (done event?)
-    pack.callHook("recipes:register-parser", {
-      register: (_type, _parser) => {
-        // TODO register on loader
-      },
+    pack.hook("setup:after", ({ callHook }) => {
+      callHook("recipes:register-parser", {
+        register: (_type, _parser) => {
+          // TODO register on loader
+        },
+      });
     });
   },
 });

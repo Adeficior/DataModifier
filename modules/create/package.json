@@ -1,0 +1,44 @@
+{
+   "name": "@adeficior/data-modifier-create",
+   "version": "0.0.0-dev",
+   "exports": {
+      ".": "./dist/index.js"
+   },
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "test": "bun test",
+      "lint": "eslint {src,test}",
+      "prepare": "create-configs && datamod-codegen",
+      "test:ci": "bun run lint && bun run check && bun run test --coverage"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Adeficior/DataModifier.git",
+      "directory": "modules/create"
+   },
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/Adeficior/DataModifier/issues"
+   },
+   "homepage": "https://github.com/Adeficior/DataModifier#readme",
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@adeficior/data-modifier-codegen": "workspace:*"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "*",
+      "typescript": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-recipes": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*"
+   }
+}

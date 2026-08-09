@@ -1,3 +1,4 @@
+import type { Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
 import { type PackLoaderOptions } from "../config";
 import { type Container } from "../container";
@@ -36,19 +37,24 @@ export type ModuleTypes = {
   hooks?: Record<string, unknown>;
 };
 
+type CombinedHooks<T extends ModuleTypes> = Hooks & NonNullable<T["hooks"]>;
+
+export type AfterSetupEvent<T extends ModuleTypes = ModuleTypes> = {
+  callHook<K extends keyof CombinedHooks<T>>(
+    type: K,
+    event: CombinedHooks<T>[K],
+  ): Promise<void>;
+};
+
 export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   service: Registration<NonNullable<T["services"]>>;
   loader: Registration<NonNullable<T["loaders"]>, Loader, [string]>;
   emitter: Registration<NonNullable<T["emitters"]>, ClearableEmitter>;
   options: PackLoaderOptions;
-  hook: <K extends keyof NonNullable<T["hooks"]>>(
+  hook: <K extends keyof CombinedHooks<T>>(
     type: K,
-    handler: EventHandler<NonNullable<T["hooks"]>[K]>,
+    handler: EventHandler<CombinedHooks<T>[K]>,
   ) => void;
-  callHook<K extends keyof T["hooks"]>(
-    type: K,
-    event: T["hooks"][K],
-  ): Promise<void>;
 };
 
 type ModuleImports<T extends ModuleTypes> = {
@@ -70,6 +76,7 @@ type LocalModule = {
 export type ModuleConfigInput<T extends ModuleTypes> = {
   dependencies?: Record<string, DependencyType>;
   setup?: EventHandler<SetupEvent<T>>;
+  afterSetup?: EventHandler<AfterSetupEvent<T>>;
   types?: Partial<ModuleImports<T>>;
 } & (PackagedModule | LocalModule);
 
@@ -78,6 +85,7 @@ export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
   importModule?: string;
   dependencies: Record<string, DependencyType>;
   setup: EventHandler<SetupEvent<T>>;
+  afterSetup: EventHandler<AfterSetupEvent<T>>;
   types: ModuleImports<T>;
 };
 
@@ -95,6 +103,7 @@ export function defineModule<T extends ModuleTypes>({
   return {
     dependencies: actualDependencies,
     setup: () => {},
+    afterSetup: () => {},
     types: {
       emitters: types?.emitters ?? {},
       loaders: types?.loaders ?? {},

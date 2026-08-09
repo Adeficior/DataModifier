@@ -1,5 +1,6 @@
 import {
   CombinedEmitters,
+  type AfterSetupEvent,
   type Container,
   type DependencyType,
   type EventHandler,
@@ -107,11 +108,10 @@ export class InstallTarget implements Container {
 
     const sorted = sortModules(modules);
 
-    Promise.all(
+    await Promise.all(
       sorted.map(async (it) => {
         const event: SetupEvent = {
           hook: (...args) => bus.subscribe(...args),
-          callHook: (...args) => bus.dispatch(...args),
           service: (key, factory) => {
             const instance = factory(this);
             this.services.set(key, instance);
@@ -133,5 +133,9 @@ export class InstallTarget implements Container {
         await it.setup(event);
       }),
     );
+
+    bus.dispatch("after:setup", {
+      callHook: (...args) => bus.dispatch(...args),
+    } satisfies AfterSetupEvent);
   }
 }

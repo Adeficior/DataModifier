@@ -19,6 +19,7 @@ import {
 } from "@adeficior/testing";
 import { beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
+import { afterEach } from "node:test";
 import { createPredicates } from "../../../../modules/ingredients/src/predicates";
 import { createIngredientSerializer } from "../../../../modules/ingredients/src/serializer/ingredients";
 import { createResultSerializer } from "../../../../modules/ingredients/src/serializer/results";
@@ -53,9 +54,14 @@ const emitter = new RecipeEmitter(
 
 beforeAll(async () => {
   const resolver = await createTestDataResolver(version, {
-    include: ["data/*/tags/**/*.json", "data/*/recipes/**/*.json"],
+    include: ["data/*/recipes/**/*.json"],
   });
+  //  TODO use distribute for this somehow
   await resolver.extract(loader);
+});
+
+afterEach(() => {
+  emitter.clear();
 });
 
 describe("recipe ingredient replacement", () => {
@@ -159,7 +165,7 @@ describe("recipe removal", () => {
 
     await emitter.resolver(context).extract(acceptor);
 
-    expect(acceptor.paths()).toHaveLength(3);
+    expect(acceptor.paths()).toHaveLength(2);
 
     expect(acceptor.jsonAt("data/minecraft/recipes/piston.json")).toMatchObject(
       EMPTY_RECIPE,
@@ -190,7 +196,7 @@ describe("recipe removal", () => {
 
     await emitter.resolver(context).extract(acceptor);
 
-    expect(acceptor.paths()).toHaveLength(4);
+    expect(acceptor.paths()).toHaveLength(3);
 
     expect(
       acceptor.jsonAt("data/minecraft/recipes/cooked_beef.json"),
@@ -265,7 +271,7 @@ it("warns about missing recipe removal matches", async () => {
 });
 
 it("warns about missing recipe replacement matches", async () => {
-  const from = "minecraft:nothing";
+  const from = "minecraft:bedrock";
   const to = new ItemResult("minecraft:dirt");
   emitter.replaceResult(from, to);
 
@@ -283,7 +289,7 @@ it("warns about missing recipe replacement matches", async () => {
 });
 
 it("does not warn about optional missing recipe matches", async () => {
-  const from = "minecraft:nothing";
+  const from = "minecraft:bedrock";
   const to = new ItemResult("minecraft:dirt");
   emitter.replaceResult(from, to, { optional: true });
 

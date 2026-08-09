@@ -62,6 +62,23 @@
         "zod": "catalog:*",
       },
     },
+    "modules/botania": {
+      "name": "@adeficior/data-modifier-botania",
+      "version": "0.0.0-dev",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
+        "@adeficior/pack-resolver": "*",
+        "typescript": "catalog:",
+      },
+    },
     "modules/content": {
       "name": "@adeficior/data-modifier-content",
       "version": "0.0.0-dev",
@@ -76,6 +93,23 @@
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "lodash-es": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "modules/create": {
+      "name": "@adeficior/data-modifier-create",
+      "version": "0.0.0-dev",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-codegen": "workspace:*",
+        "@adeficior/testing": "workspace:*",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
+        "@adeficior/pack-resolver": "*",
         "typescript": "catalog:",
       },
     },
@@ -235,11 +269,15 @@
 
     "@adeficior/data-modifier": ["@adeficior/data-modifier@workspace:lib"],
 
+    "@adeficior/data-modifier-botania": ["@adeficior/data-modifier-botania@workspace:modules/botania"],
+
     "@adeficior/data-modifier-codegen": ["@adeficior/data-modifier-codegen@workspace:packages/codegen"],
 
     "@adeficior/data-modifier-content": ["@adeficior/data-modifier-content@workspace:modules/content"],
 
     "@adeficior/data-modifier-core": ["@adeficior/data-modifier-core@workspace:core"],
+
+    "@adeficior/data-modifier-create": ["@adeficior/data-modifier-create@workspace:modules/create"],
 
     "@adeficior/data-modifier-ingredients": ["@adeficior/data-modifier-ingredients@workspace:modules/ingredients"],
 
