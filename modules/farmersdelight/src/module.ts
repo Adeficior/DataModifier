@@ -1,7 +1,6 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { CookingRecipeParser } from "./serializer/cooking";
-import { CuttingRecipeParser } from "./serializer/cutting";
+import { registerParsers } from "./registration";
 
 export default defineModule({
   importModule: name,
@@ -9,10 +8,6 @@ export default defineModule({
     "@adeficior/data-modifier-recipes": "required",
   },
   setup: (pack) => {
-    pack.hook("recipes:register-parser", (event) => {
-      event.register("farmersdelight:cooking", new CookingRecipeParser());
-      event.register("farmersdelight:cutting", new CuttingRecipeParser());
-      event.register("farmersrespite:brewing", new CookingRecipeParser());
-    });
+    pack.hook("recipes:register-parser", registerParsers);
   },
 });

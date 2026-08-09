@@ -1,7 +1,6 @@
 import {
   CustomEmitter,
   encodeId,
-  recipeFolder,
   RuledEmitter,
   withDisabledConditions,
   type ClearableEmitter,
@@ -37,7 +36,7 @@ import {
   type Logger,
 } from "@adeficior/pack-resolver";
 import { RecipeRule } from "./rule";
-import { type RecipeDefinition } from "./schema";
+import { recipePath, type RecipeDefinition } from "./schema";
 import { type Recipe } from "./serializer/abstract";
 import { type RecipeSerializer } from "./serializer/context";
 import { RecipeHolder } from "./serializer/holder";
@@ -78,7 +77,7 @@ export const EMPTY_RECIPE: RecipeDefinition = withDisabledConditions({
 
 export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>
-    this.recipePath(it),
+    recipePath(this.packFormat, it),
   );
 
   private readonly ruled: RuledEmitter<RecipeHolder, RecipeRule>;
@@ -95,7 +94,7 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
   ) {
     this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
       this.registry,
-      (id) => this.recipePath(id),
+      (id) => recipePath(packFormat, id),
       EMPTY_RECIPE,
       (it) => this.serializer.serialize(it),
       (id) => this.custom.has(id),
@@ -107,11 +106,6 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
       [this.ruled.resolver(context), this.custom.resolver(context)],
       { async: true },
     );
-  }
-
-  private recipePath(id: Id) {
-    const folder = recipeFolder(this.packFormat);
-    return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
   private createIngredientPredicate(filter?: IngredientFilter) {

@@ -1,8 +1,8 @@
 [
-  "minecraft:debug_all_block_states",
-  "minecraft:single_biome_surface",
   "minecraft:amplified",
-  "minecraft:normal",
+  "minecraft:debug_all_block_states",
   "minecraft:flat",
-  "minecraft:large_biomes"
+  "minecraft:large_biomes",
+  "minecraft:normal",
+  "minecraft:single_biome_surface"
 ]

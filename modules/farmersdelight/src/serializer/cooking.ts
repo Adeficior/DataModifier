@@ -52,7 +52,7 @@ export class CookingRecipe extends Recipe {
     return {
       ingredients: context.ingredients.serializeList(this.ingredients),
       result: context.results.serialize(this.result),
-      container: context.ingredients.serializeOptional(this.container),
+      container: context.results.serializeOptional(this.container?.asResult()),
     };
   }
 }
@@ -69,9 +69,9 @@ export class CookingRecipeParser extends RecipeParser<
       definition.ingredients,
     );
     const result = context.results.deserialize(definition.result);
-    const container = context.ingredients.deserializeOptional(
-      definition.container,
-    );
+    const container = context.results
+      .deserializeOptional(definition.container)
+      ?.asIngredient();
     return new CookingRecipe(ingredients, result, container);
   }
 }

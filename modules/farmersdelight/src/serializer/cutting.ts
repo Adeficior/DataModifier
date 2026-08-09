@@ -9,11 +9,7 @@ import {
   type RecipeModifier,
   type RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-
-export type ToolInput = Readonly<{
-  type: "farmersdelight:tool_action";
-  action: string;
-}>;
+import { resultSerializerModules } from "./module";
 
 export type CuttingRecipeDefinition = Omit<
   ManyToManyRecipeDefinition,
@@ -23,16 +19,6 @@ export type CuttingRecipeDefinition = Omit<
     tool: unknown;
     result: ManyToManyRecipeDefinition["results"];
   }>;
-
-// TODO create actual input
-// function isToolInput<T>(input: T | ToolInput): input is ToolInput {
-//   return (
-//     !!input &&
-//     typeof input === "object" &&
-//     "type" in input &&
-//     input.type === "farmersdelight:tool_action"
-//   );
-// }
 
 export class CuttingRecipe extends ManyToManyRecipe {
   constructor(
@@ -71,6 +57,10 @@ export class CuttingRecipeParser extends RecipeParser<
   CuttingRecipeDefinition,
   CuttingRecipe
 > {
+  override resultModules() {
+    return resultSerializerModules;
+  }
+
   deserialize(
     definition: CuttingRecipeDefinition,
     context: RecipeParseContext,

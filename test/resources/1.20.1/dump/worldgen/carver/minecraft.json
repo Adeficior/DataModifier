@@ -1,1 +1,5 @@
-["minecraft:canyon", "minecraft:nether_cave", "minecraft:cave"]
+[
+  "minecraft:canyon",
+  "minecraft:cave",
+  "minecraft:nether_cave"
+]

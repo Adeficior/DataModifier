@@ -126,6 +126,7 @@
         "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "typescript": "catalog:",
+        "zod": "catalog:",
       },
     },
     "modules/ingredients": {
@@ -268,6 +269,9 @@
       "version": "0.0.0-dev",
       "bin": {
         "datamod-codegen": "./src/cli.ts",
+      },
+      "dependencies": {
+        "arg": "catalog:",
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",

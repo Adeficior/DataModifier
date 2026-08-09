@@ -1,7 +1,9 @@
 [
-  "minecraft:lava",
   "minecraft:empty",
-  "minecraft:water",
   "minecraft:flowing_lava",
-  "minecraft:flowing_water"
+  "minecraft:flowing_milk",
+  "minecraft:flowing_water",
+  "minecraft:lava",
+  "minecraft:milk",
+  "minecraft:water"
 ]

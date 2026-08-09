@@ -1,4 +1,4 @@
-import type { Hooks } from "@adeficior/data-modifier-core/generated";
+import { type Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
 import { type PackLoaderOptions } from "../config";
 import { type Container } from "../container";

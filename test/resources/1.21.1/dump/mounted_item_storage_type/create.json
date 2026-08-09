@@ -1,0 +1,10 @@
+[
+  "create:chest",
+  "create:creative_crate",
+  "create:depot",
+  "create:dispenser",
+  "create:fallback",
+  "create:simple",
+  "create:toolbox",
+  "create:vault"
+]

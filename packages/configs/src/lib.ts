@@ -1,5 +1,5 @@
 import { exists, readdir, writeFile } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { join, relative, sep } from "node:path";
 import { format } from "prettier";
 import rootPackage from "../../../package.json";
 
@@ -56,8 +56,7 @@ async function findWorkspacePackages() {
   );
 }
 
-async function getDependencies(dir: string) {
-  const json = await readPackage(dir);
+async function getDependencies(json: PackageJson) {
   return Object.keys({
     ...json.devDependencies,
     ...json.dependencies,
@@ -68,13 +67,16 @@ async function getDependencies(dir: string) {
 export default async function generateConfigs(dir: string) {
   if (dir.endsWith("configs")) return;
 
+  const exclude: string[] = [];
   const include = ["src"];
   if (await exists(join(dir, "test"))) {
     include.push("test");
+    exclude.push("test/resources");
   }
 
   const packages = await findWorkspacePackages();
-  const dependencies = await getDependencies(dir);
+  const json = await readPackage(dir);
+  const dependencies = await getDependencies(json);
   const packagePaths = Object.fromEntries(
     packages
       .filter((it) => dependencies.includes(it.name))
@@ -88,12 +90,17 @@ export default async function generateConfigs(dir: string) {
     //.map((it) => [it.name, [`${it.dir.replaceAll(sep, "/")}/src/index.ts`]]),
   );
 
+  const isModule = [...dependencies, json.name].includes(
+    "@adeficior/data-modifier-core",
+  );
+
   await writeJson(join(dir, "tsconfig.json"), {
     extends: "@adeficior/configs/tsconfig",
     compilerOptions: {
-      paths: { ...packagePaths, ...(await createPaths(dir)) },
+      paths: { ...packagePaths, ...(await createPaths(dir, isModule)) },
     },
     include,
+    exclude,
   });
 
   await writeJson(join(dir, "tsconfig.build.json"), {
@@ -103,7 +110,7 @@ export default async function generateConfigs(dir: string) {
       outDir: "./dist",
       declaration: true,
       sourceMap: true,
-      paths: await createPaths(dir),
+      paths: await createPaths(dir, isModule),
     },
     include: ["src"],
   });
@@ -111,19 +118,19 @@ export default async function generateConfigs(dir: string) {
   await writeJs(
     join(dir, "eslint.config.js"),
     /* javascript */ `
-      //@ts-check
+    //@ts-check
       import { eslintConfig } from "@adeficior/configs/eslint";
-      import { defineConfig } from "eslint/config";
+      import { defineConfig, globalIgnores } from "eslint/config";
 
-      export default defineConfig(eslintConfig(import.meta.dirname));
+      export default defineConfig([
+        globalIgnores(["test/resources/**"]),
+        eslintConfig(import.meta.dirname),
+      ]);
   `,
   );
 }
 
-async function createPaths(dir: string) {
-  const type = basename(dirname(resolve(dir)));
-  const isModule = type !== "packages";
-
+async function createPaths(dir: string, isModule: boolean) {
   const paths: Record<string, [string]> = {
     "@adeficior/data-modifier/generated": ["./@types/registry.d.ts"],
   };

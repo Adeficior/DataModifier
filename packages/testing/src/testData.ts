@@ -1,4 +1,5 @@
 import {
+  combineResolvers,
   createCombinedResolver,
   createResolver,
   type Logger,
@@ -6,29 +7,37 @@ import {
   type ResolverOptions,
 } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { join } from "node:path";
+import { exists } from "node:fs/promises";
+import { join, resolve } from "node:path";
 
-const resourcesDir = join(
-  import.meta.dir,
-  "..",
-  "..",
-  "..",
-  "test",
-  "resources",
-);
+const resourcePath = join("test", "resources");
+const resourcesDir = join(import.meta.dir, "..", "..", "..", resourcePath);
 
-export function createTestDataResolver(
+export async function createTestDataResolver(
   version: string,
-  { from, ...options }: Partial<ResolverOptions> = {},
+  { from = "default", ...options }: Partial<ResolverOptions> = {},
 ): Promise<Resolver> {
   if (Array.isArray(from))
     throw new Error("only one resolver input supported for TestResolver");
 
-  return createCombinedResolver({
-    from: join(resourcesDir, version, from ?? "default"),
+  const shared = await createCombinedResolver({
+    from: join(resourcesDir, version, from),
     logger: false,
     ...options,
   });
+
+  const localPath = resolve(resourcePath, version, from);
+  if (await exists(localPath)) {
+    const local = await createCombinedResolver({
+      from: localPath,
+      logger: false,
+      ...options,
+    });
+
+    return combineResolvers([shared, local]);
+  }
+
+  return shared;
 }
 
 export function createDumpResolver(

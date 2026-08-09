@@ -1,14 +1,14 @@
 [
-  "minecraft:any_of",
   "minecraft:all_of",
-  "minecraft:not",
-  "minecraft:matching_fluids",
-  "minecraft:would_survive",
+  "minecraft:any_of",
+  "minecraft:has_sturdy_face",
   "minecraft:inside_world_bounds",
-  "minecraft:true",
-  "minecraft:solid",
-  "minecraft:matching_blocks",
-  "minecraft:replaceable",
   "minecraft:matching_block_tag",
-  "minecraft:has_sturdy_face"
+  "minecraft:matching_blocks",
+  "minecraft:matching_fluids",
+  "minecraft:not",
+  "minecraft:replaceable",
+  "minecraft:solid",
+  "minecraft:true",
+  "minecraft:would_survive"
 ]

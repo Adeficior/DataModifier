@@ -1,10 +1,9 @@
-import { join } from "node:path";
 import { generateModuleTypes } from "./modules";
 import { generateStubTypes } from "./registry";
 
 const dir = ".";
 await generateModuleTypes(dir);
-await generateStubTypes(join(dir, "@types", "registry.d.ts"));
+await generateStubTypes(dir);
 
 // TODO find out why this is needed
 process.exit(0);

@@ -2,6 +2,7 @@ import {
   encodeId,
   IllegalShapeError,
   JsonLoader,
+  type ConditionContext,
 } from "@adeficior/data-modifier-core";
 import {
   type IngredientSerializer,
@@ -16,6 +17,7 @@ import {
   type RecipeParseContext,
   type RecipeSerializer,
 } from "./serializer/context";
+import { ForgeConditionalRecipeParser } from "./serializer/forge/conditional";
 import { RecipeHolder } from "./serializer/holder";
 import { ShapedParser } from "./serializer/vanilla/shaped";
 import { ShapelessParser } from "./serializer/vanilla/shapeless";
@@ -45,8 +47,9 @@ export class RecipeLoader
   constructor(
     private readonly resultSerializer: ResultSerializer,
     private readonly ingredientSerializer: IngredientSerializer,
+    context?: ConditionContext,
   ) {
-    super();
+    super(context);
 
     this.registerParser("minecraft:crafting_shaped", new ShapedParser());
     this.registerParser("minecraft:crafting_shapeless", new ShapelessParser());
@@ -60,13 +63,13 @@ export class RecipeLoader
     this.registerParser("minecraft:stonecutting", new StonecuttingParser());
 
     this.registerParser("theoneprobe:probe_helmet", new ShapedParser());
-    /*
-    TODO move to seperate modules
 
     this.registerParser(
       "forge:conditional",
       new ForgeConditionalRecipeParser(),
     );
+    /*
+    TODO move to seperate modules
 
     this.registerParser(
       "sullysmod:grindstone_polishing",

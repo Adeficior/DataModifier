@@ -1,0 +1,7 @@
+[
+  "thermal:thermal.blocks",
+  "thermal:thermal.devices",
+  "thermal:thermal.foods",
+  "thermal:thermal.items",
+  "thermal:thermal.tools"
+]

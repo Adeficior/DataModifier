@@ -74,6 +74,6 @@ export const packFormatOf = defineFormats({
   "1.21.9": "88.0",
 });
 
-export function recipeFolder(packFormat: SemVerInput) {
-  return isAtLeastVersion(packFormat, "44") ? "recipe" : "recipes";
+export function jsonFilePattern(packType: string, folder: string) {
+  return `${packType}/*/${folder}/**/*.json`;
 }

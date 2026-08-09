@@ -1,15 +1,14 @@
 [
-  "minecraft:heightmaps",
   "minecraft:biomes",
-  "minecraft:full",
   "minecraft:carvers",
-  "minecraft:structure_starts",
-  "minecraft:features",
-  "minecraft:liquid_carvers",
   "minecraft:empty",
+  "minecraft:features",
+  "minecraft:full",
+  "minecraft:initialize_light",
+  "minecraft:light",
+  "minecraft:noise",
   "minecraft:spawn",
   "minecraft:structure_references",
-  "minecraft:surface",
-  "minecraft:light",
-  "minecraft:noise"
+  "minecraft:structure_starts",
+  "minecraft:surface"
 ]

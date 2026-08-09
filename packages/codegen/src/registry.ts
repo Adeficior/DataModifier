@@ -1,11 +1,13 @@
 import {
+  createId,
+  encodeId,
   type Id,
   type IdInput,
   type RegistryLookup,
 } from "@adeficior/data-modifier-core";
-import { createId, encodeId } from "@adeficior/data-modifier-core";
-import { writeFile } from "node:fs/promises";
 import { camelCase } from "lodash-es";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { format } from "prettier";
 
 const module = "@adeficior/data-modifier/generated";
@@ -64,11 +66,11 @@ export async function generateRegistryTypes(
   );
 }
 
-export async function generateStubTypes(file: string, strictIds = false) {
+export async function generateStubTypes(dir: string, strictIds = false) {
   const stubIdType = strictIds ? "`${string}:${string}`" : "string";
 
   await writeFile(
-    file,
+    join(dir, "@types", "registry.d.ts"),
     await format(
       `
          declare module '@adeficior/data-modifier/generated' {

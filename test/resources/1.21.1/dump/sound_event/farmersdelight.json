@@ -1,0 +1,22 @@
+[
+  "farmersdelight:block.cabinet.close",
+  "farmersdelight:block.cabinet.open",
+  "farmersdelight:block.cooking_pot.boil",
+  "farmersdelight:block.cooking_pot.boil_soup",
+  "farmersdelight:block.cutting_board.carve_tool",
+  "farmersdelight:block.cutting_board.knife_cut",
+  "farmersdelight:block.cutting_board.place_item",
+  "farmersdelight:block.cutting_board.remove_item",
+  "farmersdelight:block.food.slice",
+  "farmersdelight:block.food.take_portion",
+  "farmersdelight:block.rope_fence_gate.close",
+  "farmersdelight:block.rope_fence_gate.open",
+  "farmersdelight:block.skillet.add_food",
+  "farmersdelight:block.skillet.sizzle",
+  "farmersdelight:block.stove.crackle",
+  "farmersdelight:block.tomatoes.pick_tomatoes",
+  "farmersdelight:entity.rotten_tomato.hit",
+  "farmersdelight:entity.rotten_tomato.throw",
+  "farmersdelight:item.skillet.attack.strong",
+  "farmersdelight:item.skillet.attack.weak"
+]

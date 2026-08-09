@@ -36,6 +36,7 @@
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",
       "typescript": "catalog:",
+      "zod": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*",
       "@adeficior/data-modifier-recipes": "workspace:*",
       "@adeficior/data-modifier-ingredients": "workspace:*",

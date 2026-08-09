@@ -1,8 +1,9 @@
-import { defineModule, recipeFolder } from "@adeficior/data-modifier-core";
+import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import { RecipeEmitter, type RecipeRules } from "./emitter";
 import { type RegisterRecipeParser } from "./hooks";
 import { RecipeLoader, type RecipeLoaderAccessor } from "./loader";
+import { recipePattern } from "./schema";
 
 export default defineModule<{
   hooks: {
@@ -40,7 +41,7 @@ export default defineModule<{
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
         ),
-      recipeFolder(pack.options.packFormat),
+      recipePattern(pack.options.packFormat),
     );
 
     pack.emitter(

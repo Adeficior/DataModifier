@@ -23,16 +23,16 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
 
   // Do I also need to serialize as this?
   builder.deserializer(hasType("neoforge:compound"), (it, deserialize) => {
-    const { ingredients } = z
+    const { children } = z
       .object({
-        ingredients: z.array(z.any()),
+        children: z.array(z.any()),
       })
       .parse(it);
 
-    return new ListIngredient(ingredients.map(deserialize));
+    return new ListIngredient(children.map(deserialize));
   });
 
-  const toolActionType = "farmersdelight:tool_action" as const;
+  const toolActionType = "farmersdelight:item_ability" as const;
   builder.register(
     ToolActionIngredient,
     hasType(toolActionType),

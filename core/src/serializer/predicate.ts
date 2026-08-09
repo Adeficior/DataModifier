@@ -53,3 +53,11 @@ export function resolveIdTest<T extends RegistryId>(
     tags,
   );
 }
+
+export function every<T>(...predicates: Predicate<T>[]): Predicate<T> {
+  return (...args) => predicates.every((it) => it(...args));
+}
+
+export function any<T>(...predicates: Predicate<T>[]): Predicate<T> {
+  return (...args) => predicates.some((it) => it(...args));
+}

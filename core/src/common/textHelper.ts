@@ -2,7 +2,7 @@ import { type Acceptable, type Logger } from "@adeficior/pack-resolver";
 import json from "json5";
 import { format } from "prettier";
 
-export function fromJson(input: Acceptable) {
+export function fromJson<T>(input: Acceptable): T {
   const data = input.toString();
   return json.parse(data.replaceAll("\r\n", ""));
 }
@@ -15,9 +15,9 @@ export function formatJson(input: string) {
   return format(input, { parser: "json" });
 }
 
-export function tryParseJson(logger: Logger, content: Acceptable) {
+export function tryParseJson<T>(logger: Logger, content: Acceptable) {
   try {
-    return fromJson(content);
+    return fromJson<T>(content);
   } catch (error) {
     if (error instanceof SyntaxError) {
       logger.trace(`unable to parse json: ${error.message}`);

@@ -17,7 +17,7 @@
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
       "lint": "eslint src",
-      "prepare": "create-configs",
+      "prepare": "create-configs && bun run src/self.ts",
       "test:ci": "bun run lint && bun run check"
    },
    "repository": {
@@ -30,6 +30,9 @@
       "url": "https://github.com/Adeficior/DataModifier/issues"
    },
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
+   "dependencies": {
+      "arg": "catalog:"
+   },
    "devDependencies": {
       "@adeficior/configs": "workspace:*"
    },
