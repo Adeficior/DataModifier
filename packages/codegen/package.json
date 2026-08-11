@@ -10,14 +10,14 @@
    ],
    "type": "module",
    "bin": {
-      "datamod-codegen": "./src/cli.ts"
+      "datamod-codegen": "./dist/cli.ts"
    },
    "scripts": {
       "build": "tsc --project tsconfig.build.json",
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
       "lint": "eslint src",
-      "prepare": "create-configs && bun run src/self.ts",
+      "prepare": "create-configs",
       "test:ci": "bun run lint && bun run check"
    },
    "repository": {

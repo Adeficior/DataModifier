@@ -15,7 +15,7 @@
       "dev": "bun run build --watch",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepare": "create-configs && datamod-codegen",
+      "prepare": "create-configs",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "repository": {
@@ -30,8 +30,7 @@
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
-      "@adeficior/testing": "workspace:*",
-      "@adeficior/data-modifier-codegen": "workspace:*"
+      "@adeficior/testing": "workspace:*"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",

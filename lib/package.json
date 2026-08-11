@@ -60,7 +60,7 @@
       "cli": "bun run build && node dist/cli/index.js",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepare": "create-configs && datamod-codegen",
+      "prepare": "create-configs",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "repository": {
@@ -83,8 +83,7 @@
       "@adeficior/data-modifier-tags": "workspace:*",
       "@adeficior/data-modifier-ingredients": "workspace:*",
       "@adeficior/data-modifier-recipes": "workspace:*",
-      "@adeficior/data-modifier-loot": "workspace:*",
-      "@adeficior/data-modifier-codegen": "workspace:*"
+      "@adeficior/data-modifier-loot": "workspace:*"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",

@@ -35,3 +35,7 @@ export async function generateModuleTypes(dir: string) {
   const dependencies = await getDependencies(dir);
   await generateTypes(dir, dependencies);
 }
+
+export async function generateModuleStubTypes(dir: string) {
+  await generateTypes(dir, []);
+}
