@@ -3,14 +3,14 @@ import {
   type LoaderContext,
 } from "@adeficior/data-modifier-core";
 import {
+  mockRegistryLookup,
+  mockRegistryProvider,
+} from "@adeficior/data-modifier-core/testing";
+import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
+import {
   createTestAcceptor,
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
-import {
-  mockPredicates,
-  mockRegistryLookup,
-  mockRegistryProvider,
-} from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
 import { EMPTY_LOOT_TABLE, LootTableEmitter } from "../../src/emitter";
 

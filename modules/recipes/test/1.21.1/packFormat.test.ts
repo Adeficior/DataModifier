@@ -2,16 +2,16 @@ import {
   packFormatOf,
   type LoaderContext,
 } from "@adeficior/data-modifier-core";
+import { mockRegistryProvider } from "@adeficior/data-modifier-core/testing";
+import {
+  mockIngredientSerializer,
+  mockPredicates,
+  mockResultSerializer,
+} from "@adeficior/data-modifier-ingredients/testing";
 import {
   createTestAcceptor,
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
-import {
-  mockIngredientSerializer,
-  mockPredicates,
-  mockRegistryProvider,
-  mockResultSerializer,
-} from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
 import { EMPTY_RECIPE } from "../../src";
 import { RecipeEmitter } from "../../src/emitter";

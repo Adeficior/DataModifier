@@ -4,8 +4,7 @@ import {
   type IdInput,
   type NormalizedId,
 } from "@adeficior/data-modifier-core";
-import orderBy from "lodash-es/orderBy";
-import uniqBy from "lodash-es/uniqBy";
+import { orderBy, uniqBy } from "lodash-es";
 import { type TagEntry } from "./schema";
 
 export function entryId(entry: TagEntry): NormalizedId {

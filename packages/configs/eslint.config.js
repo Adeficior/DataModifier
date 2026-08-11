@@ -43,6 +43,12 @@ export function eslintConfig(tsconfigRootDir) {
         "import/no-useless-path-segments": "error",
         "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
         "import/extensions": ["error", "never", { json: "always" }],
+        "import/no-internal-modules": [
+          "error",
+          {
+            allow: [`${tsconfigRootDir}/src/**`],
+          },
+        ],
       },
     },
   ]);

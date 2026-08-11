@@ -1,10 +1,9 @@
 import { packFormatOf } from "@adeficior/data-modifier-core";
 import { createTestDataResolver } from "@adeficior/testing";
 import { beforeAll } from "bun:test";
-import { type TagRegistryHolder } from "../../../modules/tags/src";
-import { TagsLoader } from "../../../modules/tags/src/loader";
+import { TagsLoader } from "../loader";
+import { type TagRegistryHolder } from "../schema";
 
-// TODO this is dirty, maybe create a mocked loader instead?
 export function setupTagRegistry(version: string): TagRegistryHolder {
   const loader = new TagsLoader(packFormatOf(version));
 

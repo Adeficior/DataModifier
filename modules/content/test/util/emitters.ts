@@ -1,11 +1,11 @@
 import type { LoaderContext, SemVerInput } from "@adeficior/data-modifier-core";
 import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
-import { type Resolver } from "@adeficior/pack-resolver";
 import {
-  mockPredicates,
   mockRegistryLookup,
   mockRegistryProvider,
-} from "@adeficior/testing";
+} from "@adeficior/data-modifier-core/testing";
+import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
+import { type Resolver } from "@adeficior/pack-resolver";
 import { LootTableEmitter } from "../../../loot/src/emitter";
 import { BlockstateEmitter } from "../../../models/src/emitter/blockstates";
 import { ModelEmitter } from "../../../models/src/emitter/models";

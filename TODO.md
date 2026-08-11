@@ -1,1 +1,0 @@
-- move ingredients into seperate package to make core agnostic to tags (& ingredients?)?

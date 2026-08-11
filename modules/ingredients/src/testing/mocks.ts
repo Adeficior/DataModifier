@@ -1,42 +1,10 @@
-import {
-  type RegistryLookup,
-  type RegistryProvider,
-} from "@adeficior/data-modifier-core";
 import { type Serializer } from "@adeficior/data-modifier-core/serializer";
 import { mock } from "bun:test";
-import {
-  type Ingredient,
-  type IngredientSerializer,
-  type Predicates,
-  type Result,
-  type ResultSerializer,
-} from "../../../modules/ingredients/src";
-
-export function mockRegistryLookup() {
-  return {
-    addCustom: mock(),
-    isKnown: mock(),
-    keys: mock(),
-    registries: mock(),
-    validateEntry: mock(),
-  } satisfies RegistryLookup;
-}
-
-export function mockRegistryProvider<T>() {
-  return {
-    forEach: mock(),
-    forEachAsync: mock(),
-    get: mock(),
-  } satisfies RegistryProvider<T>;
-}
-
-export function mockPredicates() {
-  return {
-    id: mock(),
-    ingredient: mock(),
-    result: mock(),
-  } satisfies Predicates;
-}
+import { type Ingredient } from "../ingredient/impl";
+import { type Predicates } from "../predicates";
+import { type Result } from "../result/impl";
+import { type IngredientSerializer } from "../serializer/ingredients";
+import { type ResultSerializer } from "../serializer/results";
 
 function mockSerializer<R, T extends Serializer<R, T>>() {
   return {
@@ -63,4 +31,12 @@ export function mockIngredientSerializer() {
     deserializeIngredientMap: mock(),
     serializeIngredientMap: mock(),
   } satisfies IngredientSerializer;
+}
+
+export function mockPredicates() {
+  return {
+    id: mock(),
+    ingredient: mock(),
+    result: mock(),
+  } satisfies Predicates;
 }
