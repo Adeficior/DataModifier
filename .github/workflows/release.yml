@@ -20,10 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: PssbleTrngle/set-package-version@v1
-        with:
-          version: ${{ github.event.inputs.version }}
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
@@ -32,14 +28,24 @@ jobs:
 
       - run: bun run build
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-          registry-url: "https://registry.npmjs.org"
-          package-manager-cache: false
+      - run: bun run prune
 
-      - if: ${{ github.event.inputs.rc }}
-        run: bun run publish -- -- --provenance --access public --tag rc
+      - name: Bump Version
+        if: ${{ github.event.inputs.rc }}
+        run: bunx changeset version --snapshot rc
 
-      - if: ${{ !github.event.inputs.rc }}
-        run: bun run publish -- -- --provenance --access public
+      - name: Bump Version
+        if: ${{ !github.event.inputs.rc }}
+        run: bunx changeset version
+
+      - name: Publish Packages
+        if: ${{ github.event.inputs.rc }}
+        run: bunx publish --tag rc --no-git-tag
+
+      - name: Publish Packages
+        if: ${{ !github.event.inputs.rc }}
+        run: bunx public
+
+      - name: Push Changes
+        if: ${{ !github.event.inputs.rc }}
+        run: git push

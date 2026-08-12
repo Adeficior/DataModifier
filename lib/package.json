@@ -1,6 +1,6 @@
 {
    "name": "@adeficior/data-modifier",
-   "version": "0.0.0-dev",
+   "version": "1.0.0",
    "description": "Data Modifier",
    "bin": {
       "datamod": "dist/cli.js"
