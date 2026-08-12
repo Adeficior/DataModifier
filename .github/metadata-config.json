@@ -3,5 +3,6 @@
   "$version": "1.0",
   "type": "bun-library",
   "formatter": "prettier",
-  "tsconfig": false
+  "tsconfig": false,
+  "workflows": false
 }

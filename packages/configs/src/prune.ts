@@ -37,7 +37,6 @@ export async function prunePackage(dir: string) {
 
   const generated = {
     ...pruned,
-    version: "2.0.0-rc.1",
     bugs: { url: `https://github.com/${repository}/issues` },
     homepage: `https://github.com/${repository}#readme`,
     license: "ISC",
@@ -45,6 +44,9 @@ export async function prunePackage(dir: string) {
       type: "git",
       url: `git+https://github.com/${repository}.git`,
       directory: relativeDir,
+    },
+    publishConfig: {
+      provenance: true,
     },
   };
 

@@ -1,18 +1,14 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      rc:
-        type: boolean
-        default: false
-      version:
-        type: string
-        required: true
+  push:
+    branches:
+      - main
+      - develop
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
   release:
@@ -31,21 +27,24 @@ jobs:
       - run: bun run prune
 
       - name: Bump Version
-        if: ${{ github.event.inputs.rc }}
+        if: ${{ github.ref_name != 'main' }}
         run: bunx changeset version --snapshot rc
 
       - name: Bump Version
-        if: ${{ !github.event.inputs.rc }}
+        if: ${{ github.ref_name == 'main' }}
         run: bunx changeset version
 
+      - name: Update Lockfile
+        run: bun update
+
       - name: Publish Packages
-        if: ${{ github.event.inputs.rc }}
+        if: ${{ github.ref_name != 'main' }}
         run: bunx publish --tag rc --no-git-tag
 
       - name: Publish Packages
-        if: ${{ !github.event.inputs.rc }}
+        if: ${{ github.ref_name == 'main' }}
         run: bunx public
 
       - name: Push Changes
-        if: ${{ !github.event.inputs.rc }}
+        if: ${{ github.ref_name == 'main' }}
         run: git push

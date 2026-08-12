@@ -146,3 +146,5 @@ tsconfig.*.json
 !packages/configs/tsconfig.json
 !packages/configs/tsconfig.*.json
 !packages/configs/eslint.config.js
+
+.npmrc
