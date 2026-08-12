@@ -1,7 +1,11 @@
-import { exists, readdir, writeFile } from "node:fs/promises";
-import { join, relative, sep } from "node:path";
+import { exists, writeFile } from "node:fs/promises";
+import { join, sep } from "node:path";
 import { format } from "prettier";
-import rootPackage from "../../../package.json";
+import {
+  findWorkspacePackages,
+  readPackage,
+  type PackageJson,
+} from "./packages";
 
 async function writeJson(path: string, content: unknown) {
   const json = JSON.stringify(content, null, 2);
@@ -12,48 +16,6 @@ async function writeJson(path: string, content: unknown) {
 async function writeJs(path: string, content: string) {
   const formatted = await format(content, { parser: "typescript" });
   await writeFile(path, formatted);
-}
-
-type PackageJson = {
-  name: string;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
-  exports?: Record<string, string>;
-};
-
-async function readPackage(dir: string) {
-  const json = await Bun.file(join(dir, "package.json")).json();
-  return json as PackageJson;
-}
-
-async function findWorkspacePackages() {
-  const rootDir = relative(".", join(import.meta.dir, "../../.."));
-
-  const workspaces = await Promise.all(
-    rootPackage.workspaces.map(async (pattern) => {
-      if (pattern.endsWith("/*")) {
-        const parent = join(rootDir, pattern.substring(0, pattern.length - 2));
-        const children = await readdir(parent);
-        return children.map((it) => join(parent, it));
-      } else {
-        return [join(rootDir, pattern)];
-      }
-    }),
-  ).then((it) => it.flat());
-
-  return Promise.all(
-    workspaces.map(async (dir) => {
-      const json = await readPackage(dir);
-      const paths = Object.fromEntries(
-        Object.entries(json.exports ?? {}).map(([key, dist]) => [
-          key.substring(1),
-          dist.substring(1).replace("/dist/", "/src/").replace(".js", ".ts"),
-        ]),
-      );
-      return { dir, name: json.name, paths };
-    }),
-  );
 }
 
 async function getDependencies(json: PackageJson) {

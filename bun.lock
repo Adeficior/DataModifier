@@ -287,11 +287,12 @@
     "packages/configs": {
       "name": "@adeficior/configs",
       "bin": {
-        "create-configs": "./src/cli.ts",
+        "datamod-dev": "./src/cli.ts",
       },
-      "devDependencies": {
+      "dependencies": {
         "@eslint/js": "^10.0.1",
         "@types/bun": "latest",
+        "arg": "catalog:",
         "eslint": "^10.5.0",
         "eslint-plugin-import": "^2.32.0",
         "typescript-eslint": "^8.61.0",

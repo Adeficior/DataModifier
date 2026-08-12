@@ -3,7 +3,7 @@
    "private": true,
    "type": "module",
    "bin": {
-      "create-configs": "./src/cli.ts"
+      "datamod-dev": "./src/cli.ts"
    },
    "exports": {
       "./eslint": "./eslint.config.js",
@@ -13,11 +13,12 @@
    "scripts": {
       "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  eslint.config.js || true"
    },
-   "devDependencies": {
+   "dependencies": {
       "@eslint/js": "^10.0.1",
       "@types/bun": "latest",
       "eslint": "^10.5.0",
       "eslint-plugin-import": "^2.32.0",
+      "arg": "catalog:",
       "typescript-eslint": "^8.61.0"
    },
    "peerDependencies": {

@@ -16,19 +16,9 @@
    "scripts": {
       "check": "tsc --noEmit",
       "lint": "eslint src",
-      "prepare": "create-configs",
+      "prepare": "datamod-dev --setup",
       "test:ci": "bun run lint && bun run check"
    },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Adeficior/DataModifier.git",
-      "directory": "packages/builder"
-   },
-   "license": "ISC",
-   "bugs": {
-      "url": "https://github.com/Adeficior/DataModifier/issues"
-   },
-   "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "dependencies": {
       "handlebars": "^4.7.9",
       "arg": "catalog:",

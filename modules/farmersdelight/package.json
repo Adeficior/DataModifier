@@ -15,19 +15,9 @@
       "dev": "bun run build --watch",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepare": "create-configs",
+      "prepare": "datamod-dev --setup",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Adeficior/DataModifier.git",
-      "directory": "modules/farmersdelight"
-   },
-   "license": "ISC",
-   "bugs": {
-      "url": "https://github.com/Adeficior/DataModifier/issues"
-   },
-   "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
       "@adeficior/testing": "workspace:*",
