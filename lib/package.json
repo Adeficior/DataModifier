@@ -60,6 +60,7 @@
       "cli": "bun run build && node dist/cli/index.js",
       "test": "bun test",
       "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --setup",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },

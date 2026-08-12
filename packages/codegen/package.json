@@ -17,6 +17,7 @@
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
       "lint": "eslint src",
+      "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --setup",
       "test:ci": "bun run lint && bun run check"
    },

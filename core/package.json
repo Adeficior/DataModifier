@@ -27,7 +27,7 @@
       "dev": "bun run build --watch",
       "test": "bun test",
       "lint": "eslint {src,test}",
-      "prepack": "bun run datamod-dev --prune",
+      "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --setup",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },

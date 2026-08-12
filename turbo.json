@@ -22,6 +22,12 @@
       "dev": {
          "persistent": false,
          "cache": false
+      },
+      "prune": {
+         "cache": false,
+         "dependsOn": [
+            "^prune"
+         ]
       }
    }
 }

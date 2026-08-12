@@ -9,6 +9,7 @@
     "lint": "turbo run lint",
     "check": "turbo run check",
     "prepare": "husky",
+    "prune": "turbo run prune",
     "create": "bun run packages/builder/src/cli.ts --path modules"
   },
   "catalog": {
