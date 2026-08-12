@@ -3,7 +3,7 @@ import {
   generateModuleStubTypes,
   generateModuleTypes,
 } from "../../codegen/src/modules";
-import { generateStubTypes } from "../../codegen/src/registry";
+import { generateStubTypes } from "../../codegen/src/stubs";
 
 export async function generateTypes(dir: string) {
   const type = basename(dirname(resolve(dir)));
