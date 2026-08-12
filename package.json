@@ -8,6 +8,7 @@
     "format": "prettier --write \"**/*.ts\"",
     "lint": "turbo run lint",
     "check": "turbo run check",
+    "test:ci": "bun run check && bun run lint && bun test",
     "prepare": "husky",
     "prune": "turbo run prune",
     "create": "bun run packages/builder/src/cli.ts --path modules"
