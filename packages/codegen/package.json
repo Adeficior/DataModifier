@@ -22,16 +22,16 @@
       "test:ci": "bun run lint && bun run check"
    },
    "dependencies": {
-      "arg": "catalog:"
+      "arg": "^5.0.2"
    },
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
       "@adeficior/data-modifier-core": "workspace:*"
    },
    "peerDependencies": {
-      "typescript": "catalog:",
-      "prettier": "catalog:",
-      "lodash-es": "catalog:",
+      "typescript": "^5.9.3",
+      "prettier": "^3.9.6",
+      "lodash-es": "^4.18.1",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

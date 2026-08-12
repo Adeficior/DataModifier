@@ -33,7 +33,7 @@
       "@adeficior/data-modifier-tags": "workspace:*"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "*",
+      "@adeficior/pack-resolver": "^2.0.0",
       "typescript": "catalog:",
       "zod": "catalog:",
       "lodash-es": "catalog:",

@@ -25,7 +25,7 @@
       "@adeficior/data-modifier-core": "workspace:*"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "*",
+      "@adeficior/pack-resolver": "^2.0.0",
       "typescript": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*"
    }

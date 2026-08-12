@@ -14,9 +14,8 @@
     },
     "core": {
       "name": "@adeficior/data-modifier-core",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "dependencies": {
-        "@adeficior/resource-merger": "^2.0.0-rc.16",
         "json5": "^2.2.3",
         "lodash-es": "catalog:",
         "minimatch": "catalog:",
@@ -29,13 +28,13 @@
         "@types/lodash-es": "catalog:",
       },
       "peerDependencies": {
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
       },
     },
     "lib": {
       "name": "@adeficior/data-modifier",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "bin": {
         "datamod": "dist/cli.js",
       },
@@ -45,7 +44,7 @@
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/resource-merger": "^2.0.0-rc.16",
+        "@adeficior/resource-merger": "^2.0.0",
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
@@ -53,7 +52,7 @@
         "@types/command-line-usage": "^5.0.4",
       },
       "peerDependencies": {
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
         "zod": "catalog:*",
@@ -61,7 +60,7 @@
     },
     "modules/botania": {
       "name": "@adeficior/data-modifier-botania",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -72,14 +71,14 @@
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
         "zod": "catalog:",
       },
     },
     "modules/content": {
       "name": "@adeficior/data-modifier-content",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
@@ -90,14 +89,14 @@
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-models": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
       },
     },
     "modules/create": {
       "name": "@adeficior/data-modifier-create",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -108,13 +107,13 @@
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
       },
     },
     "modules/farmersdelight": {
       "name": "@adeficior/data-modifier-farmersdelight",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -125,14 +124,14 @@
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
         "zod": "catalog:",
       },
     },
     "modules/ingredients": {
       "name": "@adeficior/data-modifier-ingredients",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
@@ -141,7 +140,7 @@
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
         "zod": "catalog:",
@@ -149,7 +148,7 @@
     },
     "modules/lang": {
       "name": "@adeficior/data-modifier-lang",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -158,7 +157,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
         "zod": "catalog:",
@@ -166,7 +165,7 @@
     },
     "modules/loot": {
       "name": "@adeficior/data-modifier-loot",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -176,14 +175,14 @@
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
         "zod": "catalog:",
       },
     },
     "modules/models": {
       "name": "@adeficior/data-modifier-models",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -191,13 +190,13 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
       },
     },
     "modules/recipes": {
       "name": "@adeficior/data-modifier-recipes",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -208,7 +207,7 @@
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "minimatch": "catalog:",
         "typescript": "catalog:",
@@ -216,7 +215,7 @@
     },
     "modules/tags": {
       "name": "@adeficior/data-modifier-tags",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -224,14 +223,14 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
       },
     },
     "modules/thermal": {
       "name": "@adeficior/data-modifier-thermal",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -242,14 +241,14 @@
         "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
         "zod": "catalog:",
       },
     },
     "packages/builder": {
       "name": "@adeficior/data-modifier-builder",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "bin": {
         "datamod-builder": "./src/cli.ts",
       },
@@ -268,7 +267,7 @@
     },
     "packages/codegen": {
       "name": "@adeficior/data-modifier-codegen",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "bin": {
         "datamod-codegen": "./dist/cli.ts",
       },
@@ -305,13 +304,13 @@
     },
     "packages/testing": {
       "name": "@adeficior/testing",
-      "version": "0.0.0-dev",
+      "version": "1.0.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
-        "@adeficior/pack-resolver": "*",
+        "@adeficior/pack-resolver": "^2.0.0",
         "typescript": "catalog:",
       },
     },
@@ -359,9 +358,9 @@
 
     "@adeficior/data-modifier-thermal": ["@adeficior/data-modifier-thermal@workspace:modules/thermal"],
 
-    "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0-rc.52", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0", "zip-a-folder": "^6.1.1" } }, "sha512-MPGK4c3+3gC72C/QEH/oDDc3EABioqxJUTTSbSK9OKhCMzwPhWjoiIfQsJ4aLPQoOcdnG0A7VyLHhCyeXtpeeQ=="],
+    "@adeficior/pack-resolver": ["@adeficior/pack-resolver@2.0.0", "", { "dependencies": { "minimatch": "^10.2.5", "node-stream-zip": "^1.15.0", "zip-a-folder": "^6.1.1" } }, "sha512-Tm4yHwKO85wJQvWntAhlrnBNvogkXE0twCqgna4VoH8RJ+Trc8Fy+ta2olq5KpcPcPZ/5QIphZuv3iDOfxsTQA=="],
 
-    "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.0-rc.17", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0-rc.51", "arg": "^5.0.2", "command-line-usage": "^6.1.3" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-rE92kw96BO8d7rD/m9iirPbAzlrwAaDLJcqECdiA/9yguB9rzwqHco9agI8l8OESZhbkpvnkxh7/gs6HLoQRjA=="],
+    "@adeficior/resource-merger": ["@adeficior/resource-merger@2.0.1", "", { "dependencies": { "@adeficior/pack-resolver": "^2.0.0", "arg": "^5.0.2", "command-line-usage": "^6.1.3" }, "bin": { "merge": "dist/cli/index.js" } }, "sha512-YwJCymQpliEyf3TDe2O9sjIJWPUxdVaEZolBTnjYn6zTiIWOTNcyiyoQumfn1nSK5GPUwWpoVdi+MEyWXuas+w=="],
 
     "@adeficior/testing": ["@adeficior/testing@workspace:packages/testing"],
 

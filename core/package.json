@@ -37,7 +37,6 @@
       "@types/lodash-es": "catalog:"
    },
    "dependencies": {
-      "@adeficior/resource-merger": "^2.0.0-rc.16",
       "json5": "^2.2.3",
       "lodash-es": "catalog:",
       "minimatch": "catalog:",
@@ -45,7 +44,7 @@
       "zod": "catalog:"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "*",
+      "@adeficior/pack-resolver": "^2.0.0",
       "typescript": "catalog:"
    }
 }
