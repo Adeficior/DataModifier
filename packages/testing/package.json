@@ -9,7 +9,7 @@
    "scripts": {
       "check": "tsc --noEmit",
       "lint": "eslint src",
-      "prepare": "datamod-dev --setup",
+      "prepare": "datamod-dev --configs && datamod-dev --types",
       "test:ci": "bun run lint && bun run check"
    },
    "devDependencies": {

@@ -16,7 +16,7 @@
       "test": "bun test",
       "lint": "eslint {src,test}",
       "prune": "bun run datamod-dev --prune",
-      "prepare": "datamod-dev --setup",
+      "prepare": "datamod-dev --configs && datamod-dev --types",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"
    },
    "devDependencies": {

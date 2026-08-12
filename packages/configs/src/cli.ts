@@ -6,12 +6,16 @@ import generateConfigs from "./lib";
 import { prunePackage } from "./prune";
 
 const args = arg({
-  "--setup": Boolean,
+  "--configs": Boolean,
+  "--types": Boolean,
   "--prune": Boolean,
 });
 
-if (args["--setup"]) {
+if (args["--configs"]) {
   await generateConfigs(".");
+}
+
+if (args["--types"]) {
   await generateTypes(".");
 }
 
