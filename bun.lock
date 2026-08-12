@@ -62,6 +62,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -85,6 +86,8 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-loot": "workspace:*",
+        "@adeficior/data-modifier-models": "workspace:*",
         "@adeficior/pack-resolver": "*",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
@@ -95,6 +98,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -111,6 +115,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -128,6 +133,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -144,6 +150,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/testing": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
@@ -160,6 +167,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -176,6 +184,8 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
@@ -188,6 +198,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/testing": "workspace:*",
         "@types/lodash-es": "catalog:",
       },
@@ -206,6 +217,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -220,6 +232,7 @@
       "version": "0.0.0-dev",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/testing": "workspace:*",
       },
       "peerDependencies": {
@@ -262,6 +275,7 @@
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-core": "workspace:*",
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",

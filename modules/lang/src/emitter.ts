@@ -1,18 +1,18 @@
 import {
-  type ClearableEmitter,
-  type Id,
-  type IdInput,
-  type LoaderContext,
-  type Predicate,
-  type RegistryProvider,
-  type Replacer,
-} from "@adeficior/data-modifier-core";
-import {
   createId,
   encodeId,
   Registry,
   toJson,
+  type ClearableEmitter,
+  type Id,
+  type IdInput,
+  type LoaderContext,
+  type RegistryProvider,
 } from "@adeficior/data-modifier-core";
+import  {
+  type Predicate,
+  type Replacer,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,

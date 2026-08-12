@@ -30,7 +30,8 @@
    "homepage": "https://github.com/Adeficior/DataModifier#readme",
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
-      "@adeficior/testing": "workspace:*"
+      "@adeficior/testing": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "*",

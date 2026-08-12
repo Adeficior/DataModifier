@@ -34,7 +34,8 @@
       "arg": "catalog:"
    },
    "devDependencies": {
-      "@adeficior/configs": "workspace:*"
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/data-modifier-core": "workspace:*"
    },
    "peerDependencies": {
       "typescript": "catalog:",

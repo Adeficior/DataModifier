@@ -38,6 +38,8 @@
       "@adeficior/pack-resolver": "*",
       "typescript": "catalog:",
       "lodash-es": "catalog:",
+      "@adeficior/data-modifier-models": "workspace:*",
+      "@adeficior/data-modifier-loot": "workspace:*",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }
