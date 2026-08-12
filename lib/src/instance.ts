@@ -2,15 +2,15 @@ import {
   type Container,
   type LoaderContext,
   type ModuleConfig,
+  type ModuleType,
+  type ModuleTypes,
   type PackLoaderOptions,
 } from "@adeficior/data-modifier-core";
 import {
   combineResolvers,
-  createLogger,
   distributedAcceptor,
   filterAcceptor,
   type Acceptor,
-  type Logger,
   type Resolver,
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
@@ -19,7 +19,6 @@ import { overwritePackMetadata } from "./emit/packMetadata";
 import { InstallTarget } from "./installTarget";
 
 export interface DataModifier extends Container {
-  readonly logger: Logger;
   loadFromMultiple(resolvers: Resolver[]): Promise<void>;
   loadFrom(resolvers: Resolver): Promise<void>;
   emit(to: Acceptor, options?: LoaderEmitOptions): Promise<void>;
@@ -33,11 +32,9 @@ export type LoaderEmitOptions = {
 class DataModifierImpl extends InstallTarget implements DataModifier {
   constructor(
     // TODO rename "pack" things
-    // TODO not needed here really
-    private readonly options: PackLoaderOptions,
-    readonly logger: Logger,
+    options: PackLoaderOptions,
   ) {
-    super();
+    super(options);
   }
 
   loadFromMultiple(resolvers: Resolver[]) {
@@ -70,7 +67,9 @@ class DataModifierImpl extends InstallTarget implements DataModifier {
   }
 
   async emit(to: Acceptor, options: LoaderEmitOptions = {}) {
-    await this.resolver({ ...options, logger: this.logger }).extract(to);
+    await this.resolver({ ...options, logger: this.options.logger }).extract(
+      to,
+    );
   }
 
   async run(from: Resolver, to: Acceptor) {
@@ -90,15 +89,43 @@ class DataModifierImpl extends InstallTarget implements DataModifier {
   // }
 }
 
-export async function createDataModifier({
-  modules = [],
-  logger = createLogger(),
-  ...options
-}: PackLoaderOptions & {
-  modules?: ModuleConfig[];
-  logger?: Logger;
-}): Promise<DataModifier> {
-  const instance = new DataModifierImpl(options, logger);
-  await instance.install(options, ...modules, ...builtInModules());
+type DataModifierBuilder = {
+  install<T extends ModuleTypes>(
+    module: ModuleConfig<T>,
+    options?: ModuleType<T, "options">,
+  ): void;
+};
+
+type GatheredModule<T extends ModuleTypes = ModuleTypes> = {
+  module: ModuleConfig<T>;
+  options?: ModuleType<T, "options">;
+};
+
+export async function createDataModifier<T extends ModuleTypes>(
+  options: PackLoaderOptions,
+  factory: (builder: DataModifierBuilder) => void,
+): Promise<DataModifier> {
+  const instance = new DataModifierImpl(options);
+
+  const gatheredModules: GatheredModule[] = [];
+
+  factory({
+    install: (module, options) => {
+      gatheredModules.push({ module, options } as GatheredModule);
+    },
+  });
+
+  const modules = [
+    ...gatheredModules.map((it) => it.module),
+    ...builtInModules(),
+  ];
+
+  // TODO only pass options to module that belong to it
+  const moduleOptions = gatheredModules.reduce(
+    (a, b) => ({ ...a, ...b.options }),
+    {},
+  );
+
+  await instance.install(modules, moduleOptions);
   return instance;
 }

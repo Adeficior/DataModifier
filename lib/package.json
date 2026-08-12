@@ -58,7 +58,6 @@
       "dev": "bun run build --watch",
       "check": "tsc --noEmit",
       "cli": "bun run build && node dist/cli/index.js",
-      "test": "bun test",
       "lint": "eslint {src,test}",
       "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --configs && datamod-dev --types",

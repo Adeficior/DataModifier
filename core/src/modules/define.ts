@@ -31,16 +31,24 @@ type Registration<
 export type EventHandler<T> = (event: T) => Promise<void> | void;
 
 export type ModuleTypes = {
+  // TODO these need to force being nullable
+  // or modules need to provide default values
+  options?: Record<string, unknown>;
   services?: Record<string, unknown>;
   emitters?: Record<string, unknown>;
   loaders?: Record<string, unknown>;
   hooks?: Record<string, unknown>;
 };
 
-export type ModuleHooks<T extends ModuleTypes> = Hooks<T> &
-  NonNullable<T["hooks"]>;
+export type ModuleType<
+  T extends ModuleTypes,
+  TKey extends keyof ModuleTypes,
+> = NonNullable<T[TKey]>;
 
-//  export type ModuleServices<T extends ModuleTypes> = Services<T> & NonNullable<T["services"]>;
+export type ModuleHooks<T extends ModuleTypes> = Hooks<T> &
+  ModuleType<T, "hooks">;
+
+//  export type ModuleServices<T extends ModuleTypes> = Services<T> & ModuleType<T, "services">;
 
 export type AfterSetupEvent<T extends ModuleTypes = ModuleTypes> = {
   callHook<K extends keyof ModuleHooks<T>>(
@@ -50,10 +58,10 @@ export type AfterSetupEvent<T extends ModuleTypes = ModuleTypes> = {
 };
 
 export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
-  service: Registration<NonNullable<T["services"]>>;
-  loader: Registration<NonNullable<T["loaders"]>, Loader, [string]>;
-  emitter: Registration<NonNullable<T["emitters"]>, ClearableEmitter>;
-  options: PackLoaderOptions;
+  service: Registration<ModuleType<T, "services">>;
+  loader: Registration<ModuleType<T, "loaders">, Loader, [string]>;
+  emitter: Registration<ModuleType<T, "emitters">, ClearableEmitter>;
+  options: PackLoaderOptions & ModuleType<T, "options">;
   hook: <K extends keyof ModuleHooks<T>>(
     type: K,
     handler: EventHandler<ModuleHooks<T>[K]>,
@@ -61,10 +69,11 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
 };
 
 type ModuleImports<T extends ModuleTypes> = {
-  services: Record<keyof NonNullable<T["services"]>, ImportOptions>;
-  emitters: Record<keyof NonNullable<T["emitters"]>, ImportOptions>;
-  loaders: Record<keyof NonNullable<T["loaders"]>, ImportOptions>;
-  hooks: Record<keyof NonNullable<T["hooks"]>, ImportOptions>;
+  options: ImportOptions;
+  services: Record<keyof ModuleType<T, "services">, ImportOptions>;
+  emitters: Record<keyof ModuleType<T, "emitters">, ImportOptions>;
+  loaders: Record<keyof ModuleType<T, "loaders">, ImportOptions>;
+  hooks: Record<keyof ModuleType<T, "hooks">, ImportOptions>;
 };
 
 type PackagedModule = {

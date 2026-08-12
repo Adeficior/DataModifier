@@ -6,6 +6,8 @@ import {
   type EventHandler,
   type Loader,
   type ModuleConfig,
+  type ModuleType,
+  type ModuleTypes,
   type PackLoaderOptions,
   type SetupEvent,
 } from "@adeficior/data-modifier-core";
@@ -89,9 +91,12 @@ class EventBus {
 }
 
 export class InstallTarget implements Container {
+  private frozen = false;
   private readonly services = new Map<string, unknown>();
   protected readonly emitters = new CombinedEmitters();
   protected readonly loaders: Record<string, Loader> = {};
+
+  constructor(protected readonly options: PackLoaderOptions) {}
 
   get(key: string) {
     const instance = this.getOrNull(key);
@@ -103,14 +108,25 @@ export class InstallTarget implements Container {
     return this.services.get(key);
   }
 
-  async install(options: PackLoaderOptions, ...modules: ModuleConfig[]) {
+  async install(
+    modules: ModuleConfig[],
+    options: ModuleType<ModuleTypes, "options">,
+  ) {
+    if (this.frozen) {
+      throw new Error(
+        "installation cannot happen after modifier has been created",
+      );
+    }
+
     const bus = new EventBus();
 
     const sorted = sortModules(modules);
 
     await Promise.all(
       sorted.map(async (it) => {
-        const event: SetupEvent = {
+        const combinedOptions = { ...this.options, ...options };
+
+        const event: SetupEvent<T> = {
           hook: (type, handler) =>
             bus.subscribe(type, handler as EventHandler<unknown>),
           service: (key, factory) => {
@@ -119,22 +135,23 @@ export class InstallTarget implements Container {
             return () => instance;
           },
           emitter: (key, factory) => {
-            const instance = event.service(key, factory);
+            const instance = event.service(`emitter:${key}`, factory);
             this.emitters.add(instance());
             return instance;
           },
           loader: (key, factory, pattern) => {
-            const instance = event.service(key, factory);
+            const instance = event.service(`loader:${key}`, factory);
             this.loaders[pattern] = instance();
             return instance;
           },
-          options,
+          options: combinedOptions,
         };
 
         await it.setup(event);
       }),
     );
 
+    this.frozen = true;
     bus.dispatch("after:setup", {
       callHook: (...args) => bus.dispatch(...args),
     } satisfies AfterSetupEvent);

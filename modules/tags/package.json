@@ -21,7 +21,6 @@
       "build": "tsc --project tsconfig.build.json",
       "check": "tsc --noEmit",
       "dev": "bun run build --watch",
-      "test": "bun test",
       "lint": "eslint {src,test}",
       "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --configs && datamod-dev --types",
