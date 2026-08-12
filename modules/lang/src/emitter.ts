@@ -9,7 +9,7 @@ import {
   type LoaderContext,
   type RegistryProvider,
 } from "@adeficior/data-modifier-core";
-import  {
+import {
   type Predicate,
   type Replacer,
 } from "@adeficior/data-modifier-core/serializer";
