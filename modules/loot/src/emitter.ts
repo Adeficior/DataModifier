@@ -22,7 +22,7 @@ import {
   type Predicates,
 } from "@adeficior/data-modifier-ingredients";
 import { combineResolvers } from "@adeficior/pack-resolver";
-import { lootTableFolder } from "./helper";
+import { lootTablePath } from "./helper";
 import { LootTableRule } from "./rule";
 import {
   type LootItemInput,
@@ -69,7 +69,7 @@ export interface LootRules {
 
 export class LootTableEmitter implements LootRules, ClearableEmitter {
   private readonly customTables = new CustomEmitter<LootTable>((it) =>
-    this.tablePath(it),
+    lootTablePath(this.packFormat, it),
   );
   private readonly customModifiers = new CustomEmitter<LootModifier>((it) =>
     this.modifierPath(it),
@@ -86,7 +86,7 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
   ) {
     this.ruled = new RuledEmitter<LootTable, LootTableRule>(
       this.lootTables,
-      (id) => this.tablePath(id),
+      (id) => lootTablePath(packFormat, id),
       EMPTY_LOOT_TABLE,
       // TODO also add value object here?
       (it) => it,
@@ -103,11 +103,6 @@ export class LootTableEmitter implements LootRules, ClearableEmitter {
       ],
       { async: true },
     );
-  }
-
-  private tablePath(id: Id) {
-    const folder = lootTableFolder(this.packFormat);
-    return `data/${id.namespace}/${folder}/${id.path}.json`;
   }
 
   private modifierPath(id: Id) {

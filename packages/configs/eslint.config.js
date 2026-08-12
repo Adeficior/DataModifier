@@ -45,6 +45,7 @@ export function eslintConfig(tsconfigRootDir) {
         "import/extensions": ["error", "never", { json: "always" }],
         "import/no-internal-modules": [
           "error",
+          // TODO disallow from /test/** too
           {
             allow: [`${tsconfigRootDir}/src/**`],
           },

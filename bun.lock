@@ -87,8 +87,10 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/data-modifier-ingredients": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-models": "workspace:*",
+        "@adeficior/data-modifier-tags": "workspace:*",
         "@adeficior/pack-resolver": "^2.0.0",
         "lodash-es": "catalog:",
         "typescript": "catalog:",
@@ -272,7 +274,7 @@
         "datamod-codegen": "./dist/cli.ts",
       },
       "dependencies": {
-        "arg": "catalog:",
+        "arg": "^5.0.2",
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
@@ -280,9 +282,9 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
-        "lodash-es": "catalog:",
-        "prettier": "catalog:",
-        "typescript": "catalog:",
+        "lodash-es": "^4.18.1",
+        "prettier": "^3.9.6",
+        "typescript": "^5.9.3",
       },
     },
     "packages/configs": {

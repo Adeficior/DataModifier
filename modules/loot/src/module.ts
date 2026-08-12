@@ -1,7 +1,7 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import { LootTableEmitter, type LootRules } from "./emitter";
-import { lootTableFolder } from "./helper";
+import { lootTablePattern } from "./helper";
 import { LootTableLoader } from "./loader";
 
 export default defineModule<{
@@ -29,7 +29,7 @@ export default defineModule<{
     const loader = pack.loader(
       "loot",
       () => new LootTableLoader(),
-      lootTableFolder(pack.options.packFormat),
+      lootTablePattern(pack.options.packFormat),
     );
 
     pack.emitter(

@@ -1,7 +1,11 @@
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import {
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+} from "@adeficior/data-modifier-ingredients";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import type { Ingredient } from "../src";
-import { BlockIngredient, FluidIngredient, ItemIngredient } from "../src";
 import type { BlacklistRules } from "../src/emit/blacklist";
 import { setupInstance } from "./util/setup";
 
@@ -43,8 +47,6 @@ describe("blacklist tests", () => {
   it("generated a blacklist using dumped ids", async () => {
     const acceptor = createTestAcceptor();
 
-    await loadDump();
-
     blacklist.hide(/minecraft:.*oak.*/);
     blacklist.hide(
       (it: Ingredient) =>
@@ -73,8 +75,6 @@ describe("blacklist tests", () => {
 
   it("validates custom registry ids", async () => {
     const acceptor = createTestAcceptor();
-
-    await loadDump();
 
     expect(() => blacklist.hideEntry("example", /whatever/)).toThrow(
       `cannot hide using regex/predicates, registry minecraft:example not loaded`,

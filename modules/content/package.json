@@ -29,8 +29,10 @@
       "@adeficior/pack-resolver": "^2.0.0",
       "typescript": "catalog:",
       "lodash-es": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
       "@adeficior/data-modifier-models": "workspace:*",
-      "@adeficior/data-modifier-loot": "workspace:*",
-      "@adeficior/data-modifier-core": "workspace:*"
+      "@adeficior/data-modifier-loot": "workspace:*"
    }
 }

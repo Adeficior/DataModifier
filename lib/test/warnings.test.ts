@@ -1,4 +1,4 @@
-import { ItemResult } from "@adeficior/data-modifier-core";
+import { ItemResult } from "@adeficior/data-modifier-ingredients";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { setupInstance } from "./util/setup";

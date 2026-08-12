@@ -3,6 +3,15 @@ export {
   EMPTY_LOOT_TABLE,
   type LootRules,
 } from "./emitter";
+export type * from "./helper";
 export type * from "./loader";
 export { default } from "./module";
-export type * from "./schema";
+export type {
+  EmptyLootEntry,
+  LootEntry,
+  LootEntryBase,
+  LootItemInput,
+  LootModifier,
+  LootPool,
+  LootTable,
+} from "./schema";

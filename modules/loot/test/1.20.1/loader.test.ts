@@ -1,12 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import setupLoader from "../shared/loaderSetup";
+import { setupLootLoader } from "../../src/testing";
 
 const version = basename(import.meta.dir);
-const { logger } = setupLoader({
-  version,
-  include: ["data/*/loot_table/**/*.json", "data/*/tags/**/*.json"],
-});
+const { logger } = setupLootLoader(version);
 
 describe("loading of loot tables", () => {
   it("loads loot tables without errors", async () => {

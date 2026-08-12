@@ -12,9 +12,10 @@ import {
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
+import { basename } from "node:path";
 import { EMPTY_LOOT_TABLE, LootTableEmitter } from "../../src/emitter";
 
-const version = "1.21.1";
+const version = basename(import.meta.dir);
 // TODO common method?
 const context: LoaderContext = { logger: createTestLogger() };
 const emitter = new LootTableEmitter(

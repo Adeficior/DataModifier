@@ -1,25 +1,26 @@
+import { encodeId } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { encodeId } from "../src";
-import setupLoader from "./shared/loaderSetup";
+import { type PolytoneTabs } from "../src/emit/polytoneTabs";
+import { setupInstance } from "./util/setup";
 
 const version = "1.20.1";
-const { loader } = setupLoader({
-  version,
+const instance = await setupInstance(version, {
   load: false,
-  hideFrom: ["polytone"],
 });
+
+const tabs = instance.get<PolytoneTabs>("emitter:tabs");
 
 describe("creates addition entries", () => {
   it("emits per tab key", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.add(
+    tabs.add(
       ["something:test_tab", { namespace: "example", path: "food" }],
       ["minecraft:diamond", { namespace: "forge", path: "the_logo" }],
     );
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -34,11 +35,11 @@ describe("creates addition entries", () => {
   it("adds after predicate", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.add("example:tab", ["minecraft:oak_log"], {
+    tabs.add("example:tab", ["minecraft:oak_log"], {
       after: "minecraft:stone_axe",
     });
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at("assets/example/polytone/creative_tab_modifiers/tab.json"),
@@ -48,11 +49,11 @@ describe("creates addition entries", () => {
   it("adds before predicate", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.add("example:tab", ["minecraft:oak_planks"], {
+    tabs.add("example:tab", ["minecraft:oak_planks"], {
       before: "minecraft:stone_hoe",
     });
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at("assets/example/polytone/creative_tab_modifiers/tab.json"),
@@ -62,11 +63,11 @@ describe("creates addition entries", () => {
   it("uses custom file name", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.add("something:test_tab", ["minecraft:diamond"], {
+    tabs.add("something:test_tab", ["minecraft:diamond"], {
       file: "other:id",
     });
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -79,16 +80,14 @@ describe("creates addition entries", () => {
   });
 
   it("fails trying to merge modifiers with different targets", () => {
-    loader.tabs.add("something:test_tab", ["minecraft:diamond"], {
+    tabs.add("something:test_tab", ["minecraft:diamond"], {
       file: "other:id",
     });
 
     expect(() =>
-      loader.tabs.add(
-        "something:another_tab",
-        ["minecraft:diamond_chestplate"],
-        { file: "other:id" },
-      ),
+      tabs.add("something:another_tab", ["minecraft:diamond_chestplate"], {
+        file: "other:id",
+      }),
     ).toThrow("trying to merge modifiers with different targets");
   });
 });
@@ -97,12 +96,12 @@ describe("create removal entries", () => {
   it("resolves filter correctly", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.remove(
+    tabs.remove(
       ["something:test_tab", { namespace: "example", path: "food" }],
       ["minecraft:diamond", { namespace: "forge", path: "the_logo" }],
     );
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -117,11 +116,11 @@ describe("create removal entries", () => {
   it("uses custom file name", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.tabs.remove("something:test_tab", ["minecraft:diamond"], {
+    tabs.remove("something:test_tab", ["minecraft:diamond"], {
       file: "other:id",
     });
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at(
@@ -138,11 +137,11 @@ describe("create new tabs", () => {
   it("emits and mergers csv", async () => {
     const acceptor = createTestAcceptor();
 
-    const id = loader.tabs.create("something:test_tab");
-    loader.tabs.create("something:another_tab");
-    loader.tabs.create("minecraft:more_blocks");
+    const id = tabs.create("something:test_tab");
+    tabs.create("something:another_tab");
+    tabs.create("minecraft:more_blocks");
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(encodeId(id)).toMatch("something:test_tab");
     expect(

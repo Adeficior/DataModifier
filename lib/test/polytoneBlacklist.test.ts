@@ -1,24 +1,28 @@
+import {
+  BlockIngredient,
+  FluidIngredient,
+  ItemIngredient,
+} from "@adeficior/data-modifier-ingredients";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
-import { beforeEach, describe, expect, it } from "bun:test";
-import { BlockIngredient, FluidIngredient, ItemIngredient } from "../src";
-import setupLoader from "./shared/loaderSetup";
+import { describe, expect, it } from "bun:test";
+import type { BlacklistRules } from "../src/emit/blacklist";
+import { setupInstance } from "./util/setup";
 
 const version = "1.20.1";
-const { loader, loadDump } = setupLoader({
-  version,
+const instance = await setupInstance(version, {
   load: false,
   hideFrom: ["polytone"],
 });
 
-beforeEach(loadDump);
+const blacklist = instance.get<BlacklistRules>("emitter:blacklist");
 
 describe("blacklist tests", () => {
   it("does not generate a jei blacklist config file", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.blacklist.hide("minecraft:stone");
+    blacklist.hide("minecraft:stone");
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(acceptor.at("jei/blacklist.cfg")).toBeNull();
   });
@@ -26,15 +30,15 @@ describe("blacklist tests", () => {
   it("does not create the jei blacklist config if nothing is hidden", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.blacklist.hide("minecraft:stone");
-    loader.blacklist.hide(new FluidIngredient("water"));
-    loader.blacklist.hide(new BlockIngredient("water"));
-    loader.blacklist.hide([
+    blacklist.hide("minecraft:stone");
+    blacklist.hide(new FluidIngredient("water"));
+    blacklist.hide(new BlockIngredient("water"));
+    blacklist.hide([
       new ItemIngredient("ice"),
       new FluidIngredient("minecraft:lava"),
     ]);
 
-    await loader.emit(acceptor);
+    await instance.emit(acceptor);
 
     expect(
       acceptor.at(

@@ -2,7 +2,8 @@ import {
   packFormatOf,
   UnknownRegistryEntry,
 } from "@adeficior/data-modifier-core";
-import { provided, setupLookup, setupTagRegistry } from "@adeficior/testing";
+import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
+import { provided, setupLookup } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import { ItemIngredient, ItemResult } from "../../src";

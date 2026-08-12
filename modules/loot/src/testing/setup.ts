@@ -1,39 +1,26 @@
-import { packFormatOf, type EventHandler } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import { createPredicates } from "../../../ingredients/src/predicates";
 import { createIngredientSerializer } from "../../../ingredients/src/serializer/ingredients";
-import { createResultSerializer } from "../../../ingredients/src/serializer/results";
-import { recipePattern, type RegisterRecipeParser } from "../../src";
-import { RecipeEmitter } from "../../src/emitter";
-import { RecipeLoader } from "../../src/loader";
+import { LootTableEmitter } from "../emitter";
+import { lootTablePattern } from "../helper";
+import { LootTableLoader } from "../loader";
 
-// TODO move to testing package?
-export function setupRecipeLoader(
+export function setupLootLoader(
   version: string,
-  parsers?: EventHandler<RegisterRecipeParser>,
   mods: string[] = ["minecraft"],
 ) {
-  const lookup = setupLookup(version);
-
-  const results = createResultSerializer(packFormatOf(version), lookup);
-  const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
-
-  const loader = new RecipeLoader(results, ingredients, { mods });
+  const loader = new LootTableLoader({ mods });
   const logger = createTestLogger();
 
   beforeAll(async () => {
-    await parsers?.({
-      register: (...args) => loader.registerParser(...args),
-    });
-
     const resolver = await createTestDataResolver(version, {
-      include: recipePattern(packFormatOf(version)),
+      include: lootTablePattern(packFormatOf(version)),
       logger,
     });
-    //  TODO use distribute for this somehow
     await resolver.extract(loader);
   });
 
@@ -44,31 +31,25 @@ export function setupRecipeLoader(
   return { loader, logger };
 }
 
-export function setupRecipeEmitter(
+export function setupLootEmitter(
   version: string,
-  parsers?: EventHandler<RegisterRecipeParser>,
   mods: string[] = ["minecraft"],
 ) {
   const lookup = setupLookup(version);
+  const { loader } = setupLootLoader(version, mods);
 
-  const results = createResultSerializer(packFormatOf(version), lookup);
   const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
   const tags = setupTagRegistry(version);
   const predicates = createPredicates(lookup, tags, ingredients);
 
-  const logger = createTestLogger();
-  const { loader } = setupRecipeLoader(version, parsers, mods);
-
-  const emitter = new RecipeEmitter(
-    logger,
+  const emitter = new LootTableEmitter(
     packFormatOf(version),
     loader,
-    results,
-    ingredients,
+    lookup,
     predicates,
-    loader,
   );
 
+  const logger = createTestLogger();
   const resolver = emitter.resolver({ logger });
 
   afterEach(() => {

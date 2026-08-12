@@ -26,10 +26,10 @@ export default defineModule<{
     hooks: {
       "recipes:register-parser": { name: "RegisterRecipeParser" },
     },
-    emitters: {
+    loaders: {
       recipes: "RecipeLoaderAccessor",
     },
-    loaders: {
+    emitters: {
       recipes: "RecipeRules",
     },
   },

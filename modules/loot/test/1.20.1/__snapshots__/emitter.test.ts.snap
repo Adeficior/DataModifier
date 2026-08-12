@@ -399,6 +399,7 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
 {
   "pools": [
     {
+      "bonus_rolls": 0,
       "conditions": [
         {
           "block": "farmersdelight:wild_rice",
@@ -412,7 +413,9 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
           "offsetY": 1,
           "predicate": {
             "block": {
-              "block": "farmersdelight:wild_rice",
+              "blocks": [
+                "farmersdelight:wild_rice",
+              ],
               "state": {
                 "half": "upper",
               },
@@ -426,10 +429,8 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
             {
               "conditions": [
                 {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "tag": "forge:shears",
-                  },
+                  "action": "shears_harvest",
+                  "condition": "forge:can_tool_perform_action",
                 },
               ],
               "name": "farmersdelight:wild_rice",
@@ -451,6 +452,7 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
       "rolls": 1,
     },
     {
+      "bonus_rolls": 0,
       "conditions": [
         {
           "block": "farmersdelight:wild_rice",
@@ -464,7 +466,9 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
           "offsetY": -1,
           "predicate": {
             "block": {
-              "block": "farmersdelight:wild_rice",
+              "blocks": [
+                "farmersdelight:wild_rice",
+              ],
               "state": {
                 "half": "lower",
               },
@@ -478,10 +482,8 @@ exports[`loot tables output replacements keeps extended loot entry properties: m
             {
               "conditions": [
                 {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "tag": "forge:shears",
-                  },
+                  "action": "shears_harvest",
+                  "condition": "forge:can_tool_perform_action",
                 },
               ],
               "name": "farmersdelight:wild_rice",
@@ -552,7 +554,6 @@ exports[`loot table removal removes loot table with output filter: loot tables c
   "data/minecraft/loot_tables/chests/pillager_outpost.json",
   "data/minecraft/loot_tables/chests/spawn_bonus_chest.json",
   "data/minecraft/loot_tables/chests/village/village_taiga_house.json",
-  "pack.mcmeta",
 ]
 `;
 

@@ -1,37 +1,25 @@
-import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
-import { describe, expect, it } from "bun:test";
-import { basename } from "node:path";
 import {
-  EMPTY_LOOT_TABLE,
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
-  LootTableSchema,
-  parseLootEntry,
-} from "../../src";
-import setupLoader from "../shared/loaderSetup";
+} from "@adeficior/data-modifier-ingredients";
+import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
+import { describe, expect, it } from "bun:test";
+import { basename } from "node:path";
+import { EMPTY_LOOT_TABLE } from "../../src/emitter";
+import { LootTableSchema, parseLootEntry } from "../../src/schema";
+import { setupLootEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);
-const { logger, loader } = setupLoader({
-  version,
-  include: ["data/*/loot_tables/**/*.json", "data/*/tags/**/*.json"],
-});
-
-describe("loading of loot tables", () => {
-  it("loads loot tables without errors", async () => {
-    expect(logger.trace).not.toHaveBeenCalled();
-    expect(logger.warn).not.toHaveBeenCalled();
-    expect(logger.error).not.toHaveBeenCalled();
-  });
-});
+const { emitter, resolver } = setupLootEmitter(version);
 
 describe("loot tables output replacements", () => {
   it("removes outputs", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.removeOutput("#minecraft:iron_ores");
+    emitter.removeOutput("#minecraft:iron_ores");
 
-    await loader.emit(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/blocks/iron_ore.json"),
@@ -46,18 +34,18 @@ describe("loot tables output replacements", () => {
   it("replaces outputs with additional tests", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.replaceOutput(
+    emitter.replaceOutput(
       "#forge:ingots/iron",
       new ItemTagIngredient("forge:ingots/lead"),
       { id: /minecraft:entities\/.+/ },
     );
-    loader.loot.replaceOutput(
+    emitter.replaceOutput(
       new ItemIngredient("minecraft:rotten_flesh"),
       new ItemIngredient("minecraft:sand"),
       { id: "minecraft:entities/husk" },
     );
 
-    await loader.emit(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/entities/husk.json"),
@@ -78,12 +66,12 @@ describe("loot tables output replacements", () => {
   it("keeps extended loot entry properties", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.replaceOutput(
+    emitter.replaceOutput(
       "farmersdelight:rice",
       new ItemResult("minecraft:apple"),
     );
 
-    await loader.emit(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/farmersdelight/loot_tables/blocks/wild_rice.json"),
@@ -95,11 +83,11 @@ describe("loot table removal", () => {
   it("removes loot table with id filter", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.disable({
+    emitter.disable({
       id: /minecraft:.*oak_log/,
     });
 
-    await loader.emit(acceptor);
+    await resolver.extract(acceptor);
 
     expect(
       acceptor.jsonAt("data/minecraft/loot_tables/blocks/oak_log.json"),
@@ -122,11 +110,11 @@ describe("loot table removal", () => {
   it("removes loot table with output filter", async () => {
     const acceptor = createTestAcceptor();
 
-    loader.loot.disable({
+    emitter.disable({
       output: "#minecraft:logs",
     });
 
-    await loader.emit(acceptor);
+    await resolver.extract(acceptor);
 
     expect(acceptor.paths()).toMatchSnapshot("loot tables containing any log");
   });
@@ -159,9 +147,9 @@ it("creates custom loot tables", async () => {
     ],
   });
 
-  loader.loot.add("example:custom", lootTable);
+  emitter.add("example:custom", lootTable);
 
-  await loader.emit(acceptor);
+  await resolver.extract(acceptor);
 
   expect(
     acceptor.jsonAt("data/example/loot_tables/custom.json"),
