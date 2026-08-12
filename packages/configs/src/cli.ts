@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import { generateTypes } from "./codegen";
 import generateConfigs from "./lib";
 
