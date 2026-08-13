@@ -1,20 +1,22 @@
 import {
   type Container,
+  type DataModifierOptions,
   type LoaderContext,
   type ModuleConfig,
+  type ModuleSetupOptions,
   type ModuleType,
   type ModuleTypes,
-  type PackLoaderOptions,
 } from "@adeficior/data-modifier-core";
 import {
   combineResolvers,
   distributedAcceptor,
   filterAcceptor,
   type Acceptor,
+  type Logger,
   type Resolver,
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
-import { builtInModules } from "./builtinModules";
+import { installBuiltinModules } from "./builtinModules";
 import { overwritePackMetadata } from "./emit/packMetadata";
 import { InstallTarget } from "./installTarget";
 
@@ -30,10 +32,7 @@ export type LoaderEmitOptions = {
 };
 
 class DataModifierImpl extends InstallTarget implements DataModifier {
-  constructor(
-    // TODO rename "pack" things
-    options: PackLoaderOptions,
-  ) {
+  constructor(options: ModuleSetupOptions) {
     super(options);
   }
 
@@ -67,9 +66,8 @@ class DataModifierImpl extends InstallTarget implements DataModifier {
   }
 
   async emit(to: Acceptor, options: LoaderEmitOptions = {}) {
-    await this.resolver({ ...options, logger: this.options.logger }).extract(
-      to,
-    );
+    const logger = this.get<Logger>("logger");
+    await this.resolver({ ...options, logger }).extract(to);
   }
 
   async run(from: Resolver, to: Acceptor) {
@@ -80,45 +78,41 @@ class DataModifierImpl extends InstallTarget implements DataModifier {
   reset() {
     this.emitters.clear();
   }
-
-  // TODO move to module with options
-  // async loadRegistryDump(resolver: Resolver) {
-  //   const registryDumpLoader = new RegistryDumpLoader();
-  //   await resolver.extract(registryDumpLoader);
-  //   this.lookup.set(registryDumpLoader);
-  // }
 }
 
-type DataModifierBuilder = {
+export type DataModifierBuilder = {
   install<T extends ModuleTypes>(
     module: ModuleConfig<T>,
     options?: ModuleType<T, "options">,
   ): void;
 };
 
+export type DataModifierFactory = (builder: DataModifierBuilder) => void;
+
 type GatheredModule<T extends ModuleTypes = ModuleTypes> = {
   module: ModuleConfig<T>;
   options?: ModuleType<T, "options">;
 };
 
-export async function createDataModifier<T extends ModuleTypes>(
-  options: PackLoaderOptions,
-  factory: (builder: DataModifierBuilder) => void,
+export async function createDataModifier(
+  { packFormat, ...coreOptions }: DataModifierOptions,
+  factory: DataModifierFactory = () => {},
 ): Promise<DataModifier> {
-  const instance = new DataModifierImpl(options);
+  const moduleSetupOptions: ModuleSetupOptions = { packFormat };
+  const instance = new DataModifierImpl(moduleSetupOptions);
 
   const gatheredModules: GatheredModule[] = [];
 
-  factory({
+  const builder: DataModifierBuilder = {
     install: (module, options) => {
       gatheredModules.push({ module, options } as GatheredModule);
     },
-  });
+  };
 
-  const modules = [
-    ...gatheredModules.map((it) => it.module),
-    ...builtInModules(),
-  ];
+  factory(builder);
+  installBuiltinModules(coreOptions)(builder);
+
+  const modules = gatheredModules.map((it) => it.module);
 
   // TODO only pass options to module that belong to it
   const moduleOptions = gatheredModules.reduce(

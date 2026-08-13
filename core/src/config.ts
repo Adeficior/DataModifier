@@ -1,8 +1,8 @@
-import { type Logger } from "@adeficior/pack-resolver";
 import { type SemVerInput } from "./common/packFormat";
+import type { CoreModuleOptions } from "./module";
 
-export interface PackLoaderOptions {
+export type ModuleSetupOptions = {
   packFormat: SemVerInput;
-  // TODO make optional
-  logger: Logger;
-}
+};
+
+export type DataModifierOptions = ModuleSetupOptions & CoreModuleOptions;

@@ -6,9 +6,9 @@ import {
   type EventHandler,
   type Loader,
   type ModuleConfig,
+  type ModuleSetupOptions,
   type ModuleType,
   type ModuleTypes,
-  type PackLoaderOptions,
   type SetupEvent,
 } from "@adeficior/data-modifier-core";
 import { uniqBy } from "lodash-es";
@@ -96,16 +96,16 @@ export class InstallTarget implements Container {
   protected readonly emitters = new CombinedEmitters();
   protected readonly loaders: Record<string, Loader> = {};
 
-  constructor(protected readonly options: PackLoaderOptions) {}
+  constructor(protected readonly options: ModuleSetupOptions) {}
 
-  get(key: string) {
-    const instance = this.getOrNull(key);
+  get<T>(key: string): T {
+    const instance = this.getOrNull<T>(key);
     if (instance) return instance;
     throw new Error(`no instance of type '${key}' registered`);
   }
 
-  getOrNull(key: string) {
-    return this.services.get(key);
+  getOrNull<T>(key: string): T | null {
+    return this.services.get(key) as T | null;
   }
 
   async install(
@@ -122,34 +122,32 @@ export class InstallTarget implements Container {
 
     const sorted = sortModules(modules);
 
-    await Promise.all(
-      sorted.map(async (it) => {
-        const combinedOptions = { ...this.options, ...options };
+    for (const module of sorted) {
+      const combinedOptions = { ...this.options, ...options };
 
-        const event: SetupEvent<T> = {
-          hook: (type, handler) =>
-            bus.subscribe(type, handler as EventHandler<unknown>),
-          service: (key, factory) => {
-            const instance = factory(this);
-            this.services.set(key, instance);
-            return () => instance;
-          },
-          emitter: (key, factory) => {
-            const instance = event.service(`emitter:${key}`, factory);
-            this.emitters.add(instance());
-            return instance;
-          },
-          loader: (key, factory, pattern) => {
-            const instance = event.service(`loader:${key}`, factory);
-            this.loaders[pattern] = instance();
-            return instance;
-          },
-          options: combinedOptions,
-        };
+      const event: SetupEvent = {
+        hook: (type, handler) =>
+          bus.subscribe(type, handler as EventHandler<unknown>),
+        service: (key, factory) => {
+          const instance = factory(this);
+          this.services.set(key, instance);
+          return () => instance;
+        },
+        emitter: (key, factory) => {
+          const instance = event.service(`emitter:${key}`, factory);
+          this.emitters.add(instance());
+          return instance;
+        },
+        loader: (key, factory, pattern) => {
+          const instance = event.service(`loader:${key}`, factory);
+          this.loaders[pattern] = instance();
+          return instance;
+        },
+        options: combinedOptions,
+      };
 
-        await it.setup(event);
-      }),
-    );
+      await module.setup(event);
+    }
 
     this.frozen = true;
     bus.dispatch("after:setup", {

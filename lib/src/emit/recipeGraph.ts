@@ -10,13 +10,13 @@ import {
   type LoaderContext,
   type NormalizedId,
   type Registered,
-  type RegistryProvider,
 } from "@adeficior/data-modifier-core";
 import {
   resolveIdTest,
   type CommonFilter,
   type Predicate,
 } from "@adeficior/data-modifier-core/serializer";
+import type { RecipeLoaderAccessor } from "@adeficior/data-modifier-recipes";
 import { type RecipeHolder } from "@adeficior/data-modifier-recipes";
 import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import {
@@ -42,7 +42,7 @@ type Edge = {
   label?: string;
 };
 
-export interface RecipeGraphOptions {
+export type RecipeGraphOptions = {
   // output: "visjs"
   resolveTags?: boolean;
   brokenIcon?: string;
@@ -50,7 +50,7 @@ export interface RecipeGraphOptions {
     id: NormalizedId,
     registry: NormalizedId<RegistryId>,
   ) => string;
-}
+};
 
 const defaultOptions: Required<RecipeGraphOptions> = {
   resolveTags: true,
@@ -86,7 +86,7 @@ export class RecipeGraphEmitter
   private readonly options: Required<RecipeGraphOptions>;
 
   constructor(
-    private readonly recipes: RegistryProvider<RecipeHolder>,
+    private readonly recipes: RecipeLoaderAccessor,
     private readonly tags: TagRegistryHolder,
     options: RecipeGraphOptions = {},
   ) {

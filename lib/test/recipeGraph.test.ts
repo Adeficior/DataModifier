@@ -1,11 +1,47 @@
+import { defineModule } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { type RecipeGraphAccessor } from "../src/emit/recipeGraph";
+import {
+  RecipeGraphEmitter,
+  type RecipeGraphAccessor,
+  type RecipeGraphOptions,
+} from "../src/emit/recipeGraph";
 import { setupInstance } from "./util/setup";
 
-const instance = await setupInstance("1.21.1", {
-  include: ["data/*/recipe/**/*.json", "data/*/tags/**/*.json"],
+const module = defineModule<{
+  options: RecipeGraphOptions;
+  emitters: {
+    "graph:recipes": RecipeGraphAccessor;
+  };
+}>({
+  name: "internal",
+  dependencies: {
+    "@adeficior/data-modifier-recipes": "required",
+    "@adeficior/data-modifier-tags": "required",
+  },
+  setup: (pack) => {
+    pack.emitter(
+      "graph:recipes",
+      (container) =>
+        new RecipeGraphEmitter(
+          container.get("loader:recipes"),
+          container.get("loader:tags"),
+          pack.options,
+        ),
+    );
+  },
 });
+
+const version = "1.21.1";
+const instance = await setupInstance(
+  version,
+  {
+    include: ["data/*/recipe/**/*.json", "data/*/tags/**/*.json"],
+  },
+  (modules) => {
+    modules.install(module);
+  },
+);
 
 const recipeGraph = instance.get<RecipeGraphAccessor>("emitter:graph:recipes");
 

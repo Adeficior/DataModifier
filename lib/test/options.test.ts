@@ -33,9 +33,9 @@ it("correctly passed options to installed modules", async () => {
       packFormat: packFormatOf("1.21.1"),
       logger: createTestLogger(),
     },
-    (modifier) => {
-      modifier.install(moduleA, { moduleAKey: "valueA" });
-      modifier.install(moduleB, { moduleBKey: "valueB" });
+    (modules) => {
+      modules.install(moduleA, { moduleAKey: "valueA" });
+      modules.install(moduleB, { moduleBKey: "valueB" });
     },
   );
 

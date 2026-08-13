@@ -1,13 +1,39 @@
-import { encodeId } from "@adeficior/data-modifier-core";
+import { defineModule, encodeId } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
+import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import { type PolytoneTabs } from "../src/emit/polytoneTabs";
+import {
+  PolytoneTabsEmitter,
+  type PolytoneTabs,
+} from "../src/emit/polytoneTabs";
 import { setupInstance } from "./util/setup";
 
-const version = "1.20.1";
-const instance = await setupInstance(version, {
-  load: false,
+const module = defineModule<{
+  emitters: {
+    tabs: PolytoneTabs;
+  };
+}>({
+  name: "internal",
+  setup: (pack) => {
+    pack.emitter(
+      "tabs",
+      (container) => new PolytoneTabsEmitter(container.get("registries")),
+    );
+  },
 });
+
+const version = "1.20.1";
+const instance = await setupInstance(
+  version,
+  {
+    load: false,
+    // TODO do in setup
+    dump: await createDumpResolver(version),
+  },
+  (modules) => {
+    modules.install(module);
+  },
+);
 
 const tabs = instance.get<PolytoneTabs>("emitter:tabs");
 

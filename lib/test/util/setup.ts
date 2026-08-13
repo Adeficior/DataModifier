@@ -1,12 +1,16 @@
 import {
   packFormatOf,
-  type PackLoaderOptions,
+  type DataModifierOptions,
 } from "@adeficior/data-modifier-core";
 import type { ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver } from "@adeficior/testing";
 import { afterEach, beforeAll } from "bun:test";
-import { createDataModifier } from "../../src";
+import {
+  createDataModifier,
+  type DataModifier,
+  type DataModifierFactory,
+} from "../../src";
 
 export async function setupInstance(
   version: string,
@@ -15,21 +19,27 @@ export async function setupInstance(
     from,
     include,
     ...options
-  }: Partial<PackLoaderOptions & Pick<ResolverOptions, "include" | "from">> & {
+  }: Partial<
+    DataModifierOptions & Pick<ResolverOptions, "include" | "from">
+  > & {
     load?: boolean;
   } = {},
-) {
+  factory?: DataModifierFactory,
+): Promise<DataModifier> {
   const logger = createTestLogger();
-  const instance = await createDataModifier({
-    logger,
-    packFormat: packFormatOf(version),
-    ...options,
-  });
+  const instance = await createDataModifier(
+    {
+      logger,
+      packFormat: packFormatOf(version),
+      ...options,
+    },
+    factory,
+  );
 
   if (load) {
     beforeAll(async () => {
       const data = await createTestDataResolver(version, { include, from });
-      instance.loadFrom(data);
+      await instance.loadFrom(data);
     });
   }
 

@@ -2,7 +2,31 @@
 
 exports[`blacklist tests does not create the jei blacklist config if nothing is hidden: creates a polytone tab modifier 1`] = `
 "{
-  "targets": ["minecraft:example_tab"],
+  "targets": [
+    "botania:botania",
+    "create:base",
+    "create:palettes",
+    "farmersdelight:farmersdelight",
+    "minecraft:building_blocks",
+    "minecraft:colored_blocks",
+    "minecraft:combat",
+    "minecraft:food_and_drinks",
+    "minecraft:functional_blocks",
+    "minecraft:hotbar",
+    "minecraft:ingredients",
+    "minecraft:inventory",
+    "minecraft:natural_blocks",
+    "minecraft:op_blocks",
+    "minecraft:redstone_blocks",
+    "minecraft:search",
+    "minecraft:spawn_eggs",
+    "minecraft:tools_and_utilities",
+    "thermal:thermal.blocks",
+    "thermal:thermal.devices",
+    "thermal:thermal.foods",
+    "thermal:thermal.items",
+    "thermal:thermal.tools"
+  ],
   "removals": [
     {
       "type": "items_match",

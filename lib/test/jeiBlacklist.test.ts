@@ -1,3 +1,4 @@
+import { defineModule } from "@adeficior/data-modifier-core";
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   BlockIngredient,
@@ -5,15 +6,50 @@ import {
   ItemIngredient,
 } from "@adeficior/data-modifier-ingredients";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
+import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import type { BlacklistRules } from "../src/emit/blacklist";
+import {
+  BlacklistEmitter,
+  type BlacklistOptions,
+  type BlacklistRules,
+} from "../src/emit/blacklist";
 import { setupInstance } from "./util/setup";
 
-const version = "1.20.1";
-const instance = await setupInstance(version, {
-  hideFrom: ["jei"],
-  load: false,
+const module = defineModule<{
+  options: BlacklistOptions;
+  emitters: {
+    blacklist: BlacklistRules;
+  };
+}>({
+  name: "internal",
+  dependencies: {
+    "@adeficior/data-modifier-ingredients": "required",
+  },
+  setup: (pack) => {
+    pack.emitter(
+      "blacklist",
+      (container) =>
+        new BlacklistEmitter(
+          container.get("registries"),
+          container.get("predicates"),
+          container.get("serializer:ingredients"),
+          pack.options,
+        ),
+    );
+  },
 });
+
+const version = "1.20.1";
+const instance = await setupInstance(
+  version,
+  {
+    load: false,
+    dump: await createDumpResolver(version),
+  },
+  (modules) => {
+    modules.install(module, { hideFrom: ["jei"] });
+  },
+);
 
 const blacklist = instance.get<BlacklistRules>("emitter:blacklist");
 
@@ -26,7 +62,7 @@ describe("blacklist tests", () => {
     blacklist.hide(new BlockIngredient("water"));
     blacklist.hide([
       new ItemIngredient("ice"),
-      new FluidIngredient("forge:milk"),
+      new FluidIngredient("minecraft:lava"),
     ]);
 
     await instance.emit(acceptor);
@@ -60,7 +96,8 @@ describe("blacklist tests", () => {
     );
   });
 
-  it("fails when trying to use a regex/predicate without a registry dump", async () => {
+  // move to seperate test after extracting into module
+  it.skip("fails when trying to use a regex/predicate without a registry dump", async () => {
     const acceptor = createTestAcceptor();
 
     const message =

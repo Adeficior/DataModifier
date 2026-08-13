@@ -1,6 +1,6 @@
 import { type Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
-import { type PackLoaderOptions } from "../config";
+import { type ModuleSetupOptions } from "../config";
 import { type Container } from "../container";
 import { type ClearableEmitter } from "../emit/abstract";
 import { type Loader } from "../load/abstract";
@@ -61,7 +61,7 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   service: Registration<ModuleType<T, "services">>;
   loader: Registration<ModuleType<T, "loaders">, Loader, [string]>;
   emitter: Registration<ModuleType<T, "emitters">, ClearableEmitter>;
-  options: PackLoaderOptions & ModuleType<T, "options">;
+  options: ModuleSetupOptions & ModuleType<T, "options">;
   hook: <K extends keyof ModuleHooks<T>>(
     type: K,
     handler: EventHandler<ModuleHooks<T>[K]>,

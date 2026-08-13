@@ -48,7 +48,7 @@ export default defineModule<{
       "recipes",
       (container) =>
         new RecipeEmitter(
-          pack.options.logger,
+          container.get("logger"),
           pack.options.packFormat,
           loader(),
           container.get("serializer:results"),

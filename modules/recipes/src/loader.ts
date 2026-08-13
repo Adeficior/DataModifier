@@ -3,6 +3,7 @@ import {
   IllegalShapeError,
   JsonLoader,
   type ConditionContext,
+  type RegistryProvider,
 } from "@adeficior/data-modifier-core";
 import {
   type IngredientSerializer,
@@ -25,7 +26,7 @@ import { SmeltingParser } from "./serializer/vanilla/smelting";
 import { SmithingParser } from "./serializer/vanilla/smithing";
 import { StonecuttingParser } from "./serializer/vanilla/stonecutting";
 
-export interface RecipeLoaderAccessor {
+export interface RecipeLoaderAccessor extends RegistryProvider<RecipeHolder> {
   unknownRecipeTypes(): RecipeDefinition[];
   registerParser(
     recipeType: string,

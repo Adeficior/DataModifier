@@ -25,4 +25,4 @@ export type * from "./registry/lookup";
 export type * from "./registry/registered";
 
 export * from "./conditions";
-export { default as module } from "./module";
+export { default as module, type CoreModuleOptions } from "./module";

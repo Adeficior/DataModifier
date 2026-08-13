@@ -24,9 +24,9 @@ import {
 import { uniq } from "lodash-es";
 
 export type HideMode = "jei" | "polytone";
-export interface BlacklistOptions {
+export type BlacklistOptions = {
   hideFrom?: HideMode | HideMode[];
-}
+};
 
 export interface BlacklistRules {
   hide(...inputs: IngredientFilter[]): void;
@@ -138,7 +138,7 @@ export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
       );
 
     const content = toJson({
-      targets: [...tabs.values()],
+      targets: [...tabs.values()].toSorted(),
       removals: [
         {
           type: "items_match",

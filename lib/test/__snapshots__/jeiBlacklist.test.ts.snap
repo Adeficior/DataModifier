@@ -1,19 +1,38 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`blacklist tests generated a jei blacklist config file: jei blacklist config file 1`] = `
-"forge:milk
-minecraft:ice
+"minecraft:ice
+minecraft:lava
 minecraft:stone
 minecraft:water"
 `;
 
 exports[`blacklist tests generated a blacklist using dumped ids: jei blacklist config file using registry dump 1`] = `
-"minecraft:dark_oak_boat
+"create:cut_granite
+create:cut_granite_brick_slab
+create:cut_granite_brick_stairs
+create:cut_granite_brick_wall
+create:cut_granite_bricks
+create:cut_granite_slab
+create:cut_granite_stairs
+create:cut_granite_wall
+create:granite_pillar
+create:layered_granite
+create:polished_cut_granite
+create:polished_cut_granite_slab
+create:polished_cut_granite_stairs
+create:polished_cut_granite_wall
+create:small_granite_brick_slab
+create:small_granite_brick_stairs
+create:small_granite_brick_wall
+create:small_granite_bricks
+minecraft:dark_oak_boat
 minecraft:dark_oak_button
 minecraft:dark_oak_chest_boat
 minecraft:dark_oak_door
 minecraft:dark_oak_fence
 minecraft:dark_oak_fence_gate
+minecraft:dark_oak_hanging_sign
 minecraft:dark_oak_leaves
 minecraft:dark_oak_log
 minecraft:dark_oak_planks
@@ -34,6 +53,7 @@ minecraft:oak_chest_boat
 minecraft:oak_door
 minecraft:oak_fence
 minecraft:oak_fence_gate
+minecraft:oak_hanging_sign
 minecraft:oak_leaves
 minecraft:oak_log
 minecraft:oak_planks
