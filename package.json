@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
-    "add": "^2.0.9",
     "husky": "^9.1.7",
     "prettier": "catalog:",
     "turbo": "^2.10.7"
