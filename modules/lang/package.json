@@ -26,7 +26,7 @@
       "@adeficior/data-modifier-core": "workspace:*"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "^2.0.0",
+      "@adeficior/pack-resolver": "catalog:",
       "typescript": "catalog:",
       "zod": "catalog:",
       "lodash-es": "catalog:",

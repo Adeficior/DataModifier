@@ -70,7 +70,7 @@
       "@types/command-line-usage": "^5.0.4"
    },
    "dependencies": {
-      "@adeficior/resource-merger": "^2.0.0",
+      "@adeficior/resource-merger": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*",
       "@adeficior/data-modifier-tags": "workspace:*",
       "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -78,7 +78,7 @@
       "@adeficior/data-modifier-loot": "workspace:*"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "^2.0.0",
+      "@adeficior/pack-resolver": "catalog:",
       "typescript": "catalog:",
       "lodash-es": "catalog:",
       "zod": "catalog:*"

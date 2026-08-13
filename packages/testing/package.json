@@ -17,7 +17,7 @@
    },
    "peerDependencies": {
       "typescript": "catalog:",
-      "@adeficior/pack-resolver": "^2.0.0",
+      "@adeficior/pack-resolver": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

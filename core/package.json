@@ -44,7 +44,7 @@
       "zod": "catalog:"
    },
    "peerDependencies": {
-      "@adeficior/pack-resolver": "^2.0.0",
+      "@adeficior/pack-resolver": "catalog:",
       "typescript": "catalog:"
    }
 }
