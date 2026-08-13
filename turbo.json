@@ -24,13 +24,6 @@
             "^test"
          ]
       },
-      "test:ci": {
-         "dependsOn": [
-            "lint",
-            "check",
-            "test"
-         ]
-      },
       "dev": {
          "persistent": false,
          "cache": false
