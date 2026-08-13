@@ -1,10 +1,10 @@
-import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { type LoaderContext } from "@adeficior/data-modifier-core";
 import {
   createTestAcceptor,
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
-import type { Model } from "../src";
+import { type Model } from "../src";
 import { ModelEmitter } from "../src/emitter/models";
 
 // TODO more tests

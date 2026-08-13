@@ -12,7 +12,7 @@ import {
   type ShapedRecipeDefinition,
   EMPTY_RECIPE,
 } from "../../src";
-import { setupRecipeEmitter } from "../util/setup";
+import { setupRecipeEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);
 const { emitter, resolver, logger } = setupRecipeEmitter(version);

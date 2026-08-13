@@ -1,8 +1,8 @@
-import type { IdInput } from "@adeficior/data-modifier-core";
+import { type IdInput } from "@adeficior/data-modifier-core";
+import { setupRecipeLoader } from "@adeficior/data-modifier-recipes/testing";
 import { provided, type DataProvider } from "@adeficior/testing";
 import { expect, it } from "bun:test";
 import { basename } from "node:path";
-import { setupRecipeLoader } from "../../../recipes/test/util/setup";
 import { registerParsers } from "../../src/registration";
 
 const version = basename(import.meta.dir);

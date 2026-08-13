@@ -1,5 +1,5 @@
 import { expect, it } from "bun:test";
-import type { Id, NormalizedId } from "../src";
+import { type Id, type NormalizedId } from "../src";
 import { Registry, createId, encodeId } from "../src";
 import { resolveIdTest } from "../src/serializer";
 

@@ -1,6 +1,4 @@
-import type { DataProvider } from "@adeficior/testing";
-import type { Class } from "../../../../../../core/src/common/class";
-import type { Ingredient } from "../../../../src";
+import { type DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -9,6 +7,7 @@ import {
   FluidTagIngredient,
   ItemIngredient,
   ItemTagIngredient,
+  type Ingredient,
 } from "../../../../src";
 import { ingredientLikeResults } from "../ingredientInputs";
 

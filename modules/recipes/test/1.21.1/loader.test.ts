@@ -1,6 +1,6 @@
 import { expect, it } from "bun:test";
 import { basename } from "node:path";
-import { setupRecipeLoader } from "../util/setup";
+import { setupRecipeLoader } from "../../src/testing";
 
 const version = basename(import.meta.dir);
 

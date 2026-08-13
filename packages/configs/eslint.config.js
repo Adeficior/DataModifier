@@ -11,6 +11,8 @@ export function eslintConfig(tsconfigRootDir) {
   return defineConfig([
     js.configs.recommended,
     ts.configs.recommended,
+    importPlugin.flatConfigs.recommended,
+    importPlugin.flatConfigs.typescript,
     {
       rules: {
         "no-console": "error",
@@ -22,6 +24,12 @@ export function eslintConfig(tsconfigRootDir) {
             argsIgnorePattern: "^_",
           },
         ],
+        "import/no-unresolved": "off",
+        "import/no-extraneous-dependencies": "error",
+        "import/enforce-node-protocol-usage": ["error", "always"],
+        "import/no-useless-path-segments": "error",
+        "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
+        "import/extensions": ["error", "never", { json: "always" }],
       },
       languageOptions: {
         parserOptions: {
@@ -32,20 +40,9 @@ export function eslintConfig(tsconfigRootDir) {
     },
     {
       files: ["src/**/*.ts"],
-      extends: [
-        importPlugin.flatConfigs.recommended,
-        importPlugin.flatConfigs.typescript,
-      ],
       rules: {
-        "import/no-unresolved": "off",
-        "import/no-extraneous-dependencies": "error",
-        "import/enforce-node-protocol-usage": ["error", "always"],
-        "import/no-useless-path-segments": "error",
-        "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
-        "import/extensions": ["error", "never", { json: "always" }],
         "import/no-internal-modules": [
           "error",
-          // TODO disallow from /test/** too
           {
             allow: [`${tsconfigRootDir}/src/**`],
           },

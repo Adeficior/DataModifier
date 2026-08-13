@@ -1,5 +1,9 @@
-import type { LoaderContext, SemVerInput } from "@adeficior/data-modifier-core";
-import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
+import {
+  CombinedEmitters,
+  packFormatOf,
+  type LoaderContext,
+  type SemVerInput,
+} from "@adeficior/data-modifier-core";
 import {
   mockRegistryLookup,
   mockRegistryProvider,

@@ -1,14 +1,17 @@
 import { packFormatOf, type EventHandler } from "@adeficior/data-modifier-core";
+import {
+  setupIngredientSerializer,
+  setupPredicates,
+  setupResultSerializer,
+} from "@adeficior/data-modifier-ingredients/testing";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
-import { createPredicates } from "../../../ingredients/src/predicates";
-import { createIngredientSerializer } from "../../../ingredients/src/serializer/ingredients";
-import { createResultSerializer } from "../../../ingredients/src/serializer/results";
-import { recipePattern, type RegisterRecipeParser } from "../../src";
-import { RecipeEmitter } from "../../src/emitter";
-import { RecipeLoader } from "../../src/loader";
+import { RecipeEmitter } from "../emitter";
+import { type RegisterRecipeParser } from "../hooks";
+import { RecipeLoader } from "../loader";
+import { recipePattern } from "../schema";
 
 // TODO move to testing package?
 export function setupRecipeLoader(
@@ -18,8 +21,8 @@ export function setupRecipeLoader(
 ) {
   const lookup = setupLookup(version);
 
-  const results = createResultSerializer(packFormatOf(version), lookup);
-  const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
+  const results = setupResultSerializer(version, lookup);
+  const ingredients = setupIngredientSerializer(version, lookup);
 
   const loader = new RecipeLoader(results, ingredients, { mods });
   const logger = createTestLogger();
@@ -51,10 +54,10 @@ export function setupRecipeEmitter(
 ) {
   const lookup = setupLookup(version);
 
-  const results = createResultSerializer(packFormatOf(version), lookup);
-  const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
+  const results = setupResultSerializer(version, lookup);
+  const ingredients = setupIngredientSerializer(version, lookup);
   const tags = setupTagRegistry(version);
-  const predicates = createPredicates(lookup, tags, ingredients);
+  const predicates = setupPredicates(lookup, tags, ingredients);
 
   const logger = createTestLogger();
   const { loader } = setupRecipeLoader(version, parsers, mods);

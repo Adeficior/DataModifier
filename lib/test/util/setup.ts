@@ -2,7 +2,7 @@ import {
   packFormatOf,
   type DataModifierOptions,
 } from "@adeficior/data-modifier-core";
-import type { ResolverOptions } from "@adeficior/pack-resolver";
+import { type ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver } from "@adeficior/testing";
 import { afterEach, beforeAll } from "bun:test";

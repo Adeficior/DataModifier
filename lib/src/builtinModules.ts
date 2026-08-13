@@ -6,7 +6,7 @@ import ingredients from "@adeficior/data-modifier-ingredients";
 import loot from "@adeficior/data-modifier-loot";
 import recipes from "@adeficior/data-modifier-recipes";
 import tags from "@adeficior/data-modifier-tags";
-import type { DataModifierFactory } from "./instance";
+import { type DataModifierFactory } from "./instance";
 
 export function installBuiltinModules(
   coreOptions: CoreModuleOptions,

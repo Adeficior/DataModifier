@@ -2,9 +2,17 @@
    "name": "@adeficior/data-modifier-loot",
    "version": "1.0.0",
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./dist/index.js",
+      "./testing": "./dist/testing/index.js"
    },
    "types": "./dist/index.d.ts",
+   "typesVersions": {
+      "*": {
+         "testing": [
+            "./dist/testing/index.d.ts"
+         ]
+      }
+   },
    "files": [
       "dist"
    ],

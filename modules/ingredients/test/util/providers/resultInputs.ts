@@ -1,5 +1,5 @@
-import type { DataProvider } from "@adeficior/testing";
-import type { Class } from "../../../../../core/src/common/class";
+import { type Class } from "@adeficior/data-modifier-core";
+import { type DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,
   BlockResult,

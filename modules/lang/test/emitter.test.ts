@@ -1,4 +1,4 @@
-import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { type LoaderContext } from "@adeficior/data-modifier-core";
 import {
   createTestAcceptor,
   createTestLogger,

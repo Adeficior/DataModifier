@@ -1,5 +1,5 @@
 import { defineModule } from "@adeficior/data-modifier-core";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import { type Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   BlockIngredient,
   FluidIngredient,

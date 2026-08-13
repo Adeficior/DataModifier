@@ -1,3 +1,4 @@
+export type * from "./common/class";
 export type * from "./common/context";
 export * from "./common/error";
 export * from "./common/id";

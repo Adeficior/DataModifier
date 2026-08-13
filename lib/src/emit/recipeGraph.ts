@@ -16,8 +16,10 @@ import {
   type CommonFilter,
   type Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import type { RecipeLoaderAccessor } from "@adeficior/data-modifier-recipes";
-import { type RecipeHolder } from "@adeficior/data-modifier-recipes";
+import {
+  type RecipeLoaderAccessor,
+  type RecipeHolder,
+} from "@adeficior/data-modifier-recipes";
 import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import {
   type ItemId,

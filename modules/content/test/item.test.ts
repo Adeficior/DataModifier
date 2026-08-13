@@ -1,4 +1,4 @@
-import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { type LoaderContext } from "@adeficior/data-modifier-core";
 import { createLogger } from "@adeficior/pack-resolver";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";

@@ -1,10 +1,12 @@
 import { packFormatOf } from "@adeficior/data-modifier-core";
+import {
+  setupIngredientSerializer,
+  setupPredicates,
+} from "@adeficior/data-modifier-ingredients/testing";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
-import { createPredicates } from "../../../ingredients/src/predicates";
-import { createIngredientSerializer } from "../../../ingredients/src/serializer/ingredients";
 import { LootTableEmitter } from "../emitter";
 import { lootTablePattern } from "../helper";
 import { LootTableLoader } from "../loader";
@@ -38,9 +40,12 @@ export function setupLootEmitter(
   const lookup = setupLookup(version);
   const { loader } = setupLootLoader(version, mods);
 
-  const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
   const tags = setupTagRegistry(version);
-  const predicates = createPredicates(lookup, tags, ingredients);
+  const predicates = setupPredicates(
+    lookup,
+    tags,
+    setupIngredientSerializer(version, lookup),
+  );
 
   const emitter = new LootTableEmitter(
     packFormatOf(version),

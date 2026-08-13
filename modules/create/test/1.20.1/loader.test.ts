@@ -1,7 +1,7 @@
+import { setupRecipeLoader } from "@adeficior/data-modifier-recipes/testing";
 import { provided } from "@adeficior/testing";
 import { expect, it } from "bun:test";
 import { basename } from "node:path";
-import { setupRecipeLoader } from "../../../recipes/test/util/setup";
 import { registerParsers } from "../../src/registration";
 import { recipesIds } from "../providers/recipeIds";
 
