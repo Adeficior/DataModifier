@@ -17,14 +17,16 @@ import { recipePattern } from "../schema";
 export function setupRecipeLoader(
   version: string,
   parsers?: EventHandler<RegisterRecipeParser>,
-  mods: string[] = ["minecraft"],
+  mods: string[] = [],
 ) {
   const lookup = setupLookup(version);
 
   const results = setupResultSerializer(version, lookup);
   const ingredients = setupIngredientSerializer(version, lookup);
 
-  const loader = new RecipeLoader(results, ingredients, { mods });
+  const loader = new RecipeLoader(results, ingredients, {
+    mods: ["minecraft", ...mods],
+  });
   const logger = createTestLogger();
 
   beforeAll(async () => {

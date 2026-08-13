@@ -1,3 +1,4 @@
+import { type Class } from "@adeficior/data-modifier-core";
 import { type DataProvider } from "@adeficior/testing";
 import {
   BlockResult,

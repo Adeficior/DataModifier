@@ -17,8 +17,8 @@ import {
   type Predicate,
 } from "@adeficior/data-modifier-core/serializer";
 import {
-  type RecipeLoaderAccessor,
   type RecipeHolder,
+  type RecipeLoaderAccessor,
 } from "@adeficior/data-modifier-recipes";
 import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import {

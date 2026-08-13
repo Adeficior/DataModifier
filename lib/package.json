@@ -59,6 +59,7 @@
       "check": "tsc --noEmit",
       "cli": "bun run build && node dist/cli/index.js",
       "lint": "eslint {src,test}",
+      "test": "bun test",
       "prune": "bun run datamod-dev --prune",
       "prepare": "datamod-dev --configs && datamod-dev --types",
       "test:ci": "bun run lint && bun run check && bun run test --coverage"

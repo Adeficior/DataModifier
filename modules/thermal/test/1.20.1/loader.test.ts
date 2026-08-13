@@ -7,7 +7,9 @@ import { registerParsers } from "../../src/registration";
 
 const version = basename(import.meta.dir);
 
-const { loader, logger } = setupRecipeLoader(version, registerParsers);
+const { loader, logger } = setupRecipeLoader(version, registerParsers, [
+  "thermal",
+]);
 
 function* recipes(): DataProvider<[IdInput]> {
   yield ["press", "thermal:machines/press/press_lead_nugget_to_coin"];

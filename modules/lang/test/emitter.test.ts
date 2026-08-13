@@ -89,8 +89,6 @@ describe("replacing translation entries", () => {
 
     await emitter.resolver(context).extract(acceptor);
 
-    // TODO check why this was 3?
-    //expect(acceptor.paths()).toHaveLength(3);
     expect(acceptor.paths()).toHaveLength(2);
   });
 

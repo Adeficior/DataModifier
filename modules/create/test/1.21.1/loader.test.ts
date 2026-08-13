@@ -7,7 +7,9 @@ import { recipesIds } from "../providers/recipeIds";
 
 const version = basename(import.meta.dir);
 
-const { loader, logger } = setupRecipeLoader(version, registerParsers);
+const { loader, logger } = setupRecipeLoader(version, registerParsers, [
+  "create",
+]);
 
 provided("loads recipes", recipesIds(), (id) => {
   expect(loader.get(id)).toBeDefined();

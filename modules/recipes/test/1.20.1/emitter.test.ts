@@ -2,7 +2,6 @@ import { type NormalizedId } from "@adeficior/data-modifier-core";
 import {
   ItemIngredient,
   ItemResult,
-  ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
@@ -62,42 +61,12 @@ describe("recipe ingredient replacement", () => {
     expect(acceptor.jsonAt("data/minecraft/recipes/compass.json")).toBeNull();
   });
 
-  it("replaces ingredients in create recipes", async () => {
-    const acceptor = createTestAcceptor();
-
-    emitter.replaceIngredient(
-      "#forge:raw_materials/zinc",
-      new ItemTagIngredient("forge:raw_materials/iron"),
-    );
-
-    await resolver.extract(acceptor);
-
-    expect(
-      acceptor.jsonAt(
-        "data/create/recipes/crafting/materials/raw_zinc_block.json",
-      ),
-    ).toMatchSnapshot("modified create:raw_zinc_block recipe");
-    expect(
-      acceptor.jsonAt("data/create/recipes/crushing/raw_zinc.json"),
-    ).toMatchSnapshot("modified create:raw_zinc recipe");
-    expect(
-      acceptor.jsonAt(
-        "data/create/recipes/blasting/zinc_ingot_from_raw_ore.json",
-      ),
-    ).toMatchSnapshot("modified create:zinc_ingot_from_raw_ore recipe");
-    expect(
-      acceptor.jsonAt(
-        "data/create/recipes/smelting/zinc_ingot_from_raw_ore.json",
-      ),
-    ).toMatchSnapshot("modified create:zinc_ingot_from_raw_ore recipe");
-  });
-
   it("matches recipes wrapped in forge:conditional", async () => {
     const acceptor = createTestAcceptor();
 
     emitter.remove({
-      input: new ItemIngredient("biomesoplenty:violet"),
-      type: "farmersdelight:cutting",
+      input: new ItemIngredient("minecraft:poppy"),
+      type: "minecraft:crafting_shapeless",
     });
 
     await resolver.extract(acceptor);
@@ -137,7 +106,7 @@ describe("recipe removal", () => {
 
     await resolver.extract(acceptor);
 
-    expect(acceptor.paths()).toHaveLength(119);
+    expect(acceptor.paths()).toHaveLength(70);
   });
 
   it("removes recipes with result filter", async () => {

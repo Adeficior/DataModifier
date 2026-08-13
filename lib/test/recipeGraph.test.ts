@@ -56,7 +56,11 @@ describe("recipe graph", () => {
 
     await instance.emit(acceptor);
 
-    expect(acceptor.jsonAt("graph/nodes.json")).toMatchSnapshot("nodes.json");
-    expect(acceptor.jsonAt("graph/edges.json")).toMatchSnapshot("edges.json");
+    expect(acceptor.jsonAt("graph/recipe/nodes.json")).toMatchSnapshot(
+      "nodes.json",
+    );
+    expect(acceptor.jsonAt("graph/recipe/edges.json")).toMatchSnapshot(
+      "edges.json",
+    );
   });
 });
