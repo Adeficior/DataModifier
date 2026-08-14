@@ -39,11 +39,11 @@ jobs:
 
       - name: Publish Packages
         if: ${{ github.ref_name != 'main' }}
-        run: bunx publish --tag rc --no-git-tag
+        run: bunx changeset publish --tag rc --no-git-tag
 
       - name: Publish Packages
         if: ${{ github.ref_name == 'main' }}
-        run: bunx public
+        run: bunx changeset publish
 
       - name: Push Changes
         if: ${{ github.ref_name == 'main' }}
