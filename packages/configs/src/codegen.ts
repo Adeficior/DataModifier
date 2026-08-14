@@ -1,5 +1,5 @@
 import { basename, dirname, join, resolve } from "node:path";
-import { loadDependencyModules, readModule } from "../../codegen/src/modules";
+import { findModuleIn, loadDependencyModules } from "../../codegen/src/modules";
 import { generateStubTypes } from "../../codegen/src/stubs";
 import { generateModulesTypes } from "../../codegen/src/types";
 
@@ -10,9 +10,9 @@ export async function generateTypes(moduleDir: string) {
   if (type === "packages") {
     await generateModulesTypes(typesDir, []);
   } else {
-    const module = await readModule(moduleDir);
+    const module = await findModuleIn(moduleDir);
     const dependencies = await loadDependencyModules(
-      moduleDir,
+      join(moduleDir, "node_modules"),
       module.dependencies,
     );
     await generateModulesTypes(typesDir, dependencies);

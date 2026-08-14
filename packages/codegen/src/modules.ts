@@ -27,24 +27,24 @@ export async function readModule(file: string) {
 }
 
 export async function loadDependencyModules(
-  dir: string,
+  nodeModules: string,
   dependencies: ModuleConfig["dependencies"],
   exclude: string[] = [],
 ): Promise<ModuleConfig[]> {
-  if (exclude.includes(dir)) return [];
-
   const found = await Promise.all(
     Object.entries(dependencies).map(async ([name, type]) => {
-      const dependencyDir = join(dir, "node_modules", name);
+      const dependencyDir = join(nodeModules, name);
       const depenencyModule = await findModuleIn(dependencyDir);
+
+      if (exclude.includes(name)) return [];
 
       if (depenencyModule) {
         return [
           depenencyModule,
           ...(await loadDependencyModules(
-            dependencyDir,
+            nodeModules,
             depenencyModule.dependencies,
-            [...exclude, dir],
+            [...exclude, name],
           )),
         ];
       }
