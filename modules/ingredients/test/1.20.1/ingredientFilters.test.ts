@@ -1,7 +1,5 @@
-import {
-  packFormatOf,
-  UnknownRegistryEntry,
-} from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
+import { UnknownRegistryEntry } from "@adeficior/data-modifier-core/serializer";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { provided, setupLookup } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";

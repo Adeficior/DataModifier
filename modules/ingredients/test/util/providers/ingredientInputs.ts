@@ -1,4 +1,4 @@
-import { type Class } from "@adeficior/data-modifier-core";
+import { type Class } from "@adeficior/data-modifier-core/serializer";
 import { type DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,

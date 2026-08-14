@@ -13,7 +13,6 @@ export type FabricCondition = Readonly<{
 
 export type WithConditions<T> = T &
   Readonly<{
-    // TODO add neoforge conditions
     conditions?: ForgeCondition[];
     "neoforge:conditions"?: ForgeCondition[];
     "fabric:load_conditions"?: FabricCondition[];

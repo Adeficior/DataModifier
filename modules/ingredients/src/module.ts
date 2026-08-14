@@ -47,11 +47,10 @@ export default defineModule<{
     );
 
     // TODO make tags optional
+    // TODO split in predicates:ingredients, predicates:results, predicates:id?
     pack.service("predicates", (container) =>
       createPredicates(
         container.get("registries"),
-        // TODO somehow I depend on tags which does not make sense because tags depends on core
-        // solved if moved to ingredients package?
         container.get("loader:tags"),
         ingredientSerializer(),
       ),

@@ -43,6 +43,7 @@ export function createIdPredicate<TEntry, TId extends string>(
 }
 
 // TODO this needs to be in core still somehow?
+// incorrect, can be moved to tags
 export function resolveIdTest<T extends RegistryId>(
   test: CommonFilter<NormalizedId<InferIds<T>>>,
   tags?: TagChecker<T>,

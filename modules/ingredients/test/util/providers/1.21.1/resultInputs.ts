@@ -1,4 +1,4 @@
-import { type Class } from "@adeficior/data-modifier-core";
+import { type Class } from "@adeficior/data-modifier-core/serializer";
 import { type DataProvider } from "@adeficior/testing";
 import { BUCKET, FluidResult, ItemResult, type Result } from "../../../../src";
 import { resultLikeIngredients } from "../resultInputs";

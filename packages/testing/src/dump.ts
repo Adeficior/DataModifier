@@ -4,7 +4,6 @@ import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { beforeAll } from "bun:test";
 
-// TODO would not work if dump loader is moved out of core into own module, if kept there everything is fine
 export function setupLookup(
   version: string,
   logger: Logger = createTestLogger(),
