@@ -1,9 +1,9 @@
-import { createId, encodeId } from "@adeficior/data-modifier-core";
 import type {
   Id,
   IdInput,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
+import { createId, encodeId } from "@adeficior/data-modifier-core";
 import { camelCase } from "lodash-es";
 import { writeFile } from "node:fs/promises";
 import { format } from "prettier";
@@ -32,6 +32,7 @@ function inferRegistryTemplate(keys: IdInput[]) {
       `;
 }
 
+// TODO could re-use this
 function moduleTemplate(...content: string[]) {
   const replaced = `
         declare module '${module}' {

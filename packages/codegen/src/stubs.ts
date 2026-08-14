@@ -1,14 +1,12 @@
-import { writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import { format } from "prettier";
+import { writeTemplate } from "./write";
 
-export async function generateStubTypes(dir: string, strictIds = false) {
+export async function generateStubTypes(typesDir: string, strictIds = false) {
   const stubIdType = strictIds ? "`${string}:${string}`" : "string";
 
-  await writeFile(
-    join(dir, "@types", "registry.d.ts"),
-    await format(
-      `
+  await writeTemplate(
+    typesDir,
+    "registry",
+    `
          declare module '@adeficior/data-modifier/generated' {
             type StubId = ${stubIdType}
 
@@ -29,7 +27,5 @@ export async function generateStubTypes(dir: string, strictIds = false) {
 
             export type EntityTypeId = StubId
          }`,
-      { parser: "typescript" },
-    ),
   );
 }

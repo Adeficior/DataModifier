@@ -1,7 +1,7 @@
 import type { ModuleConfig } from "@adeficior/data-modifier-core";
 import { exists } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
-import { generateTypes } from "./types";
+import { generateModulesTypes } from "./types";
 
 export async function readModule(dir: string) {
   const moduleFile = join(dir, "src", "module.ts");
@@ -31,11 +31,14 @@ export async function getDependencies(dir: string) {
   return found.filter((it) => !!it) as ModuleConfig[];
 }
 
-export async function generateModuleTypes(dir: string) {
-  const dependencies = await getDependencies(dir);
-  await generateTypes(dir, dependencies);
+export async function generateModuleTypes(
+  moduleDir: string,
+  typesDir = join(moduleDir, "@types"),
+) {
+  const dependencies = await getDependencies(moduleDir);
+  await generateModulesTypes(typesDir, dependencies);
 }
 
-export async function generateModuleStubTypes(dir: string) {
-  await generateTypes(dir, []);
+export async function generateModuleStubTypes(typesDir: string) {
+  await generateModulesTypes(typesDir, []);
 }

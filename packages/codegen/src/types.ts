@@ -1,5 +1,4 @@
 import type { ModuleConfig } from "@adeficior/data-modifier-core";
-import { join } from "node:path";
 import { gatherImports } from "./imports";
 import { writeTemplate } from "./write";
 
@@ -19,8 +18,10 @@ function generateModule(modules: ModuleConfig[]) {
   `;
 }
 
-export async function generateTypes(dir: string, modules: ModuleConfig[]) {
+export async function generateModulesTypes(
+  typesDir: string,
+  modules: ModuleConfig[],
+) {
   const servicesTypes = generateModule(modules);
-  const typesDir = join(dir, "@types");
   await writeTemplate(typesDir, "modules", servicesTypes);
 }
