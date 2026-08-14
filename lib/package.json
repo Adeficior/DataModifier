@@ -67,7 +67,7 @@
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
       "@adeficior/testing": "workspace:*",
-      "@types/command-line-usage": "^5.0.4"
+      "@types/lodash-es": "catalog:"
    },
    "dependencies": {
       "@adeficior/resource-merger": "catalog:",
@@ -79,8 +79,8 @@
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "catalog:",
-      "typescript": "catalog:",
       "lodash-es": "catalog:",
-      "zod": "catalog:*"
+      "typescript": "catalog:",
+      "zod": "catalog:"
    }
 }

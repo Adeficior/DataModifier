@@ -30,7 +30,8 @@
    "devDependencies": {
       "@adeficior/configs": "workspace:*",
       "@adeficior/testing": "workspace:*",
-      "@adeficior/data-modifier-core": "workspace:*"
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@types/lodash-es": "catalog:"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "catalog:",

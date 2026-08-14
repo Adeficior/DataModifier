@@ -21,8 +21,7 @@
    },
    "dependencies": {
       "handlebars": "^4.7.9",
-      "arg": "catalog:",
-      "command-line-usage": "catalog:"
+      "arg": "catalog:"
    },
    "devDependencies": {
       "@adeficior/configs": "workspace:*"

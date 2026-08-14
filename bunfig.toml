@@ -1,2 +1,2 @@
 [install]
-publicHoistPattern = ["*eslint*", "@types/bun", "prettier", "@types/lodash-es"]
+publicHoistPattern = ["*eslint*", "@types/bun"]

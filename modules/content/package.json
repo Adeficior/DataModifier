@@ -23,7 +23,8 @@
       "@adeficior/configs": "workspace:*",
       "@adeficior/testing": "workspace:*",
       "@adeficior/data-modifier-models": "workspace:*",
-      "@adeficior/data-modifier-loot": "workspace:*"
+      "@adeficior/data-modifier-loot": "workspace:*",
+      "@types/lodash-es": "catalog:"
    },
    "peerDependencies": {
       "@adeficior/pack-resolver": "catalog:",
