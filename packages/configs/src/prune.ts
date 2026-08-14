@@ -46,7 +46,7 @@ export async function prunePackage(dir: string) {
     ...pruned,
     bugs: { url: `https://github.com/${repository}/issues` },
     homepage: `https://github.com/${repository}#readme`,
-    license: "ISC",
+    license: "LGPL-3.0-or-later",
     repository: {
       type: "git",
       url: `git+https://github.com/${repository}.git`,
