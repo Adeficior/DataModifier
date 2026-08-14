@@ -1,9 +1,9 @@
-import type {ModuleConfig} from "@adeficior/data-modifier-core";
+import type { ModuleConfig } from "@adeficior/data-modifier-core";
 import { uniqBy } from "lodash-es";
 import { exists } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
-export async function readModule(dir: string) {
+export async function findModuleIn(dir: string) {
   const candidates = [
     join(dir, "src", "module.ts"),
     join(dir, "dist", "module.js"),
@@ -17,7 +17,11 @@ export async function readModule(dir: string) {
     throw new Error(`could not find module in ${resolve(dir)}`);
   }
 
-  const url = relative(import.meta.dirname, candidates[match]!);
+  return readModule(candidates[match]!);
+}
+
+export async function readModule(file: string) {
+  const url = relative(import.meta.dirname, file);
   const exports = await import(url);
   return exports.default as ModuleConfig;
 }
@@ -32,7 +36,7 @@ export async function loadDependencyModules(
   const found = await Promise.all(
     Object.entries(dependencies).map(async ([name, type]) => {
       const dependencyDir = join(dir, "node_modules", name);
-      const depenencyModule = await readModule(dependencyDir);
+      const depenencyModule = await findModuleIn(dependencyDir);
 
       if (depenencyModule) {
         return [
