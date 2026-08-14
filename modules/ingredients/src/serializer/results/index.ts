@@ -1,12 +1,14 @@
-import {
-  type RegistryLookup,
-  type SemVerInput,
+import type {
+  RegistryLookup,
+  SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
   VersionedSerializer,
   WrapperSerializer,
-  type Serializer,
-  type SerializerModule,
+} from "@adeficior/data-modifier-core/serializer";
+import type {
+  Serializer,
+  SerializerModule,
 } from "@adeficior/data-modifier-core/serializer";
 import { Result } from "../../result/impl";
 import { serializer15 } from "./15";

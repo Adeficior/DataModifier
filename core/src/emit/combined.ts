@@ -1,6 +1,6 @@
 import { combineResolvers, extendContext } from "@adeficior/pack-resolver";
-import { type LoaderContext } from "../common/context";
-import { type ClearableEmitter } from "./abstract";
+import type { LoaderContext } from "../common/context";
+import type { ClearableEmitter } from "./abstract";
 
 export class CombinedEmitters implements ClearableEmitter {
   private entries: ClearableEmitter[] = [];

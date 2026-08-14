@@ -1,9 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import {
-  resolveDependencies,
-  sortModules,
-  type Installable,
-} from "../src/installTarget";
+import { resolveDependencies, sortModules } from "../src/installTarget";
+import type { Installable } from "../src/installTarget";
 
 const valid: Installable[] = [
   { name: "c", dependencies: { a: "required", b: "optional" } },

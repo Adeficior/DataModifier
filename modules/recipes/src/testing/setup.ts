@@ -1,4 +1,5 @@
-import { packFormatOf, type EventHandler } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
+import type { EventHandler } from "@adeficior/data-modifier-core";
 import {
   setupIngredientSerializer,
   setupPredicates,
@@ -9,7 +10,7 @@ import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import { RecipeEmitter } from "../emitter";
-import { type RegisterRecipeParser } from "../hooks";
+import type { RegisterRecipeParser } from "../hooks";
 import { RecipeLoader } from "../loader";
 import { recipePattern } from "../schema";
 

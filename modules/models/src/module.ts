@@ -1,7 +1,9 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { BlockstateEmitter, type BlockstateRules } from "./emitter/blockstates";
-import { ModelEmitter, type ModelRules } from "./emitter/models";
+import { BlockstateEmitter } from "./emitter/blockstates";
+import type { BlockstateRules } from "./emitter/blockstates";
+import { ModelEmitter } from "./emitter/models";
+import type { ModelRules } from "./emitter/models";
 
 export default defineModule<{
   emitters: {

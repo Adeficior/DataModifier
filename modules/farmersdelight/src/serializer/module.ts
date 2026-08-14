@@ -7,8 +7,8 @@ import {
   ChanceSchema,
   CountSchema,
   ItemResult,
-  type Result,
 } from "@adeficior/data-modifier-ingredients";
+import type { Result } from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
 
 const chanceResultSchema = z.object({

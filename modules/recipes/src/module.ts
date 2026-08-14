@@ -1,8 +1,10 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { RecipeEmitter, type RecipeRules } from "./emitter";
-import { type RegisterRecipeParser } from "./hooks";
-import { RecipeLoader, type RecipeLoaderAccessor } from "./loader";
+import { RecipeEmitter } from "./emitter";
+import type { RecipeRules } from "./emitter";
+import type { RegisterRecipeParser } from "./hooks";
+import { RecipeLoader } from "./loader";
+import type { RecipeLoaderAccessor } from "./loader";
 import { recipePattern } from "./schema";
 
 export default defineModule<{

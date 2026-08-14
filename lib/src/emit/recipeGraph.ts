@@ -4,27 +4,31 @@ import {
   prefix,
   Registry,
   suffix,
-  type ClearableEmitter,
-  type IdInput,
-  type LoaderContext,
-  type NormalizedId,
-  type Registered,
+} from "@adeficior/data-modifier-core";
+import type {
+  ClearableEmitter,
+  IdInput,
+  LoaderContext,
+  NormalizedId,
+  Registered,
 } from "@adeficior/data-modifier-core";
 import {
   resolveIdTest,
   toJson,
-  type CommonFilter,
-  type Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  type RecipeHolder,
-  type RecipeLoaderAccessor,
+import type {
+  CommonFilter,
+  Predicate,
+} from "@adeficior/data-modifier-core/serializer";
+import type {
+  RecipeHolder,
+  RecipeLoaderAccessor,
 } from "@adeficior/data-modifier-recipes";
-import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
-import {
-  type ItemId,
-  type RecipeSerializerId,
-  type RegistryId,
+import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
+import type {
+  ItemId,
+  RecipeSerializerId,
+  RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 

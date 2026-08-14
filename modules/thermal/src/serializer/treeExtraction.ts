@@ -1,18 +1,14 @@
 import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
-import {
-  BlockIngredient,
-  type Ingredient,
-  type Result,
-} from "@adeficior/data-modifier-ingredients";
-import {
-  Recipe,
-  type RecipeDefinition,
-  type RecipeModifier,
-  type RecipeParseContext,
-  RecipeParser,
+import { BlockIngredient } from "@adeficior/data-modifier-ingredients";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { type BlockId } from "@adeficior/data-modifier/generated";
+import type { BlockId } from "@adeficior/data-modifier/generated";
 
 type BlockStateIngredient = {
   Name: BlockId;

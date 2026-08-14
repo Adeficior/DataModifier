@@ -1,22 +1,21 @@
-import {
-  encodeId,
-  JsonLoader,
-  type ConditionContext,
-  type RegistryProvider,
+import { encodeId, JsonLoader } from "@adeficior/data-modifier-core";
+import type {
+  ConditionContext,
+  RegistryProvider,
 } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
-import {
-  type IngredientSerializer,
-  type ResultSerializer,
-  type WithSerializerModules,
+import type {
+  IngredientSerializer,
+  ResultSerializer,
+  WithSerializerModules,
 } from "@adeficior/data-modifier-ingredients";
 import { omit } from "lodash-es";
 import { minimatch } from "minimatch";
-import { type RecipeDefinition } from "./schema";
-import { type Recipe, type RecipeParser } from "./serializer/abstract";
-import {
-  type RecipeParseContext,
-  type RecipeSerializer,
+import type { RecipeDefinition } from "./schema";
+import type { Recipe, RecipeParser } from "./serializer/abstract";
+import type {
+  RecipeParseContext,
+  RecipeSerializer,
 } from "./serializer/context";
 import { ForgeConditionalRecipeParser } from "./serializer/forge/conditional";
 import { RecipeHolder } from "./serializer/holder";

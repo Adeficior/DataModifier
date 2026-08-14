@@ -1,13 +1,10 @@
-import {
-  extendLoggerContext,
-  simpleResolver,
-  type Logger,
-} from "@adeficior/pack-resolver";
-import { type LoaderContext } from "../common/context";
-import { type Id } from "../common/id";
-import { type RegistryProvider } from "../registry/abstract";
+import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
+import type { Logger } from "@adeficior/pack-resolver";
+import type { LoaderContext } from "../common/context";
+import type { Id } from "../common/id";
+import type { RegistryProvider } from "../registry/abstract";
 import { toJson } from "../serializer/textHelper";
-import { type ClearableEmitter, type PathProvider } from "./abstract";
+import type { ClearableEmitter, PathProvider } from "./abstract";
 
 export type Modifier<T> = (value: T) => T | null;
 

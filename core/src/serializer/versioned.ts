@@ -1,10 +1,12 @@
-import { type SemVerInput } from "../common/packFormat";
-import { type RegistryLookup } from "../registry/lookup";
-import { type Registered } from "../registry/registered";
-import { AbstractSerializer, type Serializer } from "./abstract";
-import { type Class } from "./class";
+import type { SemVerInput } from "../common/packFormat";
+import type { RegistryLookup } from "../registry/lookup";
+import type { Registered } from "../registry/registered";
+import { AbstractSerializer } from "./abstract";
+import type { Serializer } from "./abstract";
+import type { Class } from "./class";
 import { IllegalShapeError, transformErrors } from "./error";
-import { selectSerializerModule, type SerializerModule } from "./module";
+import { selectSerializerModule } from "./module";
+import type { SerializerModule } from "./module";
 
 export abstract class VersionedSerializer<
   Out extends Registered,

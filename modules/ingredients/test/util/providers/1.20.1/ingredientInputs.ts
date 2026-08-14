@@ -1,5 +1,5 @@
-import { type Class } from "@adeficior/data-modifier-core/serializer";
-import { type DataProvider } from "@adeficior/testing";
+import type { Class } from "@adeficior/data-modifier-core/serializer";
+import type { DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,
   BlockTagIngredient,
@@ -8,8 +8,8 @@ import {
   FluidTagIngredient,
   ItemIngredient,
   ItemTagIngredient,
-  type Ingredient,
 } from "../../../../src";
+import type { Ingredient } from "../../../../src";
 import { ingredientLikeResults } from "../ingredientInputs";
 
 export function* invalidIngredientInputs(): DataProvider<

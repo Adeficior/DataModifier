@@ -1,14 +1,16 @@
 import {
-  type ClearableEmitter,
   CustomEmitter,
   encodeId,
-  type IdInput,
-  type LoaderContext,
-  type NormalizedId,
   prefix,
   suffix,
 } from "@adeficior/data-modifier-core";
-import { type Model } from "../schema";
+import type {
+  ClearableEmitter,
+  IdInput,
+  LoaderContext,
+  NormalizedId,
+} from "@adeficior/data-modifier-core";
+import type { Model } from "../schema";
 
 export interface ModelRules {
   add(id: IdInput, blockstate: Model): NormalizedId;

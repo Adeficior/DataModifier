@@ -1,16 +1,11 @@
-import {
-  packFormatOf,
-  type DataModifierOptions,
-} from "@adeficior/data-modifier-core";
-import { type ResolverOptions } from "@adeficior/pack-resolver";
+import { packFormatOf } from "@adeficior/data-modifier-core";
+import type { DataModifierOptions } from "@adeficior/data-modifier-core";
+import type { ResolverOptions } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver } from "@adeficior/testing";
 import { afterEach, beforeAll } from "bun:test";
-import {
-  createDataModifier,
-  type DataModifier,
-  type DataModifierFactory,
-} from "../../src";
+import { createDataModifier } from "../../src";
+import type { DataModifier, DataModifierFactory } from "../../src";
 
 export async function setupInstance(
   version: string,

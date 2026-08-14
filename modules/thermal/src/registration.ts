@@ -1,4 +1,4 @@
-import { type RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
+import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
 import { ThermalRecipeParser } from "./serializer";
 import { ThermalCatalystRecipeParser } from "./serializer/catalyst";
 import { ThermalFuelRecipeParser } from "./serializer/fuel";

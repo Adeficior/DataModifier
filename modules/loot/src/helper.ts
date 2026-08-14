@@ -2,9 +2,8 @@ import {
   createId,
   isAtLeastVersion,
   jsonFilePattern,
-  type IdInput,
-  type SemVerInput,
 } from "@adeficior/data-modifier-core";
+import type { IdInput, SemVerInput } from "@adeficior/data-modifier-core";
 
 function lootTableFolder(packFormat: SemVerInput) {
   return isAtLeastVersion(packFormat, "44") ? "loot_table" : "loot_tables";

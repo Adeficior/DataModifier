@@ -1,8 +1,10 @@
 import {
   ManyToOneRecipe,
   RecipeParser,
-  type RecipeDefinition,
-  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeDefinition,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &

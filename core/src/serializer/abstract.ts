@@ -1,4 +1,4 @@
-import { type SerializerModule } from "./module";
+import type { SerializerModule } from "./module";
 
 export interface Serializer<Out, S extends Serializer<Out, S>> {
   serialize(output: Out): unknown;

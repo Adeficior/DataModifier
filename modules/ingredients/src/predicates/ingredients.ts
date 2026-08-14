@@ -1,15 +1,17 @@
-import {
-  type NormalizedId,
-  type RegistryLookup,
+import type {
+  NormalizedId,
+  RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import {
   createIdPredicate,
   IllegalShapeError,
-  type CommonFilter,
-  type Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import { type TagRegistryHolder } from "@adeficior/data-modifier-tags";
-import { type RegistryId } from "@adeficior/data-modifier/generated";
+import type {
+  CommonFilter,
+  Predicate,
+} from "@adeficior/data-modifier-core/serializer";
+import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
+import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {
   Ingredient,
   ItemIngredient,
@@ -18,8 +20,8 @@ import {
   RegistryEntryIngredient,
   TagIngredient,
 } from "../ingredient/impl";
-import { type IngredientInput } from "../ingredient/input";
-import { type IngredientSerializer } from "../serializer/ingredients";
+import type { IngredientInput } from "../ingredient/input";
+import type { IngredientSerializer } from "../serializer/ingredients";
 
 export type IngredientFilter =
   CommonFilter<Ingredient> | IngredientInput | `#${string}`;

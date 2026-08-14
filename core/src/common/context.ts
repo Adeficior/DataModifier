@@ -1,3 +1,3 @@
-import { type BaseContext } from "@adeficior/pack-resolver";
+import type { BaseContext } from "@adeficior/pack-resolver";
 
 export type LoaderContext = BaseContext;

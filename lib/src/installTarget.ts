@@ -1,15 +1,15 @@
-import {
-  CombinedEmitters,
-  type AfterSetupEvent,
-  type Container,
-  type DependencyType,
-  type EventHandler,
-  type Loader,
-  type ModuleConfig,
-  type ModuleSetupOptions,
-  type ModuleType,
-  type ModuleTypes,
-  type SetupEvent,
+import { CombinedEmitters } from "@adeficior/data-modifier-core";
+import type {
+  AfterSetupEvent,
+  Container,
+  DependencyType,
+  EventHandler,
+  Loader,
+  ModuleConfig,
+  ModuleSetupOptions,
+  ModuleType,
+  ModuleTypes,
+  SetupEvent,
 } from "@adeficior/data-modifier-core";
 import { uniqBy } from "lodash-es";
 

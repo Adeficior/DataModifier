@@ -1,13 +1,9 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import {
-  BlockDefinitionEmitter,
-  type BlockDefinitionRules,
-} from "./emitter/blockDefinition";
-import {
-  ItemDefinitionEmitter,
-  type ItemDefinitionRules,
-} from "./emitter/itemDefinition";
+import { BlockDefinitionEmitter } from "./emitter/blockDefinition";
+import type { BlockDefinitionRules } from "./emitter/blockDefinition";
+import { ItemDefinitionEmitter } from "./emitter/itemDefinition";
+import type { ItemDefinitionRules } from "./emitter/itemDefinition";
 
 export default defineModule<{
   emitters: {

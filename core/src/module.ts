@@ -1,18 +1,15 @@
-import {
-  createLogger,
-  createResolver,
-  type Logger,
-  type Resolver,
-} from "@adeficior/pack-resolver";
+import { createLogger, createResolver } from "@adeficior/pack-resolver";
+import type { Logger, Resolver } from "@adeficior/pack-resolver";
 import { name } from "../package.json";
-import { defineModule, type AfterSetupEvent } from "./modules/define";
+import { defineModule } from "./modules/define";
+import type { AfterSetupEvent } from "./modules/define";
 import { RegistryDumpLoader } from "./registry/dump";
 import { EmptyRegistryLookup } from "./registry/empty";
-import { type RegistryLookup } from "./registry/lookup";
+import type { RegistryLookup } from "./registry/lookup";
 
 export type CoreModuleOptions = {
   logger?: Logger;
-  dump?: true | string | Resolver;
+  dump?: boolean | string | Resolver;
 };
 
 async function resolveDumpDir({

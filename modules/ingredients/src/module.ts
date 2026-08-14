@@ -1,14 +1,11 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { createPredicates, type Predicates } from "./predicates";
-import {
-  createIngredientSerializer,
-  type IngredientSerializer,
-} from "./serializer/ingredients";
-import {
-  createResultSerializer,
-  type ResultSerializer,
-} from "./serializer/results";
+import { createPredicates } from "./predicates";
+import type { Predicates } from "./predicates";
+import { createIngredientSerializer } from "./serializer/ingredients";
+import type { IngredientSerializer } from "./serializer/ingredients";
+import { createResultSerializer } from "./serializer/results";
+import type { ResultSerializer } from "./serializer/results";
 
 export default defineModule<{
   services: {

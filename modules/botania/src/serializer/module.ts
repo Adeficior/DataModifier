@@ -7,9 +7,8 @@ import {
   BlockIngredient,
   BlockResult,
   BlockTagIngredient,
-  type Ingredient,
-  type Result,
 } from "@adeficior/data-modifier-ingredients";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
 
 const ingredientSerializer15 = createSerializerModule<Ingredient>((builder) => {

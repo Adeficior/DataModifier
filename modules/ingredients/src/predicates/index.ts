@@ -1,28 +1,23 @@
-import {
-  type IdInput,
-  type NormalizedId,
-  type RegistryLookup,
+import type {
+  IdInput,
+  NormalizedId,
+  RegistryLookup,
 } from "@adeficior/data-modifier-core";
-import {
-  resolveIdTest,
-  type CommonFilter,
-  type Predicate,
+import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
+import type {
+  CommonFilter,
+  Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  type TagRegistry,
-  type TagRegistryHolder,
+import type {
+  TagRegistry,
+  TagRegistryHolder,
 } from "@adeficior/data-modifier-tags";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
-import { type Ingredient } from "../ingredient/impl";
-import { type Result } from "../result/impl";
-import { type IngredientSerializer } from "../serializer/ingredients";
-import {
-  createIngredientPredicate,
-  type IngredientFilter,
-} from "./ingredients";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Ingredient } from "../ingredient/impl";
+import type { Result } from "../result/impl";
+import type { IngredientSerializer } from "../serializer/ingredients";
+import { createIngredientPredicate } from "./ingredients";
+import type { IngredientFilter } from "./ingredients";
 
 export type Predicates = {
   ingredient(filter: IngredientFilter): Predicate<Ingredient>;

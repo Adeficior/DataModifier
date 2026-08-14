@@ -1,6 +1,6 @@
 import { mock } from "bun:test";
-import { type RegistryProvider } from "../registry/abstract";
-import { type RegistryLookup } from "../registry/lookup";
+import type { RegistryProvider } from "../registry/abstract";
+import type { RegistryLookup } from "../registry/lookup";
 
 export function mockRegistryLookup() {
   return {

@@ -1,13 +1,6 @@
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
-import {
-  encodeId,
-  type IdInput,
-  type NormalizedId,
-  type TagInput,
-} from "../common/id";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import { encodeId } from "../common/id";
+import type { IdInput, NormalizedId, TagInput } from "../common/id";
 
 export type TagChecker<T extends RegistryId> = {
   contains(id: TagInput, entry: IdInput<InferIds<T>>): boolean;

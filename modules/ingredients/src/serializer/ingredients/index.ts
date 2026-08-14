@@ -1,18 +1,21 @@
-import {
-  type RegistryLookup,
-  type SemVerInput,
+import type {
+  RegistryLookup,
+  SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
   VersionedSerializer,
   WrapperSerializer,
-  type Serializer,
-  type SerializerModule,
+} from "@adeficior/data-modifier-core/serializer";
+import type {
+  Serializer,
+  SerializerModule,
 } from "@adeficior/data-modifier-core/serializer";
 import { mapValues } from "lodash-es";
 import { Ingredient } from "../../ingredient/impl";
 import { serializer15 } from "./15";
 import { serializer44 } from "./44";
-import { IngredientMap, type IngredientMapInput } from "./ingredientMap";
+import { IngredientMap } from "./ingredientMap";
+import type { IngredientMapInput } from "./ingredientMap";
 
 export interface IngredientSerializer extends Serializer<
   Ingredient,

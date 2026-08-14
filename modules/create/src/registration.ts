@@ -1,4 +1,4 @@
-import { type RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
+import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
 import { ShapedParser } from "@adeficior/data-modifier-recipes";
 import { AssemblyRecipeParser } from "./serializer/assembly";
 import { CreateProcessingRecipeParser } from "./serializer/processing";

@@ -1,9 +1,9 @@
-import { type Hooks } from "@adeficior/data-modifier-core/generated";
+import type { Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
-import { type ModuleSetupOptions } from "../config";
-import { type Container } from "../container";
-import { type ClearableEmitter } from "../emit/abstract";
-import { type Loader } from "../load/abstract";
+import type { ModuleSetupOptions } from "../config";
+import type { Container } from "../container";
+import type { ClearableEmitter } from "../emit/abstract";
+import type { Loader } from "../load/abstract";
 
 export type DependencyType = "required" | "optional";
 

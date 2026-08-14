@@ -1,6 +1,6 @@
-import { type Replacer } from "@adeficior/data-modifier-core/serializer";
+import type { Replacer } from "@adeficior/data-modifier-core/serializer";
 import { mapValues } from "lodash-es";
-import { type Ingredient } from "../../ingredient/impl";
+import type { Ingredient } from "../../ingredient/impl";
 
 export type IngredientMapInput = Record<string, unknown>;
 

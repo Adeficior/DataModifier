@@ -1,6 +1,7 @@
-import { type SerializerBuilder } from "@adeficior/data-modifier-core/serializer";
+import type { SerializerBuilder } from "@adeficior/data-modifier-core/serializer";
 import { Ingredient } from "../../ingredient/impl";
-import { IgnoredResult, ItemResult, type Result } from "../../result/impl";
+import { IgnoredResult, ItemResult } from "../../result/impl";
+import type { Result } from "../../result/impl";
 
 export function commonSerialization(builder: SerializerBuilder<Result>) {
   builder.deserializer<Ingredient>(

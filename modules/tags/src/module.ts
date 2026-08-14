@@ -1,9 +1,10 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { TagEmitter, type TagRules } from "./emitter";
-import { type TagEmitterOptions } from "./emitter/options";
+import { TagEmitter } from "./emitter";
+import type { TagRules } from "./emitter";
+import type { TagEmitterOptions } from "./emitter/options";
 import { TagsLoader } from "./loader";
-import { type TagRegistryHolder } from "./schema";
+import type { TagRegistryHolder } from "./schema";
 
 export default defineModule<{
   options: TagEmitterOptions;

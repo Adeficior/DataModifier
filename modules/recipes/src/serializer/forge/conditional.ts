@@ -1,8 +1,8 @@
-import { type RecipeDefinition } from "../../schema";
+import type { RecipeDefinition } from "../../schema";
 import { Recipe, RecipeParser } from "../abstract";
-import { type RecipeParseContext } from "../context";
-import { type RecipeHolder } from "../holder";
-import { type RecipeModifier } from "../modifier";
+import type { RecipeParseContext } from "../context";
+import type { RecipeHolder } from "../holder";
+import type { RecipeModifier } from "../modifier";
 
 type WithConditions<T> = {
   conditions: unknown[];

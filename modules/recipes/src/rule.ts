@@ -1,16 +1,9 @@
-import {
-  createId,
-  Rule,
-  type Id,
-  type Modifier,
-} from "@adeficior/data-modifier-core";
-import { type Predicate } from "@adeficior/data-modifier-core/serializer";
-import {
-  type Ingredient,
-  type Result,
-} from "@adeficior/data-modifier-ingredients";
-import { type ContextLike, type Logger } from "@adeficior/pack-resolver";
-import { type RecipeHolder } from "./serializer/holder";
+import { createId, Rule } from "@adeficior/data-modifier-core";
+import type { Id, Modifier } from "@adeficior/data-modifier-core";
+import type { Predicate } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import type { RecipeHolder } from "./serializer/holder";
 
 export class RecipeRule extends Rule<RecipeHolder> {
   constructor(

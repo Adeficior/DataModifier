@@ -1,25 +1,20 @@
-import {
-  createId,
-  encodeId,
-  Registry,
-  type ClearableEmitter,
-  type Id,
-  type IdInput,
-  type LoaderContext,
-  type RegistryProvider,
+import { createId, encodeId, Registry } from "@adeficior/data-modifier-core";
+import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
+  LoaderContext,
+  RegistryProvider,
 } from "@adeficior/data-modifier-core";
-import {
-  toJson,
-  type Predicate,
-  type Replacer,
+import { toJson } from "@adeficior/data-modifier-core/serializer";
+import type {
+  Predicate,
+  Replacer,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
-import { type LangDefinition } from "./schema";
+import type { LangDefinition } from "./schema";
 
 type LangRule = Readonly<{
   languages: string[];

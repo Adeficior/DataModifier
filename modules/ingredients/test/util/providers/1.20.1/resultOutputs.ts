@@ -1,11 +1,6 @@
-import { type DataProvider } from "@adeficior/testing";
-import {
-  type Result,
-  BlockResult,
-  BUCKET,
-  FluidResult,
-  ItemResult,
-} from "../../../../src";
+import type { DataProvider } from "@adeficior/testing";
+import { BlockResult, BUCKET, FluidResult, ItemResult } from "../../../../src";
+import type { Result } from "../../../../src";
 
 export function* serializedResults(): DataProvider<[Result, object]> {
   yield [

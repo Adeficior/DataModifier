@@ -10,8 +10,8 @@ import {
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
-  type Ingredient,
 } from "@adeficior/data-modifier-ingredients";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
 
 const ThermalFluidTagSchema = z.object({

@@ -1,9 +1,8 @@
-import {
-  createId,
-  encodeId,
-  type Id,
-  type IdInput,
-  type RegistryLookup,
+import { createId, encodeId } from "@adeficior/data-modifier-core";
+import type {
+  Id,
+  IdInput,
+  RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import { camelCase } from "lodash-es";
 import { writeFile } from "node:fs/promises";

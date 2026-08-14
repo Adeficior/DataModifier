@@ -1,5 +1,5 @@
-import { type SemVerInput } from "./common/packFormat";
-import { type CoreModuleOptions } from "./module";
+import type { SemVerInput } from "./common/packFormat";
+import type { CoreModuleOptions } from "./module";
 
 export type ModuleSetupOptions = {
   packFormat: SemVerInput;

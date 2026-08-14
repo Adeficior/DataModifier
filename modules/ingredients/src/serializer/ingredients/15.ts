@@ -11,11 +11,11 @@ import {
   BlockTagIngredient,
   FluidIngredient,
   FluidTagIngredient,
-  type Ingredient,
   ItemIngredient,
   ItemTagIngredient,
   ToolActionIngredient,
 } from "../../ingredient/impl";
+import type { Ingredient } from "../../ingredient/impl";
 import { commonSerialization } from "./common";
 
 export const serializer15 = createSerializerModule<Ingredient>((builder) => {

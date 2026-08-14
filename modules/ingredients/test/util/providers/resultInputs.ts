@@ -1,5 +1,5 @@
-import { type Class } from "@adeficior/data-modifier-core/serializer";
-import { type DataProvider } from "@adeficior/testing";
+import type { Class } from "@adeficior/data-modifier-core/serializer";
+import type { DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,
   BlockResult,
@@ -7,9 +7,8 @@ import {
   FluidResult,
   ItemIngredient,
   ItemResult,
-  type Ingredient,
-  type Result,
 } from "../../../src";
+import type { Ingredient, Result } from "../../../src";
 
 export function* resultLikeIngredients(): DataProvider<
   [Ingredient, Class<Result>]

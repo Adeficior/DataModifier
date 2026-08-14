@@ -1,12 +1,13 @@
-import { type RegistryId } from "@adeficior/data-modifier/generated";
-import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
+import type { RegistryId } from "@adeficior/data-modifier/generated";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import * as z from "zod";
-import { type LoaderContext } from "../common/context";
-import { encodeId, type IdInput, type NormalizedId } from "../common/id";
+import type { LoaderContext } from "../common/context";
+import { encodeId } from "../common/id";
+import type { IdInput, NormalizedId } from "../common/id";
 import { tryCatching, UnknownRegistryEntry } from "../serializer/error";
 import { tryParseJson } from "../serializer/textHelper";
 import { Registry } from "./impl";
-import { type RegistryLookup } from "./lookup";
+import type { RegistryLookup } from "./lookup";
 
 const schema = z.array(z.string());
 

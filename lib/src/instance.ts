@@ -1,20 +1,18 @@
-import {
-  type Container,
-  type DataModifierOptions,
-  type LoaderContext,
-  type ModuleConfig,
-  type ModuleSetupOptions,
-  type ModuleType,
-  type ModuleTypes,
+import type {
+  Container,
+  DataModifierOptions,
+  LoaderContext,
+  ModuleConfig,
+  ModuleSetupOptions,
+  ModuleType,
+  ModuleTypes,
 } from "@adeficior/data-modifier-core";
 import {
   combineResolvers,
   distributedAcceptor,
   filterAcceptor,
-  type Acceptor,
-  type Logger,
-  type Resolver,
 } from "@adeficior/pack-resolver";
+import type { Acceptor, Logger, Resolver } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
 import { installBuiltinModules } from "./builtinModules";
 import { overwritePackMetadata } from "./emit/packMetadata";

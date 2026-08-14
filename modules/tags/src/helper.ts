@@ -1,11 +1,7 @@
-import {
-  createId,
-  encodeId,
-  type IdInput,
-  type NormalizedId,
-} from "@adeficior/data-modifier-core";
+import { createId, encodeId } from "@adeficior/data-modifier-core";
+import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
 import { orderBy, uniqBy } from "lodash-es";
-import { type TagEntry } from "./schema";
+import type { TagEntry } from "./schema";
 
 export function entryId(entry: TagEntry): NormalizedId {
   if (typeof entry === "string") return encodeId(entry);

@@ -2,9 +2,11 @@ import {
   combineResolvers,
   createCombinedResolver,
   createResolver,
-  type Logger,
-  type Resolver,
-  type ResolverOptions,
+} from "@adeficior/pack-resolver";
+import type {
+  Logger,
+  Resolver,
+  ResolverOptions,
 } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { exists } from "node:fs/promises";

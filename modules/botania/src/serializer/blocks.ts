@@ -1,8 +1,7 @@
-import {
-  OneToOneRecipe,
-  RecipeParser,
-  type RecipeDefinition,
-  type RecipeParseContext,
+import { OneToOneRecipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeDefinition,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import { ingredientSerializerModules, resultSerializerModules } from "./module";
 

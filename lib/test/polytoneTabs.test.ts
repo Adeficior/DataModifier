@@ -2,10 +2,8 @@ import { defineModule, encodeId } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import {
-  PolytoneTabsEmitter,
-  type PolytoneTabs,
-} from "../src/emit/polytoneTabs";
+import { PolytoneTabsEmitter } from "../src/emit/polytoneTabs";
+import type { PolytoneTabs } from "../src/emit/polytoneTabs";
 import { setupInstance } from "./util/setup";
 
 const module = defineModule<{

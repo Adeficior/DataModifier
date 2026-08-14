@@ -1,5 +1,5 @@
-import { type DataProvider } from "@adeficior/testing";
-import { type Ingredient } from "../../../../src";
+import type { DataProvider } from "@adeficior/testing";
+import type { Ingredient } from "../../../../src";
 import {
   BlockIngredient,
   BlockTagIngredient,

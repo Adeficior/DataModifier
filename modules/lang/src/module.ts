@@ -1,7 +1,9 @@
 import { defineModule, jsonFilePattern } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { LangEmitter, type LangRules } from "./emitter";
-import { LangLoader, type LangRegistry } from "./loader";
+import { LangEmitter } from "./emitter";
+import type { LangRules } from "./emitter";
+import { LangLoader } from "./loader";
+import type { LangRegistry } from "./loader";
 
 export default defineModule<{
   loaders: {

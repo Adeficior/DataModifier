@@ -5,7 +5,8 @@ import {
 } from "@adeficior/data-modifier-core/serializer";
 import * as z from "zod";
 import { AmountSchema, ChanceSchema, CountSchema } from "../../fields";
-import { FluidResult, ItemResult, type Result } from "../../result/impl";
+import { FluidResult, ItemResult } from "../../result/impl";
+import type { Result } from "../../result/impl";
 import { commonSerialization } from "./common";
 
 export const serializer44 = createSerializerModule<Result>((builder) => {

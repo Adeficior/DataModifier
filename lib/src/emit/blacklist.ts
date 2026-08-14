@@ -1,26 +1,20 @@
-import {
-  encodeId,
-  type ClearableEmitter,
-  type LoaderContext,
-  type NormalizedId,
-  type RegistryLookup,
+import { encodeId } from "@adeficior/data-modifier-core";
+import type {
+  ClearableEmitter,
+  LoaderContext,
+  NormalizedId,
+  RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import { toJson } from "@adeficior/data-modifier-core/serializer";
-import {
-  ItemIngredient,
-  type IngredientFilter,
-  type IngredientSerializer,
-  type Predicates,
+import { ItemIngredient } from "@adeficior/data-modifier-ingredients";
+import type {
+  IngredientFilter,
+  IngredientSerializer,
+  Predicates,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
-import {
-  arrayOrSelf,
-  simpleResolver,
-  type DataConsumer,
-} from "@adeficior/pack-resolver";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
+import type { DataConsumer } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 
 export type HideMode = "jei" | "polytone";

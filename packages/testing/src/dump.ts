@@ -1,5 +1,5 @@
 import { RegistryDumpLoader } from "@adeficior/data-modifier-core";
-import { type Logger } from "@adeficior/pack-resolver";
+import type { Logger } from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { beforeAll } from "bun:test";

@@ -2,14 +2,13 @@ import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import {
   ItemIngredient,
   ItemTagIngredient,
-  type Ingredient,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  Recipe,
-  RecipeParser,
-  type RecipeDefinition,
-  type RecipeModifier,
-  type RecipeParseContext,
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import { omit } from "lodash-es";
 import * as z from "zod";

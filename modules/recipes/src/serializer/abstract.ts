@@ -1,12 +1,12 @@
-import { type NormalizedId } from "@adeficior/data-modifier-core";
-import {
-  type Ingredient,
-  type Result,
-  type WithSerializerModules,
+import type { NormalizedId } from "@adeficior/data-modifier-core";
+import type {
+  Ingredient,
+  Result,
+  WithSerializerModules,
 } from "@adeficior/data-modifier-ingredients";
-import { type RecipeDefinition } from "../schema";
-import { type RecipeParseContext } from "./context";
-import { type RecipeModifier } from "./modifier";
+import type { RecipeDefinition } from "../schema";
+import type { RecipeParseContext } from "./context";
+import type { RecipeModifier } from "./modifier";
 
 export abstract class Recipe {
   abstract getIngredients(): Ingredient[];

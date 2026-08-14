@@ -1,26 +1,21 @@
-import {
-  encodeId,
-  toTag,
-  type IdInput,
-  type NormalizedId,
-  type Registered,
-  type RegistryIds,
-  type RegistryLookup,
-  type TagId,
+import { encodeId, toTag } from "@adeficior/data-modifier-core";
+import type {
+  IdInput,
+  NormalizedId,
+  Registered,
+  RegistryIds,
+  RegistryLookup,
+  TagId,
 } from "@adeficior/data-modifier-core";
-import {
-  type BlockId,
-  type FluidId,
-  type ItemId,
-  type RegistryId,
+import type {
+  BlockId,
+  FluidId,
+  ItemId,
+  RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { uniq } from "lodash-es";
-import {
-  BlockResult,
-  FluidResult,
-  ItemResult,
-  type Result,
-} from "../result/impl";
+import { BlockResult, FluidResult, ItemResult } from "../result/impl";
+import type { Result } from "../result/impl";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements Registered {

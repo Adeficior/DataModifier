@@ -1,5 +1,5 @@
 import { defineModule } from "@adeficior/data-modifier-core";
-import { type Ingredient } from "@adeficior/data-modifier-ingredients";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   BlockIngredient,
   FluidIngredient,
@@ -8,11 +8,8 @@ import {
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import {
-  BlacklistEmitter,
-  type BlacklistOptions,
-  type BlacklistRules,
-} from "../src/emit/blacklist";
+import { BlacklistEmitter } from "../src/emit/blacklist";
+import type { BlacklistOptions, BlacklistRules } from "../src/emit/blacklist";
 import { setupInstance } from "./util/setup";
 
 const module = defineModule<{

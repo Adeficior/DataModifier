@@ -1,13 +1,12 @@
-import {
-  type Ingredient,
-  type Result,
-} from "@adeficior/data-modifier-ingredients";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import {
   ManyToManyRecipe,
   RecipeParser,
-  type ManyToManyRecipeDefinition,
-  type RecipeModifier,
-  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import type {
+  ManyToManyRecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import { resultSerializerModules } from "./module";
 

@@ -1,9 +1,10 @@
 import { simpleResolver } from "@adeficior/pack-resolver";
-import { type LoaderContext } from "../common/context";
-import { createId, type IdInput } from "../common/id";
+import type { LoaderContext } from "../common/context";
+import { createId } from "../common/id";
+import type { IdInput } from "../common/id";
 import { Registry } from "../registry/impl";
 import { toJson } from "../serializer/textHelper";
-import { type ClearableEmitter, type PathProvider } from "./abstract";
+import type { ClearableEmitter, PathProvider } from "./abstract";
 
 export class CustomEmitter<TEntry> implements ClearableEmitter {
   constructor(

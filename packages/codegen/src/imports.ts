@@ -1,6 +1,6 @@
-import {
-  type ImportOptions,
-  type ModuleConfig,
+import type {
+  ImportOptions,
+  ModuleConfig,
 } from "@adeficior/data-modifier-core";
 
 type ResolvedImport = {

@@ -1,11 +1,11 @@
-import { type SerializerBuilder } from "@adeficior/data-modifier-core/serializer";
+import type { SerializerBuilder } from "@adeficior/data-modifier-core/serializer";
 import {
   IgnoredIngredient,
-  type Ingredient,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
 } from "../../ingredient/impl";
+import type { Ingredient } from "../../ingredient/impl";
 import { Result } from "../../result/impl";
 
 export function commonSerialization(builder: SerializerBuilder<Ingredient>) {

@@ -1,23 +1,23 @@
-import {
-  encodeId,
-  type IdInput,
-  type NormalizedId,
-  type Registered,
-  type RegistryIds,
-  type RegistryLookup,
+import { encodeId } from "@adeficior/data-modifier-core";
+import type {
+  IdInput,
+  NormalizedId,
+  Registered,
+  RegistryIds,
+  RegistryLookup,
 } from "@adeficior/data-modifier-core";
-import {
-  type BlockId,
-  type FluidId,
-  type ItemId,
-  type RegistryId,
+import type {
+  BlockId,
+  FluidId,
+  ItemId,
+  RegistryId,
 } from "@adeficior/data-modifier/generated";
 import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
-  type Ingredient,
 } from "../ingredient/impl";
+import type { Ingredient } from "../ingredient/impl";
 import { BUCKET } from "../units";
 
 export abstract class Result implements Registered {

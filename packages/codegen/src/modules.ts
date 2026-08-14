@@ -1,4 +1,4 @@
-import { type ModuleConfig } from "@adeficior/data-modifier-core";
+import type { ModuleConfig } from "@adeficior/data-modifier-core";
 import { exists } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { generateTypes } from "./types";

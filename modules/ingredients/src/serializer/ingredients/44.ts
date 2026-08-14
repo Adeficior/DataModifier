@@ -10,12 +10,12 @@ import {
   FluidIngredient,
   FluidTagIngredient,
   IgnoredIngredient,
-  type Ingredient,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
   ToolActionIngredient,
 } from "../../ingredient/impl";
+import type { Ingredient } from "../../ingredient/impl";
 import { commonSerialization } from "./common";
 
 export const serializer44 = createSerializerModule<Ingredient>((builder) => {

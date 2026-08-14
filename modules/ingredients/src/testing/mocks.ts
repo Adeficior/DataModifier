@@ -1,10 +1,10 @@
-import { type Serializer } from "@adeficior/data-modifier-core/serializer";
+import type { Serializer } from "@adeficior/data-modifier-core/serializer";
 import { mock } from "bun:test";
-import { type Ingredient } from "../ingredient/impl";
-import { type Predicates } from "../predicates";
-import { type Result } from "../result/impl";
-import { type IngredientSerializer } from "../serializer/ingredients";
-import { type ResultSerializer } from "../serializer/results";
+import type { Ingredient } from "../ingredient/impl";
+import type { Predicates } from "../predicates";
+import type { Result } from "../result/impl";
+import type { IngredientSerializer } from "../serializer/ingredients";
+import type { ResultSerializer } from "../serializer/results";
 
 function mockSerializer<R, T extends Serializer<R, T>>() {
   return {

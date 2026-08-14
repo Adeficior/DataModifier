@@ -1,24 +1,21 @@
-import {
-  encodeId,
-  type RegistryLookup,
-  stripTag,
-} from "@adeficior/data-modifier-core";
-import {
-  type Predicate,
-  type Replacer,
+import { encodeId, stripTag } from "@adeficior/data-modifier-core";
+import type { RegistryLookup } from "@adeficior/data-modifier-core";
+import type {
+  Predicate,
+  Replacer,
 } from "@adeficior/data-modifier-core/serializer";
 import {
-  type Ingredient,
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  extendLootEntry,
-  type LootEntry,
-  type LootEntryBase,
-  type LootItemInput,
-  type LootTable,
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import { extendLootEntry } from "./schema";
+import type {
+  LootEntry,
+  LootEntryBase,
+  LootItemInput,
+  LootTable,
 } from "./schema";
 
 function createUnvalidatedLootEntry(input: LootItemInput): LootEntry {

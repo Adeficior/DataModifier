@@ -1,8 +1,8 @@
-import {
-  type RecipeDefinition,
-  type RecipeHolder,
-  type RecipeModifier,
-  type RecipeParseContext,
+import type {
+  RecipeDefinition,
+  RecipeHolder,
+  RecipeModifier,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 

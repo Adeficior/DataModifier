@@ -1,10 +1,10 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import {
-  RecipeGraphEmitter,
-  type RecipeGraphAccessor,
-  type RecipeGraphOptions,
+import { RecipeGraphEmitter } from "../src/emit/recipeGraph";
+import type {
+  RecipeGraphAccessor,
+  RecipeGraphOptions,
 } from "../src/emit/recipeGraph";
 import { setupInstance } from "./util/setup";
 

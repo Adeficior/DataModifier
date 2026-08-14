@@ -1,8 +1,5 @@
-import { type IdInput, type TagInput } from "@adeficior/data-modifier-core";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
+import type { IdInput, TagInput } from "@adeficior/data-modifier-core";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 
 export type TagDefinition = Readonly<{
   replace?: boolean;

@@ -1,9 +1,7 @@
-import {
-  JsonLoader,
-  type Id,
-  type RegistryProvider,
-} from "@adeficior/data-modifier-core";
-import { LangSchema, type LangDefinition } from "./schema";
+import { JsonLoader } from "@adeficior/data-modifier-core";
+import type { Id, RegistryProvider } from "@adeficior/data-modifier-core";
+import { LangSchema } from "./schema";
+import type { LangDefinition } from "./schema";
 
 export type LangRegistry = RegistryProvider<LangDefinition>;
 

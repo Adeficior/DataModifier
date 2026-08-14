@@ -1,5 +1,6 @@
 import { RegistryDumpLoader } from "@adeficior/data-modifier-core";
-import { createResolver, type Resolver } from "@adeficior/pack-resolver";
+import { createResolver } from "@adeficior/pack-resolver";
+import type { Resolver } from "@adeficior/pack-resolver";
 import { join } from "node:path";
 import { generateRegistryTypes } from "./registry";
 

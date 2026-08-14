@@ -1,5 +1,6 @@
 import { createId } from "./common/id";
-import { any, every, type Predicate } from "./serializer/predicate";
+import { any, every } from "./serializer/predicate";
+import type { Predicate } from "./serializer/predicate";
 
 export type ForgeCondition = Readonly<{
   type: string;

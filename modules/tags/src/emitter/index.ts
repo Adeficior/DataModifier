@@ -1,22 +1,18 @@
-import {
-  type ClearableEmitter,
-  type LoaderContext,
-  type NormalizedId,
-  type TagInput,
+import type {
+  ClearableEmitter,
+  LoaderContext,
+  NormalizedId,
+  TagInput,
 } from "@adeficior/data-modifier-core";
-import {
-  toJson,
-  type CommonFilter,
-} from "@adeficior/data-modifier-core/serializer";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
+import type { CommonFilter } from "@adeficior/data-modifier-core/serializer";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
-import { type TagEntry, type TagRegistryHolder } from "../schema";
-import { type TagEmitterOptions } from "./options";
-import { ScopedEmitter, type ScopedTagRules } from "./scoped";
+import type { TagEntry, TagRegistryHolder } from "../schema";
+import type { TagEmitterOptions } from "./options";
+import { ScopedEmitter } from "./scoped";
+import type { ScopedTagRules } from "./scoped";
 
 export interface TagRules {
   add<T extends RegistryId>(

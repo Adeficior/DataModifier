@@ -1,6 +1,7 @@
-import { type IdInput } from "@adeficior/data-modifier-core";
+import type { IdInput } from "@adeficior/data-modifier-core";
 import { setupRecipeLoader } from "@adeficior/data-modifier-recipes/testing";
-import { provided, type DataProvider } from "@adeficior/testing";
+import { provided } from "@adeficior/testing";
+import type { DataProvider } from "@adeficior/testing";
 import { expect, it } from "bun:test";
 import { basename } from "node:path";
 import { registerParsers } from "../../src/registration";

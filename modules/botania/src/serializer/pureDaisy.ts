@@ -3,13 +3,11 @@ import {
   createSerializerModule,
   isObjectWith,
 } from "@adeficior/data-modifier-core/serializer";
-import { type Result } from "@adeficior/data-modifier-ingredients";
+import type { Result } from "@adeficior/data-modifier-ingredients";
 import { BlockResult } from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
-import {
-  BotaniaBlockRecipeParser,
-  type BotaniaBlockRecipeDefinition,
-} from "./blocks";
+import { BotaniaBlockRecipeParser } from "./blocks";
+import type { BotaniaBlockRecipeDefinition } from "./blocks";
 
 export type PureDaisyRecipeDefinition = BotaniaBlockRecipeDefinition;
 

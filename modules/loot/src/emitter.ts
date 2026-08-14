@@ -1,36 +1,33 @@
 import {
-  type ClearableEmitter,
-  type Id,
-  type IdInput,
-  type LoaderContext,
-  type NormalizedId,
-  type RegistryLookup,
-  type RegistryProvider,
-  type SemVerInput,
   CustomEmitter,
   encodeId,
   prefix,
   RuledEmitter,
 } from "@adeficior/data-modifier-core";
-import {
-  type CommonFilter,
-  type Predicate,
+import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
+  LoaderContext,
+  NormalizedId,
+  RegistryLookup,
+  RegistryProvider,
+  SemVerInput,
+} from "@adeficior/data-modifier-core";
+import type {
+  CommonFilter,
+  Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  type Ingredient,
-  type IngredientFilter,
-  type Predicates,
+import type {
+  Ingredient,
+  IngredientFilter,
+  Predicates,
 } from "@adeficior/data-modifier-ingredients";
 import { combineResolvers } from "@adeficior/pack-resolver";
 import { lootTablePath } from "./helper";
 import { LootTableRule } from "./rule";
-import {
-  type LootItemInput,
-  type LootModifier,
-  type LootTable,
-  EmptyLootEntry,
-  LootTableSchema,
-} from "./schema";
+import { EmptyLootEntry, LootTableSchema } from "./schema";
+import type { LootItemInput, LootModifier, LootTable } from "./schema";
 import { createLootEntry, replaceItemInTable } from "./serializer";
 
 export const EMPTY_LOOT_TABLE: LootTable = {

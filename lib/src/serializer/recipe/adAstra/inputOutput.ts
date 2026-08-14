@@ -1,16 +1,18 @@
 import { encodeId, IdSchema } from "@adeficior/data-modifier-core";
-import {
-  ItemResult,
-  type Ingredient,
-  type ResultSerializer,
+import { ItemResult } from "@adeficior/data-modifier-ingredients";
+import type {
+  Ingredient,
+  ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
 import {
   OneToOneRecipe,
   Recipe,
   RecipeParser,
-  type RecipeDefinition,
-  type RecipeModifier,
-  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeDefinition,
+  RecipeModifier,
+  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
 import * as z from "zod";
 

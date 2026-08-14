@@ -2,26 +2,23 @@ import {
   encodeId,
   isAtLeastVersion,
   Registry,
-  type IdInput,
-  type NormalizedId,
-  type SemVerInput,
-  type TagInput,
 } from "@adeficior/data-modifier-core";
-import {
-  fromJson,
-  type TagChecker,
-} from "@adeficior/data-modifier-core/serializer";
-import {
-  type InferIds,
-  type RegistryId,
-} from "@adeficior/data-modifier/generated";
-import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
+import type {
+  IdInput,
+  NormalizedId,
+  SemVerInput,
+  TagInput,
+} from "@adeficior/data-modifier-core";
+import { fromJson } from "@adeficior/data-modifier-core/serializer";
+import type { TagChecker } from "@adeficior/data-modifier-core/serializer";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { entryId, orderTagEntries, tagFolderOf } from "./helper";
-import {
-  type TagDefinition,
-  type TagEntry,
-  type TagRegistry,
-  type TagRegistryHolder,
+import type {
+  TagDefinition,
+  TagEntry,
+  TagRegistry,
+  TagRegistryHolder,
 } from "./schema";
 
 class WriteableTagRegistry<T extends RegistryId>

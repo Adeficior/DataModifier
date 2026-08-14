@@ -1,17 +1,16 @@
-import { type Class } from "@adeficior/data-modifier-core/serializer";
-import { type DataProvider } from "@adeficior/testing";
+import type { Class } from "@adeficior/data-modifier-core/serializer";
+import type { DataProvider } from "@adeficior/testing";
 import {
   BlockIngredient,
   BlockTagIngredient,
   BUCKET,
   FluidIngredient,
   FluidTagIngredient,
-  type Ingredient,
-  type IngredientFilter,
   ItemIngredient,
   ItemTagIngredient,
   ListIngredient,
 } from "../../../../src";
+import type { Ingredient, IngredientFilter } from "../../../../src";
 
 export function* matchingIngredientFilters(): DataProvider<
   [IngredientFilter, Ingredient]

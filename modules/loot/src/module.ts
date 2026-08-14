@@ -1,6 +1,7 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { LootTableEmitter, type LootRules } from "./emitter";
+import { LootTableEmitter } from "./emitter";
+import type { LootRules } from "./emitter";
 import { lootTablePattern } from "./helper";
 import { LootTableLoader } from "./loader";
 

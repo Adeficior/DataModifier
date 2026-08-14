@@ -1,12 +1,7 @@
-import { type Class } from "@adeficior/data-modifier-core/serializer";
-import { type DataProvider } from "@adeficior/testing";
-import {
-  BlockResult,
-  BUCKET,
-  FluidResult,
-  ItemResult,
-  type Result,
-} from "../../../../src";
+import type { Class } from "@adeficior/data-modifier-core/serializer";
+import type { DataProvider } from "@adeficior/testing";
+import { BlockResult, BUCKET, FluidResult, ItemResult } from "../../../../src";
+import type { Result } from "../../../../src";
 import { resultLikeIngredients } from "../resultInputs";
 
 export function* invalidResultInputs(): DataProvider<

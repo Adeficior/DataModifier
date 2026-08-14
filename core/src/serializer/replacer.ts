@@ -1,4 +1,4 @@
-import { type Predicate } from "./predicate";
+import type { Predicate } from "./predicate";
 
 export type Replacer<T> = (value: T) => T;
 

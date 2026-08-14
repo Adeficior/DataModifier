@@ -1,4 +1,4 @@
-import { type BlockDefinition } from "./blockDefinition";
+import type { BlockDefinition } from "./blockDefinition";
 
 // TODO missing values
 export type Rarity = "common" | "rare";

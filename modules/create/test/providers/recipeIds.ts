@@ -1,5 +1,5 @@
-import { type IdInput } from "@adeficior/data-modifier-core";
-import { type DataProvider } from "@adeficior/testing";
+import type { IdInput } from "@adeficior/data-modifier-core";
+import type { DataProvider } from "@adeficior/testing";
 
 export function* recipesIds(): DataProvider<[IdInput]> {
   yield ["compacting", "create:compacting/granite_from_flint"];

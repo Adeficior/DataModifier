@@ -1,4 +1,4 @@
-import { type NormalizedId } from "@adeficior/data-modifier-core";
+import type { NormalizedId } from "@adeficior/data-modifier-core";
 import {
   ItemIngredient,
   ItemResult,
@@ -6,11 +6,8 @@ import {
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import {
-  type RecipeTest,
-  type ShapedRecipeDefinition,
-  EMPTY_RECIPE,
-} from "../../src";
+import { EMPTY_RECIPE } from "../../src";
+import type { RecipeTest, ShapedRecipeDefinition } from "../../src";
 import { setupRecipeEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);

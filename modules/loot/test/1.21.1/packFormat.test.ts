@@ -1,7 +1,5 @@
-import {
-  packFormatOf,
-  type LoaderContext,
-} from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
+import type { LoaderContext } from "@adeficior/data-modifier-core";
 import {
   mockRegistryLookup,
   mockRegistryProvider,

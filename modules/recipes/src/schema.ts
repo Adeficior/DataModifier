@@ -2,11 +2,13 @@ import {
   createId,
   isAtLeastVersion,
   jsonFilePattern,
-  type IdInput,
-  type SemVerInput,
-  type WithConditions,
 } from "@adeficior/data-modifier-core";
-import { type RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import type {
+  IdInput,
+  SemVerInput,
+  WithConditions,
+} from "@adeficior/data-modifier-core";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 
 export type RecipeDefinition = WithConditions<
   Readonly<{
