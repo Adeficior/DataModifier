@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-builder",
+   "description": "cli to initialize data-modifier projects",
    "private": true,
    "version": "1.0.0",
    "exports": {

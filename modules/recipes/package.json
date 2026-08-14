@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-recipes",
+   "description": "data-modifier module for recipes",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js",

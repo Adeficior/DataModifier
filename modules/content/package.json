@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-content",
+   "description": "data-modifier module adding compatibility for content-packs",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"

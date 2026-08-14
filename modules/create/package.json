@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-create",
+   "description": "data-modifier module adding compatibility for create",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"

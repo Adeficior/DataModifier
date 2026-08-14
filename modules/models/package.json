@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-models",
+   "description": "data-modifier module for blockstates & model assets",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"

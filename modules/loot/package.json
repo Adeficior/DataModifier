@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-loot",
+   "description": "data-modifier module for loot",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js",

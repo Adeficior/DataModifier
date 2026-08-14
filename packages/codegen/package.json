@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-codegen",
+   "description": "code-generation for data-modifier projects",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"

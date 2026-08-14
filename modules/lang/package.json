@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-lang",
+   "description": "data-modifier module for translations",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"

@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-tags",
+   "description": "data-modifier module for tags",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js",

@@ -1,5 +1,6 @@
 {
    "name": "@adeficior/data-modifier-ingredients",
+   "description": "data-modifier module for ingredient & results",
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js",
