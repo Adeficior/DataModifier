@@ -1,40 +1,48 @@
+import { encodeId } from "@adeficior/data-modifier-core";
+import type { NormalizedId } from "@adeficior/data-modifier-core";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import type {
   ManyToOneRecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
 import {
   ManyToOneRecipe,
   RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 
+type RitualOptions<I, E> = Readonly<{
+  color: string;
+  effect: E;
+  level: number;
+  incenses?: I[];
+}>;
+
 export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &
-  Readonly<{
-    color: string;
-    effect: string;
-    level: number;
-    incenses?: unknown[];
-  }>;
+  RitualOptions<unknown, string>;
 
 export class RootRitualRecipe extends ManyToOneRecipe {
   constructor(
     ingredients: Ingredient[],
     result: Result,
-    readonly incenses: Ingredient[] = [],
+    readonly options: RitualOptions<Ingredient, NormalizedId>,
   ) {
     super(ingredients, result);
   }
 
   override getIngredients() {
-    return [...super.getIngredients(), ...this.incenses];
+    return [...super.getIngredients(), ...(this.options.incenses ?? [])];
   }
 
   override modify(modifier: RecipeModifier) {
     return new RootRitualRecipe(
-      this.incenses.map(modifier.ingredient),
+      this.ingredients.map(modifier.ingredient),
       modifier.result(this.result),
-      this.incenses.map(modifier.ingredient),
+      {
+        ...this.options,
+        incenses: this.options.incenses?.map(modifier.ingredient),
+      },
     );
   }
 }
@@ -54,17 +62,25 @@ export class RootRitualRecipeSerializer extends RecipeTypeSerializer<
     const incenses =
       definition.incenses &&
       context.ingredients.deserializeList(definition.incenses);
-    return new RootRitualRecipe(ingredients, result, incenses);
+    return new RootRitualRecipe(ingredients, result, {
+      incenses,
+      color: definition.color,
+      effect: encodeId(definition.effect),
+      level: definition.level,
+    });
   }
 
   override serialize(
     recipe: RootRitualRecipe,
     context: RecipeParseContext,
-  ): Partial<RootRitualRecipeDefinition> {
+  ): SerializedRecipe<RootRitualRecipeDefinition> {
     return {
       result: context.results.serialize(recipe.result),
       ingredients: context.ingredients.serializeList(recipe.ingredients),
-      incenses: context.ingredients.serializeList(recipe.incenses),
+      ...recipe.options,
+      incenses:
+        recipe.options.incenses &&
+        context.ingredients.serializeList(recipe.options.incenses),
     };
   }
 }

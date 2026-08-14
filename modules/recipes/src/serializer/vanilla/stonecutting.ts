@@ -1,7 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe } from "../../model";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
 import { RecipeTypeSerializer } from "../abstract";
+import type { SerializedRecipe } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -9,16 +10,15 @@ export type StonecuttingRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredient: unknown;
     result: unknown;
+    // TODO use count somehow
     count?: number;
   }>;
 
-export class StonecuttingRecipe extends Recipe {
+export class StonecuttingRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly result: Result,
-  ) {
-    super();
-  }
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -28,7 +28,7 @@ export class StonecuttingRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new StonecuttingRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
@@ -52,7 +52,7 @@ export class StonecuttingSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: StonecuttingRecipe,
     context: RecipeParseContext,
-  ): Partial<StonecuttingRecipeDefinition> {
+  ): SerializedRecipe<StonecuttingRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(recipe.ingredient),
       result: context.results.serialize(recipe.result),

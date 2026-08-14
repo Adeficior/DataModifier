@@ -1,6 +1,7 @@
 import type {
   RecipeDefinition,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
 import {
   OneToOneRecipe,
@@ -14,11 +15,10 @@ export type BotaniaBlockRecipeDefinition = RecipeDefinition &
     output: unknown;
   }>;
 
-export class BotaniaBlockRecipe extends OneToOneRecipe {}
-
-export class BotaniaBlockRecipeSerializer<
-  TDefinition extends BotaniaBlockRecipeDefinition,
-> extends RecipeTypeSerializer<TDefinition, BotaniaBlockRecipe> {
+export class BotaniaBlockRecipeSerializer extends RecipeTypeSerializer<
+  BotaniaBlockRecipeDefinition,
+  OneToOneRecipe
+> {
   override resultModules() {
     return resultSerializerModules;
   }
@@ -28,18 +28,21 @@ export class BotaniaBlockRecipeSerializer<
   }
 
   deserialize(
-    definition: TDefinition,
+    definition: BotaniaBlockRecipeDefinition,
     context: RecipeParseContext,
-  ): BotaniaBlockRecipe {
+  ): OneToOneRecipe {
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.deserialize(definition.output);
-    return new BotaniaBlockRecipe(ingredient, result);
+    return new OneToOneRecipe(ingredient, result);
   }
 
-  override serialize(recipe: BotaniaBlockRecipe, context: RecipeParseContext) {
+  override serialize(
+    recipe: OneToOneRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<BotaniaBlockRecipeDefinition> {
     return {
       output: context.results.serialize(recipe.result),
       input: context.ingredients.serialize(recipe.ingredient),
-    } as Partial<TDefinition>;
+    };
   }
 }

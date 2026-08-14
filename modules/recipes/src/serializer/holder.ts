@@ -11,6 +11,10 @@ function keep<T>(): Replacer<T> {
   return (it) => it;
 }
 
+function optional<T>(replacer: Replacer<T>): Replacer<T | undefined> {
+  return (value) => value && replacer(value);
+}
+
 export class RecipeHolder {
   readonly serializerType: NormalizedId;
 
@@ -45,18 +49,23 @@ export class RecipeHolder {
   replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder {
     return this.modify({
       ingredient: replace,
+      optionalIngredient: optional(replace),
       result: keep(),
+      optionalResult: keep(),
     });
   }
 
   replaceResult(replace: Replacer<Result>): RecipeHolder {
     return this.modify({
       ingredient: keep(),
+      optionalIngredient: keep(),
       result: replace,
+      optionalResult: optional(replace),
     });
   }
 
   getTypes(): NormalizedId[] {
-    return [this.serializerType, ...this.recipe.additionalTypes()];
+    const additional = this.recipe.additionalTypes?.() ?? [];
+    return [this.serializerType, ...additional];
   }
 }

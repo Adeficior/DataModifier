@@ -1,7 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe } from "../model";
+import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import { RecipeTypeSerializer } from "./abstract";
+import type { SerializedRecipe } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";
 
@@ -11,13 +12,11 @@ export type OneToOneRecipeDefinition = RecipeDefinition &
     result: unknown;
   }>;
 
-export class OneToOneRecipe extends Recipe {
+export class OneToOneRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly result: Result,
-  ) {
-    super();
-  }
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -27,7 +26,7 @@ export class OneToOneRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new OneToOneRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
@@ -35,11 +34,12 @@ export class OneToOneRecipe extends Recipe {
   }
 }
 
-export class OneToOneRecipeSerializer<
-  TDefinition extends OneToOneRecipeDefinition,
-> extends RecipeTypeSerializer<TDefinition, OneToOneRecipe> {
+export class OneToOneRecipeSerializer extends RecipeTypeSerializer<
+  OneToOneRecipeDefinition,
+  OneToOneRecipe
+> {
   deserialize(
-    definition: TDefinition,
+    definition: OneToOneRecipeDefinition,
     context: RecipeParseContext,
   ): OneToOneRecipe {
     const ingredient = context.ingredients.deserialize(definition.ingredient);
@@ -47,10 +47,13 @@ export class OneToOneRecipeSerializer<
     return new OneToOneRecipe(ingredient, result);
   }
 
-  override serialize(recipe: OneToOneRecipe, context: RecipeParseContext) {
+  override serialize(
+    recipe: OneToOneRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<OneToOneRecipeDefinition> {
     return {
       result: context.results.serialize(recipe.result),
       ingredient: context.ingredients.serialize(recipe.ingredient),
-    } as Partial<TDefinition>;
+    };
   }
 }

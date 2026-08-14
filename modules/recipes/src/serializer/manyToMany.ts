@@ -1,7 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe } from "../model";
+import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import { RecipeTypeSerializer } from "./abstract";
+import type { SerializedRecipe } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";
 
@@ -11,13 +12,11 @@ export type ManyToManyRecipeDefinition = RecipeDefinition &
     results: unknown[];
   }>;
 
-export class ManyToManyRecipe extends Recipe {
+export class ManyToManyRecipe implements Recipe {
   constructor(
     readonly ingredients: Ingredient[],
     readonly results: Result[],
-  ) {
-    super();
-  }
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -27,7 +26,7 @@ export class ManyToManyRecipe extends Recipe {
     return this.results;
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ManyToManyRecipe(
       this.ingredients.map(modifier.ingredient),
       this.results.map(modifier.result),
@@ -35,11 +34,12 @@ export class ManyToManyRecipe extends Recipe {
   }
 }
 
-export class ManyToManyRecipeSerializer<
-  TDefinition extends ManyToManyRecipeDefinition,
-> extends RecipeTypeSerializer<TDefinition, ManyToManyRecipe> {
+export class ManyToManyRecipeSerializer extends RecipeTypeSerializer<
+  ManyToManyRecipeDefinition,
+  ManyToManyRecipe
+> {
   deserialize(
-    definition: TDefinition,
+    definition: ManyToManyRecipeDefinition,
     context: RecipeParseContext,
   ): ManyToManyRecipe {
     const ingredients = context.ingredients.deserializeList(
@@ -49,10 +49,13 @@ export class ManyToManyRecipeSerializer<
     return new ManyToManyRecipe(ingredients, results);
   }
 
-  override serialize(recipe: ManyToManyRecipe, context: RecipeParseContext) {
+  override serialize(
+    recipe: ManyToManyRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ManyToManyRecipeDefinition> {
     return {
       results: context.results.serializeList(recipe.results),
       ingredients: context.ingredients.serializeList(recipe.ingredients),
-    } as Partial<TDefinition>;
+    };
   }
 }

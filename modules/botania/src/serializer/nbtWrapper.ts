@@ -1,10 +1,12 @@
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeHolder,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -12,10 +14,11 @@ export type NbtWrapperRecipeDefinition = RecipeDefinition &
     recipe: RecipeDefinition;
   }>;
 
-export class NbtWrapperRecipe extends Recipe {
-  constructor(readonly recipe: RecipeHolder) {
-    super();
-  }
+export class NbtWrapperRecipe implements Recipe {
+  constructor(
+    readonly nbt: string,
+    readonly recipe: RecipeHolder,
+  ) {}
 
   getIngredients() {
     return this.recipe.getIngredients();
@@ -25,8 +28,8 @@ export class NbtWrapperRecipe extends Recipe {
     return this.recipe.getResults();
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new NbtWrapperRecipe(this.recipe.modify(modifier));
+  modify(modifier: RecipeModifier) {
+    return new NbtWrapperRecipe(this.nbt, this.recipe.modify(modifier));
   }
 }
 
@@ -39,14 +42,15 @@ export class NbtWrapperRecipeSerializer extends RecipeTypeSerializer<
     context: RecipeParseContext,
   ): NbtWrapperRecipe {
     const recipe = context.recipes.deserialize(definition.recipe);
-    return new NbtWrapperRecipe(recipe);
+    return new NbtWrapperRecipe(definition.nbt, recipe);
   }
 
   override serialize(
     recipe: NbtWrapperRecipe,
     context: RecipeParseContext,
-  ): Partial<NbtWrapperRecipeDefinition> {
+  ): SerializedRecipe<NbtWrapperRecipeDefinition> {
     return {
+      nbt: recipe.nbt,
       recipe: context.recipes.serialize(recipe.recipe),
     };
   }

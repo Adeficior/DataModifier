@@ -1,15 +1,19 @@
+import type { NormalizedId } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import { omit } from "lodash-es";
 import * as z from "zod";
 
@@ -25,10 +29,13 @@ export type SpaceStationRecipeDefinition = RecipeDefinition &
     structure: string;
   }>;
 
-export class SpaceStationRecipe extends Recipe {
-  constructor(readonly ingredients: Ingredient[]) {
-    super();
-  }
+export class SpaceStationRecipe implements Recipe {
+  constructor(
+    // TODO these are IDs?
+    readonly dimension: NormalizedId,
+    readonly structure: NormalizedId,
+    readonly ingredients: Ingredient[],
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -38,8 +45,12 @@ export class SpaceStationRecipe extends Recipe {
     return [];
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new SpaceStationRecipe(this.ingredients.map(modifier.ingredient));
+  modify(modifier: RecipeModifier) {
+    return new SpaceStationRecipe(
+      this.dimension,
+      this.structure,
+      this.ingredients.map(modifier.ingredient),
+    );
   }
 }
 
@@ -57,14 +68,20 @@ export class SpaceStationRecipeSerializer extends RecipeTypeSerializer<
         .map((it) => ({ ...it.ingredient, count: it.count })),
     );
 
-    return new SpaceStationRecipe(ingredients);
+    return new SpaceStationRecipe(
+      encodeId(definition.dimension),
+      encodeId(definition.structure),
+      ingredients,
+    );
   }
 
   serialize(
     recipe: SpaceStationRecipe,
     context: RecipeParseContext,
-  ): Partial<SpaceStationRecipeDefinition> {
+  ): SerializedRecipe<SpaceStationRecipeDefinition> {
     return {
+      dimension: recipe.dimension,
+      structure: recipe.structure,
       ingredients: context.ingredients
         .serializeList(recipe.ingredients)
         .map((it) => {

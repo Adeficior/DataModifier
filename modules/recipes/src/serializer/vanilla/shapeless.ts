@@ -3,4 +3,4 @@ import { ManyToOneRecipeSerializer } from "../manyToOne";
 
 export type ShapelessRecipeDefinition = ManyToOneRecipeDefinition;
 
-export class ShapelessSerializer extends ManyToOneRecipeSerializer<ShapelessRecipeDefinition> {}
+export class ShapelessSerializer extends ManyToOneRecipeSerializer {}

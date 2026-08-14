@@ -1,31 +1,32 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeHolder,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredient: unknown;
-    transitionalItem: unknown;
-    transitional_item: unknown;
+    transitionalItem?: unknown;
+    transitional_item?: unknown;
     results: unknown[];
     loops?: number;
     sequence: RecipeDefinition[];
   }>;
 
-export class AssemblyRecipe extends Recipe {
+export class AssemblyRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly transitionalItem: Ingredient,
     readonly results: Result[],
     readonly sequence: RecipeHolder[],
-  ) {
-    super();
-  }
+    readonly options: { loops?: number } = {},
+  ) {}
 
   getIngredients() {
     return [
@@ -39,12 +40,13 @@ export class AssemblyRecipe extends Recipe {
     return [...this.results, ...this.sequence.flatMap((it) => it.getResults())];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new AssemblyRecipe(
       modifier.ingredient(this.ingredient),
       modifier.ingredient(this.transitionalItem),
       this.results.map(modifier.result),
       this.sequence.map((it) => it.modify(modifier)),
+      this.options,
     );
   }
 }
@@ -68,20 +70,24 @@ export class AssemblyRecipeSerializer extends RecipeTypeSerializer<
     const sequence = definition.sequence.map((it) =>
       context.recipes.deserialize(it),
     );
-    return new AssemblyRecipe(ingredient, transitionalItem, results, sequence);
+    return new AssemblyRecipe(ingredient, transitionalItem, results, sequence, {
+      loops: definition.loops,
+    });
   }
 
   override serialize(
     recipe: AssemblyRecipe,
     context: RecipeParseContext,
-  ): Partial<AssemblyRecipeDefinition> {
+  ): SerializedRecipe<AssemblyRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(recipe.ingredient),
+      // TODO use transitional_item depending on pack format
       transitionalItem: context.results.serialize(
         recipe.transitionalItem.asResult(),
       ),
       results: context.results.serializeList(recipe.results),
       sequence: recipe.sequence.map((it) => context.recipes.serialize(it)),
+      ...recipe.options,
     };
   }
 }

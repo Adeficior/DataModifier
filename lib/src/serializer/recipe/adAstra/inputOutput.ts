@@ -8,6 +8,7 @@ import { ItemResult } from "@adeficior/data-modifier-ingredients";
 import type {
   RecipeDefinition,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
 import {
   OneToOneRecipe,
@@ -62,7 +63,7 @@ export class InputOutputRecipeSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: OneToOneRecipe,
     context: RecipeParseContext,
-  ): Partial<InputOutputRecipeDefinition> {
+  ): SerializedRecipe<InputOutputRecipeDefinition> {
     return {
       input: context.ingredients.serialize(recipe.ingredient),
       output: serializeIdResult(recipe.result),

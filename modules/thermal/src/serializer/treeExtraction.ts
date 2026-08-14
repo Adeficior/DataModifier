@@ -2,12 +2,14 @@ import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import { BlockIngredient } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type { BlockId } from "@adeficior/data-modifier/generated";
 
 type BlockStateIngredient = {
@@ -23,15 +25,13 @@ export type TreeExtractionRecipeDefinition = RecipeDefinition &
     result: unknown;
   }>;
 
-export class TreeExtractionRecipe extends Recipe {
+export class TreeExtractionRecipe implements Recipe {
   constructor(
     readonly trunk: Ingredient,
     readonly leaves: Ingredient,
     readonly sapling: Ingredient,
     readonly result: Result,
-  ) {
-    super();
-  }
+  ) {}
 
   getIngredients() {
     return [this.trunk, this.leaves];
@@ -41,7 +41,7 @@ export class TreeExtractionRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new TreeExtractionRecipe(
       modifier.ingredient(this.trunk),
       modifier.ingredient(this.leaves),
@@ -100,7 +100,7 @@ export class TreeExtractionRecipeSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: TreeExtractionRecipe,
     context: RecipeParseContext,
-  ): Partial<TreeExtractionRecipeDefinition> {
+  ): SerializedRecipe<TreeExtractionRecipeDefinition> {
     return {
       result: context.results.serialize(recipe.result),
       trunk: this.serializeBlockStateIngredient(recipe.trunk),

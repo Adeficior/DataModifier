@@ -12,6 +12,11 @@ export type RecipesSerializer = {
   get(type: IdInput<RecipeSerializerId>): RecipeTypeSerializer;
 };
 
+export type SerializedRecipe<T extends RecipeDefinition> = Omit<
+  T,
+  keyof RecipeDefinition
+>;
+
 export abstract class RecipeTypeSerializer<
   TDefinition extends RecipeDefinition = RecipeDefinition,
   TRecipe extends Recipe = Recipe,
@@ -29,9 +34,8 @@ export abstract class RecipeTypeSerializer<
     context: RecipeParseContext,
   ): TRecipe;
 
-  // TODO make non-partial
   abstract serialize(
     recipe: TRecipe,
     context: RecipeParseContext,
-  ): Partial<TDefinition>;
+  ): SerializedRecipe<TDefinition>;
 }

@@ -1,6 +1,7 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe } from "../../model";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
+import type { SerializedRecipe } from "../abstract";
 import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
@@ -12,13 +13,14 @@ export type SmeltingRecipeDefinition = RecipeDefinition &
     experience?: number;
   }>;
 
-export class SmeltingRecipe extends Recipe {
+export class SmeltingRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly result: Result,
-  ) {
-    super();
-  }
+    readonly options: {
+      experience?: number;
+    } = {},
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -28,10 +30,11 @@ export class SmeltingRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new SmeltingRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
+      this.options,
     );
   }
 }
@@ -46,16 +49,18 @@ export class SmeltingSerializer extends RecipeTypeSerializer<
   ): SmeltingRecipe {
     const ingredient = context.ingredients.deserialize(definition.ingredient);
     const result = context.results.deserialize(definition.result);
-    return new SmeltingRecipe(ingredient, result);
+    const { experience } = definition;
+    return new SmeltingRecipe(ingredient, result, { experience });
   }
 
   override serialize(
     recipe: SmeltingRecipe,
     context: RecipeParseContext,
-  ): Partial<SmeltingRecipeDefinition> {
+  ): SerializedRecipe<SmeltingRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(recipe.ingredient),
       result: context.results.serialize(recipe.result),
+      experience: recipe.options.experience,
     };
   }
 }

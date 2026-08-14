@@ -3,6 +3,7 @@ import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
 import {
   ManyToOneRecipe,
@@ -57,7 +58,7 @@ export class ApothecaryRecipeSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: ApothecaryRecipe,
     context: RecipeParseContext,
-  ): Partial<ApothecaryRecipeDefinition> {
+  ): SerializedRecipe<ApothecaryRecipeDefinition> {
     return {
       ingredients: context.ingredients.serializeList(recipe.ingredients),
       output: context.results.serialize(recipe.result),

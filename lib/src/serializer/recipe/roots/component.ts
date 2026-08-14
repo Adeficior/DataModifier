@@ -1,10 +1,14 @@
+import type { NormalizedId } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type RootComponentRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -12,10 +16,12 @@ export type RootComponentRecipeDefinition = RecipeDefinition &
     ingredients: unknown[];
   }>;
 
-export class RootComponentRecipe extends Recipe {
-  constructor(readonly ingredients: Ingredient[]) {
-    super();
-  }
+export class RootComponentRecipe implements Recipe {
+  constructor(
+    // TODO this is an ID?
+    readonly effect: NormalizedId,
+    readonly ingredients: Ingredient[],
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -25,8 +31,11 @@ export class RootComponentRecipe extends Recipe {
     return [];
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new RootComponentRecipe(this.ingredients.map(modifier.ingredient));
+  modify(modifier: RecipeModifier) {
+    return new RootComponentRecipe(
+      this.effect,
+      this.ingredients.map(modifier.ingredient),
+    );
   }
 }
 
@@ -41,15 +50,16 @@ export class RootComponentRecipeSerializer extends RecipeTypeSerializer<
     const ingredients = context.ingredients.deserializeList(
       definition.ingredients,
     );
-    return new RootComponentRecipe(ingredients);
+    return new RootComponentRecipe(encodeId(definition.effect), ingredients);
   }
 
   override serialize(
     recipe: RootComponentRecipe,
     context: RecipeParseContext,
-  ): Partial<RootComponentRecipeDefinition> {
+  ): SerializedRecipe<RootComponentRecipeDefinition> {
     return {
       ingredients: context.ingredients.serializeList(recipe.ingredients),
+      effect: recipe.effect,
     };
   }
 }

@@ -1,5 +1,5 @@
-import { encodeId  } from "@adeficior/data-modifier-core";
-import type {IdInput} from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
+import type { IdInput } from "@adeficior/data-modifier-core";
 import {
   IllegalShapeError,
   UnknownRegistryEntry,

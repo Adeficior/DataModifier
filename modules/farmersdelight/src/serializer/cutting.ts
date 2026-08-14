@@ -3,6 +3,7 @@ import type {
   ManyToManyRecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
 import {
   ManyToManyRecipe,
@@ -64,7 +65,7 @@ export class CuttingRecipeSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: CuttingRecipe,
     context: RecipeParseContext,
-  ): Partial<CuttingRecipeDefinition> {
+  ): SerializedRecipe<CuttingRecipeDefinition> {
     return {
       ingredients: context.ingredients.serializeList(recipe.ingredients),
       result: context.results.serializeList(recipe.results),

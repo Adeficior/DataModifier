@@ -1,10 +1,12 @@
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type ThermalFuelRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -12,11 +14,11 @@ export type ThermalFuelRecipeDefinition = RecipeDefinition &
     ingredient: unknown;
   }>;
 
-// TODO could be same as catalyst
-export class ThermalFuelRecipe extends Recipe {
-  constructor(readonly ingredient: Ingredient) {
-    super();
-  }
+export class ThermalFuelRecipe implements Recipe {
+  constructor(
+    readonly ingredient: Ingredient,
+    readonly options: { energy: number },
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -26,8 +28,11 @@ export class ThermalFuelRecipe extends Recipe {
     return [];
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new ThermalFuelRecipe(modifier.ingredient(this.ingredient));
+  modify(modifier: RecipeModifier) {
+    return new ThermalFuelRecipe(
+      modifier.ingredient(this.ingredient),
+      this.options,
+    );
   }
 }
 
@@ -40,15 +45,16 @@ export class ThermalFuelRecipeSerializer extends RecipeTypeSerializer<
     context: RecipeParseContext,
   ): ThermalFuelRecipe {
     const ingredient = context.ingredients.deserialize(definition.ingredient);
-    return new ThermalFuelRecipe(ingredient);
+    return new ThermalFuelRecipe(ingredient, { energy: definition.energy });
   }
 
   override serialize(
     recipe: ThermalFuelRecipe,
     context: RecipeParseContext,
-  ): Partial<ThermalFuelRecipeDefinition> {
+  ): SerializedRecipe<ThermalFuelRecipeDefinition> {
     return {
       ingredient: context.ingredients.serialize(recipe.ingredient),
+      energy: recipe.options.energy,
     };
   }
 }

@@ -5,12 +5,14 @@ import {
   FluidIngredient,
   FluidResult,
 } from "@adeficior/data-modifier-ingredients";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+  SerializedRecipe,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -18,13 +20,11 @@ export type FluidConversionRecipeDefinition = RecipeDefinition &
     output: string;
   }>;
 
-export class FluidConversionRecipe extends Recipe {
+export class FluidConversionRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly result: Result,
-  ) {
-    super();
-  }
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -34,7 +34,7 @@ export class FluidConversionRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new FluidConversionRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
@@ -60,7 +60,7 @@ export class FluidConversionRecipeSerializer extends RecipeTypeSerializer<
   override serialize(
     recipe: FluidConversionRecipe,
     context: RecipeParseContext,
-  ): Partial<FluidConversionRecipeDefinition> {
+  ): SerializedRecipe<FluidConversionRecipeDefinition> {
     if (!(recipe.result instanceof FluidIngredient)) {
       throw new IllegalShapeError(
         "fluid conversion output must be a fluid result",
