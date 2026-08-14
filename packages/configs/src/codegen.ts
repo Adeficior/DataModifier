@@ -1,18 +1,21 @@
 import { basename, dirname, join, resolve } from "node:path";
-import {
-  generateModuleStubTypes,
-  generateModuleTypes,
-} from "../../codegen/src/modules";
+import { loadDependencyModules, readModule } from "../../codegen/src/modules";
 import { generateStubTypes } from "../../codegen/src/stubs";
+import { generateModulesTypes } from "../../codegen/src/types";
 
-export async function generateTypes(dir: string) {
-  const type = basename(dirname(resolve(dir)));
-  const typesDir = join(dir, "@types");
+export async function generateTypes(moduleDir: string) {
+  const type = basename(dirname(resolve(moduleDir)));
+  const typesDir = join(moduleDir, "@types");
 
   if (type === "packages") {
-    await generateModuleStubTypes(typesDir);
+    await generateModulesTypes(typesDir, []);
   } else {
-    await generateModuleTypes(dir, typesDir);
+    const module = await readModule(moduleDir);
+    const dependencies = await loadDependencyModules(
+      moduleDir,
+      module.dependencies,
+    );
+    await generateModulesTypes(typesDir, dependencies);
   }
 
   await generateStubTypes(typesDir);
