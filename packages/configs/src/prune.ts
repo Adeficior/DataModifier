@@ -1,4 +1,5 @@
 import { relative, resolve } from "node:path";
+import rootPackage from "../../../package.json";
 import {
   findWorkspacePackages,
   readPackage,
@@ -17,18 +18,34 @@ const publishConfig =
       }
     : undefined;
 
+const catalog: Record<string, string | undefined> = rootPackage.catalog;
+
 export async function prunePackage(dir: string) {
   const current = await readPackage(dir);
   const workspaces = await findWorkspacePackages();
 
   const relativeDir = relative(root, resolve(dir)).replaceAll("\\", "/");
 
+  function resolveVersionReference(key: string, reference: string) {
+    if (reference === "catalog:") {
+      const version = catalog[key];
+      if (!version) throw new Error(`unknown catalog reference: ${key}`);
+      return version;
+    }
+    return reference;
+  }
+
   function pruneDependencies(from: Record<string, string> = {}) {
     const filtered = Object.fromEntries(
-      Object.entries(from).filter(([key]) => {
-        const workspace = workspaces.find((it) => it.name === key);
-        return !workspace?.internal;
-      }),
+      Object.entries(from)
+        .filter(([key]) => {
+          const workspace = workspaces.find((it) => it.name === key);
+          return !workspace?.internal;
+        })
+        .map(([key, reference]) => [
+          key,
+          resolveVersionReference(key, reference),
+        ]),
     );
     if (Object.keys(filtered).length === 0) return undefined;
     return filtered;
