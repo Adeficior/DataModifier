@@ -34,6 +34,7 @@
       "typescript": "catalog:",
       "prettier": "catalog:",
       "lodash-es": "catalog:",
+      "@adeficior/pack-resolver": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*"
    }
 }

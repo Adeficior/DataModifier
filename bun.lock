@@ -285,6 +285,7 @@
       },
       "peerDependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
+        "@adeficior/pack-resolver": "catalog:",
         "lodash-es": "catalog:",
         "prettier": "catalog:",
         "typescript": "catalog:",
