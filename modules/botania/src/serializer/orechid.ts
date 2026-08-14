@@ -1,4 +1,4 @@
-import { BotaniaBlockRecipeParser } from "./blocks";
+import { BotaniaBlockRecipeSerializer } from "./blocks";
 import type { BotaniaBlockRecipeDefinition } from "./blocks";
 
 export type OrechidRecipeDefinition = BotaniaBlockRecipeDefinition &
@@ -8,4 +8,4 @@ export type OrechidRecipeDefinition = BotaniaBlockRecipeDefinition &
     weight?: number;
   }>;
 
-export class OrechidRecipeParser extends BotaniaBlockRecipeParser<OrechidRecipeDefinition> {}
+export class OrechidRecipeSerializer extends BotaniaBlockRecipeSerializer<OrechidRecipeDefinition> {}

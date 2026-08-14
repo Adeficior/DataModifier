@@ -1,18 +1,18 @@
 import { encodeId, IdSchema } from "@adeficior/data-modifier-core";
-import { ItemResult } from "@adeficior/data-modifier-ingredients";
 import type {
   Ingredient,
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
-import {
-  OneToOneRecipe,
-  Recipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
+import { ItemResult } from "@adeficior/data-modifier-ingredients";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  OneToOneRecipe,
+  Recipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 import * as z from "zod";
 
@@ -76,7 +76,7 @@ export class InputOutputRecipe extends Recipe {
   }
 }
 
-export class InputOutputRecipeParser extends RecipeParser<
+export class InputOutputRecipeSerializer extends RecipeTypeSerializer<
   InputOutputRecipeDefinition,
   InputOutputRecipe
 > {

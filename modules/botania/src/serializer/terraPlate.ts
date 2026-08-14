@@ -1,8 +1,8 @@
-import { ManyToOneRecipeParser } from "@adeficior/data-modifier-recipes";
+import { ManyToOneRecipeSerializer } from "@adeficior/data-modifier-recipes";
 import type { ManyToOneRecipeDefinition } from "@adeficior/data-modifier-recipes";
 
 export type TerraPlateRecipeDefinition = ManyToOneRecipeDefinition &
   Readonly<{
     mana?: number;
   }>;
-export class TerraPlateRecipeParser extends ManyToOneRecipeParser<TerraPlateRecipeDefinition> {}
+export class TerraPlateRecipeSerializer extends ManyToOneRecipeSerializer<TerraPlateRecipeDefinition> {}

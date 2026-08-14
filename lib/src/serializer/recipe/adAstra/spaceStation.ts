@@ -1,15 +1,15 @@
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import { omit } from "lodash-es";
 import * as z from "zod";
 
@@ -62,7 +62,7 @@ export class SpaceStationRecipe extends Recipe {
   }
 }
 
-export class SpaceStationRecipeParser extends RecipeParser<
+export class SpaceStationRecipeSerializer extends RecipeTypeSerializer<
   SpaceStationRecipeDefinition,
   SpaceStationRecipe
 > {

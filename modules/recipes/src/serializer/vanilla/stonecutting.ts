@@ -1,6 +1,7 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -11,7 +12,6 @@ export type StonecuttingRecipeDefinition = RecipeDefinition &
     count?: number;
   }>;
 
-// TODO could also be SmeltingRecipe?
 export class StonecuttingRecipe extends Recipe {
   constructor(
     private readonly ingredient: Ingredient,
@@ -45,7 +45,7 @@ export class StonecuttingRecipe extends Recipe {
   }
 }
 
-export class StonecuttingParser extends RecipeParser<
+export class StonecuttingSerializer extends RecipeTypeSerializer<
   StonecuttingRecipeDefinition,
   StonecuttingRecipe
 > {

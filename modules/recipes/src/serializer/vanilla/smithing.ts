@@ -1,7 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import { notNull } from "@adeficior/pack-resolver";
+import { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -52,7 +53,7 @@ export class SmithingRecipe extends Recipe {
   }
 }
 
-export class SmithingParser extends RecipeParser<
+export class SmithingSerializer extends RecipeTypeSerializer<
   SmithingRecipeDefinition,
   SmithingRecipe
 > {

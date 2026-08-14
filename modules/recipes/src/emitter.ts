@@ -1,9 +1,3 @@
-import {
-  CustomEmitter,
-  encodeId,
-  RuledEmitter,
-  withDisabledConditions,
-} from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   Id,
@@ -15,12 +9,18 @@ import type {
   SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
-  createReplacer,
-  resolveIdTest,
-} from "@adeficior/data-modifier-core/serializer";
+  CustomEmitter,
+  encodeId,
+  RuledEmitter,
+  withDisabledConditions,
+} from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Predicate,
+} from "@adeficior/data-modifier-core/serializer";
+import {
+  createReplacer,
+  resolveIdTest,
 } from "@adeficior/data-modifier-core/serializer";
 import type {
   Ingredient,
@@ -33,13 +33,13 @@ import type {
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import { combineResolvers, notNull } from "@adeficior/pack-resolver";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import { combineResolvers, notNull } from "@adeficior/pack-resolver";
+import type { Recipe } from "./model";
 import { RecipeRule } from "./rule";
-import { recipePath } from "./schema";
 import type { RecipeDefinition } from "./schema";
-import type { Recipe } from "./serializer/abstract";
-import type { RecipeSerializer } from "./serializer/context";
+import { recipePath } from "./schema";
+import type { RecipeSerializer } from "./serializer/abstract";
 import { RecipeHolder } from "./serializer/holder";
 
 export type RecipeTest = Readonly<{
@@ -48,11 +48,9 @@ export type RecipeTest = Readonly<{
   namespace?: string;
   output?: IngredientFilter;
   input?: IngredientFilter;
-  // TODO not sure if I want to even keep this?
-  optional?: boolean;
 }>;
 
-export interface RecipeRules {
+export interface RecipeEmitter {
   replaceResult(
     test: IngredientFilter,
     value: ResultInput,
@@ -76,7 +74,7 @@ export const EMPTY_RECIPE: RecipeDefinition = withDisabledConditions({
   type: "minecraft:disabled",
 });
 
-export class RecipeEmitter implements RecipeRules, ClearableEmitter {
+export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
   private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>
     recipePath(this.packFormat, it),
   );
@@ -177,7 +175,6 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
         [ingredientTests.result, ...recipePredicates.result].filter(notNull),
         modifier,
       ),
-      recipeTest.optional !== true,
     );
   }
 

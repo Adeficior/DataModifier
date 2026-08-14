@@ -1,4 +1,4 @@
-import { ManyToManyRecipeParser } from "@adeficior/data-modifier-recipes";
+import { ManyToManyRecipeSerializer } from "@adeficior/data-modifier-recipes";
 import type { ManyToManyRecipeDefinition } from "@adeficior/data-modifier-recipes";
 
 export type CreateProcessingRecipeDefinition = ManyToManyRecipeDefinition &
@@ -8,4 +8,4 @@ export type CreateProcessingRecipeDefinition = ManyToManyRecipeDefinition &
     keepHeldItem?: boolean;
   }>;
 
-export class CreateProcessingRecipeParser extends ManyToManyRecipeParser<CreateProcessingRecipeDefinition> {}
+export class CreateProcessingRecipeSerializer extends ManyToManyRecipeSerializer<CreateProcessingRecipeDefinition> {}

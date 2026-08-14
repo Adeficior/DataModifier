@@ -1,10 +1,10 @@
-import {
-  ManyToManyRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  ManyToManyRecipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
@@ -23,7 +23,7 @@ export class ElvenTradeRecipe extends ManyToManyRecipe {
   }
 }
 
-export class ElvenTradeRecipeParser extends RecipeParser<
+export class ElvenTradeRecipeSerializer extends RecipeTypeSerializer<
   ElvenTradeRecipeDefinition,
   ElvenTradeRecipe
 > {

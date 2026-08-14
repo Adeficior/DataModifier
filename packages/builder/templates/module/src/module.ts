@@ -7,7 +7,7 @@ export default defineModule({
     "@adeficior/data-modifier-recipes": "required",
   },
   setup: (pack) => {
-    pack.hook("recipes:register-parser", (event) => {
+    pack.hook("recipes:register-serializer", (event) => {
       // TODO register parsers
     });
   },

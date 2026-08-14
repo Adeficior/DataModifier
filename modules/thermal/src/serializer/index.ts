@@ -1,11 +1,11 @@
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import { ingredientSerializerModules } from "./module";
 
 type Writeable<T> = {
@@ -65,7 +65,7 @@ export class ThermalRecipe extends Recipe {
   }
 }
 
-export class ThermalRecipeParser extends RecipeParser<
+export class ThermalRecipeSerializer extends RecipeTypeSerializer<
   ThermalRecipeDefinition,
   ThermalRecipe
 > {

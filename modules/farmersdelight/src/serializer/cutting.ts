@@ -1,12 +1,12 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import {
-  ManyToManyRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
 import type {
   ManyToManyRecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  ManyToManyRecipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 import { resultSerializerModules } from "./module";
 
@@ -52,7 +52,7 @@ export class CuttingRecipe extends ManyToManyRecipe {
   }
 }
 
-export class CuttingRecipeParser extends RecipeParser<
+export class CuttingRecipeSerializer extends RecipeTypeSerializer<
   CuttingRecipeDefinition,
   CuttingRecipe
 > {

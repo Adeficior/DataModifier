@@ -1,40 +1,46 @@
-import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
+import type { RegisterRecipeSerializer } from "@adeficior/data-modifier-recipes";
 import {
-  ShapedParser,
-  ShapelessParser,
+  ShapedSerializer,
+  ShapelessSerializer,
 } from "@adeficior/data-modifier-recipes";
-import { ApothecaryRecipeParser } from "./serializer/apothecary";
-import { BrewRecipeParser } from "./serializer/brew";
-import { ElvenTradeRecipeParser } from "./serializer/elvenTrade";
-import { GogWrapperRecipeParser } from "./serializer/gogWrapper";
-import { ManaInfusionRecipeParser } from "./serializer/manaInfusion";
-import { NbtWrapperRecipeParser } from "./serializer/nbtWrapper";
-import { OrechidRecipeParser } from "./serializer/orechid";
-import { PureDaisyRecipeParser } from "./serializer/pureDaisy";
-import { RunicAltarRecipeParser } from "./serializer/runicAltar";
-import { TerraPlateRecipeParser } from "./serializer/terraPlate";
+import { ApothecaryRecipeSerializer } from "./serializer/apothecary";
+import { BrewRecipeSerializer } from "./serializer/brew";
+import { ElvenTradeRecipeSerializer } from "./serializer/elvenTrade";
+import { GogWrapperRecipeSerializer } from "./serializer/gogWrapper";
+import { ManaInfusionRecipeSerializer } from "./serializer/manaInfusion";
+import { NbtWrapperRecipeSerializer } from "./serializer/nbtWrapper";
+import { OrechidRecipeSerializer } from "./serializer/orechid";
+import { PureDaisyRecipeSerializer } from "./serializer/pureDaisy";
+import { RunicAltarRecipeSerializer } from "./serializer/runicAltar";
+import { TerraPlateRecipeSerializer } from "./serializer/terraPlate";
 
-export function registerParsers(event: RegisterRecipeParser) {
-  event.register("botania:nbt_output_wrapper", new NbtWrapperRecipeParser());
-  event.register("botania:orechid", new OrechidRecipeParser());
-  event.register("botania:orechid_ignem", new OrechidRecipeParser());
-  event.register("botania:marimorphosis", new OrechidRecipeParser());
-  event.register("botania:pure_daisy", new PureDaisyRecipeParser());
+export function registerSerializers(event: RegisterRecipeSerializer) {
+  event.register(
+    "botania:nbt_output_wrapper",
+    new NbtWrapperRecipeSerializer(),
+  );
+  event.register("botania:orechid", new OrechidRecipeSerializer());
+  event.register("botania:orechid_ignem", new OrechidRecipeSerializer());
+  event.register("botania:marimorphosis", new OrechidRecipeSerializer());
+  event.register("botania:pure_daisy", new PureDaisyRecipeSerializer());
   event.register(
     "botania:state_copying_pure_daisy",
-    new PureDaisyRecipeParser(),
+    new PureDaisyRecipeSerializer(),
   );
-  event.register("botania:mana_upgrade", new ShapedParser());
-  event.register("botania:water_bottle_matching_shaped", new ShapedParser());
-  event.register("botania:runic_altar", new RunicAltarRecipeParser());
-  event.register("botania:runic_altar_head", new RunicAltarRecipeParser());
-  event.register("botania:terra_plate", new TerraPlateRecipeParser());
-  event.register("botania:elven_trade", new ElvenTradeRecipeParser());
-  event.register("botania:brew", new BrewRecipeParser());
-  event.register("botania:twig_wand", new ShapedParser());
-  event.register("botania:mana_infusion", new ManaInfusionRecipeParser());
-  event.register("botania:mana_upgrade_shapeless", new ShapelessParser());
-  event.register("botania:armor_upgrade", new ShapedParser());
-  event.register("botania:gog_alternation", new GogWrapperRecipeParser());
-  event.register("botania:petal_apothecary", new ApothecaryRecipeParser());
+  event.register("botania:mana_upgrade", new ShapedSerializer());
+  event.register(
+    "botania:water_bottle_matching_shaped",
+    new ShapedSerializer(),
+  );
+  event.register("botania:runic_altar", new RunicAltarRecipeSerializer());
+  event.register("botania:runic_altar_head", new RunicAltarRecipeSerializer());
+  event.register("botania:terra_plate", new TerraPlateRecipeSerializer());
+  event.register("botania:elven_trade", new ElvenTradeRecipeSerializer());
+  event.register("botania:brew", new BrewRecipeSerializer());
+  event.register("botania:twig_wand", new ShapedSerializer());
+  event.register("botania:mana_infusion", new ManaInfusionRecipeSerializer());
+  event.register("botania:mana_upgrade_shapeless", new ShapelessSerializer());
+  event.register("botania:armor_upgrade", new ShapedSerializer());
+  event.register("botania:gog_alternation", new GogWrapperRecipeSerializer());
+  event.register("botania:petal_apothecary", new ApothecaryRecipeSerializer());
 }

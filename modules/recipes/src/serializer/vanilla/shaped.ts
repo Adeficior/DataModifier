@@ -3,8 +3,9 @@ import type {
   IngredientMapInput,
   Result,
 } from "@adeficior/data-modifier-ingredients";
+import { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -48,7 +49,7 @@ export class ShapedRecipe extends Recipe {
   }
 }
 
-export class ShapedParser extends RecipeParser<
+export class ShapedSerializer extends RecipeTypeSerializer<
   ShapedRecipeDefinition,
   ShapedRecipe
 > {

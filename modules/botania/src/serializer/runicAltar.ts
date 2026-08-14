@@ -1,10 +1,10 @@
-import {
-  ManyToOneRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  ManyToOneRecipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
@@ -23,7 +23,7 @@ export class RunicAltarRecipe extends ManyToOneRecipe {
   }
 }
 
-export class RunicAltarRecipeParser extends RecipeParser<
+export class RunicAltarRecipeSerializer extends RecipeTypeSerializer<
   RunicAltarRecipeDefinition,
   RunicAltarRecipe
 > {

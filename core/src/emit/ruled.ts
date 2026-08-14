@@ -1,5 +1,5 @@
-import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
 import type { Logger } from "@adeficior/pack-resolver";
+import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
 import type { Id } from "../common/id";
 import type { RegistryProvider } from "../registry/abstract";
@@ -33,26 +33,19 @@ export class RuledEmitter<
     private readonly shouldSkip: (id: Id) => boolean = () => true,
   ) {}
 
-  private rulesArray: TRule[] = [];
-  private requiredRules = new Set<TRule>();
-
-  protected get rules(): ReadonlyArray<TRule> {
-    return this.rulesArray;
-  }
+  private rules: TRule[] = [];
 
   clear() {
-    this.rulesArray = [];
-    this.requiredRules.clear();
+    this.rules = [];
   }
 
-  addRule(rule: TRule, required: boolean = true) {
-    this.rulesArray.push(rule);
-    if (required) this.requiredRules.add(rule);
+  addRule(rule: TRule) {
+    this.rules.push(rule);
   }
 
   resolver(context: LoaderContext) {
     return simpleResolver(async (acceptor) => {
-      const missingRules = new Set<TRule>(this.requiredRules);
+      const missingRules = new Set<TRule>(this.rules);
       await this.provider.forEachAsync(async (recipe, id) => {
         if (this.shouldSkip(id)) return;
 

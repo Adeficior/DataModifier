@@ -6,7 +6,7 @@ import {
 import type { Result } from "@adeficior/data-modifier-ingredients";
 import { BlockResult } from "@adeficior/data-modifier-ingredients";
 import * as z from "zod";
-import { BotaniaBlockRecipeParser } from "./blocks";
+import { BotaniaBlockRecipeSerializer } from "./blocks";
 import type { BotaniaBlockRecipeDefinition } from "./blocks";
 
 export type PureDaisyRecipeDefinition = BotaniaBlockRecipeDefinition;
@@ -23,7 +23,7 @@ const resultSerializer15 = createSerializerModule<Result>((builder) => {
   );
 });
 
-export class PureDaisyRecipeParser extends BotaniaBlockRecipeParser<PureDaisyRecipeDefinition> {
+export class PureDaisyRecipeSerializer extends BotaniaBlockRecipeSerializer<PureDaisyRecipeDefinition> {
   override resultModules() {
     return {
       15: resultSerializer15,

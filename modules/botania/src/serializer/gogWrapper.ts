@@ -4,7 +4,7 @@ import type {
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -46,7 +46,7 @@ export class GogWrapperRecipe extends Recipe {
   }
 }
 
-export class GogWrapperRecipeParser extends RecipeParser<
+export class GogWrapperRecipeSerializer extends RecipeTypeSerializer<
   GogWrapperRecipeDefinition,
   GogWrapperRecipe
 > {

@@ -4,7 +4,7 @@ import type {
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -38,7 +38,7 @@ export class NbtWrapperRecipe extends Recipe {
   }
 }
 
-export class NbtWrapperRecipeParser extends RecipeParser<
+export class NbtWrapperRecipeSerializer extends RecipeTypeSerializer<
   NbtWrapperRecipeDefinition,
   NbtWrapperRecipe
 > {

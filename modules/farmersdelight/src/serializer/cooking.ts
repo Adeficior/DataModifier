@@ -1,10 +1,10 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import { notNull } from "@adeficior/pack-resolver";
 
 export type CookingRecipeDefinition = RecipeDefinition &
@@ -53,7 +53,7 @@ export class CookingRecipe extends Recipe {
   }
 }
 
-export class CookingRecipeParser extends RecipeParser<
+export class CookingRecipeSerializer extends RecipeTypeSerializer<
   CookingRecipeDefinition,
   CookingRecipe
 > {

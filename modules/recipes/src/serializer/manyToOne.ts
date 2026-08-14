@@ -1,6 +1,7 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
-import { Recipe, RecipeParser } from "./abstract";
+import { RecipeTypeSerializer } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";
 
@@ -43,9 +44,9 @@ export class ManyToOneRecipe extends Recipe {
   }
 }
 
-export class ManyToOneRecipeParser<
+export class ManyToOneRecipeSerializer<
   TDefinition extends ManyToOneRecipeDefinition,
-> extends RecipeParser<TDefinition, ManyToOneRecipe> {
+> extends RecipeTypeSerializer<TDefinition, ManyToOneRecipe> {
   deserialize(
     definition: TDefinition,
     context: RecipeParseContext,

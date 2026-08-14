@@ -1,10 +1,10 @@
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type ThermalCatalystRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -42,7 +42,7 @@ export class ThermalCatalystRecipe extends Recipe {
   }
 }
 
-export class ThermalCatalystRecipeParser extends RecipeParser<
+export class ThermalCatalystRecipeSerializer extends RecipeTypeSerializer<
   ThermalCatalystRecipeDefinition,
   ThermalCatalystRecipe
 > {

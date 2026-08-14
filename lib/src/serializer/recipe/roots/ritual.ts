@@ -1,12 +1,12 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import {
-  ManyToOneRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
 import type {
   ManyToOneRecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  ManyToOneRecipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 
 export type RootRitualRecipeDefinition = ManyToOneRecipeDefinition &
@@ -39,7 +39,7 @@ export class RootRitualRecipe extends ManyToOneRecipe {
   }
 }
 
-export class RootRitualRecipeParser extends RecipeParser<
+export class RootRitualRecipeSerializer extends RecipeTypeSerializer<
   RootRitualRecipeDefinition,
   RootRitualRecipe
 > {

@@ -1,13 +1,13 @@
 import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
-import { BlockIngredient } from "@adeficior/data-modifier-ingredients";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import { BlockIngredient } from "@adeficior/data-modifier-ingredients";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type { BlockId } from "@adeficior/data-modifier/generated";
 
 type BlockStateIngredient = {
@@ -87,7 +87,7 @@ export class TreeExtractionRecipe extends Recipe {
   }
 }
 
-export class TreeExtractionRecipeParser extends RecipeParser<
+export class TreeExtractionRecipeSerializer extends RecipeTypeSerializer<
   TreeExtractionRecipeDefinition,
   TreeExtractionRecipe
 > {

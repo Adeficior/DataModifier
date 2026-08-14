@@ -1,10 +1,10 @@
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -38,7 +38,7 @@ export class BrewRecipe extends Recipe {
   }
 }
 
-export class BrewRecipeParser extends RecipeParser<
+export class BrewRecipeSerializer extends RecipeTypeSerializer<
   BrewRecipeDefinition,
   BrewRecipe
 > {

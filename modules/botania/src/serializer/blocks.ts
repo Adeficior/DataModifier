@@ -1,7 +1,10 @@
-import { OneToOneRecipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+import {
+  OneToOneRecipe,
+  RecipeTypeSerializer,
 } from "@adeficior/data-modifier-recipes";
 import { ingredientSerializerModules, resultSerializerModules } from "./module";
 
@@ -22,9 +25,9 @@ export class BotaniaBlockRecipe extends OneToOneRecipe {
   }
 }
 
-export class BotaniaBlockRecipeParser<
+export class BotaniaBlockRecipeSerializer<
   TDefinition extends BotaniaBlockRecipeDefinition,
-> extends RecipeParser<TDefinition, BotaniaBlockRecipe> {
+> extends RecipeTypeSerializer<TDefinition, BotaniaBlockRecipe> {
   override resultModules() {
     return resultSerializerModules;
   }

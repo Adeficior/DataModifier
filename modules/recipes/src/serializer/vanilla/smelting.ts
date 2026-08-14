@@ -1,6 +1,7 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -44,7 +45,7 @@ export class SmeltingRecipe extends Recipe {
   }
 }
 
-export class SmeltingParser extends RecipeParser<
+export class SmeltingSerializer extends RecipeTypeSerializer<
   SmeltingRecipeDefinition,
   SmeltingRecipe
 > {

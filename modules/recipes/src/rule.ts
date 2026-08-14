@@ -1,5 +1,5 @@
-import { createId, Rule } from "@adeficior/data-modifier-core";
 import type { Id, Modifier } from "@adeficior/data-modifier-core";
+import { createId, Rule } from "@adeficior/data-modifier-core";
 import type { Predicate } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";

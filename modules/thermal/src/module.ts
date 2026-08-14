@@ -1,6 +1,6 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { registerParsers } from "./registration";
+import { registerSerializers } from "./registration";
 
 export default defineModule({
   importModule: name,
@@ -8,6 +8,6 @@ export default defineModule({
     "@adeficior/data-modifier-recipes": "required",
   },
   setup: (pack) => {
-    pack.hook("recipes:register-parser", registerParsers);
+    pack.hook("recipes:register-serializer", registerSerializers);
   },
 });

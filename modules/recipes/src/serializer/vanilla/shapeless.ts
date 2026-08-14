@@ -1,6 +1,6 @@
-import { ManyToOneRecipeParser } from "../manyToOne";
 import type { ManyToOneRecipeDefinition } from "../manyToOne";
+import { ManyToOneRecipeSerializer } from "../manyToOne";
 
 export type ShapelessRecipeDefinition = ManyToOneRecipeDefinition;
 
-export class ShapelessParser extends ManyToOneRecipeParser<ShapelessRecipeDefinition> {}
+export class ShapelessSerializer extends ManyToOneRecipeSerializer<ShapelessRecipeDefinition> {}

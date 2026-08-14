@@ -1,5 +1,5 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import { mockRegistryProvider } from "@adeficior/data-modifier-core/testing";
 import {
   mockIngredientSerializer,
@@ -12,17 +12,17 @@ import {
 } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { EMPTY_RECIPE } from "../../src";
-import { RecipeEmitter } from "../../src/emitter";
-import { RecipeLoader } from "../../src/loader";
+import { RecipeEmitterImpl } from "../../src/emitter";
+import { RecipeSerializerImpl } from "../../src/serializer/impl";
 
 const version = "1.21.1";
 // TODO common method?
 const context: LoaderContext = { logger: createTestLogger() };
-const serializer = new RecipeLoader(
+const serializer = new RecipeSerializerImpl(
   mockResultSerializer(),
   mockIngredientSerializer(),
 );
-const emitter = new RecipeEmitter(
+const emitter = new RecipeEmitterImpl(
   context.logger,
   packFormatOf(version),
   mockRegistryProvider(),

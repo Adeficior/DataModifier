@@ -1,16 +1,16 @@
 import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import {
   FluidIngredient,
   FluidResult,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -58,7 +58,7 @@ export class FluidConversionRecipe extends Recipe {
   }
 }
 
-export class FluidConversionRecipeParser extends RecipeParser<
+export class FluidConversionRecipeSerializer extends RecipeTypeSerializer<
   FluidConversionRecipeDefinition,
   FluidConversionRecipe
 > {

@@ -1,5 +1,6 @@
+import { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeHolder } from "../holder";
 import type { RecipeModifier } from "../modifier";
@@ -52,7 +53,7 @@ export class ForgeConditionalRecipe extends Recipe {
   }
 }
 
-export class ForgeConditionalRecipeParser extends RecipeParser<
+export class ForgeConditionalRecipeSerializer extends RecipeTypeSerializer<
   ForgeConditionalRecipeDefinition,
   ForgeConditionalRecipe
 > {

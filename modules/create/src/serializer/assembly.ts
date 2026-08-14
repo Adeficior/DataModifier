@@ -1,11 +1,11 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
   RecipeDefinition,
   RecipeHolder,
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -62,7 +62,7 @@ export class AssemblyRecipe extends Recipe {
   }
 }
 
-export class AssemblyRecipeParser extends RecipeParser<
+export class AssemblyRecipeSerializer extends RecipeTypeSerializer<
   AssemblyRecipeDefinition,
   AssemblyRecipe
 > {
