@@ -14,14 +14,7 @@ export type RunicAltarRecipeDefinition = RecipeDefinition &
     mana: number;
   }>;
 
-export class RunicAltarRecipe extends ManyToOneRecipe {
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<RunicAltarRecipeDefinition> {
-    const { result, ...rest } = super.serialize(context);
-    return { ...rest, output: result };
-  }
-}
+export class RunicAltarRecipe extends ManyToOneRecipe {}
 
 export class RunicAltarRecipeSerializer extends RecipeTypeSerializer<
   RunicAltarRecipeDefinition,
@@ -36,5 +29,15 @@ export class RunicAltarRecipeSerializer extends RecipeTypeSerializer<
     );
     const result = context.results.deserialize(definition.output);
     return new RunicAltarRecipe(ingredients, result);
+  }
+
+  override serialize(
+    recipe: RunicAltarRecipe,
+    context: RecipeParseContext,
+  ): Partial<RunicAltarRecipeDefinition> {
+    return {
+      output: context.results.serialize(recipe.result),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    };
   }
 }

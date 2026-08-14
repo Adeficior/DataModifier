@@ -13,8 +13,8 @@ export type ManyToManyRecipeDefinition = RecipeDefinition &
 
 export class ManyToManyRecipe extends Recipe {
   constructor(
-    protected readonly ingredients: Ingredient[],
-    protected readonly results: Result[],
+    readonly ingredients: Ingredient[],
+    readonly results: Result[],
   ) {
     super();
   }
@@ -33,15 +33,6 @@ export class ManyToManyRecipe extends Recipe {
       this.results.map(modifier.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ManyToManyRecipeDefinition> {
-    return {
-      results: context.results.serializeList(this.results),
-      ingredients: context.ingredients.serializeList(this.ingredients),
-    };
-  }
 }
 
 export class ManyToManyRecipeSerializer<
@@ -56,5 +47,12 @@ export class ManyToManyRecipeSerializer<
     );
     const results = context.results.deserializeList(definition.results);
     return new ManyToManyRecipe(ingredients, results);
+  }
+
+  override serialize(recipe: ManyToManyRecipe, context: RecipeParseContext) {
+    return {
+      results: context.results.serializeList(recipe.results),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    } as Partial<TDefinition>;
   }
 }

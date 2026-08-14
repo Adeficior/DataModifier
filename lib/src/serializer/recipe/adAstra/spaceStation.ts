@@ -26,7 +26,7 @@ export type SpaceStationRecipeDefinition = RecipeDefinition &
   }>;
 
 export class SpaceStationRecipe extends Recipe {
-  constructor(private readonly ingredients: Ingredient[]) {
+  constructor(readonly ingredients: Ingredient[]) {
     super();
   }
 
@@ -40,25 +40,6 @@ export class SpaceStationRecipe extends Recipe {
 
   override modify(modifier: RecipeModifier) {
     return new SpaceStationRecipe(this.ingredients.map(modifier.ingredient));
-  }
-
-  serialize(
-    context: RecipeParseContext,
-  ): Partial<SpaceStationRecipeDefinition> {
-    return {
-      ingredients: context.ingredients
-        .serializeList(this.ingredients)
-        .map((it) => {
-          if (it instanceof ItemIngredient || it instanceof ItemTagIngredient) {
-            return { ingredient: omit(it, "count"), count: it.count };
-          }
-
-          throw new IllegalShapeError(
-            "space station ingredient needs to be a form of item",
-            it,
-          );
-        }),
-    };
   }
 }
 
@@ -77,5 +58,25 @@ export class SpaceStationRecipeSerializer extends RecipeTypeSerializer<
     );
 
     return new SpaceStationRecipe(ingredients);
+  }
+
+  serialize(
+    recipe: SpaceStationRecipe,
+    context: RecipeParseContext,
+  ): Partial<SpaceStationRecipeDefinition> {
+    return {
+      ingredients: context.ingredients
+        .serializeList(recipe.ingredients)
+        .map((it) => {
+          if (it instanceof ItemIngredient || it instanceof ItemTagIngredient) {
+            return { ingredient: omit(it, "count"), count: it.count };
+          }
+
+          throw new IllegalShapeError(
+            "space station ingredient needs to be a form of item",
+            it,
+          );
+        }),
+    };
   }
 }

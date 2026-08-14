@@ -23,7 +23,7 @@ export class CuttingRecipe extends ManyToManyRecipe {
   constructor(
     ingredients: Ingredient[],
     results: Result[],
-    private readonly tool: Ingredient,
+    readonly tool: Ingredient,
   ) {
     super(ingredients, results);
   }
@@ -38,17 +38,6 @@ export class CuttingRecipe extends ManyToManyRecipe {
       this.results.map(modifier.result),
       modifier.ingredient(this.tool),
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<CuttingRecipeDefinition> {
-    const { results, ...rest } = super.serialize(context);
-    return {
-      ...rest,
-      result: results,
-      tool: context.ingredients.serialize(this.tool),
-    };
   }
 }
 
@@ -70,5 +59,16 @@ export class CuttingRecipeSerializer extends RecipeTypeSerializer<
     const result = context.results.deserializeList(definition.result);
     const tool = context.ingredients.deserialize(definition.tool);
     return new CuttingRecipe(ingredients, result, tool);
+  }
+
+  override serialize(
+    recipe: CuttingRecipe,
+    context: RecipeParseContext,
+  ): Partial<CuttingRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      result: context.results.serializeList(recipe.results),
+      tool: context.ingredients.serialize(recipe.tool),
+    };
   }
 }

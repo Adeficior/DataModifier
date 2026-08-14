@@ -21,7 +21,7 @@ export class RootRitualRecipe extends ManyToOneRecipe {
   constructor(
     ingredients: Ingredient[],
     result: Result,
-    private readonly incenses: Ingredient[] = [],
+    readonly incenses: Ingredient[] = [],
   ) {
     super(ingredients, result);
   }
@@ -55,5 +55,16 @@ export class RootRitualRecipeSerializer extends RecipeTypeSerializer<
       definition.incenses &&
       context.ingredients.deserializeList(definition.incenses);
     return new RootRitualRecipe(ingredients, result, incenses);
+  }
+
+  override serialize(
+    recipe: RootRitualRecipe,
+    context: RecipeParseContext,
+  ): Partial<RootRitualRecipeDefinition> {
+    return {
+      result: context.results.serialize(recipe.result),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      incenses: context.ingredients.serializeList(recipe.incenses),
+    };
   }
 }

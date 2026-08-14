@@ -14,8 +14,8 @@ export type StonecuttingRecipeDefinition = RecipeDefinition &
 
 export class StonecuttingRecipe extends Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly result: Result,
+    readonly ingredient: Ingredient,
+    readonly result: Result,
   ) {
     super();
   }
@@ -34,15 +34,6 @@ export class StonecuttingRecipe extends Recipe {
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<StonecuttingRecipeDefinition> {
-    return {
-      ingredient: context.ingredients.serialize(this.ingredient),
-      result: context.results.serialize(this.result),
-    };
-  }
 }
 
 export class StonecuttingSerializer extends RecipeTypeSerializer<
@@ -56,5 +47,15 @@ export class StonecuttingSerializer extends RecipeTypeSerializer<
     const ingredient = context.ingredients.deserialize(definition.ingredient);
     const result = context.results.deserialize(definition.result);
     return new StonecuttingRecipe(ingredient, result);
+  }
+
+  override serialize(
+    recipe: StonecuttingRecipe,
+    context: RecipeParseContext,
+  ): Partial<StonecuttingRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(recipe.ingredient),
+      result: context.results.serialize(recipe.result),
+    };
   }
 }

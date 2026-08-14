@@ -13,7 +13,7 @@ export type NbtWrapperRecipeDefinition = RecipeDefinition &
   }>;
 
 export class NbtWrapperRecipe extends Recipe {
-  constructor(private readonly recipe: RecipeHolder) {
+  constructor(readonly recipe: RecipeHolder) {
     super();
   }
 
@@ -28,25 +28,26 @@ export class NbtWrapperRecipe extends Recipe {
   override modify(modifier: RecipeModifier) {
     return new NbtWrapperRecipe(this.recipe.modify(modifier));
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<NbtWrapperRecipeDefinition> {
-    return {
-      recipe: context.recipes.serialize(this.recipe),
-    };
-  }
 }
 
 export class NbtWrapperRecipeSerializer extends RecipeTypeSerializer<
   NbtWrapperRecipeDefinition,
   NbtWrapperRecipe
 > {
-  deserialize(
+  override deserialize(
     definition: NbtWrapperRecipeDefinition,
     context: RecipeParseContext,
   ): NbtWrapperRecipe {
     const recipe = context.recipes.deserialize(definition.recipe);
     return new NbtWrapperRecipe(recipe);
+  }
+
+  override serialize(
+    recipe: NbtWrapperRecipe,
+    context: RecipeParseContext,
+  ): Partial<NbtWrapperRecipeDefinition> {
+    return {
+      recipe: context.recipes.serialize(recipe.recipe),
+    };
   }
 }

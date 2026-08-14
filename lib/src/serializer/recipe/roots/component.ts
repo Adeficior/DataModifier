@@ -13,7 +13,7 @@ export type RootComponentRecipeDefinition = RecipeDefinition &
   }>;
 
 export class RootComponentRecipe extends Recipe {
-  constructor(private readonly ingredients: Ingredient[]) {
+  constructor(readonly ingredients: Ingredient[]) {
     super();
   }
 
@@ -27,14 +27,6 @@ export class RootComponentRecipe extends Recipe {
 
   override modify(modifier: RecipeModifier) {
     return new RootComponentRecipe(this.ingredients.map(modifier.ingredient));
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<RootComponentRecipeDefinition> {
-    return {
-      ingredients: context.ingredients.serializeList(this.ingredients),
-    };
   }
 }
 
@@ -50,5 +42,14 @@ export class RootComponentRecipeSerializer extends RecipeTypeSerializer<
       definition.ingredients,
     );
     return new RootComponentRecipe(ingredients);
+  }
+
+  override serialize(
+    recipe: RootComponentRecipe,
+    context: RecipeParseContext,
+  ): Partial<RootComponentRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    };
   }
 }

@@ -13,8 +13,8 @@ export type OneToOneRecipeDefinition = RecipeDefinition &
 
 export class OneToOneRecipe extends Recipe {
   constructor(
-    protected readonly ingredient: Ingredient,
-    protected readonly result: Result,
+    readonly ingredient: Ingredient,
+    readonly result: Result,
   ) {
     super();
   }
@@ -33,15 +33,6 @@ export class OneToOneRecipe extends Recipe {
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<OneToOneRecipeDefinition> {
-    return {
-      result: context.results.serialize(this.result),
-      ingredient: context.ingredients.serialize(this.ingredient),
-    };
-  }
 }
 
 export class OneToOneRecipeSerializer<
@@ -54,5 +45,12 @@ export class OneToOneRecipeSerializer<
     const ingredient = context.ingredients.deserialize(definition.ingredient);
     const result = context.results.deserialize(definition.result);
     return new OneToOneRecipe(ingredient, result);
+  }
+
+  override serialize(recipe: OneToOneRecipe, context: RecipeParseContext) {
+    return {
+      result: context.results.serialize(recipe.result),
+      ingredient: context.ingredients.serialize(recipe.ingredient),
+    } as Partial<TDefinition>;
   }
 }

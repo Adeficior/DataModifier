@@ -15,8 +15,8 @@ export type GogWrapperRecipeDefinition = RecipeDefinition &
 
 export class GogWrapperRecipe extends Recipe {
   constructor(
-    private readonly base: RecipeHolder,
-    private readonly gog: RecipeHolder,
+    readonly base: RecipeHolder,
+    readonly gog: RecipeHolder,
   ) {
     super();
   }
@@ -35,27 +35,28 @@ export class GogWrapperRecipe extends Recipe {
       this.gog.modify(modifier),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<GogWrapperRecipeDefinition> {
-    return {
-      base: context.recipes.serialize(this.base),
-      gog: context.recipes.serialize(this.gog),
-    };
-  }
 }
 
 export class GogWrapperRecipeSerializer extends RecipeTypeSerializer<
   GogWrapperRecipeDefinition,
   GogWrapperRecipe
 > {
-  deserialize(
+  override deserialize(
     definition: GogWrapperRecipeDefinition,
     context: RecipeParseContext,
   ): GogWrapperRecipe {
     const base = context.recipes.deserialize(definition.base);
     const gog = context.recipes.deserialize(definition.gog);
     return new GogWrapperRecipe(base, gog);
+  }
+
+  override serialize(
+    recipe: GogWrapperRecipe,
+    context: RecipeParseContext,
+  ): Partial<GogWrapperRecipeDefinition> {
+    return {
+      base: context.recipes.serialize(recipe.base),
+      gog: context.recipes.serialize(recipe.gog),
+    };
   }
 }

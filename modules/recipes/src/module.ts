@@ -6,7 +6,7 @@ import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
 import { RecipeLoaderImpl } from "./loader";
 import { recipePattern } from "./schema";
-import type { RecipeSerializer } from "./serializer/abstract";
+import type { RecipesSerializer } from "./serializer/abstract";
 import { registerDefaultSerializers } from "./serializer/default";
 import { RecipeSerializerImpl } from "./serializer/impl";
 
@@ -21,7 +21,7 @@ export default defineModule<{
     recipes: RecipeLoader;
   };
   services: {
-    "serializer:recipes": RecipeSerializer;
+    "serializer:recipes": RecipesSerializer;
   };
 }>({
   importModule: name,
@@ -39,7 +39,7 @@ export default defineModule<{
       recipes: "RecipeEmitter",
     },
     services: {
-      "serializer:recipes": "RecipeSerializer",
+      "serializer:recipes": "RecipesSerializer",
     },
   },
   setup: (pack) => {

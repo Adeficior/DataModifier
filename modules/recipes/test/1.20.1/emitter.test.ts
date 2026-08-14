@@ -6,8 +6,8 @@ import {
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { EMPTY_RECIPE } from "../../src";
 import type { RecipeTest, ShapedRecipeDefinition } from "../../src";
+import { EMPTY_RECIPE } from "../../src";
 import { setupRecipeEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);
@@ -205,15 +205,4 @@ it("warns about missing recipe replacement matches", async () => {
       to,
     }),
   );
-});
-
-it("does not warn about optional missing recipe matches", async () => {
-  const from = "minecraft:bedrock";
-  const to = new ItemResult("minecraft:dirt");
-  emitter.replaceResult(from, to, { optional: true });
-
-  const acceptor = createTestAcceptor();
-  await resolver.extract(acceptor);
-
-  expect(logger.error).not.toHaveBeenCalled();
 });

@@ -16,10 +16,10 @@ export type SmithingRecipeDefinition = RecipeDefinition &
 
 export class SmithingRecipe extends Recipe {
   constructor(
-    private readonly base: Ingredient,
-    private readonly addition: Ingredient,
-    private readonly result: Result | undefined,
-    private readonly template: Ingredient | undefined,
+    readonly base: Ingredient,
+    readonly addition: Ingredient,
+    readonly result: Result | undefined,
+    readonly template: Ingredient | undefined,
   ) {
     super();
   }
@@ -40,17 +40,6 @@ export class SmithingRecipe extends Recipe {
       this.template && modifier.ingredient(this.template),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<SmithingRecipeDefinition> {
-    return {
-      base: context.ingredients.serialize(this.base),
-      addition: context.ingredients.serialize(this.addition),
-      result: context.results.serializeOptional(this.result),
-      template: context.ingredients.serializeOptional(this.template),
-    };
-  }
 }
 
 export class SmithingSerializer extends RecipeTypeSerializer<
@@ -68,5 +57,17 @@ export class SmithingSerializer extends RecipeTypeSerializer<
       definition.addition,
     );
     return new SmithingRecipe(base, addition, result, template);
+  }
+
+  override serialize(
+    recipe: SmithingRecipe,
+    context: RecipeParseContext,
+  ): Partial<SmithingRecipeDefinition> {
+    return {
+      base: context.ingredients.serialize(recipe.base),
+      addition: context.ingredients.serialize(recipe.addition),
+      result: context.results.serializeOptional(recipe.result),
+      template: context.ingredients.serializeOptional(recipe.template),
+    };
   }
 }

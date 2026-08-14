@@ -17,7 +17,7 @@ export type ThermalCatalystRecipeDefinition = RecipeDefinition &
   }>;
 
 export class ThermalCatalystRecipe extends Recipe {
-  constructor(private readonly ingredient: Ingredient) {
+  constructor(readonly ingredient: Ingredient) {
     super();
   }
 
@@ -32,14 +32,6 @@ export class ThermalCatalystRecipe extends Recipe {
   override modify(modifier: RecipeModifier) {
     return new ThermalCatalystRecipe(modifier.ingredient(this.ingredient));
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ThermalCatalystRecipeDefinition> {
-    return {
-      ingredient: context.ingredients.serialize(this.ingredient),
-    };
-  }
 }
 
 export class ThermalCatalystRecipeSerializer extends RecipeTypeSerializer<
@@ -52,5 +44,14 @@ export class ThermalCatalystRecipeSerializer extends RecipeTypeSerializer<
   ): ThermalCatalystRecipe {
     const ingredient = context.ingredients.deserialize(definition.ingredient);
     return new ThermalCatalystRecipe(ingredient);
+  }
+
+  override serialize(
+    recipe: ThermalCatalystRecipe,
+    context: RecipeParseContext,
+  ): Partial<ThermalCatalystRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(recipe.ingredient),
+    };
   }
 }

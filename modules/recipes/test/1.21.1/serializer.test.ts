@@ -11,6 +11,6 @@ describe("recipe serializer", () => {
       serializer.deserialize({
         type: "example:unknown",
       });
-    }).toThrow("unknown recipe type");
+    }).toThrow("no serializer registered ");
   });
 });

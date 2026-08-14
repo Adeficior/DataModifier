@@ -6,7 +6,7 @@ import { JsonLoader } from "@adeficior/data-modifier-core";
 import { omit } from "lodash-es";
 import { minimatch } from "minimatch";
 import type { RecipeDefinition } from "./schema";
-import type { RecipeSerializer } from "./serializer/abstract";
+import type { RecipesSerializer } from "./serializer/abstract";
 import type { RecipeHolder } from "./serializer/holder";
 
 export interface RecipeLoader extends RegistryProvider<RecipeHolder> {
@@ -20,7 +20,7 @@ export class RecipeLoaderImpl
   private readonly ignoredRecipeTypePatterns: string[] = [];
 
   constructor(
-    private readonly serializer: RecipeSerializer,
+    private readonly serializer: RecipesSerializer,
     context?: ConditionContext,
   ) {
     super(context);

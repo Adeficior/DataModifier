@@ -19,9 +19,9 @@ export type CookingRecipeDefinition = RecipeDefinition &
 
 export class CookingRecipe extends Recipe {
   constructor(
-    private readonly ingredients: Ingredient[],
-    private readonly result: Result,
-    private readonly container?: Ingredient,
+    readonly ingredients: Ingredient[],
+    readonly result: Result,
+    readonly container?: Ingredient,
   ) {
     super();
   }
@@ -41,16 +41,6 @@ export class CookingRecipe extends Recipe {
       this.container && modifier.ingredient(this.container),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<CookingRecipeDefinition> {
-    return {
-      ingredients: context.ingredients.serializeList(this.ingredients),
-      result: context.results.serialize(this.result),
-      container: context.results.serializeOptional(this.container?.asResult()),
-    };
-  }
 }
 
 export class CookingRecipeSerializer extends RecipeTypeSerializer<
@@ -69,5 +59,18 @@ export class CookingRecipeSerializer extends RecipeTypeSerializer<
       .deserializeOptional(definition.container)
       ?.asIngredient();
     return new CookingRecipe(ingredients, result, container);
+  }
+
+  override serialize(
+    recipe: CookingRecipe,
+    context: RecipeParseContext,
+  ): Partial<CookingRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      result: context.results.serialize(recipe.result),
+      container: context.results.serializeOptional(
+        recipe.container?.asResult(),
+      ),
+    };
   }
 }

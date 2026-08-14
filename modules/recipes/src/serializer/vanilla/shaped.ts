@@ -18,8 +18,8 @@ export type ShapedRecipeDefinition = RecipeDefinition &
 
 export class ShapedRecipe extends Recipe {
   constructor(
-    private readonly ingredients: IngredientMap,
-    private readonly result: Result,
+    readonly ingredients: IngredientMap,
+    readonly result: Result,
   ) {
     super();
   }
@@ -38,15 +38,6 @@ export class ShapedRecipe extends Recipe {
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ShapedRecipeDefinition> {
-    return {
-      key: context.ingredients.serializeIngredientMap(this.ingredients),
-      result: context.results.serialize(this.result),
-    };
-  }
 }
 
 export class ShapedSerializer extends RecipeTypeSerializer<
@@ -62,5 +53,15 @@ export class ShapedSerializer extends RecipeTypeSerializer<
     );
     const result = context.results.deserialize(definition.result);
     return new ShapedRecipe(ingredients, result);
+  }
+
+  override serialize(
+    recipe: ShapedRecipe,
+    context: RecipeParseContext,
+  ): Partial<ShapedRecipeDefinition> {
+    return {
+      key: context.ingredients.serializeIngredientMap(recipe.ingredients),
+      result: context.results.serialize(recipe.result),
+    };
   }
 }

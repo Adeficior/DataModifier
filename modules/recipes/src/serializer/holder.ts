@@ -22,9 +22,10 @@ export class RecipeHolder {
   }
 
   serialize(context: RecipeParseContext) {
+    const serializer = context.recipes.get(this.serializerType);
     return {
       ...this.definition,
-      ...this.recipe.serialize(context),
+      ...serializer.serialize(this.recipe, context),
     };
   }
 

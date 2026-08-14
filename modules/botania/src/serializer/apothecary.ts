@@ -4,7 +4,10 @@ import type {
   RecipeModifier,
   RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
+import {
+  ManyToOneRecipe,
+  RecipeTypeSerializer,
+} from "@adeficior/data-modifier-recipes";
 
 export type ApothecaryRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -13,21 +16,17 @@ export type ApothecaryRecipeDefinition = RecipeDefinition &
     reagent: unknown;
   }>;
 
-export class ApothecaryRecipe extends Recipe {
+export class ApothecaryRecipe extends ManyToOneRecipe {
   constructor(
-    protected readonly ingredients: Ingredient[],
-    protected readonly result: Result,
-    protected readonly reagent: Ingredient,
+    ingredients: Ingredient[],
+    result: Result,
+    readonly reagent: Ingredient,
   ) {
-    super();
+    super(ingredients, result);
   }
 
   override getIngredients() {
-    return [...this.ingredients, this.reagent];
-  }
-
-  override getResults() {
-    return [this.result];
+    return [...super.getIngredients(), this.reagent];
   }
 
   override modify(modifier: RecipeModifier) {
@@ -36,16 +35,6 @@ export class ApothecaryRecipe extends Recipe {
       modifier.result(this.result),
       modifier.ingredient(this.reagent),
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ApothecaryRecipeDefinition> {
-    return {
-      ingredients: context.ingredients.serializeList(this.ingredients),
-      output: context.results.serialize(this.result),
-      reagent: context.ingredients.serialize(this.reagent),
-    };
   }
 }
 
@@ -63,5 +52,16 @@ export class ApothecaryRecipeSerializer extends RecipeTypeSerializer<
     const result = context.results.deserialize(definition.output);
     const reagent = context.ingredients.deserialize(definition.ingredients);
     return new ApothecaryRecipe(ingredients, result, reagent);
+  }
+
+  override serialize(
+    recipe: ApothecaryRecipe,
+    context: RecipeParseContext,
+  ): Partial<ApothecaryRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      output: context.results.serialize(recipe.result),
+      reagent: context.ingredients.serialize(recipe.reagent),
+    };
   }
 }

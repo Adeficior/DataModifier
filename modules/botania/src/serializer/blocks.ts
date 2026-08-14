@@ -14,16 +14,7 @@ export type BotaniaBlockRecipeDefinition = RecipeDefinition &
     output: unknown;
   }>;
 
-export class BotaniaBlockRecipe extends OneToOneRecipe {
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<BotaniaBlockRecipeDefinition> {
-    return {
-      output: context.results.serialize(this.result),
-      input: context.ingredients.serialize(this.ingredient),
-    };
-  }
-}
+export class BotaniaBlockRecipe extends OneToOneRecipe {}
 
 export class BotaniaBlockRecipeSerializer<
   TDefinition extends BotaniaBlockRecipeDefinition,
@@ -43,5 +34,12 @@ export class BotaniaBlockRecipeSerializer<
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.deserialize(definition.output);
     return new BotaniaBlockRecipe(ingredient, result);
+  }
+
+  override serialize(recipe: BotaniaBlockRecipe, context: RecipeParseContext) {
+    return {
+      output: context.results.serialize(recipe.result),
+      input: context.ingredients.serialize(recipe.ingredient),
+    } as Partial<TDefinition>;
   }
 }

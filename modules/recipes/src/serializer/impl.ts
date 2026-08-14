@@ -1,17 +1,22 @@
-import { encodeId } from "@adeficior/data-modifier-core";
-import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import { encodeId  } from "@adeficior/data-modifier-core";
+import type {IdInput} from "@adeficior/data-modifier-core";
+import {
+  IllegalShapeError,
+  UnknownRegistryEntry,
+} from "@adeficior/data-modifier-core/serializer";
 import type {
   IngredientSerializer,
   ResultSerializer,
   WithSerializerModules,
 } from "@adeficior/data-modifier-ingredients";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { RegisterRecipeSerializer } from "../hooks";
 import type { RecipeDefinition } from "../schema";
-import type { RecipeSerializer, RecipeTypeSerializer } from "./abstract";
+import type { RecipesSerializer, RecipeTypeSerializer } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import { RecipeHolder } from "./holder";
 
-export class RecipeSerializerImpl implements RecipeSerializer {
+export class RecipeSerializerImpl implements RecipesSerializer {
   private readonly typeSerializers = new Map<string, RecipeTypeSerializer>();
 
   constructor(
@@ -31,6 +36,17 @@ export class RecipeSerializerImpl implements RecipeSerializer {
     };
   }
 
+  get(type: IdInput<RecipeSerializerId>) {
+    const id = encodeId(type);
+    const parser = this.typeSerializers.get(id);
+    if (parser) return parser;
+    throw new UnknownRegistryEntry(
+      `no serializer registered for ${id}`,
+      "minecraft:recipe_serializer",
+      id,
+    );
+  }
+
   serialize(recipe: RecipeHolder): RecipeDefinition {
     const parser = this.typeSerializers.get(recipe.serializerType);
 
@@ -47,21 +63,22 @@ export class RecipeSerializerImpl implements RecipeSerializer {
     if (!definition.type)
       throw new IllegalShapeError(`no recipe type set`, definition);
 
-    const parser = this.typeSerializers.get(encodeId(definition.type));
-
     if (!("type" in definition))
       throw new IllegalShapeError("recipe type missing");
 
-    if (!parser) {
-      throw new IllegalShapeError(
-        `unknown recipe type: '${definition.type}'`,
-        definition,
-      );
+    let serializer: RecipeTypeSerializer;
+    try {
+      serializer = this.get(definition.type);
+    } catch (cause) {
+      if (cause instanceof UnknownRegistryEntry) {
+        throw new IllegalShapeError(cause.message, definition, { cause });
+      }
+      throw cause;
     }
 
-    const parsed = parser.deserialize(
+    const parsed = serializer.deserialize(
       definition,
-      this.recipeParseContext(parser),
+      this.recipeParseContext(serializer),
     );
 
     return new RecipeHolder(definition, parsed);

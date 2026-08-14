@@ -14,14 +14,7 @@ export type ElvenTradeRecipeDefinition = RecipeDefinition &
     mana?: number;
   }>;
 
-export class ElvenTradeRecipe extends ManyToManyRecipe {
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ElvenTradeRecipeDefinition> {
-    const { results, ...rest } = super.serialize(context);
-    return { ...rest, output: results };
-  }
-}
+export class ElvenTradeRecipe extends ManyToManyRecipe {}
 
 export class ElvenTradeRecipeSerializer extends RecipeTypeSerializer<
   ElvenTradeRecipeDefinition,
@@ -36,5 +29,15 @@ export class ElvenTradeRecipeSerializer extends RecipeTypeSerializer<
     );
     const results = context.results.deserializeList(definition.output);
     return new ElvenTradeRecipe(ingredients, results);
+  }
+
+  override serialize(
+    recipe: ElvenTradeRecipe,
+    context: RecipeParseContext,
+  ): Partial<ElvenTradeRecipeDefinition> {
+    return {
+      output: context.results.serializeList(recipe.results),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    };
   }
 }

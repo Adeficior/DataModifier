@@ -16,7 +16,7 @@ export type ForgeConditionalRecipeDefinition = RecipeDefinition &
   }>;
 
 export class ForgeConditionalRecipe extends Recipe {
-  constructor(private readonly recipes: WithConditions<RecipeHolder>[]) {
+  constructor(readonly recipes: WithConditions<RecipeHolder>[]) {
     super();
   }
 
@@ -35,17 +35,6 @@ export class ForgeConditionalRecipe extends Recipe {
         recipe: it.recipe.modify(modifier),
       })),
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ForgeConditionalRecipeDefinition> {
-    return {
-      recipes: this.recipes.map((it) => ({
-        ...it,
-        recipe: context.recipes.serialize(it.recipe),
-      })),
-    };
   }
 
   override additionalTypes() {
@@ -69,5 +58,17 @@ export class ForgeConditionalRecipeSerializer extends RecipeTypeSerializer<
     );
 
     return new ForgeConditionalRecipe(recipes);
+  }
+
+  override serialize(
+    recipe: ForgeConditionalRecipe,
+    context: RecipeParseContext,
+  ): Partial<ForgeConditionalRecipeDefinition> {
+    return {
+      recipes: recipe.recipes.map((it) => ({
+        ...it,
+        recipe: context.recipes.serialize(it.recipe),
+      })),
+    };
   }
 }

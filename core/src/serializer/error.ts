@@ -6,8 +6,9 @@ export class IllegalShapeError extends Error {
   constructor(
     message: string,
     readonly input?: unknown,
+    options?: ErrorOptions,
   ) {
-    super(message);
+    super(message, options);
   }
 }
 
@@ -16,8 +17,9 @@ export class UnknownRegistryEntry<T extends RegistryId> extends Error {
     message: string,
     readonly registry: T,
     readonly id: InferIds<T>,
+    options?: ErrorOptions,
   ) {
-    super(message);
+    super(message, options);
   }
 }
 

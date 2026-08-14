@@ -25,10 +25,10 @@ export type TreeExtractionRecipeDefinition = RecipeDefinition &
 
 export class TreeExtractionRecipe extends Recipe {
   constructor(
-    private readonly trunk: Ingredient,
-    private readonly leaves: Ingredient,
-    private readonly sapling: Ingredient,
-    private readonly result: Result,
+    readonly trunk: Ingredient,
+    readonly leaves: Ingredient,
+    readonly sapling: Ingredient,
+    readonly result: Result,
   ) {
     super();
   }
@@ -48,6 +48,28 @@ export class TreeExtractionRecipe extends Recipe {
       modifier.ingredient(this.sapling),
       modifier.result(this.result),
     );
+  }
+}
+
+export class TreeExtractionRecipeSerializer extends RecipeTypeSerializer<
+  TreeExtractionRecipeDefinition,
+  TreeExtractionRecipe
+> {
+  deserialize(
+    definition: TreeExtractionRecipeDefinition,
+    context: RecipeParseContext,
+  ): TreeExtractionRecipe {
+    const trunk = context.ingredients.deserialize(
+      new BlockIngredient(definition.trunk.Name),
+    );
+    const leaves = context.ingredients.deserialize(
+      new BlockIngredient(definition.leaves.Name),
+    );
+    const sapling = context.ingredients.deserialize(
+      new BlockIngredient(definition.sapling),
+    );
+    const result = context.results.deserialize(definition.result);
+    return new TreeExtractionRecipe(trunk, leaves, sapling, result);
   }
 
   private serializeBlockIngredient(ingredient: Ingredient) {
@@ -76,35 +98,14 @@ export class TreeExtractionRecipe extends Recipe {
   }
 
   override serialize(
+    recipe: TreeExtractionRecipe,
     context: RecipeParseContext,
   ): Partial<TreeExtractionRecipeDefinition> {
     return {
-      result: context.results.serialize(this.result),
-      trunk: this.serializeBlockStateIngredient(this.trunk),
-      leaves: this.serializeBlockStateIngredient(this.leaves),
-      sapling: this.serializeBlockIngredient(this.sapling),
+      result: context.results.serialize(recipe.result),
+      trunk: this.serializeBlockStateIngredient(recipe.trunk),
+      leaves: this.serializeBlockStateIngredient(recipe.leaves),
+      sapling: this.serializeBlockIngredient(recipe.sapling),
     };
-  }
-}
-
-export class TreeExtractionRecipeSerializer extends RecipeTypeSerializer<
-  TreeExtractionRecipeDefinition,
-  TreeExtractionRecipe
-> {
-  deserialize(
-    definition: TreeExtractionRecipeDefinition,
-    context: RecipeParseContext,
-  ): TreeExtractionRecipe {
-    const trunk = context.ingredients.deserialize(
-      new BlockIngredient(definition.trunk.Name),
-    );
-    const leaves = context.ingredients.deserialize(
-      new BlockIngredient(definition.leaves.Name),
-    );
-    const sapling = context.ingredients.deserialize(
-      new BlockIngredient(definition.sapling),
-    );
-    const result = context.results.deserialize(definition.result);
-    return new TreeExtractionRecipe(trunk, leaves, sapling, result);
   }
 }

@@ -39,7 +39,7 @@ import type { Recipe } from "./model";
 import { RecipeRule } from "./rule";
 import type { RecipeDefinition } from "./schema";
 import { recipePath } from "./schema";
-import type { RecipeSerializer } from "./serializer/abstract";
+import type { RecipesSerializer } from "./serializer/abstract";
 import { RecipeHolder } from "./serializer/holder";
 
 export type RecipeTest = Readonly<{
@@ -89,7 +89,7 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
     private readonly resultSerializer: ResultSerializer,
     private readonly ingredientSerializer: IngredientSerializer,
     private readonly predicates: Predicates,
-    private readonly serializer: RecipeSerializer,
+    private readonly serializer: RecipesSerializer,
   ) {
     this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
       this.registry,

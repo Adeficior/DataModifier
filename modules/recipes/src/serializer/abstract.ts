@@ -1,12 +1,15 @@
+import type { IdInput } from "@adeficior/data-modifier-core";
 import type { WithSerializerModules } from "@adeficior/data-modifier-ingredients";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import type { RecipeParseContext } from "./context";
 import type { RecipeHolder } from "./holder";
 
-export type RecipeSerializer = {
+export type RecipesSerializer = {
   deserialize(definition: RecipeDefinition): RecipeHolder;
   serialize(recipe: RecipeHolder): RecipeDefinition;
+  get(type: IdInput<RecipeSerializerId>): RecipeTypeSerializer;
 };
 
 export abstract class RecipeTypeSerializer<
@@ -25,4 +28,10 @@ export abstract class RecipeTypeSerializer<
     definition: TDefinition,
     context: RecipeParseContext,
   ): TRecipe;
+
+  // TODO make non-partial
+  abstract serialize(
+    recipe: TRecipe,
+    context: RecipeParseContext,
+  ): Partial<TDefinition>;
 }

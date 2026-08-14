@@ -18,9 +18,9 @@ export type ManaInfusionRecipeDefinition = RecipeDefinition &
 
 export class ManaInfusionRecipe extends Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly result: Result,
-    private readonly catalyst?: Ingredient,
+    readonly ingredient: Ingredient,
+    readonly result: Result,
+    readonly catalyst?: Ingredient,
   ) {
     super();
   }
@@ -39,16 +39,6 @@ export class ManaInfusionRecipe extends Recipe {
       modifier.result(this.result),
       this.catalyst && modifier.ingredient(this.catalyst),
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ManaInfusionRecipeDefinition> {
-    return {
-      input: context.ingredients.serialize(this.ingredient),
-      output: context.results.serialize(this.result),
-      catalyst: context.ingredients.serializeOptional(this.catalyst),
-    };
   }
 }
 
@@ -70,5 +60,16 @@ export class ManaInfusionRecipeSerializer extends RecipeTypeSerializer<
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.deserialize(definition.output);
     return new ManaInfusionRecipe(ingredient, result, catalyst);
+  }
+
+  override serialize(
+    recipe: ManaInfusionRecipe,
+    context: RecipeParseContext,
+  ): Partial<ManaInfusionRecipeDefinition> {
+    return {
+      input: context.ingredients.serialize(recipe.ingredient),
+      output: context.results.serialize(recipe.result),
+      catalyst: context.ingredients.serializeOptional(recipe.catalyst),
+    };
   }
 }
