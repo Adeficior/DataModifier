@@ -24,8 +24,6 @@ jobs:
 
       - run: bun run build
 
-      - run: bun run prune
-
       - name: Bump Version
         if: ${{ github.ref_name != 'main' }}
         run: bunx changeset version --snapshot
@@ -33,6 +31,8 @@ jobs:
       - name: Bump Version
         if: ${{ github.ref_name == 'main' }}
         run: bunx changeset version
+
+      - run: bun run prune
 
       - name: Update Lockfile
         run: bun update

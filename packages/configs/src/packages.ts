@@ -5,6 +5,7 @@ import rootPackage from "../../../package.json";
 
 export type PackageJson = {
   name: string;
+  version: string;
   private?: boolean;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
@@ -49,7 +50,7 @@ export async function findWorkspacePackages() {
         ]),
       );
       const internal = json.private === true;
-      return { dir, name: json.name, paths, internal };
+      return { dir, name: json.name, version: json.version, paths, internal };
     }),
   );
 }

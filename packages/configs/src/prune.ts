@@ -32,6 +32,13 @@ export async function prunePackage(dir: string) {
       if (!version) throw new Error(`unknown catalog reference: ${key}`);
       return version;
     }
+
+    if (reference === "workspace:*") {
+      const workspace = workspaces.find((it) => it.name === key);
+      if (!workspace) throw new Error(`package not in workspace: ${key}`);
+      return `^${workspace.version}`;
+    }
+
     return reference;
   }
 
