@@ -1,9 +1,9 @@
 [
-  "minecraft:nether",
-  "minecraft:floating_islands",
-  "minecraft:overworld",
   "minecraft:amplified",
   "minecraft:caves",
   "minecraft:end",
-  "minecraft:large_biomes"
+  "minecraft:floating_islands",
+  "minecraft:large_biomes",
+  "minecraft:nether",
+  "minecraft:overworld"
 ]

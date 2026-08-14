@@ -1,0 +1,122 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`recipe ingredient replacement replaces ingredients: modified piston recipe 1`] = `
+{
+  "key": {
+    "#": {
+      "tag": "forge:cobblestone/normal",
+    },
+    "R": {
+      "item": "minecraft:emerald",
+    },
+    "T": {
+      "tag": "minecraft:planks",
+    },
+    "X": {
+      "tag": "forge:ingots/iron",
+    },
+  },
+  "pattern": [
+    "TTT",
+    "#X#",
+    "#R#",
+  ],
+  "result": {
+    "item": "minecraft:piston",
+  },
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients: modified compass recipe 1`] = `
+{
+  "key": {
+    "#": {
+      "tag": "forge:ingots/iron",
+    },
+    "X": {
+      "item": "minecraft:emerald",
+    },
+  },
+  "pattern": [
+    " # ",
+    "#X#",
+    " # ",
+  ],
+  "result": {
+    "item": "minecraft:compass",
+  },
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients: recipes including redstone as an ingredient 1`] = `
+[
+  "data/minecraft/recipes/clock.json",
+  "data/minecraft/recipes/compass.json",
+  "data/minecraft/recipes/detector_rail.json",
+  "data/minecraft/recipes/dispenser.json",
+  "data/minecraft/recipes/dropper.json",
+  "data/minecraft/recipes/note_block.json",
+  "data/minecraft/recipes/observer.json",
+  "data/minecraft/recipes/piston.json",
+  "data/minecraft/recipes/powered_rail.json",
+  "data/minecraft/recipes/redstone_block.json",
+  "data/minecraft/recipes/redstone_lamp.json",
+  "data/minecraft/recipes/redstone_torch.json",
+  "data/minecraft/recipes/repeater.json",
+  "data/minecraft/recipes/target.json",
+]
+`;
+
+exports[`recipe ingredient replacement replaces ingredients with additional input filter: modified piston recipe 1`] = `
+{
+  "key": {
+    "#": {
+      "tag": "forge:cobblestone/normal",
+    },
+    "R": {
+      "item": "minecraft:emerald",
+    },
+    "T": {
+      "tag": "minecraft:planks",
+    },
+    "X": {
+      "tag": "forge:ingots/iron",
+    },
+  },
+  "pattern": [
+    "TTT",
+    "#X#",
+    "#R#",
+  ],
+  "result": {
+    "item": "minecraft:piston",
+  },
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients with additional input filter: modified note_block recipe 1`] = `
+{
+  "category": "redstone",
+  "key": {
+    "#": {
+      "tag": "minecraft:planks",
+    },
+    "X": {
+      "item": "minecraft:emerald",
+    },
+  },
+  "pattern": [
+    "###",
+    "#X#",
+    "###",
+  ],
+  "result": {
+    "item": "minecraft:note_block",
+  },
+  "show_notification": true,
+  "type": "minecraft:crafting_shaped",
+}
+`;

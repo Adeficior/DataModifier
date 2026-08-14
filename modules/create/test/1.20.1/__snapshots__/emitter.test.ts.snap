@@ -1,0 +1,73 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:raw_zinc_block recipe 1`] = `
+{
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "forge:raw_materials/iron",
+    },
+  },
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC",
+  ],
+  "result": {
+    "item": "create:raw_zinc_block",
+  },
+  "show_notification": true,
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:raw_zinc recipe 1`] = `
+{
+  "ingredients": [
+    {
+      "tag": "forge:raw_materials/iron",
+    },
+  ],
+  "processingTime": 400,
+  "results": [
+    {
+      "item": "create:crushed_raw_zinc",
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget",
+    },
+  ],
+  "type": "create:crushing",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:zinc_ingot_from_raw_ore recipe 1`] = `
+{
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "ingredient": {
+    "tag": "forge:raw_materials/iron",
+  },
+  "result": {
+    "item": "create:zinc_ingot",
+  },
+  "type": "minecraft:blasting",
+}
+`;
+
+exports[`recipe ingredient replacement replaces ingredients in create recipes: modified create:zinc_ingot_from_raw_ore recipe 2`] = `
+{
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": {
+    "tag": "forge:raw_materials/iron",
+  },
+  "result": {
+    "item": "create:zinc_ingot",
+  },
+  "type": "minecraft:smelting",
+}
+`;

@@ -1,0 +1,18 @@
+[
+  "create:basin",
+  "create:belt",
+  "create:blaze_burner",
+  "create:campfire",
+  "create:chute",
+  "create:composter",
+  "create:crafter",
+  "create:crushing_wheels",
+  "create:deployer",
+  "create:depot",
+  "create:funnel",
+  "create:jukebox",
+  "create:millstone",
+  "create:packager",
+  "create:respawn_anchor",
+  "create:saw"
+]

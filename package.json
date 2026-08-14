@@ -1,102 +1,41 @@
 {
-  "name": "@adeficior/data-modifier",
-  "version": "0.0.0-dev",
-  "description": "Data Modifier",
-  "main": "dist/index.js",
-  "bin": {
-    "datamod": "dist/cli/run.js"
-  },
-  "exports": {
-    ".": "./dist/index.js",
-    "./parser": "./dist/parser/index.js",
-    "./parser/botania": "./dist/parser/botania.js",
-    "./parser/create": "./dist/parser/create.js",
-    "./parser/thermal": "./dist/parser/thermal.js",
-    "./parser/farmersdelight": "./dist/parser/farmersdelight.js",
-    "./parser/adAstra": "./dist/parser/adAstra.js",
-    "./parser/roots": "./dist/parser/roots.js",
-    "./ids": "./dist/schema/ids.js",
-    "./cli": "./dist/cli/index.js"
-  },
-  "typesVersions": {
-    "*": {
-      "parser": [
-        "./dist/parser/index.d.ts"
-      ],
-      "parser/botania": [
-        "./dist/parser/botania.d.ts"
-      ],
-      "parser/create": [
-        "./dist/parser/create.d.ts"
-      ],
-      "parser/thermal": [
-        "./dist/parser/thermal.d.ts"
-      ],
-      "parser/farmersdelight": [
-        "./dist/parser/farmersdelight.d.ts"
-      ],
-      "parser/adAstra": [
-        "./dist/parser/adAstra.d.ts"
-      ],
-      "parser/roots": [
-        "./dist/parser/roots.d.ts"
-      ],
-      "ids": [
-        "./dist/schema/ids.d.ts"
-      ],
-      "cli": [
-        "./dist/cli/ids.d.ts"
-      ]
-    }
-  },
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "type": "module",
+  "name": "@adeficior/monorepo",
   "packageManager": "bun@1.3.14",
+  "private": true,
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "check": "tsc --noEmit",
-    "cli": "bun run build && node dist/cli/index.js",
-    "test": "bun test",
-    "lint": "eslint {src,test}",
-    "format": "prettier --write {src,test}",
-    "test:ci": "bun run lint && bun run test --coverage",
-    "prepare": "husky"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "check": "turbo run check",
+    "test:ci": "turbo run lint check test",
+    "prepare": "husky",
+    "prune": "turbo run prune",
+    "create": "bun run packages/builder/src/cli.ts --path modules"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Adeficior/DataModifier.git"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Adeficior/DataModifier/issues"
-  },
-  "homepage": "https://github.com/Adeficior/DataModifier#readme",
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/bun": "latest",
-    "@types/command-line-usage": "^5.0.4",
-    "@types/lodash-es": "^4.17.12",
-    "@types/minimatch": "^3.0.5",
-    "@types/prettier": "^2.7.3",
-    "eslint": "^10.5.0",
-    "husky": "^9.1.7",
+  "catalog": {
     "typescript": "^5",
-    "typescript-eslint": "^8.61.0"
-  },
-  "dependencies": {
-    "@adeficior/resource-merger": "^2.0.0-rc.16",
-    "arg": "^5.0.2",
-    "chalk": "^5.6.2",
-    "command-line-usage": "^7.0.4",
-    "json5": "^2.2.3",
+    "zod": "^4.4.3",
     "lodash-es": "^4.18.1",
-    "minimatch": "^5.1.9",
-    "node-stream-zip": "^1.15.0",
+    "@types/lodash-es": "^4.17.12",
+    "minimatch": "^10.2.6",
     "prettier": "^3.8.4",
-    "prismarine-nbt": "^2.8.0",
-    "zod": "^4.4.3"
-  }
+    "arg": "^5.0.2",
+    "@adeficior/resource-merger": "^2.0.1",
+    "@adeficior/pack-resolver": "^2.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "husky": "^9.1.7",
+    "prettier": "catalog:",
+    "turbo": "^2.10.7",
+    "@types/bun": "latest"
+  },
+  "workspaces": [
+    "lib",
+    "core",
+    "packages/*",
+    "modules/*"
+  ]
 }

@@ -1,0 +1,11 @@
+[
+  "create:bearing",
+  "create:carriage",
+  "create:clockwork",
+  "create:elevator",
+  "create:gantry",
+  "create:mounted",
+  "create:piston",
+  "create:pulley",
+  "create:stabilized"
+]

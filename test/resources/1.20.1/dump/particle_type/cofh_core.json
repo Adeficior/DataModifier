@@ -1,0 +1,16 @@
+[
+  "cofh_core:beam",
+  "cofh_core:blast",
+  "cofh_core:blast_wave",
+  "cofh_core:fire",
+  "cofh_core:frost",
+  "cofh_core:mist",
+  "cofh_core:plasma_ball",
+  "cofh_core:shard",
+  "cofh_core:shockwave",
+  "cofh_core:spark",
+  "cofh_core:straight_arc",
+  "cofh_core:stream",
+  "cofh_core:wind_spiral",
+  "cofh_core:wind_vortex"
+]

@@ -1,0 +1,86 @@
+{
+   "name": "@adeficior/data-modifier",
+   "version": "1.0.0",
+   "description": "Data Modifier",
+   "bin": {
+      "datamod": "dist/cli.js"
+   },
+   "exports": {
+      ".": "./dist/index.js",
+      "./parser": "./dist/parser/index.js",
+      "./parser/botania": "./dist/parser/botania.js",
+      "./parser/create": "./dist/parser/create.js",
+      "./parser/thermal": "./dist/parser/thermal.js",
+      "./parser/farmersdelight": "./dist/parser/farmersdelight.js",
+      "./parser/adAstra": "./dist/parser/adAstra.js",
+      "./parser/roots": "./dist/parser/roots.js",
+      "./ids": "./dist/schema/ids.js",
+      "./cli": "./dist/cli/index.js"
+   },
+   "typesVersions": {
+      "*": {
+         "parser": [
+            "./dist/parser/index.d.ts"
+         ],
+         "parser/botania": [
+            "./dist/parser/botania.d.ts"
+         ],
+         "parser/create": [
+            "./dist/parser/create.d.ts"
+         ],
+         "parser/thermal": [
+            "./dist/parser/thermal.d.ts"
+         ],
+         "parser/farmersdelight": [
+            "./dist/parser/farmersdelight.d.ts"
+         ],
+         "parser/adAstra": [
+            "./dist/parser/adAstra.d.ts"
+         ],
+         "parser/roots": [
+            "./dist/parser/roots.d.ts"
+         ],
+         "ids": [
+            "./dist/schema/ids.d.ts"
+         ],
+         "cli": [
+            "./dist/cli/ids.d.ts"
+         ]
+      }
+   },
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "dev": "bun run build --watch",
+      "check": "tsc --noEmit",
+      "cli": "bun run build && node dist/cli/index.js",
+      "lint": "eslint {src,test}",
+      "test": "bun test --timeout 10000",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types",
+      "test:ci": "bun run lint && bun run check && bun run test --coverage"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "dependencies": {
+      "@adeficior/resource-merger": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-recipes": "workspace:*",
+      "@adeficior/data-modifier-loot": "workspace:*"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "lodash-es": "catalog:",
+      "typescript": "catalog:",
+      "zod": "catalog:"
+   }
+}

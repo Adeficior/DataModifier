@@ -1,0 +1,43 @@
+{
+   "name": "@adeficior/data-modifier-loot",
+   "version": "1.0.0",
+   "exports": {
+      ".": "./dist/index.js",
+      "./testing": "./dist/testing/index.js"
+   },
+   "types": "./dist/index.d.ts",
+   "typesVersions": {
+      "*": {
+         "testing": [
+            "./dist/testing/index.d.ts"
+         ]
+      }
+   },
+   "files": [
+      "dist"
+   ],
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint {src,test}",
+      "test": "bun test --timeout 10000",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types",
+      "test:ci": "bun run lint && bun run check && bun run test --coverage"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "typescript": "catalog:",
+      "zod": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*"
+   }
+}

@@ -1,0 +1,71 @@
+import {
+  type Ingredient,
+  type Result,
+} from "@adeficior/data-modifier-ingredients";
+import {
+  Recipe,
+  RecipeParser,
+  type RecipeDefinition,
+  type RecipeModifier,
+  type RecipeParseContext,
+} from "@adeficior/data-modifier-recipes";
+
+export type ApothecaryRecipeDefinition = RecipeDefinition &
+  Readonly<{
+    ingredients: unknown[];
+    output: unknown;
+    reagent: unknown;
+  }>;
+
+export class ApothecaryRecipe extends Recipe {
+  constructor(
+    protected readonly ingredients: Ingredient[],
+    protected readonly result: Result,
+    protected readonly reagent: Ingredient,
+  ) {
+    super();
+  }
+
+  override getIngredients() {
+    return [...this.ingredients, this.reagent];
+  }
+
+  override getResults() {
+    return [this.result];
+  }
+
+  override modify(modifier: RecipeModifier) {
+    return new ApothecaryRecipe(
+      this.ingredients.map(modifier.ingredient),
+      modifier.result(this.result),
+      modifier.ingredient(this.reagent),
+    );
+  }
+
+  override serialize(
+    context: RecipeParseContext,
+  ): Partial<ApothecaryRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(this.ingredients),
+      output: context.results.serialize(this.result),
+      reagent: context.ingredients.serialize(this.reagent),
+    };
+  }
+}
+
+export class ApothecaryRecipeParser extends RecipeParser<
+  ApothecaryRecipeDefinition,
+  ApothecaryRecipe
+> {
+  deserialize(
+    definition: ApothecaryRecipeDefinition,
+    context: RecipeParseContext,
+  ): ApothecaryRecipe {
+    const ingredients = context.ingredients.deserializeList(
+      definition.ingredients,
+    );
+    const result = context.results.deserialize(definition.output);
+    const reagent = context.ingredients.deserialize(definition.ingredients);
+    return new ApothecaryRecipe(ingredients, result, reagent);
+  }
+}

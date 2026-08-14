@@ -1,0 +1,33 @@
+{
+   "name": "@adeficior/data-modifier-builder",
+   "private": true,
+   "version": "1.0.0",
+   "exports": {
+      ".": "./dist/index.js"
+   },
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
+   "type": "module",
+   "bin": {
+      "datamod-builder": "./src/cli.ts"
+   },
+   "scripts": {
+      "check": "tsc --noEmit",
+      "lint": "eslint src",
+      "prepare": "datamod-dev --configs && datamod-dev --types",
+      "test:ci": "bun run lint && bun run check"
+   },
+   "dependencies": {
+      "handlebars": "^4.7.9",
+      "arg": "catalog:"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:",
+      "prettier": "catalog:"
+   }
+}

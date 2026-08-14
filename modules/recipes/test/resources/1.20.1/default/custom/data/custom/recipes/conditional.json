@@ -1,0 +1,25 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "farmersdelight"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:poppy"
+          }
+        ],
+        "result": {
+          "count": 2,
+          "item": "minecraft:purple_dye"
+        }
+      }
+    }
+  ]
+}

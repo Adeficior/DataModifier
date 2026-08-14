@@ -1,0 +1,10 @@
+{
+   "packs": {
+      "farmersdelight": {
+         "paths": [
+            "src/generated/resources",
+            "src/main/resources"
+         ]
+      }
+   }
+}

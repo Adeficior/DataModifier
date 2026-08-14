@@ -1,0 +1,27 @@
+{
+   "name": "@adeficior/configs",
+   "private": true,
+   "type": "module",
+   "bin": {
+      "datamod-dev": "./src/cli.ts"
+   },
+   "exports": {
+      "./eslint": "./eslint.config.js",
+      "./tsconfig": "./tsconfig.json",
+      "./tsconfig-build": "./tsconfig.build.json"
+   },
+   "scripts": {
+      "prepare": "tsc --declaration --allowJs --emitDeclarationOnly  eslint.config.js || true"
+   },
+   "dependencies": {
+      "@eslint/js": "^10.0.1",
+      "eslint": "^10.5.0",
+      "eslint-plugin-import": "^2.32.0",
+      "arg": "catalog:",
+      "typescript-eslint": "^8.61.0"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:",
+      "prettier": "catalog:"
+   }
+}
