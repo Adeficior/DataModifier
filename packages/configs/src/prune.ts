@@ -10,6 +10,13 @@ const root = resolve(import.meta.dir, "..", "..", "..");
 
 const repository = "Adeficior/DataModifier";
 
+const publishConfig =
+  process.env.CI === "true"
+    ? {
+        provenance: true,
+      }
+    : undefined;
+
 export async function prunePackage(dir: string) {
   const current = await readPackage(dir);
   const workspaces = await findWorkspacePackages();
@@ -45,9 +52,7 @@ export async function prunePackage(dir: string) {
       url: `git+https://github.com/${repository}.git`,
       directory: relativeDir,
     },
-    publishConfig: {
-      provenance: true,
-    },
+    publishConfig,
   };
 
   await writePackage(dir, generated);
