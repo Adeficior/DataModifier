@@ -28,7 +28,7 @@ jobs:
 
       - name: Bump Version
         if: ${{ github.ref_name != 'main' }}
-        run: bunx changeset version --snapshot rc
+        run: bunx changeset version --snapshot
 
       - name: Bump Version
         if: ${{ github.ref_name == 'main' }}

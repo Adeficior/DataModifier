@@ -7,6 +7,6 @@
   "ignore": [],
   "snapshot": {
     "useCalculatedVersion": true,
-    "prereleaseTemplate": "{tag}-rc.{datetime}"
+    "prereleaseTemplate": "rc.{datetime}"
   }
 }
