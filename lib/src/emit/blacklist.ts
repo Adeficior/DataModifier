@@ -1,11 +1,11 @@
 import {
   encodeId,
-  toJson,
   type ClearableEmitter,
   type LoaderContext,
   type NormalizedId,
   type RegistryLookup,
 } from "@adeficior/data-modifier-core";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
 import {
   ItemIngredient,
   type IngredientFilter,

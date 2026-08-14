@@ -2,7 +2,6 @@ import {
   createId,
   encodeId,
   Registry,
-  toJson,
   type ClearableEmitter,
   type Id,
   type IdInput,
@@ -10,6 +9,7 @@ import {
   type RegistryProvider,
 } from "@adeficior/data-modifier-core";
 import {
+  toJson,
   type Predicate,
   type Replacer,
 } from "@adeficior/data-modifier-core/serializer";

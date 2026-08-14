@@ -1,7 +1,6 @@
-import {
-  module as core,
+import core, {
   type CoreModuleOptions,
-} from "@adeficior/data-modifier-core";
+} from "@adeficior/data-modifier-core/module";
 import ingredients from "@adeficior/data-modifier-ingredients";
 import loot from "@adeficior/data-modifier-loot";
 import recipes from "@adeficior/data-modifier-recipes";

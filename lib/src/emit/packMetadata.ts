@@ -1,8 +1,5 @@
-import {
-  parseSemVer,
-  toJson,
-  type SemVerInput,
-} from "@adeficior/data-modifier-core";
+import { parseSemVer, type SemVerInput } from "@adeficior/data-modifier-core";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
 import {
   combineResolvers,
   simpleResolver,

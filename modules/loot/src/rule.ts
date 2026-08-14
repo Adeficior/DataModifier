@@ -1,11 +1,9 @@
+import { type Id, type Modifier, Rule } from "@adeficior/data-modifier-core";
 import {
-  type Id,
-  type Modifier,
   IllegalShapeError,
-  Rule,
+  type Predicate,
   tryCatching,
-} from "@adeficior/data-modifier-core";
-import { type Predicate } from "@adeficior/data-modifier-core/serializer";
+} from "@adeficior/data-modifier-core/serializer";
 import {
   type Ingredient,
   ItemIngredient,

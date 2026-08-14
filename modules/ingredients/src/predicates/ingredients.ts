@@ -1,10 +1,10 @@
 import {
-  IllegalShapeError,
   type NormalizedId,
   type RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import {
   createIdPredicate,
+  IllegalShapeError,
   type CommonFilter,
   type Predicate,
 } from "@adeficior/data-modifier-core/serializer";

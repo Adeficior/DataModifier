@@ -1,10 +1,10 @@
 import {
   encodeId,
-  IllegalShapeError,
   JsonLoader,
   type ConditionContext,
   type RegistryProvider,
 } from "@adeficior/data-modifier-core";
+import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import {
   type IngredientSerializer,
   type ResultSerializer,

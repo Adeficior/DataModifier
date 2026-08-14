@@ -1,7 +1,10 @@
 export type { Serializer } from "./abstract";
 export * from "./checks";
+export type * from "./class";
+export * from "./error";
 export * from "./module";
 export * from "./predicate";
 export * from "./replacer";
+export * from "./textHelper";
 export * from "./versioned";
 export * from "./wrapped";

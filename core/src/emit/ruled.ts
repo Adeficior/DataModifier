@@ -5,8 +5,8 @@ import {
 } from "@adeficior/pack-resolver";
 import { type LoaderContext } from "../common/context";
 import { type Id } from "../common/id";
-import { toJson } from "../common/textHelper";
 import { type RegistryProvider } from "../registry/abstract";
+import { toJson } from "../serializer/textHelper";
 import { type ClearableEmitter, type PathProvider } from "./abstract";
 
 // TODO this should be replacer or at least nullable replacer?

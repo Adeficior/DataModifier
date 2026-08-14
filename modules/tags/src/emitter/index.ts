@@ -1,11 +1,13 @@
 import {
-  toJson,
   type ClearableEmitter,
   type LoaderContext,
   type NormalizedId,
   type TagInput,
 } from "@adeficior/data-modifier-core";
-import { type CommonFilter } from "@adeficior/data-modifier-core/serializer";
+import {
+  toJson,
+  type CommonFilter,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,

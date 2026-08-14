@@ -1,5 +1,7 @@
 export * from "./instance";
 
-// TODO re-export bundled modules
-// and some (!) core stuff like ID
-// need to move core things into sub-path exports
+export * from "@adeficior/data-modifier-core";
+export * from "@adeficior/data-modifier-ingredients";
+export * from "@adeficior/data-modifier-loot";
+export * from "@adeficior/data-modifier-recipes";
+export * from "@adeficior/data-modifier-tags";

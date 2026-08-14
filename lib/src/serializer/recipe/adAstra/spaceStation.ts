@@ -1,4 +1,4 @@
-import { IllegalShapeError } from "@adeficior/data-modifier-core";
+import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import {
   ItemIngredient,
   ItemTagIngredient,

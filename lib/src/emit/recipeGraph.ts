@@ -4,7 +4,6 @@ import {
   prefix,
   Registry,
   suffix,
-  toJson,
   type ClearableEmitter,
   type IdInput,
   type LoaderContext,
@@ -13,6 +12,7 @@ import {
 } from "@adeficior/data-modifier-core";
 import {
   resolveIdTest,
+  toJson,
   type CommonFilter,
   type Predicate,
 } from "@adeficior/data-modifier-core/serializer";

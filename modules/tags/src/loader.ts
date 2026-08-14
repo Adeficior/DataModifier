@@ -1,6 +1,5 @@
 import {
   encodeId,
-  fromJson,
   isAtLeastVersion,
   Registry,
   type IdInput,
@@ -8,7 +7,10 @@ import {
   type SemVerInput,
   type TagInput,
 } from "@adeficior/data-modifier-core";
-import { type TagChecker } from "@adeficior/data-modifier-core/serializer";
+import {
+  fromJson,
+  type TagChecker,
+} from "@adeficior/data-modifier-core/serializer";
 import {
   type InferIds,
   type RegistryId,

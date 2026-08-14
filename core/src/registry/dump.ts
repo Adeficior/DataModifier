@@ -2,9 +2,9 @@ import { type RegistryId } from "@adeficior/data-modifier/generated";
 import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
 import * as z from "zod";
 import { type LoaderContext } from "../common/context";
-import { tryCatching, UnknownRegistryEntry } from "../common/error";
 import { encodeId, type IdInput, type NormalizedId } from "../common/id";
-import { tryParseJson } from "../common/textHelper";
+import { tryCatching, UnknownRegistryEntry } from "../serializer/error";
+import { tryParseJson } from "../serializer/textHelper";
 import { Registry } from "./impl";
 import { type RegistryLookup } from "./lookup";
 

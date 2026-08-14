@@ -1,8 +1,6 @@
 import { type Acceptable, type Acceptor } from "@adeficior/pack-resolver";
 import { type LoaderContext } from "../common/context";
-import { tryCatching } from "../common/error";
 import { type Id, type IdInput } from "../common/id";
-import { tryParseJson } from "../common/textHelper";
 import {
   conditionsPredicate,
   type ConditionContext,
@@ -10,6 +8,8 @@ import {
 } from "../conditions";
 import { type RegistryProvider } from "../registry/abstract";
 import { Registry } from "../registry/impl";
+import { tryCatching } from "../serializer/error";
+import { tryParseJson } from "../serializer/textHelper";
 
 export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
   private readonly registry = new Registry<T>();
