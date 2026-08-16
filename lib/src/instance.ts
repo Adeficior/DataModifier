@@ -7,16 +7,18 @@ import type {
   ModuleType,
   ModuleTypes,
 } from "@adeficior/data-modifier-core";
+import type { Acceptor, Logger, Resolver } from "@adeficior/pack-resolver";
 import {
   combineResolvers,
   distributedAcceptor,
   filterAcceptor,
 } from "@adeficior/pack-resolver";
-import type { Acceptor, Logger, Resolver } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
 import { installBuiltinModules } from "./builtinModules";
 import { overwritePackMetadata } from "./emit/packMetadata";
 import { InstallTarget } from "./installTarget";
+import { promote } from "./promotions";
+import type { Promoted } from "./promotions";
 
 export interface DataModifier extends Container {
   loadFromMultiple(resolvers: Resolver[]): Promise<void>;
@@ -95,7 +97,7 @@ type GatheredModule<T extends ModuleTypes = ModuleTypes> = {
 export async function createDataModifier(
   { packFormat, ...coreOptions }: DataModifierOptions,
   factory: DataModifierFactory = () => {},
-): Promise<DataModifier> {
+): Promise<Promoted<DataModifier, "modifier">> {
   const moduleSetupOptions: ModuleSetupOptions = { packFormat };
   const instance = new DataModifierImpl(moduleSetupOptions);
 
@@ -119,5 +121,12 @@ export async function createDataModifier(
   );
 
   await instance.install(modules, moduleOptions);
-  return instance;
+
+  return promote(
+    instance,
+    modules
+      .flatMap((it) => it.promote)
+      .filter((it) => it.target === "modifier"),
+    instance,
+  );
 }

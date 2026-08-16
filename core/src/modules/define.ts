@@ -85,11 +85,24 @@ type LocalModule = {
   name: string;
 };
 
+export type ServiceKey<T extends ModuleTypes> =
+  | keyof ModuleType<T, "services">
+  | `emitter:${keyof ModuleType<T, "emitters"> & string}`
+  | `loaders:${keyof ModuleType<T, "loaders"> & string}`;
+
+export type ServicePromotion<T extends ModuleTypes = ModuleTypes> = {
+  service: ServiceKey<T>;
+  key: string;
+  // TODO make extendable (ex for recipe emitter)
+  target?: "modifier";
+};
+
 export type ModuleConfigInput<T extends ModuleTypes> = {
   dependencies?: Record<string, DependencyType>;
   setup?: EventHandler<SetupEvent<T>>;
   afterSetup?: EventHandler<AfterSetupEvent<T>>;
   types?: Partial<ModuleImports<T>>;
+  promote?: ServicePromotion<T>[];
 } & (PackagedModule | LocalModule);
 
 export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
@@ -99,11 +112,13 @@ export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
   setup: EventHandler<SetupEvent<T>>;
   afterSetup: EventHandler<AfterSetupEvent<T>>;
   types: ModuleImports<T>;
+  promote: Required<ServicePromotion<T>>[];
 };
 
 export function defineModule<T extends ModuleTypes>({
   types,
   dependencies,
+  promote,
   ...config
 }: ModuleConfigInput<T>): ModuleConfig<T> {
   const actualDependencies = { ...dependencies };
@@ -112,8 +127,15 @@ export function defineModule<T extends ModuleTypes>({
     actualDependencies[packageJson.name] = "required";
   }
 
+  const actualPromote: ModuleConfig<T>["promote"] =
+    promote?.map((it) => ({
+      target: "modifier",
+      ...it,
+    })) ?? [];
+
   return {
     dependencies: actualDependencies,
+    promote: actualPromote,
     setup: () => {},
     afterSetup: () => {},
     types: {

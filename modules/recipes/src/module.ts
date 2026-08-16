@@ -42,6 +42,7 @@ export default defineModule<{
       "serializer:recipes": "RecipesSerializer",
     },
   },
+  promote: [{ service: "emitter:recipes", key: "recipes" }],
   setup: (pack) => {
     const serializer = pack.service(
       "serializer:recipes",
