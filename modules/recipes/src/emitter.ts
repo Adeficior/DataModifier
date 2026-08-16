@@ -64,7 +64,6 @@ export interface RecipeEmitter {
   ): void;
 
   add(id: IdInput, value: RecipeDefinition): void;
-  add(id: IdInput, value: RecipeHolder): void;
   add(id: IdInput, type: NormalizedId<RecipeSerializerId>, value: Recipe): void;
 
   remove(test: RecipeTest): void;
@@ -134,22 +133,23 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
 
   add(
     id: IdInput,
-    arg: RecipeDefinition | RecipeHolder | NormalizedId<RecipeSerializerId>,
+    arg: RecipeDefinition | NormalizedId<RecipeSerializerId>,
     arg2?: Recipe,
   ) {
     if (typeof arg === "string") {
       const type = arg;
       const recipe = arg2!;
-      this.add(id, new RecipeHolder({ type }, recipe));
+      const holder = new RecipeHolder({ type }, recipe);
+      const serialized = this.serializer.serialize(holder);
+      this.add(id, serialized);
     } else {
       const value = arg;
 
       if (this.custom.has(id))
         this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
 
-      if (value instanceof RecipeHolder)
-        this.custom.add(id, this.serializer.serialize(value));
-      else this.custom.add(id, value);
+      // TODO add to custom registry so recipe graph can use it
+      this.custom.add(id, value);
     }
   }
 

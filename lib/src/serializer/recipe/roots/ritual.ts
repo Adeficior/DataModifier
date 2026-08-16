@@ -1,16 +1,16 @@
-import { encodeId } from "@adeficior/data-modifier-core";
 import type { NormalizedId } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeModifier } from "@adeficior/data-modifier-recipes";
 import type {
   ManyToOneRecipeDefinition,
-  RecipeModifier,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   ManyToOneRecipe,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 
 type RitualOptions<I, E> = Readonly<{
   color: string;

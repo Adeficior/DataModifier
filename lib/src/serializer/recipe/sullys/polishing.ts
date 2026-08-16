@@ -1,15 +1,15 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeModifier } from "@adeficior/data-modifier-recipes";
 import type {
   ManyToOneRecipeDefinition,
-  RecipeModifier,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   ManyToOneRecipe,
   ManyToOneRecipeSerializer,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 
 export type GrindstonePolishingDefinition = ManyToOneRecipeDefinition &
   Readonly<{

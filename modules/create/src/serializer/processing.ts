@@ -1,15 +1,15 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeModifier } from "@adeficior/data-modifier-recipes";
 import type {
   ManyToManyRecipeDefinition,
-  RecipeModifier,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   ManyToManyRecipe,
   ManyToManyRecipeSerializer,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 
 type ProcessingOptions = Readonly<{
   heatRequirement?: string;

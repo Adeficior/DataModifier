@@ -1,12 +1,12 @@
+import type { RecipeDefinition } from "@adeficior/data-modifier-recipes";
 import type {
-  RecipeDefinition,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   OneToOneRecipe,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import { ingredientSerializerModules, resultSerializerModules } from "./module";
 
 export type BotaniaBlockRecipeDefinition = RecipeDefinition &

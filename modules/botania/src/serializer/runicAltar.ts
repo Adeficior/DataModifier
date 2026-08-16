@@ -1,13 +1,13 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeDefinition } from "@adeficior/data-modifier-recipes";
 import type {
-  RecipeDefinition,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   ManyToOneRecipe,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 
 export type RunicAltarRecipeDefinition = RecipeDefinition &
   Readonly<{

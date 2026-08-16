@@ -2,14 +2,16 @@ import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import { BlockIngredient } from "@adeficior/data-modifier-ingredients";
-import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
   Recipe,
   RecipeDefinition,
   RecipeModifier,
+} from "@adeficior/data-modifier-recipes";
+import type {
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 import type { BlockId } from "@adeficior/data-modifier/generated";
 
 type BlockStateIngredient = {

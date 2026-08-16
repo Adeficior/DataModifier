@@ -1,12 +1,14 @@
-import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes";
 import type {
   Recipe,
   RecipeDefinition,
-  RecipeHolder,
   RecipeModifier,
+} from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeHolder,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 
 export type GogWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{

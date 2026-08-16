@@ -20,10 +20,8 @@ import {
   resolveIdTest,
   toJson,
 } from "@adeficior/data-modifier-core/serializer";
-import type {
-  RecipeHolder,
-  RecipeLoader,
-} from "@adeficior/data-modifier-recipes";
+import type { RecipeLoader } from "@adeficior/data-modifier-recipes";
+import type { RecipeHolder } from "@adeficior/data-modifier-recipes/serializer";
 import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import type {
   ItemId,

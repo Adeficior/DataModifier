@@ -2,11 +2,11 @@ import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import type {
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   OneToOneRecipe,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import type { BotaniaBlockRecipeDefinition } from "./blocks";
 import { BotaniaBlockRecipeSerializer } from "./blocks";
 

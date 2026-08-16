@@ -1,5 +1,5 @@
-import { ManyToManyRecipe } from "@adeficior/data-modifier-recipes";
-import type { ManyToOneRecipeDefinition } from "@adeficior/data-modifier-recipes";
+import type { ManyToOneRecipeDefinition } from "@adeficior/data-modifier-recipes/serializer";
+import { ManyToManyRecipe } from "@adeficior/data-modifier-recipes/serializer";
 
 export type NasaWorkbenchRecipeDefinition = ManyToOneRecipeDefinition;
 

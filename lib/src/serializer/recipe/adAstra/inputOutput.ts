@@ -5,15 +5,15 @@ import type {
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
 import { ItemResult } from "@adeficior/data-modifier-ingredients";
+import type { RecipeDefinition } from "@adeficior/data-modifier-recipes";
 import type {
-  RecipeDefinition,
   RecipeParseContext,
   SerializedRecipe,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   OneToOneRecipe,
   RecipeTypeSerializer,
-} from "@adeficior/data-modifier-recipes";
+} from "@adeficior/data-modifier-recipes/serializer";
 import * as z from "zod";
 
 // TODO this will also be the new item format, can re-use that

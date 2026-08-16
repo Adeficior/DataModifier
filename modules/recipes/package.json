@@ -4,11 +4,15 @@
    "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js",
+      "./serializer": "./dist/serializer/index.js",
       "./testing": "./dist/testing/index.js"
    },
    "types": "./dist/index.d.ts",
    "typesVersions": {
       "*": {
+         "serializer": [
+            "./dist/serializer/index.d.ts"
+         ],
          "testing": [
             "./dist/testing/index.d.ts"
          ]
