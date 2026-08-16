@@ -1,0 +1,50 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`custom recipe creation creates using recipe classes (shaped): serialized 1`] = `
+{
+  "key": {
+    "A": {
+      "item": "minecraft:diamond",
+    },
+    "B": {
+      "tag": "c:ingots/copper",
+    },
+    "X": {
+      "item": "minecraft:string",
+    },
+  },
+  "pattern": [
+    "AXA",
+    "XBX",
+    "AXA",
+  ],
+  "result": {
+    "item": "minecraft:pumpkin",
+  },
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`custom recipe creation creates using recipe with conditions: serialized 1`] = `
+{
+  "conditions": [
+    {
+      "type": "always",
+    },
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "true",
+    },
+  ],
+  "ingredients": [
+    {
+      "tag": "c:plates/iron",
+    },
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:crafting_shapeless",
+}
+`;

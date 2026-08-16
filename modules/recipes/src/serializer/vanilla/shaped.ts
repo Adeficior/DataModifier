@@ -5,8 +5,8 @@ import type {
 } from "@adeficior/data-modifier-ingredients";
 import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { RecipeTypeSerializer } from "../abstract";
 import type { SerializedRecipe } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -19,9 +19,9 @@ export type ShapedRecipeDefinition = RecipeDefinition &
 
 export class ShapedRecipe implements Recipe {
   constructor(
+    readonly pattern: string[],
     readonly ingredients: IngredientMap,
     readonly result: Result,
-    readonly pattern: string[],
   ) {}
 
   getIngredients() {
@@ -34,9 +34,9 @@ export class ShapedRecipe implements Recipe {
 
   modify(modifier: RecipeModifier) {
     return new ShapedRecipe(
+      this.pattern,
       this.ingredients.replace(modifier.ingredient),
       modifier.result(this.result),
-      this.pattern,
     );
   }
 }
@@ -53,13 +53,14 @@ export class ShapedSerializer extends RecipeTypeSerializer<
       definition.key,
     );
     const result = context.results.deserialize(definition.result);
-    return new ShapedRecipe(ingredients, result, definition.pattern);
+    return new ShapedRecipe(definition.pattern, ingredients, result);
   }
 
   override serialize(
     recipe: ShapedRecipe,
     context: RecipeParseContext,
   ): SerializedRecipe<ShapedRecipeDefinition> {
+    // TODO validate pattern?
     return {
       key: context.ingredients.serializeIngredientMap(recipe.ingredients),
       pattern: recipe.pattern,

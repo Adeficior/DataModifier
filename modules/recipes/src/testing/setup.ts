@@ -1,4 +1,7 @@
-import type { EventHandler } from "@adeficior/data-modifier-core";
+import type {
+  EventHandler,
+  RegistryLookup,
+} from "@adeficior/data-modifier-core";
 import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   setupIngredientSerializer,
@@ -10,9 +13,12 @@ import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import { RecipeEmitterImpl } from "../emitter";
+import type { RecipeEmitter } from "../emitter";
 import type { RegisterRecipeSerializer } from "../hooks";
 import { RecipeLoaderImpl } from "../loader";
+import type { RecipeLoader } from "../loader";
 import { recipePattern } from "../schema";
+import type { RecipesSerializer } from "../serializer";
 import { registerDefaultSerializers } from "../serializer/default";
 import { RecipeSerializerImpl } from "../serializer/impl";
 
@@ -30,7 +36,7 @@ export function setupRecipeSerializer(
     await parsers?.(serializer.createEvent());
   });
 
-  return { lookup, serializer };
+  return { lookup, serializer: serializer as RecipesSerializer };
 }
 
 export function setupRecipeLoader(
@@ -57,7 +63,12 @@ export function setupRecipeLoader(
     logger.reset();
   });
 
-  return { loader, logger, serializer, lookup };
+  return {
+    logger,
+    serializer,
+    lookup: lookup as RegistryLookup,
+    loader: loader as RecipeLoader,
+  };
 }
 
 export function setupRecipeEmitter(
@@ -94,5 +105,5 @@ export function setupRecipeEmitter(
     logger.reset();
   });
 
-  return { loader, emitter, resolver, logger };
+  return { loader, resolver, logger, emitter: emitter as RecipeEmitter };
 }

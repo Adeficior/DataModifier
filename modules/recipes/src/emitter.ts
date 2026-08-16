@@ -1,5 +1,6 @@
 import type {
   ClearableEmitter,
+  Conditions,
   Id,
   IdInput,
   LoaderContext,
@@ -64,7 +65,12 @@ export interface RecipeEmitter {
   ): void;
 
   add(id: IdInput, value: RecipeDefinition): void;
-  add(id: IdInput, type: NormalizedId<RecipeSerializerId>, value: Recipe): void;
+  add(
+    id: IdInput,
+    type: IdInput<RecipeSerializerId>,
+    value: Recipe,
+    conditions?: Conditions,
+  ): void;
 
   remove(test: RecipeTest): void;
 }
@@ -133,13 +139,14 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
 
   add(
     id: IdInput,
-    arg: RecipeDefinition | NormalizedId<RecipeSerializerId>,
+    arg: RecipeDefinition | IdInput<RecipeSerializerId>,
     arg2?: Recipe,
+    conditions?: Conditions,
   ) {
-    if (typeof arg === "string") {
-      const type = arg;
+    if (typeof arg === "string" || "namespace" in arg) {
+      const type = encodeId(arg);
       const recipe = arg2!;
-      const holder = new RecipeHolder({ type }, recipe);
+      const holder = new RecipeHolder({ type, ...conditions }, recipe);
       const serialized = this.serializer.serialize(holder);
       this.add(id, serialized);
     } else {
