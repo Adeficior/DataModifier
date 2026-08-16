@@ -1,3 +1,4 @@
+import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
 export async function generateStubTypes(typesDir: string, strictIds = false) {
@@ -6,8 +7,9 @@ export async function generateStubTypes(typesDir: string, strictIds = false) {
   await writeTemplate(
     typesDir,
     "registry",
-    `
-         declare module '@adeficior/data-modifier/generated' {
+    await moduleTemplate(
+      "@adeficior/data-modifier/generated",
+      /* typescript */ `
             type StubId = ${stubIdType}
 
             export type RegistryId = StubId
@@ -26,6 +28,7 @@ export async function generateStubTypes(typesDir: string, strictIds = false) {
             export type RecipeSerializerId = StubId
 
             export type EntityTypeId = StubId
-         }`,
+      `,
+    ),
   );
 }

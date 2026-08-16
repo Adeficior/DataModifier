@@ -1,12 +1,14 @@
 import type { ModuleConfig } from "@adeficior/data-modifier-core";
 import { gatherImports } from "./imports";
+import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
 function generateModule(modules: ModuleConfig[]) {
   const { services, hooks } = gatherImports(modules);
 
-  return /* typescript */ `
-    declare module "@adeficior/data-modifier-core/generated" {
+  return moduleTemplate(
+    "@adeficior/data-modifier-core/generated",
+    /* typescript */ `
       export type Services<T extends ModuleTypes> = {
         ${services}
       }
@@ -14,14 +16,14 @@ function generateModule(modules: ModuleConfig[]) {
       export type Hooks<T extends ModuleTypes> = {
         ${hooks}
       }
-    }
-  `;
+    `,
+  );
 }
 
 export async function generateModulesTypes(
   typesDir: string,
   modules: ModuleConfig[],
 ) {
-  const servicesTypes = generateModule(modules);
+  const servicesTypes = await generateModule(modules);
   await writeTemplate(typesDir, "modules", servicesTypes);
 }

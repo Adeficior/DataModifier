@@ -5,10 +5,8 @@ import type {
 } from "@adeficior/data-modifier-core";
 import { createId, encodeId } from "@adeficior/data-modifier-core";
 import { camelCase } from "lodash-es";
-import { writeFile } from "node:fs/promises";
-import { format } from "prettier";
-
-const module = "@adeficior/data-modifier/generated";
+import { moduleTemplate } from "./typescript";
+import { writeTemplate } from "./write";
 
 function idType(id: Id) {
   const cased = camelCase(id.path.replaceAll("/", " "));
@@ -32,19 +30,9 @@ function inferRegistryTemplate(keys: IdInput[]) {
       `;
 }
 
-// TODO could re-use this
-function moduleTemplate(...content: string[]) {
-  const replaced = `
-        declare module '${module}' {
-            ${content.join("\n\n")}
-        }`;
-
-  return format(replaced, { parser: "typescript" });
-}
-
 export async function generateRegistryTypes(
+  typesDir: string,
   lookup: RegistryLookup,
-  file: string,
 ) {
   const registryBlock = idTemplate("Registry", lookup.registries());
   const inferIdBlock = inferRegistryTemplate(lookup.registries());
@@ -59,8 +47,14 @@ export async function generateRegistryTypes(
       return idTemplate(type, keys);
     });
 
-  await writeFile(
-    file,
-    await moduleTemplate(registryBlock, ...idBlocks, inferIdBlock),
+  await writeTemplate(
+    typesDir,
+    "registry",
+    await moduleTemplate(
+      "@adeficior/data-modifier/generated",
+      registryBlock,
+      ...idBlocks,
+      inferIdBlock,
+    ),
   );
 }
