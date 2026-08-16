@@ -1,7 +1,12 @@
-import type { NormalizedId } from "@adeficior/data-modifier-core";
+import type {
+  Conditions,
+  IdInput,
+  NormalizedId,
+} from "@adeficior/data-modifier-core";
 import { encodeId } from "@adeficior/data-modifier-core";
 import type { Replacer } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import type { RecipeParseContext } from "./context";
@@ -18,9 +23,9 @@ function optional<T>(replacer: Replacer<T>): Replacer<T | undefined> {
 export class RecipeHolder {
   readonly serializerType: NormalizedId;
 
-  constructor(
+  private constructor(
     private readonly definition: RecipeDefinition,
-    private readonly recipe: Recipe,
+    readonly recipe: Recipe,
   ) {
     this.serializerType = encodeId(definition.type);
   }
@@ -67,5 +72,13 @@ export class RecipeHolder {
   getTypes(): NormalizedId[] {
     const additional = this.recipe.additionalTypes?.() ?? [];
     return [this.serializerType, ...additional];
+  }
+
+  static of(
+    type: IdInput<RecipeSerializerId>,
+    recipe: Recipe,
+    conditions?: Conditions,
+  ): RecipeHolder {
+    return new RecipeHolder({ type: encodeId(type), ...conditions }, recipe);
   }
 }

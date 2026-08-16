@@ -9,6 +9,10 @@ import type { RecipeHolder } from "./holder";
 export type RecipesSerializer = {
   deserialize(definition: RecipeDefinition): RecipeHolder;
   serialize(recipe: RecipeHolder): RecipeDefinition;
+  serialize(
+    type: IdInput<RecipeSerializerId>,
+    recipe: Recipe,
+  ): RecipeDefinition;
   get(type: IdInput<RecipeSerializerId>): RecipeTypeSerializer;
 };
 

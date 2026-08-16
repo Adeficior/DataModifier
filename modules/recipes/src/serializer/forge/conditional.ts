@@ -1,13 +1,14 @@
+import type { ForgeCondition } from "@adeficior/data-modifier-core";
 import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { RecipeTypeSerializer } from "../abstract";
 import type { SerializedRecipe } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeHolder } from "../holder";
 import type { RecipeModifier } from "../modifier";
 
 type WithConditions<T> = {
-  conditions: unknown[];
+  conditions: ForgeCondition[];
   recipe: T;
 };
 

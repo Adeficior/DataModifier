@@ -1,6 +1,6 @@
 import { createId } from "./common/id";
-import { any, every } from "./serializer/predicate";
 import type { Predicate } from "./serializer/predicate";
+import { any, every } from "./serializer/predicate";
 
 export type ForgeCondition = Readonly<{
   type: string;
@@ -12,12 +12,13 @@ export type FabricCondition = Readonly<{
   [key: string]: unknown;
 }>;
 
-export type WithConditions<T> = T &
-  Readonly<{
-    conditions?: ForgeCondition[];
-    "neoforge:conditions"?: ForgeCondition[];
-    "fabric:load_conditions"?: FabricCondition[];
-  }>;
+export type Conditions = Readonly<{
+  conditions?: ForgeCondition[];
+  "neoforge:conditions"?: ForgeCondition[];
+  "fabric:load_conditions"?: FabricCondition[];
+}>;
+
+export type WithConditions<T> = T & Conditions;
 
 export function withDisabledConditions<T>(value: T): WithConditions<T> {
   return {

@@ -53,7 +53,7 @@ export class SmithingSerializer extends RecipeTypeSerializer<
     const addition = context.ingredients.deserialize(definition.addition);
     const result = context.results.deserializeOptional(definition.result);
     const template = context.ingredients.deserializeOptional(
-      definition.addition,
+      definition.template,
     );
     return new SmithingRecipe(base, addition, result, template);
   }

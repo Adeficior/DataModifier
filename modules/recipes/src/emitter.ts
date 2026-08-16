@@ -144,9 +144,7 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
     conditions?: Conditions,
   ) {
     if (typeof arg === "string" || "namespace" in arg) {
-      const type = encodeId(arg);
-      const recipe = arg2!;
-      const holder = new RecipeHolder({ type, ...conditions }, recipe);
+      const holder = RecipeHolder.of(arg, arg2!, conditions);
       const serialized = this.serializer.serialize(holder);
       this.add(id, serialized);
     } else {

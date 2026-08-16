@@ -1,5 +1,5 @@
-import { encodeId } from "@adeficior/data-modifier-core";
 import type { IdInput } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import {
   IllegalShapeError,
   UnknownRegistryEntry,
@@ -11,6 +11,7 @@ import type {
 } from "@adeficior/data-modifier-ingredients";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
 import type { RegisterRecipeSerializer } from "../hooks";
+import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import type { RecipesSerializer, RecipeTypeSerializer } from "./abstract";
 import type { RecipeParseContext } from "./context";
@@ -47,16 +48,23 @@ export class RecipeSerializerImpl implements RecipesSerializer {
     );
   }
 
-  serialize(recipe: RecipeHolder): RecipeDefinition {
-    const parser = this.typeSerializers.get(recipe.serializerType);
+  serialize(
+    holder: RecipeHolder | IdInput<RecipeSerializerId>,
+    recipe?: Recipe,
+  ): RecipeDefinition {
+    if (holder instanceof RecipeHolder) {
+      const parser = this.typeSerializers.get(holder.serializerType);
 
-    if (!parser)
-      throw new Error(
-        `Unable to find parser for type '${recipe.serializerType}'`,
-      );
+      if (!parser)
+        throw new Error(
+          `Unable to find parser for type '${holder.serializerType}'`,
+        );
 
-    const context = this.recipeParseContext(parser);
-    return recipe.serialize(context);
+      const context = this.recipeParseContext(parser);
+      return holder.serialize(context);
+    } else {
+      return this.serialize(RecipeHolder.of(holder, recipe!));
+    }
   }
 
   deserialize(definition: RecipeDefinition): RecipeHolder {
@@ -81,7 +89,7 @@ export class RecipeSerializerImpl implements RecipesSerializer {
       this.recipeParseContext(serializer),
     );
 
-    return new RecipeHolder(definition, parsed);
+    return RecipeHolder.of(definition.type, parsed, definition);
   }
 
   createEvent(): RegisterRecipeSerializer {

@@ -19,7 +19,7 @@ exports[`custom recipe creation creates using recipe classes (crafting_shaped): 
     "AXA",
   ],
   "result": {
-    "item": "minecraft:pumpkin",
+    "id": "minecraft:pumpkin",
   },
   "type": "minecraft:crafting_shaped",
 }
@@ -33,7 +33,7 @@ exports[`custom recipe creation creates using recipe classes (crafting_shapeless
     },
   ],
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:crafting_shapeless",
 }
@@ -46,7 +46,7 @@ exports[`custom recipe creation creates using recipe classes (smelting): seriali
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:smelting",
 }
@@ -58,7 +58,7 @@ exports[`custom recipe creation creates using recipe classes (smoking): serializ
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:smoking",
 }
@@ -70,7 +70,7 @@ exports[`custom recipe creation creates using recipe classes (blasting): seriali
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:blasting",
 }
@@ -82,7 +82,7 @@ exports[`custom recipe creation creates using recipe classes (campfire_cooking):
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:campfire_cooking",
 }
@@ -97,7 +97,7 @@ exports[`custom recipe creation creates using recipe classes (smithing): seriali
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:smithing",
 }
@@ -124,7 +124,7 @@ exports[`custom recipe creation creates using recipe classes (smithing_transform
     "tag": "c:plates/iron",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "template": {
     "item": "minecraft:diamond",
@@ -139,7 +139,7 @@ exports[`custom recipe creation creates using recipe classes (stonecutting): ser
     "item": "minecraft:apple",
   },
   "result": {
-    "item": "minecraft:iron_ingot",
+    "id": "minecraft:iron_ingot",
   },
   "type": "minecraft:stonecutting",
 }
@@ -161,7 +161,7 @@ exports[`custom recipe creation creates using recipe classes (conditional): seri
           },
         ],
         "result": {
-          "item": "minecraft:iron_ingot",
+          "id": "minecraft:iron_ingot",
         },
         "type": "minecraft:crafting_shapeless",
       },
@@ -190,36 +190,12 @@ exports[`custom recipe creation creates using recipe classes (conditional): seri
           "AXA",
         ],
         "result": {
-          "item": "minecraft:pumpkin",
+          "id": "minecraft:pumpkin",
         },
         "type": "minecraft:crafting_shaped",
       },
     },
   ],
   "type": "forge:conditional",
-}
-`;
-
-exports[`custom recipe creation creates using recipe with conditions: serialized 1`] = `
-{
-  "conditions": [
-    {
-      "type": "always",
-    },
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "true",
-    },
-  ],
-  "ingredients": [
-    {
-      "tag": "c:plates/iron",
-    },
-  ],
-  "result": {
-    "item": "minecraft:iron_ingot",
-  },
-  "type": "minecraft:crafting_shapeless",
 }
 `;
