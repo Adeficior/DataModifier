@@ -1,11 +1,12 @@
-import { defineModule } from "@adeficior/data-modifier-core";
+import { defineModule, packFormatOf } from "@adeficior/data-modifier-core";
+import { recipePattern } from "@adeficior/data-modifier-recipes";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
-import { RecipeGraphEmitter } from "../src/emit/recipeGraph";
 import type {
   RecipeGraphAccessor,
   RecipeGraphOptions,
 } from "../src/emit/recipeGraph";
+import { RecipeGraphEmitter } from "../src/emit/recipeGraph";
 import { setupInstance } from "./util/setup";
 
 const module = defineModule<{
@@ -36,7 +37,7 @@ const version = "1.21.1";
 const instance = await setupInstance(
   version,
   {
-    include: ["data/*/recipe/**/*.json", "data/*/tags/**/*.json"],
+    include: [recipePattern(packFormatOf(version)), "data/*/tags/**/*.json"],
   },
   (modules) => {
     modules.install(module);

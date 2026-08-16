@@ -1,7 +1,9 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import { notNull } from "@adeficior/pack-resolver";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import type { SerializedRecipe } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -13,15 +15,13 @@ export type SmithingRecipeDefinition = RecipeDefinition &
     template?: unknown;
   }>;
 
-export class SmithingRecipe extends Recipe {
+export class SmithingRecipe implements Recipe {
   constructor(
-    private readonly base: Ingredient,
-    private readonly addition: Ingredient,
-    private readonly result: Result | undefined,
-    private readonly template: Ingredient | undefined,
-  ) {
-    super();
-  }
+    readonly base: Ingredient,
+    readonly addition: Ingredient,
+    readonly result: Result | undefined,
+    readonly template: Ingredient | undefined,
+  ) {}
 
   getIngredients() {
     return [this.base, this.addition, this.template].filter(notNull);
@@ -31,28 +31,17 @@ export class SmithingRecipe extends Recipe {
     return [this.result].filter(notNull);
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new SmithingRecipe(
       modifier.ingredient(this.base),
       modifier.ingredient(this.addition),
-      this.result && modifier.result(this.result),
-      this.template && modifier.ingredient(this.template),
+      modifier.optionalResult(this.result),
+      modifier.optionalIngredient(this.template),
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<SmithingRecipeDefinition> {
-    return {
-      base: context.ingredients.serialize(this.base),
-      addition: context.ingredients.serialize(this.addition),
-      result: context.results.serializeOptional(this.result),
-      template: context.ingredients.serializeOptional(this.template),
-    };
   }
 }
 
-export class SmithingParser extends RecipeParser<
+export class SmithingSerializer extends RecipeTypeSerializer<
   SmithingRecipeDefinition,
   SmithingRecipe
 > {
@@ -64,8 +53,20 @@ export class SmithingParser extends RecipeParser<
     const addition = context.ingredients.deserialize(definition.addition);
     const result = context.results.deserializeOptional(definition.result);
     const template = context.ingredients.deserializeOptional(
-      definition.addition,
+      definition.template,
     );
     return new SmithingRecipe(base, addition, result, template);
+  }
+
+  override serialize(
+    recipe: SmithingRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<SmithingRecipeDefinition> {
+    return {
+      base: context.ingredients.serialize(recipe.base),
+      addition: context.ingredients.serialize(recipe.addition),
+      result: context.results.serializeOptional(recipe.result),
+      template: context.ingredients.serializeOptional(recipe.template),
+    };
   }
 }

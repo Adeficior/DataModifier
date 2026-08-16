@@ -1,13 +1,14 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import {
-  ManyToManyRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
+import type { RecipeModifier } from "@adeficior/data-modifier-recipes";
 import type {
   ManyToManyRecipeDefinition,
-  RecipeModifier,
   RecipeParseContext,
-} from "@adeficior/data-modifier-recipes";
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import {
+  ManyToManyRecipe,
+  RecipeTypeSerializer,
+} from "@adeficior/data-modifier-recipes/serializer";
 import { resultSerializerModules } from "./module";
 
 export type CuttingRecipeDefinition = Omit<
@@ -23,7 +24,7 @@ export class CuttingRecipe extends ManyToManyRecipe {
   constructor(
     ingredients: Ingredient[],
     results: Result[],
-    private readonly tool: Ingredient,
+    readonly tool: Ingredient,
   ) {
     super(ingredients, results);
   }
@@ -39,20 +40,9 @@ export class CuttingRecipe extends ManyToManyRecipe {
       modifier.ingredient(this.tool),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<CuttingRecipeDefinition> {
-    const { results, ...rest } = super.serialize(context);
-    return {
-      ...rest,
-      result: results,
-      tool: context.ingredients.serialize(this.tool),
-    };
-  }
 }
 
-export class CuttingRecipeParser extends RecipeParser<
+export class CuttingRecipeSerializer extends RecipeTypeSerializer<
   CuttingRecipeDefinition,
   CuttingRecipe
 > {
@@ -70,5 +60,16 @@ export class CuttingRecipeParser extends RecipeParser<
     const result = context.results.deserializeList(definition.result);
     const tool = context.ingredients.deserialize(definition.tool);
     return new CuttingRecipe(ingredients, result, tool);
+  }
+
+  override serialize(
+    recipe: CuttingRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<CuttingRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      result: context.results.serializeList(recipe.results),
+      tool: context.ingredients.serialize(recipe.tool),
+    };
   }
 }

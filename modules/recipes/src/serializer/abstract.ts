@@ -1,28 +1,27 @@
-import type { NormalizedId } from "@adeficior/data-modifier-core";
-import type {
-  Ingredient,
-  Result,
-  WithSerializerModules,
-} from "@adeficior/data-modifier-ingredients";
+import type { IdInput } from "@adeficior/data-modifier-core";
+import type { WithSerializerModules } from "@adeficior/data-modifier-ingredients";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import type { RecipeParseContext } from "./context";
-import type { RecipeModifier } from "./modifier";
+import type { RecipeHolder } from "./holder";
 
-export abstract class Recipe {
-  abstract getIngredients(): Ingredient[];
+export type RecipesSerializer = {
+  deserialize(definition: RecipeDefinition): RecipeHolder;
+  serialize(recipe: RecipeHolder): RecipeDefinition;
+  serialize(
+    type: IdInput<RecipeSerializerId>,
+    recipe: Recipe,
+  ): RecipeDefinition;
+  get(type: IdInput<RecipeSerializerId>): RecipeTypeSerializer;
+};
 
-  abstract getResults(): Result[];
+export type SerializedRecipe<T extends RecipeDefinition> = Omit<
+  T,
+  keyof RecipeDefinition
+>;
 
-  abstract modify(modifier: RecipeModifier): Recipe;
-
-  additionalTypes(): NormalizedId[] {
-    return [];
-  }
-
-  abstract serialize(context: RecipeParseContext): Partial<RecipeDefinition>;
-}
-
-export abstract class RecipeParser<
+export abstract class RecipeTypeSerializer<
   TDefinition extends RecipeDefinition = RecipeDefinition,
   TRecipe extends Recipe = Recipe,
 > implements WithSerializerModules {
@@ -38,4 +37,9 @@ export abstract class RecipeParser<
     definition: TDefinition,
     context: RecipeParseContext,
   ): TRecipe;
+
+  abstract serialize(
+    recipe: TRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<TDefinition>;
 }

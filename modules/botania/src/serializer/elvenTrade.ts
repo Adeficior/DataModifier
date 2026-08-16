@@ -1,11 +1,13 @@
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { RecipeDefinition } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   ManyToManyRecipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
-import type {
-  RecipeDefinition,
-  RecipeParseContext,
-} from "@adeficior/data-modifier-recipes";
+  RecipeTypeSerializer,
+} from "@adeficior/data-modifier-recipes/serializer";
 
 export type ElvenTradeRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -15,15 +17,16 @@ export type ElvenTradeRecipeDefinition = RecipeDefinition &
   }>;
 
 export class ElvenTradeRecipe extends ManyToManyRecipe {
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ElvenTradeRecipeDefinition> {
-    const { results, ...rest } = super.serialize(context);
-    return { ...rest, output: results };
+  constructor(
+    ingredients: Ingredient[],
+    results: Result[],
+    readonly options: { mana?: number } = {},
+  ) {
+    super(ingredients, results);
   }
 }
 
-export class ElvenTradeRecipeParser extends RecipeParser<
+export class ElvenTradeRecipeSerializer extends RecipeTypeSerializer<
   ElvenTradeRecipeDefinition,
   ElvenTradeRecipe
 > {
@@ -35,6 +38,19 @@ export class ElvenTradeRecipeParser extends RecipeParser<
       definition.ingredients,
     );
     const results = context.results.deserializeList(definition.output);
-    return new ElvenTradeRecipe(ingredients, results);
+    return new ElvenTradeRecipe(ingredients, results, {
+      mana: definition.mana,
+    });
+  }
+
+  override serialize(
+    recipe: ElvenTradeRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ElvenTradeRecipeDefinition> {
+    return {
+      output: context.results.serializeList(recipe.results),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      mana: recipe.options.mana,
+    };
   }
 }

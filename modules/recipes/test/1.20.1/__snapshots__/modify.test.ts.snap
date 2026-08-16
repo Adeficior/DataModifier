@@ -1,6 +1,6 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`recipe ingredient replacement replaces ingredients: modified piston recipe 1`] = `
+exports[`recipe ingredient replacement replaces item ingredient: modified piston recipe 1`] = `
 {
   "key": {
     "#": {
@@ -28,7 +28,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified piston rec
 }
 `;
 
-exports[`recipe ingredient replacement replaces ingredients: modified compass recipe 1`] = `
+exports[`recipe ingredient replacement replaces item ingredient: modified compass recipe 1`] = `
 {
   "key": {
     "#": {
@@ -50,7 +50,7 @@ exports[`recipe ingredient replacement replaces ingredients: modified compass re
 }
 `;
 
-exports[`recipe ingredient replacement replaces ingredients: recipes including redstone as an ingredient 1`] = `
+exports[`recipe ingredient replacement replaces item ingredient: recipes including redstone as an ingredient 1`] = `
 [
   "data/minecraft/recipes/clock.json",
   "data/minecraft/recipes/compass.json",

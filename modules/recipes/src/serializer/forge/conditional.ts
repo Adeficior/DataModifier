@@ -1,11 +1,14 @@
+import type { ForgeCondition } from "@adeficior/data-modifier-core";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import type { SerializedRecipe } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeHolder } from "../holder";
 import type { RecipeModifier } from "../modifier";
 
 type WithConditions<T> = {
-  conditions: unknown[];
+  conditions: ForgeCondition[];
   recipe: T;
 };
 
@@ -14,10 +17,8 @@ export type ForgeConditionalRecipeDefinition = RecipeDefinition &
     recipes: WithConditions<RecipeDefinition>[];
   }>;
 
-export class ForgeConditionalRecipe extends Recipe {
-  constructor(private readonly recipes: WithConditions<RecipeHolder>[]) {
-    super();
-  }
+export class ForgeConditionalRecipe implements Recipe {
+  constructor(readonly recipes: WithConditions<RecipeHolder>[]) {}
 
   getIngredients() {
     return this.recipes.flatMap((it) => it.recipe.getIngredients());
@@ -27,7 +28,7 @@ export class ForgeConditionalRecipe extends Recipe {
     return this.recipes.flatMap((it) => it.recipe.getResults());
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ForgeConditionalRecipe(
       this.recipes.map((it) => ({
         ...it,
@@ -36,23 +37,12 @@ export class ForgeConditionalRecipe extends Recipe {
     );
   }
 
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ForgeConditionalRecipeDefinition> {
-    return {
-      recipes: this.recipes.map((it) => ({
-        ...it,
-        recipe: context.recipes.serialize(it.recipe),
-      })),
-    };
-  }
-
-  override additionalTypes() {
+  additionalTypes() {
     return this.recipes.flatMap((it) => it.recipe.getTypes());
   }
 }
 
-export class ForgeConditionalRecipeParser extends RecipeParser<
+export class ForgeConditionalRecipeSerializer extends RecipeTypeSerializer<
   ForgeConditionalRecipeDefinition,
   ForgeConditionalRecipe
 > {
@@ -68,5 +58,17 @@ export class ForgeConditionalRecipeParser extends RecipeParser<
     );
 
     return new ForgeConditionalRecipe(recipes);
+  }
+
+  override serialize(
+    recipe: ForgeConditionalRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ForgeConditionalRecipeDefinition> {
+    return {
+      recipes: recipe.recipes.map((it) => ({
+        ...it,
+        recipe: context.recipes.serialize(it.recipe),
+      })),
+    };
   }
 }

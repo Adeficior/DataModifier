@@ -1,25 +1,25 @@
-import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
-import { ShapedParser } from "@adeficior/data-modifier-recipes";
-import { AssemblyRecipeParser } from "./serializer/assembly";
-import { CreateProcessingRecipeParser } from "./serializer/processing";
+import type { RegisterRecipeSerializer } from "@adeficior/data-modifier-recipes";
+import { ShapedSerializer } from "@adeficior/data-modifier-recipes";
+import { AssemblyRecipeSerializer } from "./serializer/assembly";
+import { ProcessingRecipeSerializer } from "./serializer/processing";
 
-export function registerParsers(event: RegisterRecipeParser) {
-  event.register("create:mixing", new CreateProcessingRecipeParser());
-  event.register("create:pressing", new CreateProcessingRecipeParser());
-  event.register("create:emptying", new CreateProcessingRecipeParser());
-  event.register("create:crushing", new CreateProcessingRecipeParser());
-  event.register("create:milling", new CreateProcessingRecipeParser());
-  event.register("create:compacting", new CreateProcessingRecipeParser());
-  event.register("create:filling", new CreateProcessingRecipeParser());
-  event.register("create:cutting", new CreateProcessingRecipeParser());
-  event.register("create:item_application", new CreateProcessingRecipeParser());
+export function registerSerializers(event: RegisterRecipeSerializer) {
+  event.register("create:mixing", new ProcessingRecipeSerializer());
+  event.register("create:pressing", new ProcessingRecipeSerializer());
+  event.register("create:emptying", new ProcessingRecipeSerializer());
+  event.register("create:crushing", new ProcessingRecipeSerializer());
+  event.register("create:milling", new ProcessingRecipeSerializer());
+  event.register("create:compacting", new ProcessingRecipeSerializer());
+  event.register("create:filling", new ProcessingRecipeSerializer());
+  event.register("create:cutting", new ProcessingRecipeSerializer());
+  event.register("create:item_application", new ProcessingRecipeSerializer());
   event.register(
     "create:sandpaper_polishing",
-    new CreateProcessingRecipeParser(),
+    new ProcessingRecipeSerializer(),
   );
-  event.register("create:deploying", new CreateProcessingRecipeParser());
-  event.register("create:splashing", new CreateProcessingRecipeParser());
-  event.register("create:haunting", new CreateProcessingRecipeParser());
-  event.register("create:mechanical_crafting", new ShapedParser());
-  event.register("create:sequenced_assembly", new AssemblyRecipeParser());
+  event.register("create:deploying", new ProcessingRecipeSerializer());
+  event.register("create:splashing", new ProcessingRecipeSerializer());
+  event.register("create:haunting", new ProcessingRecipeSerializer());
+  event.register("create:mechanical_crafting", new ShapedSerializer());
+  event.register("create:sequenced_assembly", new AssemblyRecipeSerializer());
 }

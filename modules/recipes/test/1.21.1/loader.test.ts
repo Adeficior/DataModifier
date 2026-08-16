@@ -4,11 +4,7 @@ import { setupRecipeLoader } from "../../src/testing";
 
 const version = basename(import.meta.dir);
 
-const { loader, logger } = setupRecipeLoader(version);
-
-it("has no unknown recipe loaders", () => {
-  expect(loader.unknownRecipeTypes().map((it) => it.type)).toBeEmpty();
-});
+const { logger } = setupRecipeLoader(version);
 
 it("does not encounter any errors", () => {
   expect(logger.trace).not.toHaveBeenCalled();

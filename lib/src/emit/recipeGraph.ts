@@ -1,10 +1,3 @@
-import {
-  createId,
-  encodeId,
-  prefix,
-  Registry,
-  suffix,
-} from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   IdInput,
@@ -13,17 +6,22 @@ import type {
   Registered,
 } from "@adeficior/data-modifier-core";
 import {
-  resolveIdTest,
-  toJson,
-} from "@adeficior/data-modifier-core/serializer";
+  createId,
+  encodeId,
+  prefix,
+  Registry,
+  suffix,
+} from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import type {
-  RecipeHolder,
-  RecipeLoaderAccessor,
-} from "@adeficior/data-modifier-recipes";
+import {
+  resolveIdTest,
+  toJson,
+} from "@adeficior/data-modifier-core/serializer";
+import type { RecipeLoader } from "@adeficior/data-modifier-recipes";
+import type { RecipeHolder } from "@adeficior/data-modifier-recipes/serializer";
 import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
 import type {
   ItemId,
@@ -92,7 +90,7 @@ export class RecipeGraphEmitter
   private readonly options: Required<RecipeGraphOptions>;
 
   constructor(
-    private readonly recipes: RecipeLoaderAccessor,
+    private readonly recipes: RecipeLoader,
     private readonly tags: TagRegistryHolder,
     options: RecipeGraphOptions = {},
   ) {

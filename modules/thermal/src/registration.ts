@@ -1,37 +1,46 @@
-import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
-import { ThermalRecipeParser } from "./serializer";
-import { ThermalCatalystRecipeParser } from "./serializer/catalyst";
-import { ThermalFuelRecipeParser } from "./serializer/fuel";
-import { TreeExtractionRecipeParser } from "./serializer/treeExtraction";
+import type { RegisterRecipeSerializer } from "@adeficior/data-modifier-recipes";
+import { ShapedSerializer } from "@adeficior/data-modifier-recipes";
+import { ThermalRecipeSerializer } from "./serializer";
+import { ThermalCatalystRecipeSerializer } from "./serializer/catalyst";
+import { ThermalFuelRecipeSerializer } from "./serializer/fuel";
+import { TreeExtractionRecipeSerializer } from "./serializer/treeExtraction";
 
-export function registerParsers(event: RegisterRecipeParser) {
-  event.register("thermal:bottler", new ThermalRecipeParser());
-  event.register("thermal:centrifuge", new ThermalRecipeParser());
-  event.register("thermal:chiller", new ThermalRecipeParser());
-  event.register("thermal:crucible", new ThermalRecipeParser());
-  event.register("thermal:crystallizer", new ThermalRecipeParser());
-  event.register("thermal:furnace", new ThermalRecipeParser());
-  event.register("thermal:insolator", new ThermalRecipeParser());
+export function registerSerializers(event: RegisterRecipeSerializer) {
+  event.register("cofh_core:crafting_shaped_potion", new ShapedSerializer());
+
+  event.register("thermal:bottler", new ThermalRecipeSerializer());
+  event.register("thermal:centrifuge", new ThermalRecipeSerializer());
+  event.register("thermal:chiller", new ThermalRecipeSerializer());
+  event.register("thermal:crucible", new ThermalRecipeSerializer());
+  event.register("thermal:crystallizer", new ThermalRecipeSerializer());
+  event.register("thermal:furnace", new ThermalRecipeSerializer());
+  event.register("thermal:insolator", new ThermalRecipeSerializer());
   event.register(
     "thermal:insolator_catalyst",
-    new ThermalCatalystRecipeParser(),
+    new ThermalCatalystRecipeSerializer(),
   );
-  event.register("thermal:press", new ThermalRecipeParser());
-  event.register("thermal:pulverizer", new ThermalRecipeParser());
-  event.register("thermal:pulverizer_recycle", new ThermalRecipeParser());
+  event.register("thermal:press", new ThermalRecipeSerializer());
+  event.register("thermal:pulverizer", new ThermalRecipeSerializer());
+  event.register("thermal:pulverizer_recycle", new ThermalRecipeSerializer());
   event.register(
     "thermal:pulverizer_catalyst",
-    new ThermalCatalystRecipeParser(),
+    new ThermalCatalystRecipeSerializer(),
   );
-  event.register("thermal:pyrolyzer", new ThermalRecipeParser());
-  event.register("thermal:refinery", new ThermalRecipeParser());
-  event.register("thermal:sawmill", new ThermalRecipeParser());
-  event.register("thermal:smelter", new ThermalRecipeParser());
-  event.register("thermal:smelter_recycle", new ThermalRecipeParser());
-  event.register("thermal:smelter_catalyst", new ThermalCatalystRecipeParser());
-  event.register("thermal:tree_extractor", new TreeExtractionRecipeParser());
-  event.register("thermal:compression_fuel", new ThermalFuelRecipeParser());
-  event.register("thermal:magmatic_fuel", new ThermalFuelRecipeParser());
-  event.register("thermal:gourmand_fuel", new ThermalFuelRecipeParser());
-  event.register("thermal:numismatic_fuel", new ThermalFuelRecipeParser());
+  event.register("thermal:pyrolyzer", new ThermalRecipeSerializer());
+  event.register("thermal:refinery", new ThermalRecipeSerializer());
+  event.register("thermal:sawmill", new ThermalRecipeSerializer());
+  event.register("thermal:smelter", new ThermalRecipeSerializer());
+  event.register("thermal:smelter_recycle", new ThermalRecipeSerializer());
+  event.register(
+    "thermal:smelter_catalyst",
+    new ThermalCatalystRecipeSerializer(),
+  );
+  event.register(
+    "thermal:tree_extractor",
+    new TreeExtractionRecipeSerializer(),
+  );
+  event.register("thermal:compression_fuel", new ThermalFuelRecipeSerializer());
+  event.register("thermal:magmatic_fuel", new ThermalFuelRecipeSerializer());
+  event.register("thermal:gourmand_fuel", new ThermalFuelRecipeSerializer());
+  event.register("thermal:numismatic_fuel", new ThermalFuelRecipeSerializer());
 }

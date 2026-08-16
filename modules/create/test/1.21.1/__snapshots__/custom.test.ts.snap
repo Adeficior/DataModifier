@@ -1,0 +1,121 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`custom recipe creation creates using recipe classes (mixing): serialized 1`] = `
+{
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "tag": "c:plates/iron",
+    },
+  ],
+  "keepHeldItem": true,
+  "processingTime": 100,
+  "results": [
+    {
+      "id": "minecraft:iron_ingot",
+    },
+  ],
+  "type": "create:mixing",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (crushing): serialized 1`] = `
+{
+  "ingredients": [
+    {
+      "tag": "c:plates/iron",
+    },
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "minecraft:iron_ingot",
+    },
+    {
+      "chance": 0.5,
+      "id": "minecraft:stone",
+    },
+  ],
+  "type": "create:crushing",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (mechanical_crafting): serialized 1`] = `
+{
+  "key": {
+    "A": {
+      "item": "minecraft:diamond",
+    },
+    "B": {
+      "tag": "c:ingots/copper",
+    },
+    "I": {
+      "tag": "c:plates/lead",
+    },
+    "X": {
+      "item": "minecraft:string",
+    },
+  },
+  "pattern": [
+    "AXAXA",
+    "XB BX",
+    "AXAXA",
+    "IIIII",
+  ],
+  "result": {
+    "id": "create:large_cogwheel",
+  },
+  "type": "create:mechanical_crafting",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (sequenced_assembly): serialized 1`] = `
+{
+  "ingredient": {
+    "item": "minecraft:string",
+  },
+  "loops": 5,
+  "results": [
+    {
+      "id": "create:zinc_ingot",
+    },
+    {
+      "chance": 0.2,
+      "count": 4,
+      "id": "create:zinc_nugget",
+    },
+  ],
+  "sequence": [
+    {
+      "ingredients": [
+        {
+          "tag": "c:plates/iron",
+        },
+      ],
+      "results": [
+        {
+          "id": "minecraft:obsidian",
+        },
+      ],
+      "type": "create:compacting",
+    },
+    {
+      "ingredients": [
+        {
+          "tag": "c:plates/copper",
+        },
+      ],
+      "results": [
+        {
+          "id": "minecraft:obsidian",
+        },
+      ],
+      "type": "create:haunting",
+    },
+  ],
+  "transitionalItem": {
+    "id": "minecraft:obsidian",
+  },
+  "type": "create:sequenced_assembly",
+}
+`;

@@ -1,33 +1,40 @@
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 import { ingredientSerializerModules } from "./module";
 
 type Writeable<T> = {
   -readonly [P in keyof T]: T[P];
 };
 
+export type ThermalRecipeOptions = Readonly<{
+  energy?: number;
+  experience?: number;
+}>;
+
 export type ThermalRecipeDefinition = RecipeDefinition &
+  ThermalRecipeOptions &
   Readonly<{
     ingredient?: unknown;
     ingredients?: unknown[];
     result: unknown;
-    energy?: number;
-    experience?: number;
   }>;
 
-export class ThermalRecipe extends Recipe {
+export class ThermalRecipe implements Recipe {
   constructor(
-    private readonly ingredients: Ingredient[],
-    private readonly results: Result[],
-  ) {
-    super();
-  }
+    readonly ingredients: Ingredient[],
+    readonly results: Result[],
+    readonly options: ThermalRecipeOptions = {},
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -37,35 +44,16 @@ export class ThermalRecipe extends Recipe {
     return this.results;
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ThermalRecipe(
       this.ingredients.map(modifier.ingredient),
       this.results.map(modifier.result),
+      this.options,
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ThermalRecipeDefinition> {
-    const serialized: Writeable<Partial<ThermalRecipeDefinition>> = {
-      result: context.results.serializeList(this.results),
-    };
-
-    if (this.ingredients.length === 1) {
-      serialized.ingredient = context.ingredients.serialize(
-        this.ingredients[0]!,
-      );
-    } else {
-      serialized.ingredients = context.ingredients.serializeList(
-        this.ingredients,
-      );
-    }
-
-    return serialized;
   }
 }
 
-export class ThermalRecipeParser extends RecipeParser<
+export class ThermalRecipeSerializer extends RecipeTypeSerializer<
   ThermalRecipeDefinition,
   ThermalRecipe
 > {
@@ -90,6 +78,31 @@ export class ThermalRecipeParser extends RecipeParser<
       ? context.results.deserializeList(definition.result)
       : [context.results.deserialize(definition.result)];
 
-    return new ThermalRecipe(ingredients, results);
+    return new ThermalRecipe(ingredients, results, {
+      energy: definition.energy,
+      experience: definition.experience,
+    });
+  }
+
+  override serialize(
+    recipe: ThermalRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ThermalRecipeDefinition> {
+    const serialized: Writeable<SerializedRecipe<ThermalRecipeDefinition>> = {
+      result: context.results.serializeList(recipe.results),
+      ...recipe.options,
+    };
+
+    if (recipe.ingredients.length === 1) {
+      serialized.ingredient = context.ingredients.serialize(
+        recipe.ingredients[0]!,
+      );
+    } else {
+      serialized.ingredients = context.ingredients.serializeList(
+        recipe.ingredients,
+      );
+    }
+
+    return serialized;
   }
 }

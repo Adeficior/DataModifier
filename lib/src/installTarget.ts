@@ -1,4 +1,3 @@
-import { CombinedEmitters } from "@adeficior/data-modifier-core";
 import type {
   AfterSetupEvent,
   Container,
@@ -11,6 +10,7 @@ import type {
   ModuleTypes,
   SetupEvent,
 } from "@adeficior/data-modifier-core";
+import { CombinedEmitters } from "@adeficior/data-modifier-core";
 import { uniqBy } from "lodash-es";
 
 export type Installable = {
@@ -150,7 +150,7 @@ export class InstallTarget implements Container {
     }
 
     this.frozen = true;
-    bus.dispatch("after:setup", {
+    bus.dispatch("setup:after", {
       callHook: (...args) => bus.dispatch(...args),
     } satisfies AfterSetupEvent);
   }

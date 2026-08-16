@@ -1,15 +1,21 @@
+import type { NormalizedId } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 import { omit } from "lodash-es";
 import * as z from "zod";
 
@@ -25,10 +31,13 @@ export type SpaceStationRecipeDefinition = RecipeDefinition &
     structure: string;
   }>;
 
-export class SpaceStationRecipe extends Recipe {
-  constructor(private readonly ingredients: Ingredient[]) {
-    super();
-  }
+export class SpaceStationRecipe implements Recipe {
+  constructor(
+    // TODO these are IDs?
+    readonly dimension: NormalizedId,
+    readonly structure: NormalizedId,
+    readonly ingredients: Ingredient[],
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -38,31 +47,16 @@ export class SpaceStationRecipe extends Recipe {
     return [];
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new SpaceStationRecipe(this.ingredients.map(modifier.ingredient));
-  }
-
-  serialize(
-    context: RecipeParseContext,
-  ): Partial<SpaceStationRecipeDefinition> {
-    return {
-      ingredients: context.ingredients
-        .serializeList(this.ingredients)
-        .map((it) => {
-          if (it instanceof ItemIngredient || it instanceof ItemTagIngredient) {
-            return { ingredient: omit(it, "count"), count: it.count };
-          }
-
-          throw new IllegalShapeError(
-            "space station ingredient needs to be a form of item",
-            it,
-          );
-        }),
-    };
+  modify(modifier: RecipeModifier) {
+    return new SpaceStationRecipe(
+      this.dimension,
+      this.structure,
+      this.ingredients.map(modifier.ingredient),
+    );
   }
 }
 
-export class SpaceStationRecipeParser extends RecipeParser<
+export class SpaceStationRecipeSerializer extends RecipeTypeSerializer<
   SpaceStationRecipeDefinition,
   SpaceStationRecipe
 > {
@@ -76,6 +70,32 @@ export class SpaceStationRecipeParser extends RecipeParser<
         .map((it) => ({ ...it.ingredient, count: it.count })),
     );
 
-    return new SpaceStationRecipe(ingredients);
+    return new SpaceStationRecipe(
+      encodeId(definition.dimension),
+      encodeId(definition.structure),
+      ingredients,
+    );
+  }
+
+  serialize(
+    recipe: SpaceStationRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<SpaceStationRecipeDefinition> {
+    return {
+      dimension: recipe.dimension,
+      structure: recipe.structure,
+      ingredients: context.ingredients
+        .serializeList(recipe.ingredients)
+        .map((it) => {
+          if (it instanceof ItemIngredient || it instanceof ItemTagIngredient) {
+            return { ingredient: omit(it, "count"), count: it.count };
+          }
+
+          throw new IllegalShapeError(
+            "space station ingredient needs to be a form of item",
+            it,
+          );
+        }),
+    };
   }
 }

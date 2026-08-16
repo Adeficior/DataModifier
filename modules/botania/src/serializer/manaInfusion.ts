@@ -1,10 +1,14 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 import { notNull } from "@adeficior/pack-resolver";
 import { ingredientSerializerModules } from "./module";
 
@@ -16,43 +20,34 @@ export type ManaInfusionRecipeDefinition = RecipeDefinition &
     mana?: number;
   }>;
 
-export class ManaInfusionRecipe extends Recipe {
+export class ManaInfusionRecipe implements Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly result: Result,
-    private readonly catalyst?: Ingredient,
-  ) {
-    super();
-  }
+    readonly ingredient: Ingredient,
+    readonly result: Result,
+    readonly options: { mana?: number; catalyst?: Ingredient } = {},
+  ) {}
 
   getIngredients() {
-    return [this.ingredient, this.catalyst].filter(notNull);
+    return [this.ingredient, this.options.catalyst].filter(notNull);
   }
 
   getResults() {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ManaInfusionRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
-      this.catalyst && modifier.ingredient(this.catalyst),
+      {
+        ...this.options,
+        catalyst: modifier.optionalIngredient(this.options.catalyst),
+      },
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ManaInfusionRecipeDefinition> {
-    return {
-      input: context.ingredients.serialize(this.ingredient),
-      output: context.results.serialize(this.result),
-      catalyst: context.ingredients.serializeOptional(this.catalyst),
-    };
   }
 }
 
-export class ManaInfusionRecipeParser extends RecipeParser<
+export class ManaInfusionRecipeSerializer extends RecipeTypeSerializer<
   ManaInfusionRecipeDefinition,
   ManaInfusionRecipe
 > {
@@ -69,6 +64,18 @@ export class ManaInfusionRecipeParser extends RecipeParser<
     );
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = context.results.deserialize(definition.output);
-    return new ManaInfusionRecipe(ingredient, result, catalyst);
+    return new ManaInfusionRecipe(ingredient, result, { catalyst });
+  }
+
+  override serialize(
+    recipe: ManaInfusionRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ManaInfusionRecipeDefinition> {
+    return {
+      input: context.ingredients.serialize(recipe.ingredient),
+      output: context.results.serialize(recipe.result),
+      catalyst: context.ingredients.serializeOptional(recipe.options.catalyst),
+      mana: recipe.options.mana,
+    };
   }
 }

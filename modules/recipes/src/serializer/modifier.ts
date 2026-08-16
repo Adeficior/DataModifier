@@ -4,4 +4,6 @@ import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 export type RecipeModifier = {
   result: Replacer<Result>;
   ingredient: Replacer<Ingredient>;
+  optionalResult: Replacer<Result | undefined>;
+  optionalIngredient: Replacer<Ingredient | undefined>;
 };

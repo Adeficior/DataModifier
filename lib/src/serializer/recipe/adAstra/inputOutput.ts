@@ -1,19 +1,19 @@
 import { encodeId, IdSchema } from "@adeficior/data-modifier-core";
-import { ItemResult } from "@adeficior/data-modifier-ingredients";
+import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type {
-  Ingredient,
+  Result,
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
+import { ItemResult } from "@adeficior/data-modifier-ingredients";
+import type { RecipeDefinition } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
 import {
   OneToOneRecipe,
-  Recipe,
-  RecipeParser,
-} from "@adeficior/data-modifier-recipes";
-import type {
-  RecipeDefinition,
-  RecipeModifier,
-  RecipeParseContext,
-} from "@adeficior/data-modifier-recipes";
+  RecipeTypeSerializer,
+} from "@adeficior/data-modifier-recipes/serializer";
 import * as z from "zod";
 
 // TODO this will also be the new item format, can re-use that
@@ -32,9 +32,13 @@ function deserializeIdResult(
   return results.validated(new ItemResult(id, count));
 }
 
-function serializeIdResult(result: ItemResult): unknown {
-  const { id, count } = result;
-  return { id: encodeId(id), count };
+function serializeIdResult(result: Result): unknown {
+  if (result instanceof ItemResult) {
+    const { id, count } = result;
+    return { id: encodeId(id), count };
+  }
+
+  throw new IllegalShapeError("recipe can only take item results", result);
 }
 
 export type InputOutputRecipeDefinition = RecipeDefinition &
@@ -43,49 +47,26 @@ export type InputOutputRecipeDefinition = RecipeDefinition &
     output: unknown;
   }>;
 
-export class InputOutputRecipe extends Recipe {
-  constructor(
-    protected readonly ingredient: Ingredient,
-    protected readonly result: ItemResult,
-  ) {
-    super();
-  }
-
-  getIngredients() {
-    return [this.ingredient];
-  }
-
-  getResults() {
-    return [this.result];
-  }
-
-  override modify(modifier: RecipeModifier) {
-    return new OneToOneRecipe(
-      modifier.ingredient(this.ingredient),
-      modifier.result(this.result),
-    );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<InputOutputRecipeDefinition> {
-    return {
-      input: context.ingredients.serialize(this.ingredient),
-      output: serializeIdResult(this.result),
-    };
-  }
-}
-
-export class InputOutputRecipeParser extends RecipeParser<
+export class InputOutputRecipeSerializer extends RecipeTypeSerializer<
   InputOutputRecipeDefinition,
-  InputOutputRecipe
+  OneToOneRecipe
 > {
   deserialize(
     definition: InputOutputRecipeDefinition,
     context: RecipeParseContext,
-  ): InputOutputRecipe {
+  ): OneToOneRecipe {
     const ingredient = context.ingredients.deserialize(definition.input);
     const result = deserializeIdResult(context.results, definition.output);
-    return new InputOutputRecipe(ingredient, result);
+    return new OneToOneRecipe(ingredient, result);
+  }
+
+  override serialize(
+    recipe: OneToOneRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<InputOutputRecipeDefinition> {
+    return {
+      input: context.ingredients.serialize(recipe.ingredient),
+      output: serializeIdResult(recipe.result),
+    };
   }
 }

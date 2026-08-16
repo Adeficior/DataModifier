@@ -1,16 +1,20 @@
 import { encodeId } from "@adeficior/data-modifier-core";
 import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
 import {
   FluidIngredient,
   FluidResult,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 
 export type FluidConversionRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -18,13 +22,11 @@ export type FluidConversionRecipeDefinition = RecipeDefinition &
     output: string;
   }>;
 
-export class FluidConversionRecipe extends Recipe {
+export class FluidConversionRecipe implements Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly result: Result,
-  ) {
-    super();
-  }
+    readonly ingredient: Ingredient,
+    readonly result: Result,
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -34,31 +36,15 @@ export class FluidConversionRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new FluidConversionRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<FluidConversionRecipeDefinition> {
-    if (!(this.result instanceof FluidIngredient)) {
-      throw new IllegalShapeError(
-        "fluid conversion output must be a fluid result",
-        this.result,
-      );
-    }
-
-    return {
-      input: context.ingredients.serialize(this.ingredient),
-      output: encodeId(this.result.id),
-    };
-  }
 }
 
-export class FluidConversionRecipeParser extends RecipeParser<
+export class FluidConversionRecipeSerializer extends RecipeTypeSerializer<
   FluidConversionRecipeDefinition,
   FluidConversionRecipe
 > {
@@ -71,5 +57,22 @@ export class FluidConversionRecipeParser extends RecipeParser<
       new FluidResult(definition.output, -1),
     );
     return new FluidConversionRecipe(ingredient, result);
+  }
+
+  override serialize(
+    recipe: FluidConversionRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<FluidConversionRecipeDefinition> {
+    if (!(recipe.result instanceof FluidIngredient)) {
+      throw new IllegalShapeError(
+        "fluid conversion output must be a fluid result",
+        recipe.result,
+      );
+    }
+
+    return {
+      input: context.ingredients.serialize(recipe.ingredient),
+      output: encodeId(recipe.result.id),
+    };
   }
 }

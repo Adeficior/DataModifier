@@ -1,6 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
+import type { SerializedRecipe } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -8,17 +10,15 @@ export type StonecuttingRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredient: unknown;
     result: unknown;
+    // TODO use count somehow
     count?: number;
   }>;
 
-// TODO could also be SmeltingRecipe?
-export class StonecuttingRecipe extends Recipe {
+export class StonecuttingRecipe implements Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly result: Result,
-  ) {
-    super();
-  }
+    readonly ingredient: Ingredient,
+    readonly result: Result,
+  ) {}
 
   getIngredients() {
     return [this.ingredient];
@@ -28,24 +28,15 @@ export class StonecuttingRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new StonecuttingRecipe(
       modifier.ingredient(this.ingredient),
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<StonecuttingRecipeDefinition> {
-    return {
-      ingredient: context.ingredients.serialize(this.ingredient),
-      result: context.results.serialize(this.result),
-    };
-  }
 }
 
-export class StonecuttingParser extends RecipeParser<
+export class StonecuttingSerializer extends RecipeTypeSerializer<
   StonecuttingRecipeDefinition,
   StonecuttingRecipe
 > {
@@ -56,5 +47,15 @@ export class StonecuttingParser extends RecipeParser<
     const ingredient = context.ingredients.deserialize(definition.ingredient);
     const result = context.results.deserialize(definition.result);
     return new StonecuttingRecipe(ingredient, result);
+  }
+
+  override serialize(
+    recipe: StonecuttingRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<StonecuttingRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(recipe.ingredient),
+      result: context.results.serialize(recipe.result),
+    };
   }
 }

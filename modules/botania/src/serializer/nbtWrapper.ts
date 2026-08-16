@@ -1,10 +1,14 @@
 import type {
+  Recipe,
   RecipeDefinition,
-  RecipeHolder,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeHolder,
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 
 export type NbtWrapperRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -12,10 +16,11 @@ export type NbtWrapperRecipeDefinition = RecipeDefinition &
     recipe: RecipeDefinition;
   }>;
 
-export class NbtWrapperRecipe extends Recipe {
-  constructor(private readonly recipe: RecipeHolder) {
-    super();
-  }
+export class NbtWrapperRecipe implements Recipe {
+  constructor(
+    readonly nbt: string,
+    readonly recipe: RecipeHolder,
+  ) {}
 
   getIngredients() {
     return this.recipe.getIngredients();
@@ -25,28 +30,30 @@ export class NbtWrapperRecipe extends Recipe {
     return this.recipe.getResults();
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new NbtWrapperRecipe(this.recipe.modify(modifier));
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<NbtWrapperRecipeDefinition> {
-    return {
-      recipe: context.recipes.serialize(this.recipe),
-    };
+  modify(modifier: RecipeModifier) {
+    return new NbtWrapperRecipe(this.nbt, this.recipe.modify(modifier));
   }
 }
 
-export class NbtWrapperRecipeParser extends RecipeParser<
+export class NbtWrapperRecipeSerializer extends RecipeTypeSerializer<
   NbtWrapperRecipeDefinition,
   NbtWrapperRecipe
 > {
-  deserialize(
+  override deserialize(
     definition: NbtWrapperRecipeDefinition,
     context: RecipeParseContext,
   ): NbtWrapperRecipe {
     const recipe = context.recipes.deserialize(definition.recipe);
-    return new NbtWrapperRecipe(recipe);
+    return new NbtWrapperRecipe(definition.nbt, recipe);
+  }
+
+  override serialize(
+    recipe: NbtWrapperRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<NbtWrapperRecipeDefinition> {
+    return {
+      nbt: recipe.nbt,
+      recipe: context.recipes.serialize(recipe.recipe),
+    };
   }
 }

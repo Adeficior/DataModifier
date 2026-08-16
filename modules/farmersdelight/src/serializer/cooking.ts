@@ -1,59 +1,58 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 import { notNull } from "@adeficior/pack-resolver";
 
+type CookingOptions = Readonly<{
+  cookingTime?: number;
+  experience?: number;
+  recipe_book_tab?: string;
+}>;
+
 export type CookingRecipeDefinition = RecipeDefinition &
+  CookingOptions &
   Readonly<{
     ingredients: unknown[];
     container?: unknown;
     result: unknown;
-    cookingTime?: number;
-    experience?: number;
-    recipe_book_tab?: string;
   }>;
 
-export class CookingRecipe extends Recipe {
+export class CookingRecipe implements Recipe {
   constructor(
-    private readonly ingredients: Ingredient[],
-    private readonly result: Result,
-    private readonly container?: Ingredient,
-  ) {
-    super();
-  }
+    readonly ingredients: Ingredient[],
+    readonly result: Result,
+    readonly options: CookingOptions & { container?: Ingredient } = {},
+  ) {}
 
   getIngredients() {
-    return [this.container, ...this.ingredients].filter(notNull);
+    return [this.options.container, ...this.ingredients].filter(notNull);
   }
 
   getResults() {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new CookingRecipe(
       this.ingredients.map(modifier.ingredient),
       modifier.result(this.result),
-      this.container && modifier.ingredient(this.container),
+      {
+        ...this.options,
+        container: modifier.optionalIngredient(this.options.container),
+      },
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<CookingRecipeDefinition> {
-    return {
-      ingredients: context.ingredients.serializeList(this.ingredients),
-      result: context.results.serialize(this.result),
-      container: context.results.serializeOptional(this.container?.asResult()),
-    };
   }
 }
 
-export class CookingRecipeParser extends RecipeParser<
+export class CookingRecipeSerializer extends RecipeTypeSerializer<
   CookingRecipeDefinition,
   CookingRecipe
 > {
@@ -68,6 +67,26 @@ export class CookingRecipeParser extends RecipeParser<
     const container = context.results
       .deserializeOptional(definition.container)
       ?.asIngredient();
-    return new CookingRecipe(ingredients, result, container);
+    const { cookingTime, experience, recipe_book_tab } = definition;
+    return new CookingRecipe(ingredients, result, {
+      container,
+      cookingTime,
+      experience,
+      recipe_book_tab,
+    });
+  }
+
+  override serialize(
+    recipe: CookingRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<CookingRecipeDefinition> {
+    return {
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+      result: context.results.serialize(recipe.result),
+      container: context.results.serializeOptional(
+        recipe.options.container?.asResult(),
+      ),
+      ...recipe.options,
+    };
   }
 }

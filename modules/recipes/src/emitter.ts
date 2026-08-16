@@ -1,11 +1,6 @@
-import {
-  CustomEmitter,
-  encodeId,
-  RuledEmitter,
-  withDisabledConditions,
-} from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
+  Conditions,
   Id,
   IdInput,
   LoaderContext,
@@ -15,12 +10,18 @@ import type {
   SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
-  createReplacer,
-  resolveIdTest,
-} from "@adeficior/data-modifier-core/serializer";
+  CustomEmitter,
+  encodeId,
+  RuledEmitter,
+  withDisabledConditions,
+} from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Predicate,
+} from "@adeficior/data-modifier-core/serializer";
+import {
+  createReplacer,
+  resolveIdTest,
 } from "@adeficior/data-modifier-core/serializer";
 import type {
   Ingredient,
@@ -33,13 +34,13 @@ import type {
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import { combineResolvers, notNull } from "@adeficior/pack-resolver";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import { combineResolvers, notNull } from "@adeficior/pack-resolver";
+import type { Recipe } from "./model";
 import { RecipeRule } from "./rule";
-import { recipePath } from "./schema";
 import type { RecipeDefinition } from "./schema";
-import type { Recipe } from "./serializer/abstract";
-import type { RecipeSerializer } from "./serializer/context";
+import { recipePath } from "./schema";
+import type { RecipesSerializer } from "./serializer/abstract";
 import { RecipeHolder } from "./serializer/holder";
 
 export type RecipeTest = Readonly<{
@@ -48,11 +49,9 @@ export type RecipeTest = Readonly<{
   namespace?: string;
   output?: IngredientFilter;
   input?: IngredientFilter;
-  // TODO not sure if I want to even keep this?
-  optional?: boolean;
 }>;
 
-export interface RecipeRules {
+export interface RecipeEmitter {
   replaceResult(
     test: IngredientFilter,
     value: ResultInput,
@@ -66,8 +65,12 @@ export interface RecipeRules {
   ): void;
 
   add(id: IdInput, value: RecipeDefinition): void;
-  add(id: IdInput, value: RecipeHolder): void;
-  add(id: IdInput, type: NormalizedId<RecipeSerializerId>, value: Recipe): void;
+  add(
+    id: IdInput,
+    type: IdInput<RecipeSerializerId>,
+    value: Recipe,
+    conditions?: Conditions,
+  ): void;
 
   remove(test: RecipeTest): void;
 }
@@ -76,7 +79,7 @@ export const EMPTY_RECIPE: RecipeDefinition = withDisabledConditions({
   type: "minecraft:disabled",
 });
 
-export class RecipeEmitter implements RecipeRules, ClearableEmitter {
+export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
   private readonly custom = new CustomEmitter<RecipeDefinition>((it) =>
     recipePath(this.packFormat, it),
   );
@@ -91,7 +94,7 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
     private readonly resultSerializer: ResultSerializer,
     private readonly ingredientSerializer: IngredientSerializer,
     private readonly predicates: Predicates,
-    private readonly serializer: RecipeSerializer,
+    private readonly serializer: RecipesSerializer,
   ) {
     this.ruled = new RuledEmitter<RecipeHolder, RecipeRule>(
       this.registry,
@@ -136,22 +139,22 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
 
   add(
     id: IdInput,
-    arg: RecipeDefinition | RecipeHolder | NormalizedId<RecipeSerializerId>,
+    arg: RecipeDefinition | IdInput<RecipeSerializerId>,
     arg2?: Recipe,
+    conditions?: Conditions,
   ) {
-    if (typeof arg === "string") {
-      const type = arg;
-      const recipe = arg2!;
-      this.add(id, new RecipeHolder({ type }, recipe));
+    if (typeof arg === "string" || "namespace" in arg) {
+      const holder = RecipeHolder.of(arg, arg2!, conditions);
+      const serialized = this.serializer.serialize(holder);
+      this.add(id, serialized);
     } else {
       const value = arg;
 
       if (this.custom.has(id))
         this.logger.error(`Overwriting custom recipe with ID ${encodeId(id)}`);
 
-      if (value instanceof RecipeHolder)
-        this.custom.add(id, this.serializer.serialize(value));
-      else this.custom.add(id, value);
+      // TODO add to custom registry so recipe graph can use it
+      this.custom.add(id, value);
     }
   }
 
@@ -177,7 +180,6 @@ export class RecipeEmitter implements RecipeRules, ClearableEmitter {
         [ingredientTests.result, ...recipePredicates.result].filter(notNull),
         modifier,
       ),
-      recipeTest.optional !== true,
     );
   }
 

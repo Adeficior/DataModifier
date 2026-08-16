@@ -1,6 +1,8 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
+import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
-import { Recipe, RecipeParser } from "./abstract";
+import { RecipeTypeSerializer } from "./abstract";
+import type { SerializedRecipe } from "./abstract";
 import type { RecipeParseContext } from "./context";
 import type { RecipeModifier } from "./modifier";
 
@@ -10,13 +12,11 @@ export type ManyToManyRecipeDefinition = RecipeDefinition &
     results: unknown[];
   }>;
 
-export class ManyToManyRecipe extends Recipe {
+export class ManyToManyRecipe implements Recipe {
   constructor(
-    protected readonly ingredients: Ingredient[],
-    protected readonly results: Result[],
-  ) {
-    super();
-  }
+    readonly ingredients: Ingredient[],
+    readonly results: Result[],
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -26,28 +26,20 @@ export class ManyToManyRecipe extends Recipe {
     return this.results;
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ManyToManyRecipe(
       this.ingredients.map(modifier.ingredient),
       this.results.map(modifier.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ManyToManyRecipeDefinition> {
-    return {
-      results: context.results.serializeList(this.results),
-      ingredients: context.ingredients.serializeList(this.ingredients),
-    };
-  }
 }
 
-export class ManyToManyRecipeParser<
-  TDefinition extends ManyToManyRecipeDefinition,
-> extends RecipeParser<TDefinition, ManyToManyRecipe> {
+export class ManyToManyRecipeSerializer extends RecipeTypeSerializer<
+  ManyToManyRecipeDefinition,
+  ManyToManyRecipe
+> {
   deserialize(
-    definition: TDefinition,
+    definition: ManyToManyRecipeDefinition,
     context: RecipeParseContext,
   ): ManyToManyRecipe {
     const ingredients = context.ingredients.deserializeList(
@@ -55,5 +47,15 @@ export class ManyToManyRecipeParser<
     );
     const results = context.results.deserializeList(definition.results);
     return new ManyToManyRecipe(ingredients, results);
+  }
+
+  override serialize(
+    recipe: ManyToManyRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ManyToManyRecipeDefinition> {
+    return {
+      results: context.results.serializeList(recipe.results),
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    };
   }
 }

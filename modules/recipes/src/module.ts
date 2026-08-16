@@ -1,72 +1,81 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { RecipeEmitter } from "./emitter";
-import type { RecipeRules } from "./emitter";
-import type { RegisterRecipeParser } from "./hooks";
-import { RecipeLoader } from "./loader";
-import type { RecipeLoaderAccessor } from "./loader";
+import type { RecipeEmitter } from "./emitter";
+import { RecipeEmitterImpl } from "./emitter";
+import type { RegisterRecipeSerializer } from "./hooks";
+import type { RecipeLoader } from "./loader";
+import { RecipeLoaderImpl } from "./loader";
 import { recipePattern } from "./schema";
+import type { RecipesSerializer } from "./serializer/abstract";
+import { registerDefaultSerializers } from "./serializer/default";
+import { RecipeSerializerImpl } from "./serializer/impl";
 
 export default defineModule<{
   hooks: {
-    "recipes:register-parser": RegisterRecipeParser;
+    "recipes:register-serializer": RegisterRecipeSerializer;
   };
   emitters: {
-    recipes: RecipeRules;
+    recipes: RecipeEmitter;
   };
   loaders: {
-    recipes: RecipeLoaderAccessor;
+    recipes: RecipeLoader;
+  };
+  services: {
+    "serializer:recipes": RecipesSerializer;
   };
 }>({
   importModule: name,
   dependencies: {
     "@adeficior/data-modifier-ingredients": "required",
-    // TODO make optional?
-    "@adeficior/data-modifier-tags": "required",
   },
   types: {
     hooks: {
-      "recipes:register-parser": { name: "RegisterRecipeParser" },
+      "recipes:register-serializer": { name: "RegisterRecipeSerializer" },
     },
     loaders: {
-      recipes: "RecipeLoaderAccessor",
+      recipes: "RecipeLoader",
     },
     emitters: {
-      recipes: "RecipeRules",
+      recipes: "RecipeEmitter",
+    },
+    services: {
+      "serializer:recipes": "RecipesSerializer",
     },
   },
   setup: (pack) => {
-    const loader = pack.loader(
-      "recipes",
+    const serializer = pack.service(
+      "serializer:recipes",
       (container) =>
-        new RecipeLoader(
+        new RecipeSerializerImpl(
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
         ),
+    );
+
+    const loader = pack.loader(
+      "recipes",
+      () => new RecipeLoaderImpl(serializer()),
       recipePattern(pack.options.packFormat),
     );
 
     pack.emitter(
       "recipes",
       (container) =>
-        new RecipeEmitter(
+        new RecipeEmitterImpl(
           container.get("logger"),
           pack.options.packFormat,
           loader(),
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
           container.get("predicates"),
-          loader(),
+          serializer(),
         ),
     );
 
+    pack.hook("recipes:register-serializer", registerDefaultSerializers);
+
     pack.hook("setup:after", ({ callHook }) => {
-      const serializer = loader();
-      callHook("recipes:register-parser", {
-        register: (type, parser) => {
-          serializer.registerParser(type, parser);
-        },
-      });
+      callHook("recipes:register-serializer", serializer().createEvent());
     });
   },
 });

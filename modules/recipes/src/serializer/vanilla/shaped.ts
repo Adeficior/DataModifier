@@ -3,8 +3,10 @@ import type {
   IngredientMapInput,
   Result,
 } from "@adeficior/data-modifier-ingredients";
+import type { Recipe } from "../../model";
 import type { RecipeDefinition } from "../../schema";
-import { Recipe, RecipeParser } from "../abstract";
+import type { SerializedRecipe } from "../abstract";
+import { RecipeTypeSerializer } from "../abstract";
 import type { RecipeParseContext } from "../context";
 import type { RecipeModifier } from "../modifier";
 
@@ -15,13 +17,12 @@ export type ShapedRecipeDefinition = RecipeDefinition &
     result: unknown;
   }>;
 
-export class ShapedRecipe extends Recipe {
+export class ShapedRecipe implements Recipe {
   constructor(
-    private readonly ingredients: IngredientMap,
-    private readonly result: Result,
-  ) {
-    super();
-  }
+    readonly pattern: string[],
+    readonly ingredients: IngredientMap,
+    readonly result: Result,
+  ) {}
 
   getIngredients() {
     return this.ingredients.list();
@@ -31,24 +32,16 @@ export class ShapedRecipe extends Recipe {
     return [this.result];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new ShapedRecipe(
+      this.pattern,
       this.ingredients.replace(modifier.ingredient),
       modifier.result(this.result),
     );
   }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<ShapedRecipeDefinition> {
-    return {
-      key: context.ingredients.serializeIngredientMap(this.ingredients),
-      result: context.results.serialize(this.result),
-    };
-  }
 }
 
-export class ShapedParser extends RecipeParser<
+export class ShapedSerializer extends RecipeTypeSerializer<
   ShapedRecipeDefinition,
   ShapedRecipe
 > {
@@ -60,6 +53,18 @@ export class ShapedParser extends RecipeParser<
       definition.key,
     );
     const result = context.results.deserialize(definition.result);
-    return new ShapedRecipe(ingredients, result);
+    return new ShapedRecipe(definition.pattern, ingredients, result);
+  }
+
+  override serialize(
+    recipe: ShapedRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<ShapedRecipeDefinition> {
+    // TODO validate pattern?
+    return {
+      key: context.ingredients.serializeIngredientMap(recipe.ingredients),
+      pattern: recipe.pattern,
+      result: context.results.serialize(recipe.result),
+    };
   }
 }

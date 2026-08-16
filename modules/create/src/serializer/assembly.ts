@@ -1,31 +1,34 @@
 import type { Ingredient, Result } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
-  RecipeHolder,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeHolder,
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 
 export type AssemblyRecipeDefinition = RecipeDefinition &
   Readonly<{
     ingredient: unknown;
-    transitionalItem: unknown;
-    transitional_item: unknown;
+    transitionalItem?: unknown;
+    transitional_item?: unknown;
     results: unknown[];
     loops?: number;
     sequence: RecipeDefinition[];
   }>;
 
-export class AssemblyRecipe extends Recipe {
+export class AssemblyRecipe implements Recipe {
   constructor(
-    private readonly ingredient: Ingredient,
-    private readonly transitionalItem: Ingredient,
-    private readonly results: Result[],
-    private readonly sequence: RecipeHolder[],
-  ) {
-    super();
-  }
+    readonly ingredient: Ingredient,
+    readonly transitionalItem: Ingredient,
+    readonly results: Result[],
+    readonly sequence: RecipeHolder[],
+    readonly options: { loops?: number } = {},
+  ) {}
 
   getIngredients() {
     return [
@@ -39,30 +42,18 @@ export class AssemblyRecipe extends Recipe {
     return [...this.results, ...this.sequence.flatMap((it) => it.getResults())];
   }
 
-  override modify(modifier: RecipeModifier) {
+  modify(modifier: RecipeModifier) {
     return new AssemblyRecipe(
       modifier.ingredient(this.ingredient),
       modifier.ingredient(this.transitionalItem),
       this.results.map(modifier.result),
       this.sequence.map((it) => it.modify(modifier)),
+      this.options,
     );
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<AssemblyRecipeDefinition> {
-    return {
-      ingredient: context.ingredients.serialize(this.ingredient),
-      transitionalItem: context.results.serialize(
-        this.transitionalItem.asResult(),
-      ),
-      results: context.results.serializeList(this.results),
-      sequence: this.sequence.map((it) => context.recipes.serialize(it)),
-    };
   }
 }
 
-export class AssemblyRecipeParser extends RecipeParser<
+export class AssemblyRecipeSerializer extends RecipeTypeSerializer<
   AssemblyRecipeDefinition,
   AssemblyRecipe
 > {
@@ -81,6 +72,24 @@ export class AssemblyRecipeParser extends RecipeParser<
     const sequence = definition.sequence.map((it) =>
       context.recipes.deserialize(it),
     );
-    return new AssemblyRecipe(ingredient, transitionalItem, results, sequence);
+    return new AssemblyRecipe(ingredient, transitionalItem, results, sequence, {
+      loops: definition.loops,
+    });
+  }
+
+  override serialize(
+    recipe: AssemblyRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<AssemblyRecipeDefinition> {
+    return {
+      ingredient: context.ingredients.serialize(recipe.ingredient),
+      // TODO use transitional_item depending on pack format
+      transitionalItem: context.results.serialize(
+        recipe.transitionalItem.asResult(),
+      ),
+      results: context.results.serializeList(recipe.results),
+      sequence: recipe.sequence.map((it) => context.recipes.serialize(it)),
+      ...recipe.options,
+    };
   }
 }

@@ -1,9 +1,9 @@
-import type { RegisterRecipeParser } from "@adeficior/data-modifier-recipes";
-import { CookingRecipeParser } from "./serializer/cooking";
-import { CuttingRecipeParser } from "./serializer/cutting";
+import type { RegisterRecipeSerializer } from "@adeficior/data-modifier-recipes";
+import { CookingRecipeSerializer } from "./serializer/cooking";
+import { CuttingRecipeSerializer } from "./serializer/cutting";
 
-export function registerParsers(event: RegisterRecipeParser) {
-  event.register("farmersdelight:cooking", new CookingRecipeParser());
-  event.register("farmersdelight:cutting", new CuttingRecipeParser());
-  event.register("farmersrespite:brewing", new CookingRecipeParser());
+export function registerSerializers(event: RegisterRecipeSerializer) {
+  event.register("farmersdelight:cooking", new CookingRecipeSerializer());
+  event.register("farmersdelight:cutting", new CuttingRecipeSerializer());
+  event.register("farmersrespite:brewing", new CookingRecipeSerializer());
 }

@@ -3,10 +3,10 @@ import { setupRecipeEmitter } from "@adeficior/data-modifier-recipes/testing";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { registerParsers } from "../../src/registration";
+import { registerSerializers } from "../../src/registration";
 
 const version = basename(import.meta.dir);
-const { emitter, resolver } = setupRecipeEmitter(version, registerParsers);
+const { emitter, resolver } = setupRecipeEmitter(version, registerSerializers);
 
 describe("recipe ingredient replacement", () => {
   it("replaces ingredients in create recipes", async () => {

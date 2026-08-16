@@ -1,10 +1,16 @@
+import type { NormalizedId } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { Recipe, RecipeParser } from "@adeficior/data-modifier-recipes";
 import type {
+  Recipe,
   RecipeDefinition,
   RecipeModifier,
-  RecipeParseContext,
 } from "@adeficior/data-modifier-recipes";
+import type {
+  RecipeParseContext,
+  SerializedRecipe,
+} from "@adeficior/data-modifier-recipes/serializer";
+import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -12,10 +18,12 @@ export type BrewRecipeDefinition = RecipeDefinition &
     brew: string;
   }>;
 
-export class BrewRecipe extends Recipe {
-  constructor(private readonly ingredients: Ingredient[]) {
-    super();
-  }
+export class BrewRecipe implements Recipe {
+  constructor(
+    // TODO this is an ID?
+    readonly brew: NormalizedId,
+    readonly ingredients: Ingredient[],
+  ) {}
 
   getIngredients() {
     return this.ingredients;
@@ -25,20 +33,12 @@ export class BrewRecipe extends Recipe {
     return [];
   }
 
-  override modify(modifier: RecipeModifier) {
-    return new BrewRecipe(this.ingredients.map(modifier.ingredient));
-  }
-
-  override serialize(
-    context: RecipeParseContext,
-  ): Partial<BrewRecipeDefinition> {
-    return {
-      ingredients: context.ingredients.serializeList(this.ingredients),
-    };
+  modify(modifier: RecipeModifier) {
+    return new BrewRecipe(this.brew, this.ingredients.map(modifier.ingredient));
   }
 }
 
-export class BrewRecipeParser extends RecipeParser<
+export class BrewRecipeSerializer extends RecipeTypeSerializer<
   BrewRecipeDefinition,
   BrewRecipe
 > {
@@ -49,6 +49,17 @@ export class BrewRecipeParser extends RecipeParser<
     const ingredients = context.ingredients.deserializeList(
       definition.ingredients,
     );
-    return new BrewRecipe(ingredients);
+    const brew = encodeId(definition.brew);
+    return new BrewRecipe(brew, ingredients);
+  }
+
+  override serialize(
+    recipe: BrewRecipe,
+    context: RecipeParseContext,
+  ): SerializedRecipe<BrewRecipeDefinition> {
+    return {
+      brew: recipe.brew,
+      ingredients: context.ingredients.serializeList(recipe.ingredients),
+    };
   }
 }
