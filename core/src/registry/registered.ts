@@ -7,4 +7,5 @@ export type RegistryIds = Record<NormalizedId<RegistryId>, NormalizedId[]>;
 export interface Registered {
   validate(lookup: RegistryLookup): void;
   ids(): RegistryIds;
+  hashCode(): string;
 }

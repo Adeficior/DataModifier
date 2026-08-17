@@ -1,5 +1,5 @@
 export { EMPTY_RECIPE, type RecipeEmitter, type RecipeTest } from "./emitter";
-export type * from "./helper/vanilla";
+export type { VanillaRecipeHelper } from "./helper/vanilla";
 export type * from "./hooks";
 export type { RecipeLoader } from "./loader";
 export type * from "./model";

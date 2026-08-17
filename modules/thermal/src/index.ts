@@ -1,4 +1,4 @@
-export type * from "./helper";
+export type { ThermalRecipeHelper } from "./helper";
 export { default } from "./module";
 export * from "./serializer";
 export * from "./serializer/catalyst";

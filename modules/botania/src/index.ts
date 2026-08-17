@@ -1,4 +1,4 @@
-export type * from "./helper";
+export type { BotaniaRecipeHelper } from "./helper";
 export { default } from "./module";
 export * from "./serializer/apothecary";
 export * from "./serializer/blocks";

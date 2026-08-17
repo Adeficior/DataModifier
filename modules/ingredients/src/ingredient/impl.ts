@@ -1,4 +1,3 @@
-import { encodeId, toTag } from "@adeficior/data-modifier-core";
 import type {
   IdInput,
   NormalizedId,
@@ -7,6 +6,7 @@ import type {
   RegistryLookup,
   TagId,
 } from "@adeficior/data-modifier-core";
+import { encodeId, toTag } from "@adeficior/data-modifier-core";
 import type {
   BlockId,
   FluidId,
@@ -14,14 +14,15 @@ import type {
   RegistryId,
 } from "@adeficior/data-modifier/generated";
 import { uniq } from "lodash-es";
-import { BlockResult, FluidResult, ItemResult } from "../result/impl";
 import type { Result } from "../result/impl";
+import { BlockResult, FluidResult, ItemResult } from "../result/impl";
 import { BUCKET } from "../units";
 
 export abstract class Ingredient implements Registered {
   validate(_: RegistryLookup): void {}
   abstract ids(): RegistryIds;
   abstract asResult(): Result;
+  abstract hashCode(): string;
 }
 
 export abstract class TagIngredient extends Ingredient {
