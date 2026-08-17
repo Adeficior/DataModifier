@@ -12,7 +12,7 @@ function generateModule(modules: ModuleConfig[]) {
     /* typescript */ `
       /* eslint-disable @typescript-eslint/consistent-type-imports */
       /* eslint-disable @typescript-eslint/no-unused-vars */
-      
+
       export type Services<T extends ModuleTypes> = {
         ${services}
       }

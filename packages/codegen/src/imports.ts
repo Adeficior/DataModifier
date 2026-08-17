@@ -2,6 +2,7 @@ import type {
   ImportOptions,
   ModuleConfig,
 } from "@adeficior/data-modifier-core";
+import { notNull, uniq } from "@adeficior/pack-resolver";
 
 type ResolvedImport = {
   name: string;
@@ -21,6 +22,10 @@ function resolveImport(
   }
 
   return null;
+}
+
+function importStatement(it: ResolvedImport) {
+  return `import("${it.module}").${it.name}`;
 }
 
 class ImportMap {
@@ -48,7 +53,7 @@ class ImportMap {
       .entries()
       .map(([key, options]) => ({ key, ...options }))
       .toArray()
-      .map((it) => `"${it.key}": import("${it.module}").${it.name};`)
+      .map((it) => `"${it.key}": ${importStatement(it)}`)
       .join("\n");
   }
 }
@@ -79,32 +84,47 @@ export function gatherImports(modules: ModuleConfig[]) {
 }
 
 class Promotions {
-  private entries = new Map<string, ImportMap>();
+  private entries = new Map<string, ResolvedImport>();
+  private subPromotions = new Map<string, Promotions>();
 
-  add(target: string, key: string, resolvedImport: ResolvedImport) {
-    this.entries
-      .getOrInsertComputed(target, () => new ImportMap())
-      .add(key, resolvedImport);
+  add([key, ...path]: string[], resolvedImport: ResolvedImport) {
+    if (!key) return;
+
+    if (path.length === 0) {
+      this.entries.set(key, resolvedImport);
+    } else {
+      this.subPromotions
+        .getOrInsertComputed(key, () => new Promotions())
+        .add(path, resolvedImport);
+    }
   }
 
   toString() {
-    return [...this.entries.entries()]
-      .map(([target, imports]) => `"${target}": { ${imports} }`)
+    const keys = uniq([...this.entries.keys(), ...this.subPromotions.keys()]);
+
+    return keys
+      .map((key) => {
+        const rootImport = this.entries.get(key);
+        const rootType = rootImport && importStatement(rootImport);
+
+        const subPromotions = this.subPromotions.get(key);
+        const subType = subPromotions && `{ ${subPromotions} }`;
+
+        const type = [rootType, subType].filter(notNull).join("&");
+        return `"${key}": ${type}`;
+      })
       .join("\n");
   }
 }
 
-export function gatherPromotions(
-  modules: Pick<ModuleConfig, "promote">[],
-  services: ImportMap,
-) {
+export function gatherPromotions(modules: ModuleConfig[], services: ImportMap) {
   const promotions = new Promotions();
 
   modules.forEach(({ promote }) => {
     promote.forEach((options) => {
       const resolvedImport = services.get(options.service);
       if (!resolvedImport) return;
-      promotions.add(options.target, options.key, resolvedImport);
+      promotions.add(options.path, resolvedImport);
     });
   });
 

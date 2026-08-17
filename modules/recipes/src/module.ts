@@ -2,6 +2,7 @@ import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import type { RecipeEmitter } from "./emitter";
 import { RecipeEmitterImpl } from "./emitter";
+import type { VanillaRecipeHelper } from "./helper/vanilla";
 import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
 import { RecipeLoaderImpl } from "./loader";
@@ -22,6 +23,7 @@ export default defineModule<{
   };
   services: {
     "serializer:recipes": RecipesSerializer;
+    "helper:recipes:vanilla": VanillaRecipeHelper;
   };
 }>({
   importModule: name,
@@ -40,9 +42,13 @@ export default defineModule<{
     },
     services: {
       "serializer:recipes": "RecipesSerializer",
+      "helper:recipes:vanilla": "VanillaRecipeHelper",
     },
   },
-  promote: [{ service: "emitter:recipes", key: "recipes" }],
+  promote: [
+    { service: "emitter:recipes", key: "recipes" },
+    { service: "helper:recipes:vanilla", key: "recipes.vanilla" },
+  ],
   setup: (pack) => {
     const serializer = pack.service(
       "serializer:recipes",
@@ -72,6 +78,8 @@ export default defineModule<{
           serializer(),
         ),
     );
+
+    // TODO add VanillaRecipesService service
 
     pack.hook("recipes:register-serializer", registerDefaultSerializers);
 

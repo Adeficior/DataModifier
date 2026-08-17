@@ -5,12 +5,12 @@ import {
 } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
 import type { Model } from "../src";
-import { ModelEmitter } from "../src/emitter/models";
+import { ModelEmitterImpl } from "../src/emitter/models";
 
 // TODO more tests
 
 const context: LoaderContext = { logger: createTestLogger() };
-const emitter = new ModelEmitter("custom");
+const emitter = new ModelEmitterImpl("custom");
 
 afterEach(() => {
   emitter.clear();

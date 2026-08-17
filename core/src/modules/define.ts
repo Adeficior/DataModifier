@@ -1,7 +1,7 @@
 import type { Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
 import type { ModuleSetupOptions } from "../config";
-import type { Container } from "../container";
+import type { ModulesContainer } from "../container";
 import type { ClearableEmitter } from "../emit/abstract";
 import type { Loader } from "../load/abstract";
 
@@ -24,7 +24,7 @@ type Registration<
   TArgs extends unknown[] = [],
 > = <TKey extends keyof TTypes, TImpl extends TTypes[TKey] & TAbstract>(
   key: TKey,
-  factory: (container: Container) => TImpl,
+  factory: (container: ModulesContainer) => TImpl,
   ...args: TArgs
 ) => () => TImpl;
 
@@ -90,11 +90,14 @@ export type ServiceKey<T extends ModuleTypes> =
   | `emitter:${keyof ModuleType<T, "emitters"> & string}`
   | `loaders:${keyof ModuleType<T, "loaders"> & string}`;
 
-export type ServicePromotion<T extends ModuleTypes = ModuleTypes> = {
+export type ServicePromotionInput<T extends ModuleTypes = ModuleTypes> = {
   service: ServiceKey<T>;
   key: string;
-  // TODO make extendable (ex for recipe emitter)
-  target?: "modifier";
+};
+
+export type ServicePromotion<T extends ModuleTypes = ModuleTypes> = {
+  service: ServiceKey<T>;
+  path: string[];
 };
 
 export type ModuleConfigInput<T extends ModuleTypes> = {
@@ -102,7 +105,7 @@ export type ModuleConfigInput<T extends ModuleTypes> = {
   setup?: EventHandler<SetupEvent<T>>;
   afterSetup?: EventHandler<AfterSetupEvent<T>>;
   types?: Partial<ModuleImports<T>>;
-  promote?: ServicePromotion<T>[];
+  promote?: ServicePromotionInput<T>[];
 } & (PackagedModule | LocalModule);
 
 export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
@@ -112,7 +115,7 @@ export type ModuleConfig<T extends ModuleTypes = ModuleTypes> = {
   setup: EventHandler<SetupEvent<T>>;
   afterSetup: EventHandler<AfterSetupEvent<T>>;
   types: ModuleImports<T>;
-  promote: Required<ServicePromotion<T>>[];
+  promote: ServicePromotion<T>[];
 };
 
 export function defineModule<T extends ModuleTypes>({
@@ -128,8 +131,8 @@ export function defineModule<T extends ModuleTypes>({
   }
 
   const actualPromote: ModuleConfig<T>["promote"] =
-    promote?.map((it) => ({
-      target: "modifier",
+    promote?.map(({ key, ...it }) => ({
+      path: key.split("."),
       ...it,
     })) ?? [];
 

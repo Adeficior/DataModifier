@@ -1,18 +1,18 @@
-import {
-  CustomEmitter,
-  encodeId,
-  prefix,
-  suffix,
-} from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   IdInput,
   LoaderContext,
   NormalizedId,
 } from "@adeficior/data-modifier-core";
+import {
+  CustomEmitter,
+  encodeId,
+  prefix,
+  suffix,
+} from "@adeficior/data-modifier-core";
 import type { Model } from "../schema";
 
-export interface ModelRules {
+export interface ModelEmitter {
   add(id: IdInput, blockstate: Model): NormalizedId;
 
   cubeAll(id: IdInput, texture?: string): NormalizedId;
@@ -22,7 +22,7 @@ export interface ModelRules {
   cog(id: IdInput, large: boolean, texture?: string): NormalizedId;
 }
 
-export class ModelEmitter implements ModelRules, ClearableEmitter {
+export class ModelEmitterImpl implements ModelEmitter, ClearableEmitter {
   private readonly custom;
 
   constructor(type: string) {

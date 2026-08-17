@@ -1,19 +1,21 @@
-import { CustomEmitter, prefix } from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   Id,
   IdInput,
   LoaderContext,
 } from "@adeficior/data-modifier-core";
+import { CustomEmitter, prefix } from "@adeficior/data-modifier-core";
 import type { Blockstate } from "../schema";
 
-export interface BlockstateRules {
+export interface BlockstateEmitter {
   add(id: IdInput, blockstate: Blockstate): void;
   basic(id: IdInput, model?: string): void;
   cog(id: IdInput, model?: string): void;
 }
 
-export class BlockstateEmitter implements BlockstateRules, ClearableEmitter {
+export class BlockstateEmitterImpl
+  implements BlockstateEmitter, ClearableEmitter
+{
   private readonly custom = new CustomEmitter<Blockstate>(this.filePath);
 
   private filePath(id: Id) {

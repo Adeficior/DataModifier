@@ -1,8 +1,8 @@
-import { createLogger, createResolver } from "@adeficior/pack-resolver";
 import type { Logger, Resolver } from "@adeficior/pack-resolver";
+import { createLogger, createResolver } from "@adeficior/pack-resolver";
 import { name } from "../package.json";
-import { defineModule } from "./modules/define";
 import type { AfterSetupEvent } from "./modules/define";
+import { defineModule } from "./modules/define";
 import { RegistryDumpLoader } from "./registry/dump";
 import { EmptyRegistryLookup } from "./registry/empty";
 import type { RegistryLookup } from "./registry/lookup";

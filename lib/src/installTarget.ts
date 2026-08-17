@@ -1,10 +1,10 @@
 import type {
   AfterSetupEvent,
-  Container,
   DependencyType,
   EventHandler,
   Loader,
   ModuleConfig,
+  ModulesContainer,
   ModuleSetupOptions,
   ModuleType,
   ModuleTypes,
@@ -90,7 +90,7 @@ class EventBus {
   }
 }
 
-export class InstallTarget implements Container {
+export class InstallTarget implements ModulesContainer {
   private frozen = false;
   private readonly services = new Map<string, unknown>();
   protected readonly emitters = new CombinedEmitters();

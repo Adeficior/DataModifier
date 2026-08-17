@@ -1,5 +1,5 @@
-import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
 import type { LoaderContext, SemVerInput } from "@adeficior/data-modifier-core";
+import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
 import {
   mockRegistryLookup,
   mockRegistryProvider,
@@ -7,8 +7,8 @@ import {
 import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
 import type { Resolver } from "@adeficior/pack-resolver";
 import { LootTableEmitter } from "../../../loot/src/emitter";
-import { BlockstateEmitter } from "../../../models/src/emitter/blockstates";
-import { ModelEmitter } from "../../../models/src/emitter/models";
+import { BlockstateEmitterImpl } from "../../../models/src/emitter/blockstates";
+import { ModelEmitterImpl } from "../../../models/src/emitter/models";
 import { BlockDefinitionEmitter } from "../../src/emitter/blockDefinition";
 import { ItemDefinitionEmitter } from "../../src/emitter/itemDefinition";
 
@@ -25,8 +25,8 @@ export function createBlockDefinitionEmitter(
 ): ExternalResolver<BlockDefinitionEmitter> {
   // TODO mock instead?
   const emitters = new CombinedEmitters();
-  const blockModels = emitters.add(new ModelEmitter("block"));
-  const blockStates = emitters.add(new BlockstateEmitter());
+  const blockModels = emitters.add(new ModelEmitterImpl("block"));
+  const blockStates = emitters.add(new BlockstateEmitterImpl());
   const loot = emitters.add(
     new LootTableEmitter(
       packFormatOf(version),
@@ -52,9 +52,9 @@ export function createItemDefinitionEmitter(
 ): ExternalResolver<ItemDefinitionEmitter> {
   // TODO mock instead?
   const emitters = new CombinedEmitters();
-  const itemModels = emitters.add(new ModelEmitter("item"));
-  const blockModels = emitters.add(new ModelEmitter("block"));
-  const blockStates = emitters.add(new BlockstateEmitter());
+  const itemModels = emitters.add(new ModelEmitterImpl("item"));
+  const blockModels = emitters.add(new ModelEmitterImpl("block"));
+  const blockStates = emitters.add(new BlockstateEmitterImpl());
   const loot = emitters.add(
     new LootTableEmitter(
       packFormatOf(version),

@@ -1,9 +1,9 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { BlockDefinitionEmitter } from "./emitter/blockDefinition";
 import type { BlockDefinitionRules } from "./emitter/blockDefinition";
-import { ItemDefinitionEmitter } from "./emitter/itemDefinition";
+import { BlockDefinitionEmitter } from "./emitter/blockDefinition";
 import type { ItemDefinitionRules } from "./emitter/itemDefinition";
+import { ItemDefinitionEmitter } from "./emitter/itemDefinition";
 
 export default defineModule<{
   emitters: {
@@ -23,6 +23,10 @@ export default defineModule<{
       "content:items": "ItemDefinitionRules",
     },
   },
+  promote: [
+    { key: "content.blocks", service: "emitter:content:blocks" },
+    { key: "content.items", service: "emitter:content:items" },
+  ],
   setup: (pack) => {
     pack.emitter(
       "content:blocks",

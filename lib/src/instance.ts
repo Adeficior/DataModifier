@@ -1,8 +1,8 @@
 import type {
-  Container,
   DataModifierOptions,
   LoaderContext,
   ModuleConfig,
+  ModulesContainer,
   ModuleSetupOptions,
   ModuleType,
   ModuleTypes,
@@ -17,21 +17,23 @@ import { createMergingAcceptor } from "@adeficior/resource-merger";
 import { installBuiltinModules } from "./builtinModules";
 import { overwritePackMetadata } from "./emit/packMetadata";
 import { InstallTarget } from "./installTarget";
-import { promote } from "./promotions";
 import type { Promoted } from "./promotions";
+import { promote } from "./promotions";
 
-export interface DataModifier extends Container {
+type BaseDataModifier = ModulesContainer & {
   loadFromMultiple(resolvers: Resolver[]): Promise<void>;
   loadFrom(resolvers: Resolver): Promise<void>;
   emit(to: Acceptor, options?: LoaderEmitOptions): Promise<void>;
   reset(): void;
-}
+};
+
+export type DataModifier = Promoted<BaseDataModifier>;
 
 export type LoaderEmitOptions = {
   description?: string;
 };
 
-class DataModifierImpl extends InstallTarget implements DataModifier {
+class DataModifierImpl extends InstallTarget implements BaseDataModifier {
   constructor(options: ModuleSetupOptions) {
     super(options);
   }
@@ -97,7 +99,7 @@ type GatheredModule<T extends ModuleTypes = ModuleTypes> = {
 export async function createDataModifier(
   { packFormat, ...coreOptions }: DataModifierOptions,
   factory: DataModifierFactory = () => {},
-): Promise<Promoted<DataModifier, "modifier">> {
+): Promise<DataModifier> {
   const moduleSetupOptions: ModuleSetupOptions = { packFormat };
   const instance = new DataModifierImpl(moduleSetupOptions);
 
@@ -124,9 +126,7 @@ export async function createDataModifier(
 
   return promote(
     instance,
-    modules
-      .flatMap((it) => it.promote)
-      .filter((it) => it.target === "modifier"),
+    modules.flatMap((it) => it.promote),
     instance,
   );
 }
