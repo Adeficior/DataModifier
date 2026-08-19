@@ -1,10 +1,25 @@
+import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
 import type { Replacer } from "@adeficior/data-modifier-core/serializer";
 import { mapValues } from "lodash-es";
 import type { Ingredient } from "../../ingredient/impl";
 
 export type IngredientMapInput = Record<string, unknown>;
 
-const AUTO_KEYS = "abcdefghijklmnopqrstuvwxyz".split("");
+const AUTO_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+export function validatePatternDimensions<T>(pattern: T[][]) {
+  if (pattern.length === 0) {
+    throw new IllegalShapeError("ingredient pattern cannot be empty", pattern);
+  }
+
+  const width = pattern[0]!.length;
+  if (pattern.some((it) => it.length !== width)) {
+    throw new IllegalShapeError(
+      "ingredient pattern rows must all be of same width",
+      pattern,
+    );
+  }
+}
 
 export class IngredientMap {
   constructor(public readonly ingredients: Record<string, Ingredient>) {}
@@ -22,7 +37,7 @@ export class IngredientMap {
     const keys: Record<string, Ingredient> = {};
     const lookup = new Map<string, string>();
 
-    // TODO validate lines are all of equal size
+    validatePatternDimensions(ingredients);
 
     for (let y = 0; y < ingredients.length; y++) {
       const line = ingredients[y]!;

@@ -6,7 +6,7 @@ import type {
   RegistryLookup,
   TagId,
 } from "@adeficior/data-modifier-core";
-import { encodeId, toTag } from "@adeficior/data-modifier-core";
+import { createId, encodeId, toTag } from "@adeficior/data-modifier-core";
 import type {
   BlockId,
   FluidId,
@@ -43,6 +43,10 @@ export abstract class TagIngredient extends Ingredient {
 
   override asResult(): Result {
     throw new Error("tag ingredients cannot be transformed into a result");
+  }
+
+  override hashCode(): string {
+    return `#${createId(this.registry).path}:${this.tag.substring(1)}`;
   }
 }
 
@@ -85,6 +89,10 @@ export abstract class RegistryEntryIngredient<
 
   override ids(): RegistryIds {
     return { [this.registry]: [this.id] };
+  }
+
+  override hashCode(): string {
+    return `${createId(this.registry).path}:${this.id}`;
   }
 }
 
@@ -171,6 +179,10 @@ export class ListIngredient extends Ingredient {
   override asResult(): Result {
     throw new Error("union ingredients cannot be transformed into a result");
   }
+
+  override hashCode(): string {
+    return `[${this.entries.map((it) => it.hashCode()).join(",")}]`;
+  }
 }
 
 export type ItemLikeIngredient = ItemTagIngredient | ItemIngredient;
@@ -191,6 +203,10 @@ export class ToolActionIngredient extends Ingredient {
   override ids(): RegistryIds {
     return {};
   }
+
+  override hashCode(): string {
+    return `tool:${this.action}`;
+  }
 }
 
 export class IgnoredIngredient extends Ingredient {
@@ -204,5 +220,9 @@ export class IgnoredIngredient extends Ingredient {
 
   override ids(): RegistryIds {
     return {};
+  }
+
+  override hashCode(): string {
+    throw new Error("this ingredient should be ignored");
   }
 }

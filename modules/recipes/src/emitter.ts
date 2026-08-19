@@ -64,13 +64,13 @@ export interface RecipeEmitter {
     additionalTests?: RecipeTest,
   ): void;
 
-  add(id: IdInput, value: RecipeDefinition): void;
+  add(id: IdInput, value: RecipeDefinition): NormalizedId;
   add(
     id: IdInput,
     type: IdInput<RecipeSerializerId>,
     value: Recipe,
     conditions?: Conditions,
-  ): void;
+  ): NormalizedId;
 
   remove(test: RecipeTest): void;
 }
@@ -142,11 +142,11 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
     arg: RecipeDefinition | IdInput<RecipeSerializerId>,
     arg2?: Recipe,
     conditions?: Conditions,
-  ) {
+  ): NormalizedId {
     if (typeof arg === "string" || "namespace" in arg) {
       const holder = RecipeHolder.of(arg, arg2!, conditions);
       const serialized = this.serializer.serialize(holder);
-      this.add(id, serialized);
+      return this.add(id, serialized);
     } else {
       const value = arg;
 
@@ -155,6 +155,7 @@ export class RecipeEmitterImpl implements RecipeEmitter, ClearableEmitter {
 
       // TODO add to custom registry so recipe graph can use it
       this.custom.add(id, value);
+      return encodeId(id);
     }
   }
 

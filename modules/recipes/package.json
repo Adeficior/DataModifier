@@ -5,6 +5,7 @@
    "exports": {
       ".": "./dist/index.js",
       "./serializer": "./dist/serializer/index.js",
+      "./helper": "./dist/helper/index.js",
       "./testing": "./dist/testing/index.js"
    },
    "types": "./dist/index.d.ts",
@@ -12,6 +13,9 @@
       "*": {
          "serializer": [
             "./dist/serializer/index.d.ts"
+         ],
+         "helper": [
+            "./dist/helper/index.d.ts"
          ],
          "testing": [
             "./dist/testing/index.d.ts"

@@ -1,4 +1,3 @@
-import { encodeId } from "@adeficior/data-modifier-core";
 import type {
   IdInput,
   NormalizedId,
@@ -6,24 +5,26 @@ import type {
   RegistryIds,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
+import { createId, encodeId } from "@adeficior/data-modifier-core";
 import type {
   BlockId,
   FluidId,
   ItemId,
   RegistryId,
 } from "@adeficior/data-modifier/generated";
+import type { Ingredient } from "../ingredient/impl";
 import {
   BlockIngredient,
   FluidIngredient,
   ItemIngredient,
 } from "../ingredient/impl";
-import type { Ingredient } from "../ingredient/impl";
 import { BUCKET } from "../units";
 
 export abstract class Result implements Registered {
   validate(_: RegistryLookup): void {}
   abstract ids(): RegistryIds;
   abstract asIngredient(): Ingredient;
+  abstract hashCode(): string;
 }
 
 export abstract class RegistryEntryResult<T extends string> extends Result {
@@ -39,6 +40,10 @@ export abstract class RegistryEntryResult<T extends string> extends Result {
 
   override ids(): RegistryIds {
     return { [this.registry]: [this.id] };
+  }
+
+  override hashCode(): string {
+    return `${createId(this.registry).path}:${this.id}`;
   }
 }
 
@@ -103,5 +108,9 @@ export class IgnoredResult extends Result {
 
   override ids(): RegistryIds {
     return {};
+  }
+
+  override hashCode(): string {
+    throw new Error("this result should be ignored");
   }
 }

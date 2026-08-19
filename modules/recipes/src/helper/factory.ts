@@ -1,13 +1,9 @@
-import {
-  encodeId,
-  type IdInput,
-  type NormalizedId,
-} from "@adeficior/data-modifier-core";
+import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
 
 type RecipeFactory<Args extends unknown[]> = (
-  id: IdInput,
+  id: IdInput | null,
   ...args: Args
-) => void;
+) => NormalizedId;
 
 interface CurriedRecipeFactory<Args extends unknown[]> {
   (id: IdInput, ...args: Args): NormalizedId;
@@ -16,18 +12,13 @@ interface CurriedRecipeFactory<Args extends unknown[]> {
 
 export function withDefaultId<Args extends unknown[]>(
   factory: RecipeFactory<Args>,
-  defaultId: (...args: Args) => IdInput,
 ) {
   return ((...args: unknown[]) => {
     if (args.length < factory.length) {
       const rest = args as Args;
-      const calculated = defaultId(...rest);
-      factory(calculated, ...rest);
-      return encodeId(calculated);
+      return factory(null, ...rest);
     } else {
-      const id = encodeId(args[0] as IdInput);
-      factory(...(args as [IdInput, ...Args]));
-      return id;
+      return factory(...(args as [IdInput, ...Args]));
     }
   }) as CurriedRecipeFactory<Args>;
 }
