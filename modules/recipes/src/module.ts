@@ -2,6 +2,7 @@ import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import type { RecipeEmitter } from "./emitter";
 import { RecipeEmitterImpl } from "./emitter";
+import { VanillaRecipeHelperImpl } from "./helper/vanilla";
 import type { VanillaRecipeHelper } from "./helper/vanilla";
 import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
@@ -65,7 +66,7 @@ export default defineModule<{
       recipePattern(pack.options.packFormat),
     );
 
-    pack.emitter(
+    const emitter = pack.emitter(
       "recipes",
       (container) =>
         new RecipeEmitterImpl(
@@ -79,7 +80,15 @@ export default defineModule<{
         ),
     );
 
-    // TODO add VanillaRecipesService service
+    pack.service(
+      "helper:recipes:vanilla",
+      (container) =>
+        new VanillaRecipeHelperImpl(
+          emitter(),
+          container.get("serializer:ingredients"),
+          container.get("serializer:results"),
+        ),
+    );
 
     pack.hook("recipes:register-serializer", registerDefaultSerializers);
 

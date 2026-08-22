@@ -1,6 +1,6 @@
 {
    "packs": {
-      "botania": {
+      "source": {
          "paths": [
             "Xplat/src/generated/resources",
             "Xplat/src/main/resources"

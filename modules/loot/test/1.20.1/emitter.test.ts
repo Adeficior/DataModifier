@@ -11,7 +11,9 @@ import { LootTableSchema, parseLootEntry } from "../../src/schema";
 import { setupLootEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);
-const { emitter, resolver } = setupLootEmitter(version);
+const { emitter, resolver } = setupLootEmitter(version, {
+  from: ["default", "farmersdelight"],
+});
 
 describe("loot tables output replacements", () => {
   it("removes outputs", async () => {

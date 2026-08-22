@@ -1,5 +1,6 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
+import { FarmersDelightRecipeHelperImpl } from "./helper";
 import type { FarmersDelightRecipeHelper } from "./helper";
 import { registerSerializers } from "./registration";
 
@@ -25,5 +26,15 @@ export default defineModule<{
   ],
   setup: (pack) => {
     pack.hook("recipes:register-serializer", registerSerializers);
+
+    pack.service(
+      "helper:recipes:farmers_delight",
+      (container) =>
+        new FarmersDelightRecipeHelperImpl(
+          container.get("emitter:recipes"),
+          container.get("serializer:ingredients"),
+          container.get("serializer:results"),
+        ),
+    );
   },
 });

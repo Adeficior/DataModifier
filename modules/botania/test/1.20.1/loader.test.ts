@@ -4,11 +4,11 @@ import type { DataProvider } from "@adeficior/testing";
 import { provided } from "@adeficior/testing";
 import { expect, it } from "bun:test";
 import { basename } from "node:path";
-import { registerSerializers } from "../../src/registration";
+import { recipeOptions } from "../options";
 
 const version = basename(import.meta.dir);
 
-const { loader, logger } = setupRecipeLoader(version, registerSerializers);
+const { loader, logger } = setupRecipeLoader(version, recipeOptions);
 
 function* recipes(): DataProvider<[IdInput]> {
   yield ["mana infusion", "botania:mana_infusion/carrot_to_beetroot_seeds"];

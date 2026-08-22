@@ -19,11 +19,6 @@
             "^lint"
          ]
       },
-      "test": {
-         "dependsOn": [
-            "^test"
-         ]
-      },
       "dev": {
          "persistent": false,
          "cache": false

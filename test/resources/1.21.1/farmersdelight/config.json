@@ -1,6 +1,6 @@
 {
    "packs": {
-      "farmersdelight": {
+      "source": {
          "paths": [
             "src/generated/resources",
             "src/main/resources"

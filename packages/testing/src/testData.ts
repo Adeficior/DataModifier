@@ -1,45 +1,37 @@
+import type {
+  CombinedResolverOptions,
+  Logger,
+  Resolver,
+} from "@adeficior/pack-resolver";
 import {
+  arrayOrSelf,
   combineResolvers,
   createCombinedResolver,
   createResolver,
 } from "@adeficior/pack-resolver";
-import type {
-  Logger,
-  Resolver,
-  ResolverOptions,
-} from "@adeficior/pack-resolver";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { exists } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 
 const resourcePath = join("test", "resources");
-const resourcesDir = join(import.meta.dir, "..", "..", "..", resourcePath);
+const sharedPath = join(import.meta.dir, "..", "..", "..", resourcePath);
+
+export type TestDataOptions = Partial<CombinedResolverOptions>;
 
 export async function createTestDataResolver(
   version: string,
-  { from = "default", ...options }: Partial<ResolverOptions> = {},
+  { from = "default", ...options }: TestDataOptions = {},
 ): Promise<Resolver> {
-  if (Array.isArray(from))
-    throw new Error("only one resolver input supported for TestResolver");
+  const resolvers = await Promise.all(
+    arrayOrSelf(from).map(async (it) =>
+      createCombinedResolver({
+        from: join(sharedPath, version, it),
+        logger: false,
+        ...options,
+      }),
+    ),
+  );
 
-  const shared = await createCombinedResolver({
-    from: join(resourcesDir, version, from),
-    logger: false,
-    ...options,
-  });
-
-  const localPath = resolve(resourcePath, version, from);
-  if (await exists(localPath)) {
-    const local = await createCombinedResolver({
-      from: localPath,
-      logger: false,
-      ...options,
-    });
-
-    return combineResolvers([shared, local]);
-  }
-
-  return shared;
+  return combineResolvers(resolvers);
 }
 
 export function createDumpResolver(
@@ -47,7 +39,7 @@ export function createDumpResolver(
   logger: Logger = createTestLogger(),
 ): Promise<Resolver> {
   return createResolver({
-    from: join(resourcesDir, version, "dump"),
+    from: join(sharedPath, version, "dump"),
     logger,
   });
 }

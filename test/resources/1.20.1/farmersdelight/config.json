@@ -1,6 +1,6 @@
 {
    "packs": {
-      "create": {
+      "source": {
          "paths": [
             "src/generated/resources",
             "src/main/resources"

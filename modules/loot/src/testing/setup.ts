@@ -6,22 +6,28 @@ import {
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
+import type { TestDataOptions } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import { LootTableEmitter } from "../emitter";
 import { lootTablePattern } from "../helper";
 import { LootTableLoader } from "../loader";
 
+export type TestLootLoaderOptions = TestDataOptions & {
+  mods?: string[];
+};
+
 export function setupLootLoader(
   version: string,
-  mods: string[] = ["minecraft"],
+  { mods = [], ...resolverOptions }: TestLootLoaderOptions = {},
 ) {
-  const loader = new LootTableLoader({ mods });
+  const loader = new LootTableLoader({ mods: ["minecraft", ...mods] });
   const logger = createTestLogger();
 
   beforeAll(async () => {
     const resolver = await createTestDataResolver(version, {
       include: lootTablePattern(packFormatOf(version)),
       logger,
+      ...resolverOptions,
     });
     await resolver.extract(loader);
   });
@@ -35,12 +41,12 @@ export function setupLootLoader(
 
 export function setupLootEmitter(
   version: string,
-  mods: string[] = ["minecraft"],
+  options?: TestLootLoaderOptions,
 ) {
   const lookup = setupLookup(version);
-  const { loader } = setupLootLoader(version, mods);
+  const { loader } = setupLootLoader(version, options);
 
-  const tags = setupTagRegistry(version);
+  const tags = setupTagRegistry(version, options);
   const predicates = setupPredicates(
     lookup,
     tags,

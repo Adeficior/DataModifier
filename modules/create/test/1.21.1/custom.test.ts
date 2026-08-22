@@ -6,11 +6,11 @@ import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { provided } from "@adeficior/testing";
 import { describe, expect } from "bun:test";
 import { basename } from "node:path";
-import { registerSerializers } from "../../src/registration";
+import { recipeOptions } from "../options";
 import { recipes } from "../providers/recipes";
 
 const version = basename(import.meta.dir);
-const { emitter, resolver } = setupRecipeEmitter(version, registerSerializers);
+const { emitter, resolver } = setupRecipeEmitter(version, recipeOptions);
 
 describe("custom recipe creation", () => {
   provided("creates using recipe classes", recipes(), async (type, recipe) => {

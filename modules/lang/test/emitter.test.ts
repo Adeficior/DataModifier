@@ -16,6 +16,7 @@ const emitter = new LangEmitter(loader);
 beforeAll(async () => {
   const resolver = await createTestDataResolver(version, {
     include: "assets/*/lang/en_us.json",
+    from: ["default", "create", "farmersdelight"],
   });
   await resolver.extract(loader);
 });
