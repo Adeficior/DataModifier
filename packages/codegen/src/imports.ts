@@ -1,13 +1,10 @@
 import type {
   ImportOptions,
+  ImportRewriter,
   ModuleConfig,
+  ResolvedImport,
 } from "@adeficior/data-modifier-core";
 import { notNull, uniq } from "@adeficior/pack-resolver";
-
-type ResolvedImport = {
-  name: string;
-  module: string;
-};
 
 function resolveImport(
   options: ImportOptions,
@@ -16,15 +13,19 @@ function resolveImport(
   const name = typeof options === "string" ? options : options.name;
   const module =
     (typeof options === "string" ? null : options.module) ?? fallbackModule;
+  const path = typeof options === "string" ? undefined : options.path;
 
   if (name && module) {
-    return { name, module };
+    return { module, name, path };
   }
 
   return null;
 }
 
 function importStatement(it: ResolvedImport) {
+  if (it.path) {
+    return `import("${it.module}/${it.path}").${it.name}`;
+  }
   return `import("${it.module}").${it.name}`;
 }
 
@@ -48,6 +49,14 @@ class ImportMap {
     return this.entries.get(key);
   }
 
+  rewrite(strategy: ImportRewriter) {
+    const rewritten = new ImportMap();
+    this.entries.forEach((value, key) => {
+      rewritten.add(key, strategy(value));
+    });
+    return rewritten;
+  }
+
   toString() {
     return this.entries
       .entries()
@@ -56,6 +65,14 @@ class ImportMap {
       .map((it) => `"${it.key}": ${importStatement(it)}`)
       .join("\n");
   }
+}
+
+function rewrite(map: ImportMap, modules: ModuleConfig[]): ImportMap {
+  const strategies = modules.map((it) => it.types.rewrite);
+  return strategies.reduce(
+    (previous, strategy) => previous.rewrite(strategy),
+    map,
+  );
 }
 
 export function gatherImports(modules: ModuleConfig[]) {
@@ -80,7 +97,10 @@ export function gatherImports(modules: ModuleConfig[]) {
     );
   });
 
-  return { services, hooks };
+  return {
+    services: rewrite(services, modules),
+    hooks: rewrite(hooks, modules),
+  };
 }
 
 class Promotions {
@@ -93,9 +113,10 @@ class Promotions {
     if (path.length === 0) {
       this.entries.set(key, resolvedImport);
     } else {
-      this.subPromotions
-        .getOrInsertComputed(key, () => new Promotions())
-        .add(path, resolvedImport);
+      if (!this.subPromotions.has(key)) {
+        this.subPromotions.set(key, new Promotions());
+      }
+      this.subPromotions.get(key)!.add(path, resolvedImport);
     }
   }
 

@@ -12,8 +12,8 @@ export async function generateTypes(moduleDir: string) {
   } else {
     const module = await findModuleIn(moduleDir);
     const dependencies = await loadDependencyModules(
-      join(moduleDir, "node_modules"),
       module.dependencies,
+      join(moduleDir),
     );
     await generateModulesTypes(typesDir, dependencies);
   }

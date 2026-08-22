@@ -1,7 +1,6 @@
 {
    "name": "@adeficior/testing",
    "private": true,
-   "version": "1.0.0",
    "exports": {
       ".": "./src/index.ts"
    },
@@ -9,8 +8,7 @@
    "scripts": {
       "check": "tsc --noEmit",
       "lint": "eslint src",
-      "prepare": "datamod-dev --configs && datamod-dev --types",
-      "test:ci": "bun run lint && bun run check"
+      "prepare": "datamod-dev --configs && datamod-dev --types"
    },
    "devDependencies": {
       "@adeficior/configs": "workspace:*"

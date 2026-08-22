@@ -2,7 +2,6 @@
    "name": "@adeficior/data-modifier-builder",
    "description": "cli to initialize data-modifier projects",
    "private": true,
-   "version": "1.0.0",
    "exports": {
       ".": "./dist/index.js"
    },
@@ -17,8 +16,7 @@
    "scripts": {
       "check": "tsc --noEmit",
       "lint": "eslint src",
-      "prepare": "datamod-dev --configs && datamod-dev --types",
-      "test:ci": "bun run lint && bun run check"
+      "prepare": "datamod-dev --configs && datamod-dev --types"
    },
    "dependencies": {
       "handlebars": "^4.7.9",

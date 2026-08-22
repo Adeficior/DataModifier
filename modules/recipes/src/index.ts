@@ -5,6 +5,7 @@ export type { RecipeLoader } from "./loader";
 export type * from "./model";
 export { default } from "./module";
 export * from "./schema";
+export type { RecipesSerializer } from "./serializer/abstract";
 export * from "./serializer/forge/conditional";
 export type * from "./serializer/modifier";
 export * from "./serializer/vanilla/shaped";

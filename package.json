@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.ts\"",
     "lint": "turbo run lint",
     "check": "turbo run check",
-    "test:ci": "turbo run lint check && bun test",
+    "test:ci": "turbo run lint check && bun test --coverage",
     "prepare": "husky",
     "prune": "turbo run prune",
     "create": "bun run packages/builder/src/cli.ts --path modules"
@@ -29,12 +29,13 @@
     "husky": "^9.1.7",
     "prettier": "catalog:",
     "turbo": "^2.10.7",
-    "@types/bun": "latest"
+    "@types/bun": "^1.4.0"
   },
   "workspaces": [
     "lib",
     "core",
     "packages/*",
-    "modules/*"
+    "modules/*",
+    "examples/*"
   ]
 }

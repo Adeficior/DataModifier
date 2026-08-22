@@ -1,0 +1,20 @@
+{
+   "name": "@adeficior/full-example",
+   "private": true,
+   "type": "module",
+   "scripts": {
+      "check": "tsc --noEmit",
+      "lint": "eslint src",
+      "prepare": "datamod-dev --configs && bun run src/codegen.ts"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/data-modifier-codegen": "workspace:*"
+   },
+   "dependencies": {
+      "@adeficior/data-modifier": "workspace:*"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:"
+   }
+}

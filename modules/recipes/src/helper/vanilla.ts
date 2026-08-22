@@ -1,11 +1,11 @@
 import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
-import { IngredientMap } from "@adeficior/data-modifier-ingredients";
 import type {
   IngredientInput,
   IngredientSerializer,
   ResultInput,
   ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
+import { IngredientMap } from "@adeficior/data-modifier-ingredients";
 import type { RecipeEmitter } from "../emitter";
 import { ShapedRecipe } from "../serializer/vanilla/shaped";
 import { ShapelessRecipe } from "../serializer/vanilla/shapeless";
@@ -35,7 +35,7 @@ export class VanillaRecipeHelperImpl implements VanillaRecipeHelper {
     private readonly results: ResultSerializer,
   ) {}
 
-  readonly shaped = withDefaultId(
+  readonly shaped: VanillaRecipeHelper["shaped"] = withDefaultId(
     (
       id: IdInput | null,
       ingredientInputs: IngredientInput[][],
@@ -57,7 +57,7 @@ export class VanillaRecipeHelperImpl implements VanillaRecipeHelper {
     },
   );
 
-  readonly shapeless = withDefaultId(
+  readonly shapeless: VanillaRecipeHelper["shapeless"] = withDefaultId(
     (
       id: IdInput | null,
       ingredientInputs: IngredientInput[],

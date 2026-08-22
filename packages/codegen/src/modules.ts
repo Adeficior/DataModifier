@@ -26,24 +26,40 @@ export async function readModule(file: string) {
   return exports.default as ModuleConfig;
 }
 
-export async function loadDependencyModules(
-  nodeModules: string,
+type ModuleResolutionStrategy = (name: string) => Promise<string>;
+
+function resolveModuleIn(...folders: string[]): ModuleResolutionStrategy {
+  return async (name) => {
+    const candidates = folders.map((nodeModules) => join(nodeModules, name));
+    for (const candidate of candidates) {
+      if (await exists(candidate)) {
+        return candidate;
+      }
+    }
+
+    throw new Error("module does not exist in any folder");
+  };
+}
+
+async function loadDependencyModulesRecursive(
+  nodeModules: string[],
   dependencies: ModuleConfig["dependencies"],
-  exclude: string[] = [],
+  exclude: string[],
 ): Promise<ModuleConfig[]> {
   const found = await Promise.all(
     Object.entries(dependencies).map(async ([name, type]) => {
-      const dependencyDir = join(nodeModules, name);
-      const depenencyModule = await findModuleIn(dependencyDir);
+      const strategy = resolveModuleIn(...nodeModules);
+      const dependencyDir = await strategy(name);
+      const dependencyModule = await findModuleIn(dependencyDir);
 
       if (exclude.includes(name)) return [];
 
-      if (depenencyModule) {
+      if (dependencyModule) {
         return [
-          depenencyModule,
-          ...(await loadDependencyModules(
-            nodeModules,
-            depenencyModule.dependencies,
+          dependencyModule,
+          ...(await loadDependencyModulesRecursive(
+            [...nodeModules, join(dependencyDir, "node_modules")],
+            dependencyModule.dependencies,
             [...exclude, name],
           )),
         ];
@@ -56,4 +72,15 @@ export async function loadDependencyModules(
   );
 
   return uniqBy(found.flat(), (it) => it.name);
+}
+
+export function loadDependencyModules(
+  dependencies: ModuleConfig["dependencies"],
+  root: string = ".",
+) {
+  return loadDependencyModulesRecursive(
+    [join(root, "node_modules")],
+    dependencies,
+    [],
+  );
 }

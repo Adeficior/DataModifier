@@ -28,7 +28,7 @@ export class BotaniaRecipeHelperImpl implements BotaniaRecipeHelper {
     private readonly results: ResultSerializer,
   ) {}
 
-  readonly manaInfusion = withDefaultId(
+  readonly manaInfusion: BotaniaRecipeHelper["manaInfusion"] = withDefaultId(
     (
       id: IdInput | null,
       ingredientInput: IngredientInput,

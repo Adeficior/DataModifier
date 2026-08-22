@@ -1,6 +1,7 @@
 import { exists, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { format } from "prettier";
+import selfPackage from "../package.json";
 import {
   findWorkspacePackages,
   readPackage,
@@ -41,6 +42,7 @@ export default async function generateConfigs(dir: string) {
   const dependencies = await getDependencies(json);
   const packagePaths = Object.fromEntries(
     packages
+      .filter((it) => it.name !== selfPackage.name)
       .filter((it) => dependencies.includes(it.name))
       .map((it) => ({ ...it, dir: it.dir.replaceAll(sep, "/") }))
       .flatMap(({ dir, name, paths }) =>
@@ -52,14 +54,14 @@ export default async function generateConfigs(dir: string) {
     //.map((it) => [it.name, [`${it.dir.replaceAll(sep, "/")}/src/index.ts`]]),
   );
 
-  const isModule = [...dependencies, json.name].includes(
-    "@adeficior/data-modifier-core",
+  const isModule = [...dependencies, json.name].some((it) =>
+    ["@adeficior/data-modifier-core", "@adeficior/data-modifier"].includes(it),
   );
 
   await writeJson(join(dir, "tsconfig.json"), {
     extends: "@adeficior/configs/tsconfig",
     compilerOptions: {
-      paths: { ...packagePaths, ...(await createPaths(dir, isModule)) },
+      paths: { ...packagePaths, ...(await createPaths(isModule)) },
     },
     include,
     exclude,
@@ -72,7 +74,7 @@ export default async function generateConfigs(dir: string) {
       outDir: "./dist",
       declaration: true,
       sourceMap: true,
-      paths: await createPaths(dir, isModule),
+      paths: await createPaths(isModule),
     },
     include: ["src"],
   });
@@ -92,7 +94,7 @@ export default async function generateConfigs(dir: string) {
   );
 }
 
-async function createPaths(dir: string, isModule: boolean) {
+async function createPaths(isModule: boolean) {
   const paths: Record<string, [string]> = {
     "@adeficior/data-modifier/generated": ["./@types/registry.d.ts"],
   };

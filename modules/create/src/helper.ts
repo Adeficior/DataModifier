@@ -28,7 +28,7 @@ export class CreateRecipeHelperImpl implements CreateRecipeHelper {
     private readonly results: ResultSerializer,
   ) {}
 
-  readonly mixing = withDefaultId(
+  readonly mixing: CreateRecipeHelper["mixing"] = withDefaultId(
     (
       id: IdInput | null,
       ingredientsInput: IngredientInput[],

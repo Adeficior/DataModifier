@@ -1,8 +1,9 @@
 import type { Services } from "@adeficior/data-modifier-core/generated";
-import type { ModuleConfig } from "./modules/define";
+import type { ModuleTypes } from "./modules/define";
 
-export type ModulesContainer<TModule extends ModuleConfig = ModuleConfig> =
-  Container<Services<TModule>>;
+export type ModulesContainer<T extends ModuleTypes = ModuleTypes> = Container<
+  Services<T>
+>;
 
 export type Container<TServices extends Record<string, unknown>> = {
   get<TKey extends keyof TServices>(key: TKey): TServices[TKey];

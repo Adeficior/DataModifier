@@ -7,11 +7,18 @@ import type { Loader } from "../load/abstract";
 
 export type DependencyType = "required" | "optional";
 
+export type ResolvedImport = {
+  name: string;
+  module: string;
+  path?: string;
+};
+
 export type ImportOptions =
   | string
   | {
       module?: string;
       name?: string;
+      path?: string;
     };
 
 export type ServiceOptions = {
@@ -68,12 +75,15 @@ export type SetupEvent<T extends ModuleTypes = ModuleTypes> = {
   ) => void;
 };
 
+export type ImportRewriter = (options: ResolvedImport) => ResolvedImport;
+
 type ModuleImports<T extends ModuleTypes> = {
   options: ImportOptions;
   services: Record<keyof ModuleType<T, "services">, ImportOptions>;
   emitters: Record<keyof ModuleType<T, "emitters">, ImportOptions>;
   loaders: Record<keyof ModuleType<T, "loaders">, ImportOptions>;
   hooks: Record<keyof ModuleType<T, "hooks">, ImportOptions>;
+  rewrite: ImportRewriter;
 };
 
 type PackagedModule = {
@@ -146,6 +156,7 @@ export function defineModule<T extends ModuleTypes>({
       loaders: types?.loaders ?? {},
       hooks: types?.hooks ?? {},
       services: types?.services ?? {},
+      rewrite: types?.rewrite ?? ((it) => it),
     } as ModuleImports<T>,
     ...config,
     name,

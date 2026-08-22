@@ -13,6 +13,8 @@ function generateModule(modules: ModuleConfig[]) {
       /* eslint-disable @typescript-eslint/consistent-type-imports */
       /* eslint-disable @typescript-eslint/no-unused-vars */
 
+      import type { ModuleTypes } from "@adeficior/data-modifier-core";
+
       export type Services<T extends ModuleTypes> = {
         ${services}
       }
