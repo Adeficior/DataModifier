@@ -21,9 +21,7 @@ export default defineModule({
   types: {
     rewrite: (it) => {
       if (it.module in bundled) {
-        return { ...it, module: name, path: undefined };
-        // TODO export at path instead
-        // return { ...it, module: name, path: bundled[it.module] };
+        return { ...it, module: name, path: bundled[it.module] };
       }
       return it;
     },

@@ -3,8 +3,6 @@
    "private": true,
    "type": "module",
    "scripts": {
-      "check": "tsc --noEmit",
-      "lint": "eslint src",
       "prepare": "datamod-dev --configs && bun run src/codegen.ts"
    },
    "devDependencies": {

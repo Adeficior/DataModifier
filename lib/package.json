@@ -6,7 +6,11 @@
       "datamod": "dist/cli.js"
    },
    "exports": {
-      ".": "./src/index.ts"
+      ".": "./src/index.ts",
+      "./tags": "./src/bundled/tags.ts",
+      "./ingredients": "./src/bundled/ingredients.ts",
+      "./recipes": "./src/bundled/recipes.ts",
+      "./loot": "./src/bundled/loot.ts"
    },
    "type": "module",
    "scripts": {
