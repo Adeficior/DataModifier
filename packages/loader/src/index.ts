@@ -71,7 +71,7 @@ async function loadDependencyModulesRecursive(
     }),
   );
 
-  return uniqBy(found.flat(), (it) => it.name);
+  return found.flat();
 }
 
 export function loadDependencyModules(
@@ -85,13 +85,17 @@ export function loadDependencyModules(
   );
 }
 
-export function loadModules(names: string[]) {
-  const dependencies: ModuleConfig["dependencies"] = Object.fromEntries(
-    names.map((it) => [it, "required"]),
-  );
+async function loadModule(module: string | ModuleConfig) {
+  if (typeof module === "string")
+    return loadDependencyModules({ [module]: "required" });
 
-  return loadDependencyModules({
-    "@adeficior/data-modifier": "required",
-    ...dependencies,
-  });
+  return [module, ...(await loadDependencyModules(module.dependencies))];
+}
+
+export async function loadModules(modules: (string | ModuleConfig)[]) {
+  const withLib = ["@adeficior/data-modifier", ...modules];
+
+  const loaded = await Promise.all(withLib.map(loadModule));
+
+  return uniqBy(loaded.flat(), (it) => it.name);
 }

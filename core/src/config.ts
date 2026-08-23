@@ -1,7 +1,8 @@
-import { createResolver } from "@adeficior/pack-resolver";
 import type { Resolver } from "@adeficior/pack-resolver";
+import { createResolver } from "@adeficior/pack-resolver";
 import type { SemVerInput } from "./common/packFormat";
 import type { CoreModuleOptions } from "./module";
+import type { ModuleConfig } from "./modules/define";
 
 export type ModuleSetupOptions = {
   packFormat: SemVerInput;
@@ -14,7 +15,7 @@ export type CodeGenOptions = {
 };
 
 export type DataModifierConfig = DataModifierOptions & {
-  modules?: string[];
+  modules?: (string | ModuleConfig)[];
   codegen?: CodeGenOptions;
 };
 
