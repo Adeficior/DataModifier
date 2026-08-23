@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-content",
    "description": "data-modifier module adding compatibility for content-packs",
-   "version": "2.0.0",
+   "version": "2.0.1",
    "exports": {
       ".": "./src/index.ts"
    },
