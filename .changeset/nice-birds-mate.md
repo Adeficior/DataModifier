@@ -3,7 +3,6 @@
 "@adeficior/data-modifier-ingredients": major
 "@adeficior/data-modifier-builder": major
 "@adeficior/data-modifier-codegen": major
-"@adeficior/data-modifier-loader": major
 "@adeficior/testing": major
 "@adeficior/data-modifier-botania": major
 "@adeficior/data-modifier-content": major
