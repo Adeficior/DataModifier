@@ -84,3 +84,14 @@ export function loadDependencyModules(
     [],
   );
 }
+
+export function loadModules(names: string[]) {
+  const dependencies: ModuleConfig["dependencies"] = Object.fromEntries(
+    names.map((it) => [it, "required"]),
+  );
+
+  return loadDependencyModules({
+    "@adeficior/data-modifier": "required",
+    ...dependencies,
+  });
+}

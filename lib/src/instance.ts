@@ -1,4 +1,5 @@
 import type {
+  DataModifierConfig,
   DataModifierOptions,
   LoaderContext,
   ModuleConfig,
@@ -7,6 +8,7 @@ import type {
   ModuleType,
   ModuleTypes,
 } from "@adeficior/data-modifier-core";
+import { loadModules } from "@adeficior/data-modifier-loader";
 import type { Acceptor, Logger, Resolver } from "@adeficior/pack-resolver";
 import {
   combineResolvers,
@@ -14,6 +16,7 @@ import {
   filterAcceptor,
 } from "@adeficior/pack-resolver";
 import { createMergingAcceptor } from "@adeficior/resource-merger";
+import { uniqBy } from "lodash-es";
 import { installBuiltinModules } from "./builtinModules";
 import { overwritePackMetadata } from "./emit/packMetadata";
 import { InstallTarget } from "./installTarget";
@@ -114,7 +117,10 @@ export async function createDataModifier(
   factory(builder);
   installBuiltinModules(coreOptions)(builder);
 
-  const modules = gatheredModules.map((it) => it.module);
+  const modules = uniqBy(
+    gatheredModules.map((it) => it.module),
+    (it) => it.name,
+  );
 
   // TODO only pass options to module that belong to it
   const moduleOptions = gatheredModules.reduce(
@@ -129,4 +135,16 @@ export async function createDataModifier(
     modules.flatMap((it) => it.promote),
     instance,
   );
+}
+
+export async function createDataModifierFromConfig({
+  modules = [],
+  ...options
+}: DataModifierConfig) {
+  const loadedModules = await loadModules(modules);
+  return createDataModifier(options, (instance) => {
+    loadedModules.forEach((it) => {
+      instance.install(it);
+    });
+  });
 }

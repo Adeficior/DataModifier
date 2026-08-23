@@ -1,7 +1,7 @@
 import { basename, dirname, join, resolve } from "node:path";
-import { findModuleIn, loadDependencyModules } from "../../codegen/src/modules";
 import { generateStubTypes } from "../../codegen/src/stubs";
 import { generateModulesTypes } from "../../codegen/src/types";
+import { findModuleIn, loadDependencyModules } from "../../loader/src";
 
 export async function generateTypes(moduleDir: string) {
   const type = basename(dirname(resolve(moduleDir)));

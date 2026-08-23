@@ -26,6 +26,7 @@
    "dependencies": {
       "@adeficior/resource-merger": "catalog:",
       "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-loader": "workspace:*",
       "@adeficior/data-modifier-tags": "workspace:*",
       "@adeficior/data-modifier-ingredients": "workspace:*",
       "@adeficior/data-modifier-recipes": "workspace:*",

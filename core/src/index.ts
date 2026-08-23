@@ -2,7 +2,7 @@ export type * from "./common/context";
 export * from "./common/id";
 export * from "./common/packFormat";
 
-export type * from "./config";
+export * from "./config";
 
 export type * from "./container";
 export * from "./modules/define";

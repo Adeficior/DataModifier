@@ -62,6 +62,7 @@
       "dependencies": {
         "@adeficior/data-modifier-core": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
+        "@adeficior/data-modifier-loader": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
@@ -296,6 +297,7 @@
         "datamod-codegen": "./dist/cli.ts",
       },
       "dependencies": {
+        "@adeficior/data-modifier-loader": "workspace:*",
         "arg": "catalog:",
       },
       "devDependencies": {
@@ -325,6 +327,20 @@
       },
       "peerDependencies": {
         "prettier": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "packages/loader": {
+      "name": "@adeficior/data-modifier-loader",
+      "version": "1.0.0",
+      "devDependencies": {
+        "@adeficior/configs": "workspace:*",
+        "@adeficior/data-modifier-core": "workspace:*",
+        "@types/lodash-es": "catalog:",
+      },
+      "peerDependencies": {
+        "@adeficior/data-modifier-core": "workspace:*",
+        "lodash-es": "catalog:",
         "typescript": "catalog:",
       },
     },
@@ -373,6 +389,8 @@
     "@adeficior/data-modifier-ingredients": ["@adeficior/data-modifier-ingredients@workspace:modules/ingredients"],
 
     "@adeficior/data-modifier-lang": ["@adeficior/data-modifier-lang@workspace:modules/lang"],
+
+    "@adeficior/data-modifier-loader": ["@adeficior/data-modifier-loader@workspace:packages/loader"],
 
     "@adeficior/data-modifier-loot": ["@adeficior/data-modifier-loot@workspace:modules/loot"],
 
