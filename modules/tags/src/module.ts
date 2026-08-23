@@ -1,7 +1,7 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import type { TagRules } from "./emitter";
-import { TagEmitter } from "./emitter";
+import type { TagEmitter } from "./emitter";
+import { TagEmitterImpl } from "./emitter";
 import type { TagEmitterOptions } from "./emitter/options";
 import { TagsLoader } from "./loader";
 import type { TagRegistries } from "./schema";
@@ -12,7 +12,7 @@ export default defineModule<{
     tags: TagRegistries;
   };
   emitters: {
-    tags: TagRules;
+    tags: TagEmitter;
   };
 }>({
   importModule: name,
@@ -22,7 +22,7 @@ export default defineModule<{
       tags: "TagRegistries",
     },
     emitters: {
-      tags: "TagRules",
+      tags: "TagEmitter",
     },
   },
   promote: [{ key: "tags", service: "emitter:tags" }],
@@ -33,6 +33,6 @@ export default defineModule<{
       "data/*/tags/**/*.json",
     );
 
-    pack.emitter("tags", () => new TagEmitter(loader(), pack.options));
+    pack.emitter("tags", () => new TagEmitterImpl(loader(), pack.options));
   },
 });

@@ -18,6 +18,7 @@
       "@adeficior/data-modifier-content": "workspace:*",
       "@adeficior/data-modifier-farmersdelight": "workspace:*",
       "@adeficior/data-modifier-models": "workspace:*",
+      "@adeficior/data-modifier-lang": "workspace:*",
       "@adeficior/data-modifier-thermal": "workspace:*"
    },
    "peerDependencies": {

@@ -1,10 +1,10 @@
-import { createId, Registry } from "@adeficior/data-modifier-core";
 import type { Id, NormalizedId, TagInput } from "@adeficior/data-modifier-core";
-import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
+import { createId, Registry } from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Replacer,
 } from "@adeficior/data-modifier-core/serializer";
+import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
 import type { TagDefinition, TagEntry, TagRegistry } from "../schema";
@@ -12,7 +12,7 @@ import type { TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;
 
-export type ScopedTagRules<T extends RegistryId> = {
+export type ScopedTagEmitter<T extends RegistryId> = {
   add(id: TagInput, value: TagEntry<InferIds<T>>): void;
 
   remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>): void;
@@ -22,7 +22,9 @@ export type ScopedTagRules<T extends RegistryId> = {
   replace(id: TagInput, values: TagEntry<InferIds<T>>[]): void;
 };
 
-export class ScopedEmitter<T extends RegistryId> implements ScopedTagRules<T> {
+export class ScopedTagEmitterImpl<
+  T extends RegistryId,
+> implements ScopedTagEmitter<T> {
   constructor(
     private readonly registry: TagRegistry<RegistryId>,
     public readonly folder: string,

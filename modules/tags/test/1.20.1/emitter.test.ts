@@ -1,5 +1,5 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   createTestAcceptor,
   createTestLogger,
@@ -7,13 +7,13 @@ import {
 import { createTestDataResolver } from "@adeficior/testing";
 import { afterEach, beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { TagEmitter } from "../../src/emitter";
+import { TagEmitterImpl } from "../../src/emitter";
 import { TagsLoader } from "../../src/loader";
 
 const version = basename(import.meta.dir);
 const context: LoaderContext = { logger: createTestLogger() };
 const loader = new TagsLoader(packFormatOf(version));
-const emitter = new TagEmitter(loader, {});
+const emitter = new TagEmitterImpl(loader, {});
 
 beforeAll(async () => {
   const resolver = await createTestDataResolver(version, {

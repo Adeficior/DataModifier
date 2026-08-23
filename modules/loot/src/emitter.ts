@@ -1,9 +1,3 @@
-import {
-  CustomEmitter,
-  encodeId,
-  prefix,
-  RuledEmitter,
-} from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   Id,
@@ -13,6 +7,12 @@ import type {
   RegistryLookup,
   RegistryProvider,
   SemVerInput,
+} from "@adeficior/data-modifier-core";
+import {
+  CustomEmitter,
+  encodeId,
+  prefix,
+  RuledEmitter,
 } from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
@@ -26,8 +26,8 @@ import type {
 import { combineResolvers } from "@adeficior/pack-resolver";
 import { lootTablePath } from "./helper";
 import { LootTableRule } from "./rule";
-import { EmptyLootEntry, LootTableSchema } from "./schema";
 import type { LootItemInput, LootModifier, LootTable } from "./schema";
+import { EmptyLootEntry, LootTableSchema } from "./schema";
 import { createLootEntry, replaceItemInTable } from "./serializer";
 
 export const EMPTY_LOOT_TABLE: LootTable = {
@@ -44,7 +44,7 @@ type LootTableTest = Readonly<{
   output?: IngredientFilter;
 }>;
 
-export type LootRules = {
+export type LootEmitter = {
   replaceOutput(
     from: IngredientFilter,
     to: LootItemInput,
@@ -64,7 +64,7 @@ export type LootRules = {
   disabledModifier(id: IdInput): void;
 };
 
-export class LootTableEmitter implements LootRules, ClearableEmitter {
+export class LootEmitterImpl implements LootEmitter, ClearableEmitter {
   private readonly customTables = new CustomEmitter<LootTable>((it) =>
     lootTablePath(this.packFormat, it),
   );

@@ -5,10 +5,10 @@ import type {
   LoaderContext,
 } from "@adeficior/data-modifier-core";
 import { CustomEmitter } from "@adeficior/data-modifier-core";
-import type { LootRules } from "@adeficior/data-modifier-loot";
+import type { LootEmitter } from "@adeficior/data-modifier-loot";
 import type {
-  BlockstateRules,
-  ModelRules,
+  BlockstateEmitter,
+  ModelEmitter,
 } from "@adeficior/data-modifier-models";
 import type { BlockId } from "@adeficior/data-modifier/generated";
 import type {
@@ -28,7 +28,7 @@ type ExtendedBlockProperties = PropertiesOrCopy & {
   type?: string;
 };
 
-export type BlockDefinitionRules = {
+export type BlockDefinitionEmitter = {
   add<T extends BlockDefinition>(id: IdInput, definition: T): T;
 
   basic(
@@ -49,12 +49,12 @@ function resolveProperties(from: PropertiesOrCopy): BlockProperties | string {
   return from;
 }
 
-export abstract class AbstractBlockDefinitionRules implements BlockDefinitionRules {
+export abstract class AbstractBlockDefinitionEmitter implements BlockDefinitionEmitter {
   constructor(
     // TODO inject
-    private readonly models: ModelRules,
-    private readonly blockstates: BlockstateRules,
-    private readonly loot: LootRules,
+    private readonly models: ModelEmitter,
+    private readonly blockstates: BlockstateEmitter,
+    private readonly loot: LootEmitter,
   ) {}
 
   abstract add<T extends BlockDefinition>(id: IdInput, definition: T): T;
@@ -99,8 +99,8 @@ export abstract class AbstractBlockDefinitionRules implements BlockDefinitionRul
   }
 }
 
-export class BlockDefinitionEmitter
-  extends AbstractBlockDefinitionRules
+export class BlockDefinitionEmitterImpl
+  extends AbstractBlockDefinitionEmitter
   implements ClearableEmitter
 {
   private readonly custom = new CustomEmitter<BlockDefinition>(this.filePath);

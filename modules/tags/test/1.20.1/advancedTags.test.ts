@@ -1,18 +1,18 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   createTestAcceptor,
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
 import { afterEach, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { TagEmitter } from "../../src/emitter";
+import { TagEmitterImpl } from "../../src/emitter";
 import { TagsLoader } from "../../src/loader";
 
 const version = basename(import.meta.dir);
 const context: LoaderContext = { logger: createTestLogger() };
 const loader = new TagsLoader(packFormatOf(version));
-const emitter = new TagEmitter(loader, { advancedTags: true });
+const emitter = new TagEmitterImpl(loader, { advancedTags: true });
 
 afterEach(() => {
   emitter.clear();

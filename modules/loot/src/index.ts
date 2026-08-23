@@ -1,7 +1,7 @@
 export {
   EMPTY_LOOT_MODIFIER,
   EMPTY_LOOT_TABLE,
-  type LootRules,
+  type LootEmitter,
 } from "./emitter";
 export type * from "./helper";
 export type * from "./loader";

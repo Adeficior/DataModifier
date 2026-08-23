@@ -1,20 +1,20 @@
-import { encodeId } from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   LoaderContext,
   NormalizedId,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
+import { encodeId } from "@adeficior/data-modifier-core";
 import { toJson } from "@adeficior/data-modifier-core/serializer";
-import { ItemIngredient } from "@adeficior/data-modifier-ingredients";
 import type {
   IngredientFilter,
   IngredientSerializer,
   Predicates,
 } from "@adeficior/data-modifier-ingredients";
+import { ItemIngredient } from "@adeficior/data-modifier-ingredients";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import type { DataConsumer } from "@adeficior/pack-resolver";
+import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { uniq } from "lodash-es";
 
 export type HideMode = "jei" | "polytone";
@@ -22,7 +22,7 @@ export type BlacklistOptions = {
   hideFrom?: HideMode | HideMode[];
 };
 
-export type BlacklistRules = {
+export type BlacklistEmitter = {
   hide(...inputs: IngredientFilter[]): void;
   hideEntry<T extends RegistryId>(
     type: T,
@@ -32,7 +32,9 @@ export type BlacklistRules = {
 
 type RegistryIdInput<T extends RegistryId> = InferIds<T> | RegExp;
 
-export class BlacklistEmitter implements BlacklistRules, ClearableEmitter {
+export class BlacklistEmitterImpl
+  implements BlacklistEmitter, ClearableEmitter
+{
   private hidden: NormalizedId[] = [];
   private readonly hideModes: HideMode[];
 

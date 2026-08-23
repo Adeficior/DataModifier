@@ -14,6 +14,7 @@ const modules = await loadDependencyModules({
   "@adeficior/data-modifier-content": "required",
   "@adeficior/data-modifier-farmersdelight": "required",
   "@adeficior/data-modifier-models": "required",
+  "@adeficior/data-modifier-lang": "required",
   "@adeficior/data-modifier-thermal": "required",
 });
 

@@ -1,4 +1,3 @@
-import { createId, encodeId, Registry } from "@adeficior/data-modifier-core";
 import type {
   ClearableEmitter,
   Id,
@@ -6,11 +5,12 @@ import type {
   LoaderContext,
   RegistryProvider,
 } from "@adeficior/data-modifier-core";
-import { toJson } from "@adeficior/data-modifier-core/serializer";
+import { createId, encodeId, Registry } from "@adeficior/data-modifier-core";
 import type {
   Predicate,
   Replacer,
 } from "@adeficior/data-modifier-core/serializer";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
 import { mapValues, omitBy } from "lodash-es";
@@ -33,7 +33,7 @@ type ReplaceOptions = Readonly<{
 
 type EntryOptions = { lang?: string };
 
-export type LangRules = {
+export type LangEmitter = {
   replaceValue(match: string, value: string, options?: ReplaceOptions): void;
 
   replaceValue(
@@ -52,7 +52,7 @@ export type LangRules = {
   ): void;
 };
 
-export class LangEmitter implements LangRules, ClearableEmitter {
+export class LangEmitterImpl implements LangEmitter, ClearableEmitter {
   private custom = new Registry<LangDefinition>();
   private rules: LangRule[] = [];
 

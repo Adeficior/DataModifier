@@ -1,10 +1,10 @@
 export type {
+  BlockDefinitionEmitter,
   BlockDefinitionOptions,
-  BlockDefinitionRules,
 } from "./emitter/blockDefinition";
 export type {
+  ItemDefinitionEmitter,
   ItemDefinitionOptions,
-  ItemDefinitionRules,
 } from "./emitter/itemDefinition";
 export { default } from "./module";
 export type * from "./schema/blockDefinition";

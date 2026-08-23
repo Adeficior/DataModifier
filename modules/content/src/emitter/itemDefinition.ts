@@ -5,14 +5,14 @@ import type {
   LoaderContext,
 } from "@adeficior/data-modifier-core";
 import { CustomEmitter, prefix } from "@adeficior/data-modifier-core";
-import type { LootRules } from "@adeficior/data-modifier-loot";
+import type { LootEmitter } from "@adeficior/data-modifier-loot";
 import type {
-  BlockstateRules,
-  ModelRules,
+  BlockstateEmitter,
+  ModelEmitter,
 } from "@adeficior/data-modifier-models";
 import type { BlockDefinition } from "../schema/blockDefinition";
 import type { ItemDefinition, ItemProperties } from "../schema/itemDefinition";
-import type { BlockDefinitionRulesWithoutId } from "./innerBlockDefinition";
+import type { BlockDefinitionEmitterWithoutId } from "./innerBlockDefinition";
 import { createInnerBlockDefinitionBuilder } from "./innerBlockDefinition";
 
 export type ItemDefinitionOptions = Readonly<{
@@ -24,9 +24,10 @@ type ExtendedItemProperties = ItemProperties & {
 };
 
 type BlockDefinitionInput =
-  BlockDefinition | ((rules: BlockDefinitionRulesWithoutId) => BlockDefinition);
+  | BlockDefinition
+  | ((rules: BlockDefinitionEmitterWithoutId) => BlockDefinition);
 
-export type ItemDefinitionRules = {
+export type ItemDefinitionEmitter = {
   add<T extends ItemDefinition>(id: IdInput, definition: T): T;
 
   basic(
@@ -44,17 +45,17 @@ export type ItemDefinitionRules = {
   ): ItemDefinition;
 };
 
-export class ItemDefinitionEmitter
-  implements ItemDefinitionRules, ClearableEmitter
+export class ItemDefinitionEmitterImpl
+  implements ItemDefinitionEmitter, ClearableEmitter
 {
   private readonly custom = new CustomEmitter<ItemDefinition>(this.filePath);
 
   constructor(
     // TODO inject
-    private readonly itemModels: ModelRules,
-    private readonly blockModels: ModelRules,
-    private readonly blockstates: BlockstateRules,
-    private readonly loot: LootRules,
+    private readonly itemModels: ModelEmitter,
+    private readonly blockModels: ModelEmitter,
+    private readonly blockstates: BlockstateEmitter,
+    private readonly loot: LootEmitter,
   ) {}
 
   private filePath(id: Id) {

@@ -1,7 +1,7 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import type { LootRules } from "./emitter";
-import { LootTableEmitter } from "./emitter";
+import type { LootEmitter } from "./emitter";
+import { LootEmitterImpl } from "./emitter";
 import { lootTablePattern } from "./helper";
 import { LootTableLoader } from "./loader";
 
@@ -10,7 +10,7 @@ export default defineModule<{
     loot: LootTableLoader;
   };
   emitters: {
-    loot: LootRules;
+    loot: LootEmitter;
   };
 }>({
   importModule: name,
@@ -23,7 +23,7 @@ export default defineModule<{
       loot: "LootTableLoader",
     },
     emitters: {
-      loot: "LootRules",
+      loot: "LootEmitter",
     },
   },
   promote: [{ key: "loot", service: "emitter:loot" }],
@@ -37,7 +37,7 @@ export default defineModule<{
     pack.emitter(
       "loot",
       (container) =>
-        new LootTableEmitter(
+        new LootEmitterImpl(
           pack.options.packFormat,
           loader(),
           container.get("registries"),

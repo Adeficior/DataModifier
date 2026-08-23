@@ -19,9 +19,6 @@ export default defineModule<{
       "models:item": "ModelEmitter",
       blockstates: "BlockstateEmitter",
     },
-    services: {
-      "emitter:models": "ModelsService",
-    },
   },
   promote: [
     { key: "models.block", service: "emitter:models:block" },

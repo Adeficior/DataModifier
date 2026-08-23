@@ -1,14 +1,14 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import type { BlockDefinitionRules } from "./emitter/blockDefinition";
-import { BlockDefinitionEmitter } from "./emitter/blockDefinition";
-import type { ItemDefinitionRules } from "./emitter/itemDefinition";
-import { ItemDefinitionEmitter } from "./emitter/itemDefinition";
+import type { BlockDefinitionEmitter } from "./emitter/blockDefinition";
+import { BlockDefinitionEmitterImpl } from "./emitter/blockDefinition";
+import type { ItemDefinitionEmitter } from "./emitter/itemDefinition";
+import { ItemDefinitionEmitterImpl } from "./emitter/itemDefinition";
 
 export default defineModule<{
   emitters: {
-    "content:blocks": BlockDefinitionRules;
-    "content:items": ItemDefinitionRules;
+    "content:blocks": BlockDefinitionEmitter;
+    "content:items": ItemDefinitionEmitter;
   };
 }>({
   importModule: name,
@@ -19,8 +19,8 @@ export default defineModule<{
   },
   types: {
     emitters: {
-      "content:blocks": "BlockDefinitionRules",
-      "content:items": "ItemDefinitionRules",
+      "content:blocks": "BlockDefinitionEmitter",
+      "content:items": "ItemDefinitionEmitter",
     },
   },
   promote: [
@@ -31,7 +31,7 @@ export default defineModule<{
     pack.emitter(
       "content:blocks",
       (container) =>
-        new BlockDefinitionEmitter(
+        new BlockDefinitionEmitterImpl(
           container.get("emitter:models:block"),
           container.get("emitter:blockstates"),
           container.get("emitter:loot"),
@@ -41,7 +41,7 @@ export default defineModule<{
     pack.emitter(
       "content:items",
       (container) =>
-        new ItemDefinitionEmitter(
+        new ItemDefinitionEmitterImpl(
           container.get("emitter:models:item"),
           container.get("emitter:models:block"),
           container.get("emitter:blockstates"),

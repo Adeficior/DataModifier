@@ -6,11 +6,11 @@ import {
 } from "@adeficior/data-modifier-core/testing";
 import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
 import type { Resolver } from "@adeficior/pack-resolver";
-import { LootTableEmitter } from "../../../loot/src/emitter";
+import { LootEmitterImpl } from "../../../loot/src/emitter";
 import { BlockstateEmitterImpl } from "../../../models/src/emitter/blockstates";
 import { ModelEmitterImpl } from "../../../models/src/emitter/models";
-import { BlockDefinitionEmitter } from "../../src/emitter/blockDefinition";
-import { ItemDefinitionEmitter } from "../../src/emitter/itemDefinition";
+import { BlockDefinitionEmitterImpl } from "../../src/emitter/blockDefinition";
+import { ItemDefinitionEmitterImpl } from "../../src/emitter/itemDefinition";
 
 // TODO move to testing package and use in recipes
 type ExternalResolver<T> = {
@@ -22,13 +22,13 @@ type ExternalResolver<T> = {
 export function createBlockDefinitionEmitter(
   version: SemVerInput,
   context: LoaderContext,
-): ExternalResolver<BlockDefinitionEmitter> {
+): ExternalResolver<BlockDefinitionEmitterImpl> {
   // TODO mock instead?
   const emitters = new CombinedEmitters();
   const blockModels = emitters.add(new ModelEmitterImpl("block"));
   const blockStates = emitters.add(new BlockstateEmitterImpl());
   const loot = emitters.add(
-    new LootTableEmitter(
+    new LootEmitterImpl(
       packFormatOf(version),
       mockRegistryProvider(),
       mockRegistryLookup(),
@@ -37,7 +37,7 @@ export function createBlockDefinitionEmitter(
   );
 
   const emitter = emitters.add(
-    new BlockDefinitionEmitter(blockModels, blockStates, loot),
+    new BlockDefinitionEmitterImpl(blockModels, blockStates, loot),
   );
 
   const resolver = emitters.resolver(context);
@@ -49,14 +49,14 @@ export function createBlockDefinitionEmitter(
 export function createItemDefinitionEmitter(
   version: SemVerInput,
   context: LoaderContext,
-): ExternalResolver<ItemDefinitionEmitter> {
+): ExternalResolver<ItemDefinitionEmitterImpl> {
   // TODO mock instead?
   const emitters = new CombinedEmitters();
   const itemModels = emitters.add(new ModelEmitterImpl("item"));
   const blockModels = emitters.add(new ModelEmitterImpl("block"));
   const blockStates = emitters.add(new BlockstateEmitterImpl());
   const loot = emitters.add(
-    new LootTableEmitter(
+    new LootEmitterImpl(
       packFormatOf(version),
       mockRegistryProvider(),
       mockRegistryLookup(),
@@ -65,7 +65,7 @@ export function createItemDefinitionEmitter(
   );
 
   const emitter = emitters.add(
-    new ItemDefinitionEmitter(
+    new ItemDefinitionEmitterImpl(
       // TODO mock instead?
       itemModels,
       blockModels,

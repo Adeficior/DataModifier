@@ -8,14 +8,14 @@ import {
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import { BlacklistEmitter } from "../src/emit/blacklist";
-import type { BlacklistOptions, BlacklistRules } from "../src/emit/blacklist";
+import type { BlacklistEmitter, BlacklistOptions } from "../src/emit/blacklist";
+import { BlacklistEmitterImpl } from "../src/emit/blacklist";
 import { setupInstance } from "./util/setup";
 
 const module = defineModule<{
   options: BlacklistOptions;
   emitters: {
-    blacklist: BlacklistRules;
+    blacklist: BlacklistEmitter;
   };
 }>({
   name: "internal",
@@ -26,7 +26,7 @@ const module = defineModule<{
     pack.emitter(
       "blacklist",
       (container) =>
-        new BlacklistEmitter(
+        new BlacklistEmitterImpl(
           container.get("registries"),
           container.get("predicates"),
           container.get("serializer:ingredients"),
@@ -48,7 +48,7 @@ const instance = await setupInstance(
   },
 );
 
-const blacklist = instance.get<BlacklistRules>("emitter:blacklist");
+const blacklist = instance.get<BlacklistEmitter>("emitter:blacklist");
 
 describe("blacklist tests", () => {
   it("generated a jei blacklist config file", async () => {

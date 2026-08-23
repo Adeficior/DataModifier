@@ -1,16 +1,16 @@
 import type { IdInput } from "@adeficior/data-modifier-core";
-import type { LootRules } from "@adeficior/data-modifier-loot";
+import type { LootEmitter } from "@adeficior/data-modifier-loot";
 import type {
-  BlockstateRules,
-  ModelRules,
+  BlockstateEmitter,
+  ModelEmitter,
 } from "@adeficior/data-modifier-models";
 import type { BlockDefinition } from "../schema/blockDefinition";
-import type { BlockDefinitionRules } from "./blockDefinition";
-import { AbstractBlockDefinitionRules } from "./blockDefinition";
+import type { BlockDefinitionEmitter } from "./blockDefinition";
+import { AbstractBlockDefinitionEmitter } from "./blockDefinition";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-class InnerBlockDefinitionRules extends AbstractBlockDefinitionRules {
+class InnerBlockDefinitionEmitter extends AbstractBlockDefinitionEmitter {
   add<T extends BlockDefinition>(id: IdInput | T, definition?: T): T {
     return definition ?? (id as T);
   }
@@ -37,20 +37,20 @@ function curry<
   } as InferCurriedFunction<T>;
 }
 
-export type BlockDefinitionRulesWithoutId = {
-  [K in keyof BlockDefinitionRules]: InferCurriedFunction<
-    BlockDefinitionRules[K]
+export type BlockDefinitionEmitterWithoutId = {
+  [K in keyof BlockDefinitionEmitter]: InferCurriedFunction<
+    BlockDefinitionEmitter[K]
   >;
 };
 
 /**
  * Modifies emitter
  */
-function createCurriedEmitter(id: IdInput, emitter: BlockDefinitionRules) {
+function createCurriedEmitter(id: IdInput, emitter: BlockDefinitionEmitter) {
   const methods = Object.getOwnPropertyNames(
-    AbstractBlockDefinitionRules.prototype,
+    AbstractBlockDefinitionEmitter.prototype,
   ).filter((it) => it !== "constructor") as Array<
-    keyof AbstractBlockDefinitionRules
+    keyof AbstractBlockDefinitionEmitter
   >;
 
   const out = emitter as any;
@@ -62,17 +62,17 @@ function createCurriedEmitter(id: IdInput, emitter: BlockDefinitionRules) {
     }
   });
 
-  return out as BlockDefinitionRulesWithoutId;
+  return out as BlockDefinitionEmitterWithoutId;
 }
 
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function createInnerBlockDefinitionBuilder(
   id: IdInput,
-  models: ModelRules,
-  blockstates: BlockstateRules,
-  loot: LootRules,
+  models: ModelEmitter,
+  blockstates: BlockstateEmitter,
+  loot: LootEmitter,
 ) {
-  const inner = new InnerBlockDefinitionRules(models, blockstates, loot);
+  const inner = new InnerBlockDefinitionEmitter(models, blockstates, loot);
   return createCurriedEmitter(id, inner);
 }

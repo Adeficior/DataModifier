@@ -11,10 +11,10 @@ import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
 import type { TagEntry, TagRegistries } from "../schema";
 import type { TagEmitterOptions } from "./options";
-import type { ScopedTagRules } from "./scoped";
-import { ScopedEmitter } from "./scoped";
+import type { ScopedTagEmitter } from "./scoped";
+import { ScopedTagEmitterImpl } from "./scoped";
 
-export type TagRules = {
+export type TagEmitter = {
   add<T extends RegistryId>(
     registry: T,
     id: TagInput,
@@ -27,7 +27,7 @@ export type TagRules = {
     test: CommonFilter<NormalizedId<InferIds<T>>>,
   ): void;
 
-  scoped<T extends RegistryId>(key: T, folder?: string): ScopedTagRules<T>;
+  scoped<T extends RegistryId>(key: T, folder?: string): ScopedTagEmitter<T>;
 
   empty<T extends RegistryId>(registry: T, id: TagInput): void;
 
@@ -37,17 +37,20 @@ export type TagRules = {
     values: TagEntry<InferIds<T>>[],
   ): void;
 
-  blocks: ScopedTagRules<"minecraft:block">;
-  items: ScopedTagRules<"minecraft:item">;
-  fluids: ScopedTagRules<"minecraft:fluid">;
+  blocks: ScopedTagEmitter<"minecraft:block">;
+  items: ScopedTagEmitter<"minecraft:item">;
+  fluids: ScopedTagEmitter<"minecraft:fluid">;
 };
 
-export class TagEmitter implements TagRules, ClearableEmitter {
-  private readonly emitters = new Map<string, ScopedEmitter<RegistryId>>();
+export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
+  private readonly emitters = new Map<
+    string,
+    ScopedTagEmitterImpl<RegistryId>
+  >();
 
-  readonly blocks: ScopedTagRules<"minecraft:block">;
-  readonly items: ScopedTagRules<"minecraft:item">;
-  readonly fluids: ScopedTagRules<"minecraft:fluid">;
+  readonly blocks: ScopedTagEmitter<"minecraft:block">;
+  readonly items: ScopedTagEmitter<"minecraft:item">;
+  readonly fluids: ScopedTagEmitter<"minecraft:fluid">;
 
   constructor(
     // TODO use container or inject?
@@ -115,17 +118,17 @@ export class TagEmitter implements TagRules, ClearableEmitter {
   scoped<T extends RegistryId>(
     registry: T,
     folder: string = tagFolderOf(registry),
-  ): ScopedTagRules<T> {
+  ): ScopedTagEmitter<T> {
     const existing = this.emitters.get(registry);
-    if (existing) return existing as ScopedTagRules<T>;
+    if (existing) return existing as ScopedTagEmitter<T>;
     else {
-      const emitter = new ScopedEmitter(
+      const emitter = new ScopedTagEmitterImpl(
         this.registry.registry(registry),
         folder,
         this.options,
       );
       this.emitters.set(registry, emitter);
-      return emitter as ScopedTagRules<T>;
+      return emitter as ScopedTagEmitter<T>;
     }
   }
 }

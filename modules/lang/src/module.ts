@@ -1,34 +1,34 @@
 import { defineModule, jsonFilePattern } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import type { LangRules } from "./emitter";
-import { LangEmitter } from "./emitter";
-import type { LangRegistry } from "./loader";
-import { LangLoader } from "./loader";
+import type { LangEmitter } from "./emitter";
+import { LangEmitterImpl } from "./emitter";
+import type { LangLoader } from "./loader";
+import { LangLoaderImpl } from "./loader";
 
 export default defineModule<{
   loaders: {
-    lang: LangRegistry;
+    lang: LangLoader;
   };
   emitters: {
-    lang: LangRules;
+    lang: LangEmitter;
   };
 }>({
   importModule: name,
   types: {
     loaders: {
-      lang: "LangRegistry",
+      lang: "LangLoader",
     },
     emitters: {
-      lang: "LangRules",
+      lang: "LangEmitter",
     },
   },
   promote: [{ key: "lang", service: "emitter:lang" }],
   setup: (pack) => {
     const loader = pack.loader(
       "lang",
-      () => new LangLoader(),
+      () => new LangLoaderImpl(),
       jsonFilePattern("assets", "lang"),
     );
-    pack.emitter("lang", () => new LangEmitter(loader()));
+    pack.emitter("lang", () => new LangEmitterImpl(loader()));
   },
 });

@@ -5,10 +5,10 @@ import {
 } from "@adeficior/data-modifier-ingredients/testing";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import type { TestDataOptions } from "@adeficior/testing";
+import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
-import { LootTableEmitter } from "../emitter";
+import { LootEmitterImpl } from "../emitter";
 import { lootTablePattern } from "../helper";
 import { LootTableLoader } from "../loader";
 
@@ -53,7 +53,7 @@ export function setupLootEmitter(
     setupIngredientSerializer(version, lookup),
   );
 
-  const emitter = new LootTableEmitter(
+  const emitter = new LootEmitterImpl(
     packFormatOf(version),
     loader,
     lookup,

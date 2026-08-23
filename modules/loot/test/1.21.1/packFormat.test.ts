@@ -1,5 +1,5 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { LoaderContext } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   mockRegistryLookup,
   mockRegistryProvider,
@@ -11,12 +11,12 @@ import {
 } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { EMPTY_LOOT_TABLE, LootTableEmitter } from "../../src/emitter";
+import { EMPTY_LOOT_TABLE, LootEmitterImpl } from "../../src/emitter";
 
 const version = basename(import.meta.dir);
 // TODO common method?
 const context: LoaderContext = { logger: createTestLogger() };
-const emitter = new LootTableEmitter(
+const emitter = new LootEmitterImpl(
   packFormatOf(version),
   mockRegistryProvider(),
   mockRegistryLookup(),

@@ -1,13 +1,13 @@
-import { JsonLoader } from "@adeficior/data-modifier-core";
 import type { Id, RegistryProvider } from "@adeficior/data-modifier-core";
-import { LangSchema } from "./schema";
+import { JsonLoader } from "@adeficior/data-modifier-core";
 import type { LangDefinition } from "./schema";
+import { LangSchema } from "./schema";
 
-export type LangRegistry = RegistryProvider<LangDefinition>;
+export type LangLoader = RegistryProvider<LangDefinition>;
 
-export class LangLoader
+export class LangLoaderImpl
   extends JsonLoader<LangDefinition>
-  implements LangRegistry
+  implements LangLoader
 {
   protected parse(json: unknown, id: Id): LangDefinition | null {
     const parsed = LangSchema.parse(json);
