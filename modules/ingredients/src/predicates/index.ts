@@ -3,21 +3,18 @@ import type {
   NormalizedId,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
-import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
 import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import type {
-  TagRegistry,
-  TagRegistryHolder,
-} from "@adeficior/data-modifier-tags";
+import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
+import type { TagRegistries, TagRegistry } from "@adeficior/data-modifier-tags";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Ingredient } from "../ingredient/impl";
 import type { Result } from "../result/impl";
 import type { IngredientSerializer } from "../serializer/ingredients";
-import { createIngredientPredicate } from "./ingredients";
 import type { IngredientFilter } from "./ingredients";
+import { createIngredientPredicate } from "./ingredients";
 
 export type Predicates = {
   ingredient(filter: IngredientFilter): Predicate<Ingredient>;
@@ -30,7 +27,7 @@ export type Predicates = {
 
 export function createPredicates(
   registries: RegistryLookup,
-  tags: TagRegistryHolder,
+  tags: TagRegistries,
   ingredientSerializer: IngredientSerializer,
 ): Predicates {
   return new PredicatesImpl(registries, tags, ingredientSerializer);
@@ -40,7 +37,7 @@ class PredicatesImpl implements Predicates {
   constructor(
     // TODO inject
     private readonly registries: RegistryLookup,
-    private readonly tags: TagRegistryHolder,
+    private readonly tags: TagRegistries,
     private readonly ingredientSerializer: IngredientSerializer,
   ) {}
 

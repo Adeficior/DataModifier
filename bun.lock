@@ -36,6 +36,12 @@
       "name": "@adeficior/full-example",
       "dependencies": {
         "@adeficior/data-modifier": "workspace:*",
+        "@adeficior/data-modifier-botania": "workspace:*",
+        "@adeficior/data-modifier-content": "workspace:*",
+        "@adeficior/data-modifier-create": "workspace:*",
+        "@adeficior/data-modifier-farmersdelight": "workspace:*",
+        "@adeficior/data-modifier-models": "workspace:*",
+        "@adeficior/data-modifier-thermal": "workspace:*",
       },
       "devDependencies": {
         "@adeficior/configs": "workspace:*",

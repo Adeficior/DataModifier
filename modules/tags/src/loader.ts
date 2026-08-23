@@ -1,24 +1,24 @@
-import {
-  encodeId,
-  isAtLeastVersion,
-  Registry,
-} from "@adeficior/data-modifier-core";
 import type {
   IdInput,
   NormalizedId,
   SemVerInput,
   TagInput,
 } from "@adeficior/data-modifier-core";
-import { fromJson } from "@adeficior/data-modifier-core/serializer";
+import {
+  encodeId,
+  isAtLeastVersion,
+  Registry,
+} from "@adeficior/data-modifier-core";
 import type { TagChecker } from "@adeficior/data-modifier-core/serializer";
+import { fromJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
 import { entryId, orderTagEntries, tagFolderOf } from "./helper";
 import type {
   TagDefinition,
   TagEntry,
+  TagRegistries,
   TagRegistry,
-  TagRegistryHolder,
 } from "./schema";
 
 class WriteableTagRegistry<T extends RegistryId>
@@ -94,7 +94,7 @@ class WriteableTagRegistry<T extends RegistryId>
   }
 }
 
-export class TagsLoader implements TagRegistryHolder, Acceptor {
+export class TagsLoader implements TagRegistries, Acceptor {
   private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
     {};
 

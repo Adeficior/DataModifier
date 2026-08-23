@@ -4,15 +4,15 @@ import type {
   NormalizedId,
   TagInput,
 } from "@adeficior/data-modifier-core";
-import { toJson } from "@adeficior/data-modifier-core/serializer";
 import type { CommonFilter } from "@adeficior/data-modifier-core/serializer";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
-import type { TagEntry, TagRegistryHolder } from "../schema";
+import type { TagEntry, TagRegistries } from "../schema";
 import type { TagEmitterOptions } from "./options";
-import { ScopedEmitter } from "./scoped";
 import type { ScopedTagRules } from "./scoped";
+import { ScopedEmitter } from "./scoped";
 
 export type TagRules = {
   add<T extends RegistryId>(
@@ -51,7 +51,7 @@ export class TagEmitter implements TagRules, ClearableEmitter {
 
   constructor(
     // TODO use container or inject?
-    private readonly registry: TagRegistryHolder,
+    private readonly registry: TagRegistries,
     private readonly options: TagEmitterOptions,
   ) {
     this.blocks = this.scoped("minecraft:block", "blocks");

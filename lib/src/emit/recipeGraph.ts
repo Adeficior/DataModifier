@@ -22,7 +22,7 @@ import {
 } from "@adeficior/data-modifier-core/serializer";
 import type { RecipeLoader } from "@adeficior/data-modifier-recipes";
 import type { RecipeHolder } from "@adeficior/data-modifier-recipes/serializer";
-import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
+import type { TagRegistries } from "@adeficior/data-modifier-tags";
 import type {
   ItemId,
   RecipeSerializerId,
@@ -91,7 +91,7 @@ export class RecipeGraphEmitter
 
   constructor(
     private readonly recipes: RecipeLoader,
-    private readonly tags: TagRegistryHolder,
+    private readonly tags: TagRegistries,
     options: RecipeGraphOptions = {},
   ) {
     this.options = { ...defaultOptions, ...options };
@@ -178,7 +178,7 @@ class GraphBuilder {
   private readonly edges = new Registry<Edge>();
 
   constructor(
-    private readonly tags: TagRegistryHolder,
+    private readonly tags: TagRegistries,
     private readonly representations: RecipeTypeRepresentation[],
     private readonly options: Required<RecipeGraphOptions>,
   ) {}

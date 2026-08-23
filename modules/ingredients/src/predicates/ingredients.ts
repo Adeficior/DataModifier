@@ -2,15 +2,15 @@ import type {
   NormalizedId,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
-import {
-  createIdPredicate,
-  IllegalShapeError,
-} from "@adeficior/data-modifier-core/serializer";
 import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
+import {
+  createIdPredicate,
+  IllegalShapeError,
+} from "@adeficior/data-modifier-core/serializer";
+import type { TagRegistries } from "@adeficior/data-modifier-tags";
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {
   Ingredient,
@@ -29,7 +29,7 @@ export type IngredientFilter =
 type Context = {
   registries: RegistryLookup;
   serializer: IngredientSerializer;
-  tags: TagRegistryHolder;
+  tags: TagRegistries;
 };
 
 export function createIngredientPredicate(
@@ -87,7 +87,7 @@ function createUnvalidatedFilter(
 
 function filterByRegistry(
   test: NormalizedId | RegExp,
-  tags: TagRegistryHolder,
+  tags: TagRegistries,
   registry: NormalizedId<RegistryId>,
 ): Predicate<Ingredient> {
   return createIdPredicate<Ingredient, NormalizedId>(

@@ -1,12 +1,12 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { RegistryLookup } from "@adeficior/data-modifier-core";
-import type { TagRegistryHolder } from "@adeficior/data-modifier-tags";
-import { createPredicates } from "../predicates";
+import { packFormatOf } from "@adeficior/data-modifier-core";
+import type { TagRegistries } from "@adeficior/data-modifier-tags";
 import type { Predicates } from "../predicates";
-import { createIngredientSerializer } from "../serializer/ingredients";
+import { createPredicates } from "../predicates";
 import type { IngredientSerializer } from "../serializer/ingredients";
-import { createResultSerializer } from "../serializer/results";
+import { createIngredientSerializer } from "../serializer/ingredients";
 import type { ResultSerializer } from "../serializer/results";
+import { createResultSerializer } from "../serializer/results";
 
 export function setupIngredientSerializer(
   version: string,
@@ -24,7 +24,7 @@ export function setupResultSerializer(
 
 export function setupPredicates(
   registries: RegistryLookup,
-  tags: TagRegistryHolder,
+  tags: TagRegistries,
   ingredients: IngredientSerializer,
 ): Predicates {
   return createPredicates(registries, tags, ingredients);

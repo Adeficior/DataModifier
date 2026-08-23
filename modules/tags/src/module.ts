@@ -4,12 +4,12 @@ import type { TagRules } from "./emitter";
 import { TagEmitter } from "./emitter";
 import type { TagEmitterOptions } from "./emitter/options";
 import { TagsLoader } from "./loader";
-import type { TagRegistryHolder } from "./schema";
+import type { TagRegistries } from "./schema";
 
 export default defineModule<{
   options: TagEmitterOptions;
   loaders: {
-    tags: TagRegistryHolder;
+    tags: TagRegistries;
   };
   emitters: {
     tags: TagRules;
@@ -19,7 +19,7 @@ export default defineModule<{
   types: {
     options: "TagEmitterOptions",
     loaders: {
-      tags: "TagRegistryHolder",
+      tags: "TagRegistries",
     },
     emitters: {
       tags: "TagRules",

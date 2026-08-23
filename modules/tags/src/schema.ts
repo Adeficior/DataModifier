@@ -15,7 +15,7 @@ export type TagEntry<T extends string = string> =
       id: T | `#${string}`;
     }>;
 
-export type TagRegistryHolder = {
+export type TagRegistries = {
   registry<T extends RegistryId>(key: T): TagRegistry<T>;
 };
 
