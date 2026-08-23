@@ -32,7 +32,15 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         run: bunx changeset version
 
-      - run: bun run prune
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v11
+        with:
+          message: "updated package versions & changelogs"
+          push: false
+          dry_run: ${{ github.ref_name != 'main' }}
+
+      - name: Prepare packages
+        run: bun run prune
 
       - name: Update Lockfile
         run: bun update
@@ -53,4 +61,4 @@ jobs:
 
       - name: Push Changes
         if: ${{ github.ref_name == 'main' }}
-        run: git push
+        run: git push && git push --tags
