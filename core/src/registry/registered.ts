@@ -4,8 +4,8 @@ import type { RegistryLookup } from "./lookup";
 
 export type RegistryIds = Record<NormalizedId<RegistryId>, NormalizedId[]>;
 
-export interface Registered {
+export type Registered = {
   validate(lookup: RegistryLookup): void;
   ids(): RegistryIds;
   hashCode(): string;
-}
+};

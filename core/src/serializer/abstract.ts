@@ -1,5 +1,7 @@
 import type { SerializerModule } from "./module";
 
+// necessary to allow recursive types
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface Serializer<Out, S extends Serializer<Out, S>> {
   serialize(output: Out): unknown;
   serializeList(outputs: Out[]): unknown[];

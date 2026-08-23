@@ -66,14 +66,14 @@ const defaultOptions: Required<RecipeGraphOptions> = {
   },
 };
 
-export interface RecipeGraphAccessor {
+export type RecipeGraphAccessor = {
   represent(
     type: CommonFilter<NormalizedId<RecipeSerializerId>>,
     icon: IdInput<ItemId>,
     label?: string,
   ): void;
   show(id: IdInput): void;
-}
+};
 
 type RecipeTypeRepresentation = {
   test: Predicate<RecipeSerializerId>;

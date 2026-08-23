@@ -28,7 +28,7 @@ type ExtendedBlockProperties = PropertiesOrCopy & {
   type?: string;
 };
 
-export interface BlockDefinitionRules {
+export type BlockDefinitionRules = {
   add<T extends BlockDefinition>(id: IdInput, definition: T): T;
 
   basic(
@@ -42,7 +42,7 @@ export interface BlockDefinitionRules {
     properties: ExtendedBlockProperties & { large?: boolean },
     options?: BlockDefinitionOptions,
   ): BlockDefinition;
-}
+};
 
 function resolveProperties(from: PropertiesOrCopy): BlockProperties | string {
   if ("copy" in from) return from.copy;

@@ -4,7 +4,7 @@ import type { Id } from "../common/id";
 
 export type PathProvider = (id: Id) => string;
 
-export interface ClearableEmitter {
+export type ClearableEmitter = {
   clear(): void;
   resolver(context: LoaderContext): Resolver<Acceptable, LoaderContext>;
-}
+};

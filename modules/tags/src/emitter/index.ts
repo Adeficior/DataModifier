@@ -14,7 +14,7 @@ import type { TagEmitterOptions } from "./options";
 import { ScopedEmitter } from "./scoped";
 import type { ScopedTagRules } from "./scoped";
 
-export interface TagRules {
+export type TagRules = {
   add<T extends RegistryId>(
     registry: T,
     id: TagInput,
@@ -40,7 +40,7 @@ export interface TagRules {
   blocks: ScopedTagRules<"minecraft:block">;
   items: ScopedTagRules<"minecraft:item">;
   fluids: ScopedTagRules<"minecraft:fluid">;
-}
+};
 
 export class TagEmitter implements TagRules, ClearableEmitter {
   private readonly emitters = new Map<string, ScopedEmitter<RegistryId>>();

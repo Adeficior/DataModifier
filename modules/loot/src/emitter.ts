@@ -44,7 +44,7 @@ type LootTableTest = Readonly<{
   output?: IngredientFilter;
 }>;
 
-export interface LootRules {
+export type LootRules = {
   replaceOutput(
     from: IngredientFilter,
     to: LootItemInput,
@@ -62,7 +62,7 @@ export interface LootRules {
   addModifier<T extends LootModifier>(id: IdInput, value: T): void;
 
   disabledModifier(id: IdInput): void;
-}
+};
 
 export class LootTableEmitter implements LootRules, ClearableEmitter {
   private readonly customTables = new CustomEmitter<LootTable>((it) =>

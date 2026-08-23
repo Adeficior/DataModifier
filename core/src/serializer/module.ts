@@ -9,12 +9,12 @@ type Mapper<From extends Out, To extends In, Out, In> = (
   nested: (it: Out) => In,
 ) => To;
 
-export interface SerializerModule<Out, In = unknown> {
+export type SerializerModule<Out, In = unknown> = {
   deserialize(input: In, nested: (it: In) => Out): Out | false;
   serialize(input: Out, nested: (it: Out) => In): In | false;
-}
+};
 
-export interface SerializerBuilder<Out, In = unknown> {
+export type SerializerBuilder<Out, In = unknown> = {
   deserializer<TIn extends In>(
     test: Predicate<In>,
     mapper: Mapper<TIn, Out, In, Out>,
@@ -32,7 +32,7 @@ export interface SerializerBuilder<Out, In = unknown> {
     deserialize: Mapper<TIn, TOut, In, Out>,
     serialize: Mapper<TOut, TIn, Out, In>,
   ): void;
-}
+};
 
 export function createSerializerModule<Out>(
   factory: (builder: SerializerBuilder<Out, unknown>) => void,

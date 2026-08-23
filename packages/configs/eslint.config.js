@@ -24,6 +24,7 @@ export function eslintConfig(tsconfigRootDir) {
             argsIgnorePattern: "^_",
           },
         ],
+        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
         "import/no-unresolved": "off",
         "import/no-extraneous-dependencies": "error",
         "import/enforce-node-protocol-usage": ["error", "always"],

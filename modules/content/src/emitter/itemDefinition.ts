@@ -26,7 +26,7 @@ type ExtendedItemProperties = ItemProperties & {
 type BlockDefinitionInput =
   BlockDefinition | ((rules: BlockDefinitionRulesWithoutId) => BlockDefinition);
 
-export interface ItemDefinitionRules {
+export type ItemDefinitionRules = {
   add<T extends ItemDefinition>(id: IdInput, definition: T): T;
 
   basic(
@@ -42,7 +42,7 @@ export interface ItemDefinitionRules {
     },
     options?: ItemDefinitionOptions,
   ): ItemDefinition;
-}
+};
 
 export class ItemDefinitionEmitter
   implements ItemDefinitionRules, ClearableEmitter

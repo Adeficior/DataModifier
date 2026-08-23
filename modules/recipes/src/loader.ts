@@ -9,9 +9,9 @@ import type { RecipeDefinition } from "./schema";
 import type { RecipesSerializer } from "./serializer/abstract";
 import type { RecipeHolder } from "./serializer/holder";
 
-export interface RecipeLoader extends RegistryProvider<RecipeHolder> {
+export type RecipeLoader = {
   ignoreType(pattern: string): void;
-}
+} & RegistryProvider<RecipeHolder>;
 
 export class RecipeLoaderImpl
   extends JsonLoader<RecipeHolder>

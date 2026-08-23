@@ -51,7 +51,7 @@ export type RecipeTest = Readonly<{
   input?: IngredientFilter;
 }>;
 
-export interface RecipeEmitter {
+export type RecipeEmitter = {
   replaceResult(
     test: IngredientFilter,
     value: ResultInput,
@@ -73,7 +73,7 @@ export interface RecipeEmitter {
   ): NormalizedId;
 
   remove(test: RecipeTest): void;
-}
+};
 
 export const EMPTY_RECIPE: RecipeDefinition = withDisabledConditions({
   type: "minecraft:disabled",

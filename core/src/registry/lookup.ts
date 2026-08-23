@@ -1,7 +1,7 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { IdInput, NormalizedId } from "../common/id";
 
-export interface RegistryLookup {
+export type RegistryLookup = {
   registries(): NormalizedId<RegistryId>[];
 
   keys<T extends RegistryId>(
@@ -13,4 +13,4 @@ export interface RegistryLookup {
   validateEntry(key: RegistryId, id: IdInput): void;
 
   addCustom<T extends RegistryId>(key: T, id: IdInput): InferIds<T>;
-}
+};

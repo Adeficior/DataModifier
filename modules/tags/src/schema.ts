@@ -15,11 +15,11 @@ export type TagEntry<T extends string = string> =
       id: T | `#${string}`;
     }>;
 
-export interface TagRegistryHolder {
+export type TagRegistryHolder = {
   registry<T extends RegistryId>(key: T): TagRegistry<T>;
-}
+};
 
-export interface TagRegistry<T extends RegistryId> {
+export type TagRegistry<T extends RegistryId> = {
   contains(id: TagInput, entry: IdInput<InferIds<T>>): boolean;
 
   list(): string[];
@@ -27,4 +27,4 @@ export interface TagRegistry<T extends RegistryId> {
   get(id: TagInput): TagEntry<InferIds<T>>[] | undefined;
 
   resolve(id: TagInput): TagEntry<InferIds<T>>[];
-}
+};

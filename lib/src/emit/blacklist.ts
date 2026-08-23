@@ -22,13 +22,13 @@ export type BlacklistOptions = {
   hideFrom?: HideMode | HideMode[];
 };
 
-export interface BlacklistRules {
+export type BlacklistRules = {
   hide(...inputs: IngredientFilter[]): void;
   hideEntry<T extends RegistryId>(
     type: T,
     ...entries: RegistryIdInput<T>[]
   ): void;
-}
+};
 
 type RegistryIdInput<T extends RegistryId> = InferIds<T> | RegExp;
 

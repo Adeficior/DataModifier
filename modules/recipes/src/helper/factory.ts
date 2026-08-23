@@ -5,10 +5,10 @@ type RecipeFactory<Args extends unknown[]> = (
   ...args: Args
 ) => NormalizedId;
 
-interface CurriedRecipeFactory<Args extends unknown[]> {
+type CurriedRecipeFactory<Args extends unknown[]> = {
   (id: IdInput, ...args: Args): NormalizedId;
   (...args: Args): NormalizedId;
-}
+};
 
 export function withDefaultId<Args extends unknown[]>(
   factory: RecipeFactory<Args>,

@@ -17,14 +17,14 @@ import { serializer44 } from "./44";
 import type { IngredientMapInput } from "./ingredientMap";
 import { IngredientMap } from "./ingredientMap";
 
-export interface IngredientSerializer extends Serializer<
+export type IngredientSerializer = Serializer<
   Ingredient,
   IngredientSerializer
-> {
+> & {
   deserializeIngredientMap(input: IngredientMapInput): IngredientMap;
 
   serializeIngredientMap(map: IngredientMap): IngredientMapInput;
-}
+};
 
 class IngredientSerializerImpl
   extends VersionedSerializer<Ingredient, IngredientSerializer>

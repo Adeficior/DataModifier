@@ -12,7 +12,7 @@ import type { TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;
 
-export interface ScopedTagRules<T extends RegistryId> {
+export type ScopedTagRules<T extends RegistryId> = {
   add(id: TagInput, value: TagEntry<InferIds<T>>): void;
 
   remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>): void;
@@ -20,7 +20,7 @@ export interface ScopedTagRules<T extends RegistryId> {
   empty(id: TagInput): void;
 
   replace(id: TagInput, values: TagEntry<InferIds<T>>[]): void;
-}
+};
 
 export class ScopedEmitter<T extends RegistryId> implements ScopedTagRules<T> {
   constructor(

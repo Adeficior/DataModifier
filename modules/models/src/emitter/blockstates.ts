@@ -7,11 +7,11 @@ import type {
 import { CustomEmitter, prefix } from "@adeficior/data-modifier-core";
 import type { Blockstate } from "../schema";
 
-export interface BlockstateEmitter {
+export type BlockstateEmitter = {
   add(id: IdInput, blockstate: Blockstate): void;
   basic(id: IdInput, model?: string): void;
   cog(id: IdInput, model?: string): void;
-}
+};
 
 export class BlockstateEmitterImpl
   implements BlockstateEmitter, ClearableEmitter

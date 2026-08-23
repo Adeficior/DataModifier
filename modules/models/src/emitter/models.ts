@@ -12,7 +12,7 @@ import {
 } from "@adeficior/data-modifier-core";
 import type { Model } from "../schema";
 
-export interface ModelEmitter {
+export type ModelEmitter = {
   add(id: IdInput, blockstate: Model): NormalizedId;
 
   cubeAll(id: IdInput, texture?: string): NormalizedId;
@@ -20,7 +20,7 @@ export interface ModelEmitter {
   flat(id: IdInput, texture?: string): NormalizedId;
 
   cog(id: IdInput, large: boolean, texture?: string): NormalizedId;
-}
+};
 
 export class ModelEmitterImpl implements ModelEmitter, ClearableEmitter {
   private readonly custom;

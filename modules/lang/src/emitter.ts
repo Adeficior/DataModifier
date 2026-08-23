@@ -33,7 +33,7 @@ type ReplaceOptions = Readonly<{
 
 type EntryOptions = { lang?: string };
 
-export interface LangRules {
+export type LangRules = {
   replaceValue(match: string, value: string, options?: ReplaceOptions): void;
 
   replaceValue(
@@ -50,7 +50,7 @@ export interface LangRules {
     value: string,
     options?: EntryOptions,
   ): void;
-}
+};
 
 export class LangEmitter implements LangRules, ClearableEmitter {
   private custom = new Registry<LangDefinition>();

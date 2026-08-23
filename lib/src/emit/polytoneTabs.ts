@@ -17,7 +17,7 @@ import type {
 import { arrayOrSelf, combineResolvers } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";
 
-interface TabModifications {
+type TabModifications = {
   icon?: IdInput<ItemId>;
   can_scroll?: boolean;
   show_title?: boolean;
@@ -25,24 +25,24 @@ interface TabModifications {
   before_tabs?: IdInput<CreativeModeTabId>[];
   after_tabs?: IdInput<CreativeModeTabId>[];
   name?: string;
-}
+};
 
-interface TabOptions {
+type TabOptions = {
   file?: IdInput;
   mods?: string[];
-}
+};
 
-interface TabOptionsWithAfter extends TabOptions {
+type TabOptionsWithAfter = {
   after: IdInput<ItemId>;
-}
+} & TabOptions;
 
-interface TabOptionsWithBefore extends TabOptions {
+type TabOptionsWithBefore = {
   before: IdInput<ItemId>;
-}
+} & TabOptions;
 
 type AddOptions = TabOptionsWithAfter | TabOptionsWithBefore | TabOptions;
 
-export interface PolytoneTabs {
+export type PolytoneTabs = {
   remove(
     tab: IdInput<CreativeModeTabId> | IdInput<CreativeModeTabId>[],
     items: IdInput<ItemId>[],
@@ -55,23 +55,23 @@ export interface PolytoneTabs {
   ): void;
   create(id: IdInput, options?: TabModifications): CreativeModeTabId;
   modify(id: IdInput, options: TabModifications): void;
-}
+};
 
-interface ItemsMatchPredicate {
+type ItemsMatchPredicate = {
   type: "items_match";
   items: NormalizedId<ItemId>[];
-}
+};
 
 type PolytonePredicate = ItemsMatchPredicate;
 
-interface AdditionEntry {
+type AdditionEntry = {
   items: ItemId[];
   before?: boolean;
   inverse?: boolean;
   predicate?: PolytonePredicate;
-}
+};
 
-export interface PolytoneTabModifier extends TabModifications {
+export type PolytoneTabModifier = {
   icon?: NormalizedId<ItemId>;
   before_tabs?: NormalizedId<CreativeModeTabId>[];
   after_tabs?: NormalizedId<CreativeModeTabId>[];
@@ -79,7 +79,7 @@ export interface PolytoneTabModifier extends TabModifications {
   removals?: PolytonePredicate[];
   additions?: AdditionEntry[];
   require_mods?: string[];
-}
+} & TabModifications;
 
 function translateModifications({
   icon,
