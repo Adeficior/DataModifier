@@ -3,28 +3,11 @@
    "version": "1.0.0",
    "description": "data-modfier core including module setup & common code",
    "exports": {
-      ".": "./dist/index.js",
-      "./testing": "./dist/testing/index.js",
-      "./serializer": "./dist/serializer/index.js",
-      "./module": "./dist/module.js"
+      ".": "./src/index.ts",
+      "./testing": "./src/testing/index.ts",
+      "./serializer": "./src/serializer/index.ts",
+      "./module": "./src/module.ts"
    },
-   "types": "./dist/index.d.ts",
-   "typesVersions": {
-      "*": {
-         "testing": [
-            "./dist/testing/index.d.ts"
-         ],
-         "serializer": [
-            "./dist/serializer/index.d.ts"
-         ],
-         "module": [
-            "./dist/module.d.ts"
-         ]
-      }
-   },
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "scripts": {
       "build": "tsc --project tsconfig.build.json",

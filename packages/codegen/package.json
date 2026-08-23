@@ -3,12 +3,8 @@
    "description": "code-generation for data-modifier projects",
    "version": "1.0.0",
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./src/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "bin": {
       "datamod-codegen": "./dist/cli.ts"

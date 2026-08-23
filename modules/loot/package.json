@@ -3,20 +3,9 @@
    "description": "data-modifier module for loot",
    "version": "1.0.0",
    "exports": {
-      ".": "./dist/index.js",
-      "./testing": "./dist/testing/index.js"
+      ".": "./src/index.ts",
+      "./testing": "./src/testing/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "typesVersions": {
-      "*": {
-         "testing": [
-            "./dist/testing/index.d.ts"
-         ]
-      }
-   },
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "scripts": {
       "build": "tsc --project tsconfig.build.json",

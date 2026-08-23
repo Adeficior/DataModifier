@@ -9,7 +9,10 @@ const args = arg({
   "--configs": Boolean,
   "--types": Boolean,
   "--prune": Boolean,
+  "--dry-run": Boolean,
 });
+
+const dryRun = args["--dry-run"];
 
 if (args["--configs"]) {
   await generateConfigs(".");
@@ -20,5 +23,5 @@ if (args["--types"]) {
 }
 
 if (args["--prune"]) {
-  await prunePackage(".");
+  await prunePackage(".", dryRun);
 }

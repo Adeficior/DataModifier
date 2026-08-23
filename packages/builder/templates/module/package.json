@@ -2,12 +2,8 @@
    "name": "@adeficior/data-modifier-{{ name }}",
    "version": "0.0.0-dev",
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./src/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "scripts": {
       "build": "tsc --project tsconfig.build.json",

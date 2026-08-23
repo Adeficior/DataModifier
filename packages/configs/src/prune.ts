@@ -20,7 +20,15 @@ const publishConfig =
 
 const catalog: Record<string, string | undefined> = rootPackage.catalog;
 
-export async function prunePackage(dir: string) {
+function toDist(file: string) {
+  return file.replace("/src/", "/dist/").replace(/\.ts$/, ".js");
+}
+
+function toTypesDefinition(file: string) {
+  return file.replace("/src/", "/dist/").replace(/\.ts$/, ".d.ts");
+}
+
+export async function prunePackage(dir: string, dryRun = false) {
   const current = await readPackage(dir);
   const workspaces = await findWorkspacePackages();
 
@@ -66,8 +74,33 @@ export async function prunePackage(dir: string) {
     scripts: undefined,
   } satisfies PackageJson;
 
+  function generateExports() {
+    const json: Required<Pick<PackageJson, "exports" | "typesVersions">> &
+      Pick<PackageJson, "types"> = {
+      exports: {},
+      typesVersions: {
+        "*": {},
+      },
+    };
+
+    Object.entries(current.exports ?? {}).forEach(([key, file]) => {
+      json.exports[key] = toDist(file);
+      if (key === ".") {
+        json.types = toTypesDefinition(file);
+      } else {
+        json.typesVersions["*"][key] = [toTypesDefinition(file)];
+      }
+    });
+
+    return {
+      ...json,
+      files: ["dist"],
+    };
+  }
+
   const generated = {
     ...pruned,
+    ...generateExports(),
     bugs: { url: `https://github.com/${repository}/issues` },
     homepage: `https://github.com/${repository}#readme`,
     license: "LGPL-3.0-or-later",
@@ -79,5 +112,9 @@ export async function prunePackage(dir: string) {
     publishConfig,
   };
 
-  await writePackage(dir, generated);
+  if (dryRun) {
+    console.log(generated);
+  } else {
+    await writePackage(dir, generated);
+  }
 }

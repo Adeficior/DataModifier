@@ -11,6 +11,10 @@ export type PackageJson = {
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   exports?: Record<string, string>;
+  types?: string;
+  typesVersions?: {
+    "*": Record<string, [string]>;
+  };
   scripts?: Record<string, string>;
 };
 
@@ -43,14 +47,23 @@ export async function findWorkspacePackages() {
   return Promise.all(
     workspaces.map(async (dir) => {
       const json = await readPackage(dir);
-      const paths = Object.fromEntries(
-        Object.entries(json.exports ?? {}).map(([key, dist]) => [
-          key.substring(1),
-          dist.substring(1).replace("/dist/", "/src/").replace(".js", ".ts"),
-        ]),
-      );
+
+      // no longer necessary, because modules export src directly,
+      // only being replaced with the dist equivalents when pruning before release
+      // const paths = Object.fromEntries(
+      //   Object.entries(json.exports ?? {}).map(([key, dist]) => [
+      //     key.substring(1),
+      //     dist.substring(1).replace("/dist/", "/src/").replace(".js", ".ts"),
+      //   ]),
+      // );
       const internal = json.private === true;
-      return { dir, name: json.name, version: json.version, paths, internal };
+      return {
+        dir,
+        name: json.name,
+        version: json.version,
+        paths: [],
+        internal,
+      };
     }),
   );
 }

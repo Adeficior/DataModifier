@@ -6,12 +6,8 @@
       "datamod": "dist/cli.js"
    },
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./src/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "scripts": {
       "build": "tsc --project tsconfig.build.json",

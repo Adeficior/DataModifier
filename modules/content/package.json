@@ -3,12 +3,8 @@
    "description": "data-modifier module adding compatibility for content-packs",
    "version": "1.0.0",
    "exports": {
-      ".": "./dist/index.js"
+      ".": "./src/index.ts"
    },
-   "types": "./dist/index.d.ts",
-   "files": [
-      "dist"
-   ],
    "type": "module",
    "scripts": {
       "build": "tsc --project tsconfig.build.json",
