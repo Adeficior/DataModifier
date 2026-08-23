@@ -22,6 +22,3 @@ if (args["--types"]) {
 if (args["--prune"]) {
   await prunePackage(".");
 }
-
-// TODO find out why this is needed
-process.exit(0);

@@ -15,6 +15,7 @@
       "@adeficior/data-modifier": "workspace:*"
    },
    "peerDependencies": {
-      "typescript": "catalog:"
+      "typescript": "catalog:",
+      "@adeficior/pack-resolver": "catalog:"
    }
 }

@@ -1,4 +1,5 @@
 import { createDataModifier, packFormatOf } from "@adeficior/data-modifier";
+import { createAcceptor } from "@adeficior/pack-resolver";
 
 const modifier = await createDataModifier({
   packFormat: packFormatOf("1.21.1"),
@@ -13,3 +14,7 @@ modifier.recipes.vanilla.shaped(
   ],
   "minecraft:diamond",
 );
+
+const acceptor = await createAcceptor("generated");
+
+await modifier.emit(acceptor);
