@@ -1,0 +1,19 @@
+[
+  "thermal:basalz_spawn_basalt_deltas",
+  "thermal:basalz_spawn_caves",
+  "thermal:basalz_spawn_peaks",
+  "thermal:blitz_spawn_badlands",
+  "thermal:blitz_spawn_sandy",
+  "thermal:blitz_spawn_savanna",
+  "thermal:blizz_spawn_snowy",
+  "thermal:oil_sand",
+  "thermal:ore_apatite",
+  "thermal:ore_cinnabar",
+  "thermal:ore_lead",
+  "thermal:ore_nickel",
+  "thermal:ore_niter",
+  "thermal:ore_silver",
+  "thermal:ore_sulfur",
+  "thermal:ore_tin",
+  "thermal:trees_rubberwood"
+]

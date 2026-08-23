@@ -1,11 +1,4 @@
-# <meta>
-#    <source>@pssbletrngle/github-meta-generator</source>
-#    <version>1.0.107</version>
-#    <timestamp>2026-07-24T11:28:41.812Z</timestamp>
-#    <hash>e8a379315d1fa5c9</hash>
-# </meta>
-
+bun run lint -- -- --fix
 bun run format
-bun run lint --fix
 
 git update-index --again

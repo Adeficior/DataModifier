@@ -1,0 +1,28 @@
+{
+   "name": "@adeficior/data-modifier-builder",
+   "description": "cli to initialize data-modifier projects",
+   "private": true,
+   "exports": {
+      ".": "./src/index.ts"
+   },
+   "type": "module",
+   "bin": {
+      "datamod-builder": "./src/cli.ts"
+   },
+   "scripts": {
+      "check": "tsc --noEmit",
+      "lint": "eslint src",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "dependencies": {
+      "handlebars": "^4.7.9",
+      "arg": "catalog:"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:",
+      "prettier": "catalog:"
+   }
+}

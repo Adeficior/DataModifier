@@ -1,0 +1,30 @@
+{
+   "name": "@adeficior/data-modifier-tags",
+   "description": "data-modifier module for tags",
+   "version": "1.0.0",
+   "exports": {
+      ".": "./src/index.ts",
+      "./testing": "./src/testing/index.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "typescript": "catalog:",
+      "lodash-es": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*"
+   }
+}

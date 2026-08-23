@@ -1,0 +1,10 @@
+{
+   "packs": {
+      "foundation": {
+         "paths": [
+            "src/main/generated",
+            "src/main/resources"
+         ]
+      }
+   }
+}

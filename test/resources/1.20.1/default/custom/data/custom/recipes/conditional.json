@@ -9,21 +9,15 @@
         }
       ],
       "recipe": {
-        "type": "farmersdelight:cutting",
+        "type": "minecraft:crafting_shapeless",
         "ingredients": [
           {
-            "item": "biomesoplenty:violet"
+            "item": "minecraft:poppy"
           }
         ],
-        "result": [
-          {
-            "count": 2,
-            "item": "minecraft:purple_dye"
-          }
-        ],
-        "sound": "farmersdelight:block.cutting_board.knife",
-        "tool": {
-          "tag": "forge:tools/knives"
+        "result": {
+          "count": 2,
+          "item": "minecraft:purple_dye"
         }
       }
     }

@@ -1,0 +1,165 @@
+import type {
+  IdInput,
+  NormalizedId,
+  SemVerInput,
+  TagInput,
+} from "@adeficior/data-modifier-core";
+import {
+  encodeId,
+  isAtLeastVersion,
+  Registry,
+} from "@adeficior/data-modifier-core";
+import type { TagChecker } from "@adeficior/data-modifier-core/serializer";
+import { fromJson } from "@adeficior/data-modifier-core/serializer";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
+import { entryId, orderTagEntries, tagFolderOf } from "./helper";
+import type {
+  TagDefinition,
+  TagEntry,
+  TagRegistries,
+  TagRegistry,
+} from "./schema";
+
+class WriteableTagRegistry<T extends RegistryId>
+  implements TagRegistry<T>, TagChecker<T>
+{
+  private readonly entries = new Registry<TagEntry<T>[]>();
+
+  constructor(public readonly folder: string) {}
+
+  private validateId(input: IdInput) {
+    const id = encodeId(input);
+    if (!id.startsWith("#")) throw new Error("tag id's must start with a '#'");
+  }
+
+  load(id: TagInput, definition: TagDefinition) {
+    this.validateId(id);
+
+    const existingEntries = this.entries.get(id) ?? [];
+    const unique = orderTagEntries([
+      ...existingEntries,
+      ...(definition.values ?? []),
+    ]);
+    // TODO support for advanced-tag-loader packs?
+
+    this.entries.set(id, unique as TagEntry<T>[]);
+  }
+
+  list() {
+    return this.entries.keys();
+  }
+
+  get(id: TagInput) {
+    this.validateId(id);
+    return this.entries.get(id);
+  }
+
+  resolve(input: TagInput, level = 0): TagEntry<T>[] {
+    const id = encodeId(input);
+    if (level >= 100) throw new Error(`Circular TagDefinition: ${id}`);
+
+    const entries = this.get(input) ?? [];
+
+    return entries.flatMap((it) => {
+      const entry = entryId(it);
+      const required = typeof it === "string" ? true : it.required !== false;
+
+      if (entry.startsWith("#")) {
+        if (entry === id)
+          throw new Error(`Circular TagDefinition: ${entry} -> ${id}`);
+        const step = this.resolve(entry as TagInput);
+        if (required) return step;
+        return step.map((it) => {
+          if (typeof it === "string") return { required: false, id: it };
+          return { ...it, required: false };
+        });
+      }
+
+      return [it];
+    });
+  }
+
+  contains(id: TagInput, entry: IdInput<InferIds<RegistryId>>): boolean {
+    const entryId = encodeId(entry);
+    return (
+      this.get(id)?.some((it) => {
+        const value = encodeId(typeof it === "string" ? it : it.id);
+        if (value === entryId) return true;
+        if (value.startsWith("#"))
+          return this.contains(value as TagInput, entryId);
+        return false;
+      }) ?? false
+    );
+  }
+}
+
+export class TagsLoader implements TagRegistries, Acceptor {
+  private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
+    {};
+
+  constructor(packFormat: SemVerInput) {
+    const withSuffix = (it: string) => {
+      if (isAtLeastVersion(packFormat, "44")) return it;
+      return it + "s";
+    };
+
+    this.registerRegistry("minecraft:banner_pattern");
+    this.registerRegistry("minecraft:block", withSuffix("block"));
+    this.registerRegistry("minecraft:cat_variant");
+    this.registerRegistry("minecraft:damage_type");
+    this.registerRegistry("minecraft:entity_type", withSuffix("entity_type"));
+    this.registerRegistry("minecraft:fluid", withSuffix("fluid"));
+    this.registerRegistry("minecraft:game_event", withSuffix("game_event"));
+    this.registerRegistry("minecraft:instrument");
+    this.registerRegistry("minecraft:item", withSuffix("item"));
+    this.registerRegistry("minecraft:painting_variant");
+    this.registerRegistry("minecraft:worldgen/biome");
+    this.registerRegistry("minecraft:worldgen/structure");
+    this.registerRegistry("minecraft:worldgen/flat_level_generator_preset");
+    this.registerRegistry("minecraft:worldgen/world_preset");
+  }
+
+  registerRegistry(key: IdInput, folder = tagFolderOf(key)) {
+    this.registries[encodeId(key)] = new WriteableTagRegistry(folder);
+  }
+
+  registry<T extends RegistryId>(key: IdInput<T>): TagRegistry<T> {
+    const id = encodeId(key);
+    if (!(id in this.registries))
+      throw new Error(
+        `unknown registry tags '${id}'. Register them using \`registerRegistry\``,
+      );
+    return this.registries[id];
+  }
+
+  private parsePath(input: string) {
+    const match =
+      /data\/(?<namespace>[\w-]+)\/tags\/(?<rest>[\w-/]+).json/.exec(input);
+    if (!match?.groups) return null;
+
+    const { namespace, rest } = match.groups as {
+      namespace: string;
+      rest: string;
+    };
+
+    const registry = Object.values(this.registries).find((it) =>
+      rest.startsWith(`${it.folder}/`),
+    );
+
+    if (!registry) return null;
+
+    const path = rest!.substring(registry.folder.length + 1);
+
+    return { namespace, registry, path, isTag: true };
+  }
+
+  async accept(path: string, content: PromiseLike<Acceptable>) {
+    const info = this.parsePath(path);
+    if (!info) return false;
+
+    const parsed: TagDefinition = fromJson(await content);
+    const id = encodeId(info) as TagInput;
+    info.registry.load(id, parsed);
+  }
+}

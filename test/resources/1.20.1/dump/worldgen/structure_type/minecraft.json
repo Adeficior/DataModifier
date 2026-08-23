@@ -1,18 +1,18 @@
 [
-  "minecraft:end_city",
-  "minecraft:ocean_ruin",
-  "minecraft:woodland_mansion",
+  "minecraft:buried_treasure",
   "minecraft:desert_pyramid",
+  "minecraft:end_city",
+  "minecraft:fortress",
+  "minecraft:igloo",
+  "minecraft:jigsaw",
+  "minecraft:jungle_temple",
   "minecraft:mineshaft",
   "minecraft:nether_fossil",
-  "minecraft:igloo",
-  "minecraft:fortress",
-  "minecraft:jungle_temple",
+  "minecraft:ocean_monument",
+  "minecraft:ocean_ruin",
+  "minecraft:ruined_portal",
   "minecraft:shipwreck",
   "minecraft:stronghold",
   "minecraft:swamp_hut",
-  "minecraft:ruined_portal",
-  "minecraft:ocean_monument",
-  "minecraft:buried_treasure",
-  "minecraft:jigsaw"
+  "minecraft:woodland_mansion"
 ]

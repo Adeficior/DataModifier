@@ -1,10 +1,10 @@
 [
-  "minecraft:group",
-  "minecraft:loot_table",
-  "minecraft:empty",
-  "minecraft:item",
-  "minecraft:dynamic",
-  "minecraft:sequence",
   "minecraft:alternatives",
+  "minecraft:dynamic",
+  "minecraft:empty",
+  "minecraft:group",
+  "minecraft:item",
+  "minecraft:loot_table",
+  "minecraft:sequence",
   "minecraft:tag"
 ]

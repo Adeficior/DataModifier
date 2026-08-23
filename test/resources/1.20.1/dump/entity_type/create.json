@@ -1,0 +1,11 @@
+[
+  "create:carriage_contraption",
+  "create:contraption",
+  "create:crafting_blueprint",
+  "create:gantry_contraption",
+  "create:package",
+  "create:potato_projectile",
+  "create:seat",
+  "create:stationary_contraption",
+  "create:super_glue"
+]

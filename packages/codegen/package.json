@@ -1,0 +1,36 @@
+{
+   "name": "@adeficior/data-modifier-codegen",
+   "description": "code-generation for data-modifier projects",
+   "version": "1.0.0",
+   "exports": {
+      ".": "./src/index.ts"
+   },
+   "type": "module",
+   "bin": {
+      "datamod-codegen": "./dist/cli.ts"
+   },
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint src",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "dependencies": {
+      "@adeficior/data-modifier-loader": "workspace:*",
+      "arg": "catalog:"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:",
+      "prettier": "catalog:",
+      "lodash-es": "catalog:",
+      "@adeficior/pack-resolver": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*"
+   }
+}

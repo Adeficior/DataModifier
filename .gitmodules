@@ -14,3 +14,27 @@
 	path = test/resources/1.21.1/default/vanilla-data
 	url = https://github.com/misode/mcmeta.git
 	shallow  = true
+[submodule "modules/botania/test/resources/Botania"]
+	path = test/resources/1.20.1/botania/source
+	url = https://github.com/VazkiiMods/Botania.git
+	shallow  = true
+[submodule "modules/create/test/resources/1.20.1/default/Create"]
+	path = test/resources/1.20.1/create/source
+	url = https://github.com/Creators-of-Create/Create.git
+	shallow  = true
+[submodule "modules/create/test/resources/1.21.1/default/create"]
+	path = test/resources/1.21.1/create/source
+	url = https://github.com/Creators-of-Create/Create.git
+	shallow  = true
+[submodule "modules/farmersdelight/test/resources/1.20.1/default/farmersdelight"]
+	path = test/resources/1.20.1/farmersdelight/source
+	url = https://github.com/vectorwing/FarmersDelight.git
+	shallow  = true
+[submodule "modules/farmersdelight/test/resources/1.21.1/default/farmersdelight"]
+	path = test/resources/1.21.1/farmersdelight/source
+	url = https://github.com/vectorwing/FarmersDelight.git
+	shallow  = true
+[submodule "modules/thermal/test/resources/1.20.1/default/foundation"]
+	path = test/resources/1.20.1/thermal/foundation
+	url = https://github.com/CoFH/ThermalFoundation.git
+	shallow  = true

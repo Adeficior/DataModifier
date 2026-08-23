@@ -1,0 +1,45 @@
+{
+   "name": "@adeficior/data-modifier",
+   "version": "1.0.0",
+   "description": "library to modify & generate minecraft data",
+   "bin": {
+      "datamod": "dist/cli.js"
+   },
+   "exports": {
+      ".": "./src/index.ts",
+      "./tags": "./src/bundled/tags.ts",
+      "./ingredients": "./src/bundled/ingredients.ts",
+      "./recipes": "./src/bundled/recipes.ts",
+      "./loot": "./src/bundled/loot.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "dev": "bun run build --watch",
+      "check": "tsc --noEmit",
+      "cli": "bun run build && node dist/cli/index.js",
+      "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "dependencies": {
+      "@adeficior/resource-merger": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-loader": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-recipes": "workspace:*",
+      "@adeficior/data-modifier-loot": "workspace:*"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "lodash-es": "catalog:",
+      "typescript": "catalog:",
+      "zod": "catalog:"
+   }
+}

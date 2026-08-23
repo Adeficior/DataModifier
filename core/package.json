@@ -1,0 +1,36 @@
+{
+   "name": "@adeficior/data-modifier-core",
+   "version": "1.0.0",
+   "description": "data-modfier core including module setup & common code",
+   "exports": {
+      ".": "./src/index.ts",
+      "./testing": "./src/testing/index.ts",
+      "./serializer": "./src/serializer/index.ts",
+      "./module": "./src/module.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "dependencies": {
+      "json5": "^2.2.3",
+      "lodash-es": "catalog:",
+      "minimatch": "catalog:",
+      "prettier": "catalog:",
+      "zod": "catalog:"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "typescript": "catalog:"
+   }
+}

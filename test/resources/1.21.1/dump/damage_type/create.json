@@ -1,0 +1,11 @@
+[
+  "create:crush",
+  "create:cuckoo_surprise",
+  "create:fan_fire",
+  "create:fan_lava",
+  "create:mechanical_drill",
+  "create:mechanical_roller",
+  "create:mechanical_saw",
+  "create:potato_cannon",
+  "create:run_over"
+]

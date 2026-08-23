@@ -1,5 +1,0 @@
-// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
-
-exports[`recipe graph generated nodes & edges: nodes.json 1`] = `null`;
-
-exports[`recipe graph generated nodes & edges: edges.json 1`] = `null`;

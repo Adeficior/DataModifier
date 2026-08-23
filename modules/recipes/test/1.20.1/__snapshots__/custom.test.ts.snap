@@ -1,0 +1,225 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`custom recipe creation creates using recipe classes (crafting_shaped): serialized 1`] = `
+{
+  "key": {
+    "A": {
+      "item": "minecraft:diamond",
+    },
+    "B": {
+      "tag": "c:ingots/copper",
+    },
+    "X": {
+      "item": "minecraft:string",
+    },
+  },
+  "pattern": [
+    "AXA",
+    "XBX",
+    "AXA",
+  ],
+  "result": {
+    "item": "minecraft:pumpkin",
+  },
+  "type": "minecraft:crafting_shaped",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (crafting_shapeless): serialized 1`] = `
+{
+  "ingredients": [
+    {
+      "tag": "c:plates/iron",
+    },
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:crafting_shapeless",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (smelting): serialized 1`] = `
+{
+  "experience": 10,
+  "ingredient": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:smelting",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (smoking): serialized 1`] = `
+{
+  "ingredient": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:smoking",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (blasting): serialized 1`] = `
+{
+  "ingredient": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:blasting",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (campfire_cooking): serialized 1`] = `
+{
+  "ingredient": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:campfire_cooking",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (smithing): serialized 1`] = `
+{
+  "addition": {
+    "item": "minecraft:apple",
+  },
+  "base": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:smithing",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (smithing_trim): serialized 1`] = `
+{
+  "addition": {
+    "item": "minecraft:apple",
+  },
+  "base": {
+    "tag": "c:plates/iron",
+  },
+  "type": "minecraft:smithing_trim",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (smithing_transform): serialized 1`] = `
+{
+  "addition": {
+    "item": "minecraft:apple",
+  },
+  "base": {
+    "tag": "c:plates/iron",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "template": {
+    "item": "minecraft:diamond",
+  },
+  "type": "minecraft:smithing_transform",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (stonecutting): serialized 1`] = `
+{
+  "ingredient": {
+    "item": "minecraft:apple",
+  },
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:stonecutting",
+}
+`;
+
+exports[`custom recipe creation creates using recipe classes (conditional): serialized 1`] = `
+{
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "whatever",
+        },
+      ],
+      "recipe": {
+        "ingredients": [
+          {
+            "item": "minecraft:apple",
+          },
+        ],
+        "result": {
+          "item": "minecraft:iron_ingot",
+        },
+        "type": "minecraft:crafting_shapeless",
+      },
+    },
+    {
+      "conditions": [
+        {
+          "type": "else",
+        },
+      ],
+      "recipe": {
+        "key": {
+          "A": {
+            "item": "minecraft:diamond",
+          },
+          "B": {
+            "tag": "c:ingots/copper",
+          },
+          "X": {
+            "item": "minecraft:string",
+          },
+        },
+        "pattern": [
+          "AXA",
+          "XBX",
+          "AXA",
+        ],
+        "result": {
+          "item": "minecraft:pumpkin",
+        },
+        "type": "minecraft:crafting_shaped",
+      },
+    },
+  ],
+  "type": "forge:conditional",
+}
+`;
+
+exports[`custom recipe creation creates using recipe with conditions: serialized 1`] = `
+{
+  "conditions": [
+    {
+      "type": "always",
+    },
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "true",
+    },
+  ],
+  "ingredients": [
+    {
+      "tag": "c:plates/iron",
+    },
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot",
+  },
+  "type": "minecraft:crafting_shapeless",
+}
+`;

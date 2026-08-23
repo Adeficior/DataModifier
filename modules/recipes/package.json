@@ -1,0 +1,35 @@
+{
+   "name": "@adeficior/data-modifier-recipes",
+   "description": "data-modifier module for recipes",
+   "version": "1.0.0",
+   "exports": {
+      ".": "./src/index.ts",
+      "./serializer": "./src/serializer/index.ts",
+      "./helper": "./src/helper/index.ts",
+      "./testing": "./src/testing/index.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@types/lodash-es": "catalog:",
+      "@adeficior/data-modifier-ingredients": "workspace:*"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "typescript": "catalog:",
+      "minimatch": "catalog:",
+      "lodash-es": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*"
+   }
+}

@@ -1,0 +1,36 @@
+import type { IdInput } from "@adeficior/data-modifier-core";
+import { setupRecipeLoader } from "@adeficior/data-modifier-recipes/testing";
+import type { DataProvider } from "@adeficior/testing";
+import { provided } from "@adeficior/testing";
+import { expect, it } from "bun:test";
+import { basename } from "node:path";
+import { recipeOptions } from "../options";
+
+const version = basename(import.meta.dir);
+
+const { loader, logger } = setupRecipeLoader(version, recipeOptions);
+
+function* recipes(): DataProvider<[IdInput]> {
+  yield ["press", "thermal:machines/press/press_lead_nugget_to_coin"];
+  yield ["pulverizer", "thermal:machines/pulverizer/pulverizer_raw_tin"];
+  yield ["sawmill", "thermal:machines/sawmill/sawmill_rubberwood_logs"];
+  yield ["smelter", "thermal:machines/smelter/smelter_alloy_constantan"];
+  yield [
+    "tree extractor",
+    "thermal:devices/tree_extractor/tree_extractor_rubberwood",
+  ];
+  yield [
+    "numismatic fuel",
+    "thermal:fuels/numismatic/numismatic_constantan_coin",
+  ];
+}
+
+provided("loads recipes", recipes(), (id) => {
+  expect(loader.get(id)).toBeDefined();
+});
+
+it("does not encounter any errors", () => {
+  expect(logger.trace).not.toHaveBeenCalled();
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+});

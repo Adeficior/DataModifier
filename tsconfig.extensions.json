@@ -1,9 +1,0 @@
-{
-   "compilerOptions": {
-      "paths": {
-         "@adeficior/data-modifier/generated": [
-            "./@types/generated.d.ts"
-         ],
-      }
-   }
-}

@@ -1,0 +1,34 @@
+{
+   "name": "@adeficior/data-modifier-content",
+   "description": "data-modifier module adding compatibility for content-packs",
+   "version": "1.0.0",
+   "exports": {
+      ".": "./src/index.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "build": "tsc --project tsconfig.build.json",
+      "check": "tsc --noEmit",
+      "dev": "bun run build --watch",
+      "lint": "eslint {src,test}",
+      "prune": "bun run datamod-dev --prune",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*",
+      "@adeficior/testing": "workspace:*",
+      "@adeficior/data-modifier-models": "workspace:*",
+      "@adeficior/data-modifier-loot": "workspace:*",
+      "@types/lodash-es": "catalog:"
+   },
+   "peerDependencies": {
+      "@adeficior/pack-resolver": "catalog:",
+      "typescript": "catalog:",
+      "lodash-es": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*",
+      "@adeficior/data-modifier-tags": "workspace:*",
+      "@adeficior/data-modifier-ingredients": "workspace:*",
+      "@adeficior/data-modifier-models": "workspace:*",
+      "@adeficior/data-modifier-loot": "workspace:*"
+   }
+}

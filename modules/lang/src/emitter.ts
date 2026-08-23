@@ -1,0 +1,187 @@
+import type {
+  ClearableEmitter,
+  Id,
+  IdInput,
+  LoaderContext,
+  RegistryProvider,
+} from "@adeficior/data-modifier-core";
+import { createId, encodeId, Registry } from "@adeficior/data-modifier-core";
+import type {
+  Predicate,
+  Replacer,
+} from "@adeficior/data-modifier-core/serializer";
+import { toJson } from "@adeficior/data-modifier-core/serializer";
+import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import { arrayOrSelf, simpleResolver } from "@adeficior/pack-resolver";
+import { mapValues, omitBy } from "lodash-es";
+import type { LangDefinition } from "./schema";
+
+type LangRule = Readonly<{
+  languages: string[];
+  namespaces: string[];
+  key?: Predicate<string>;
+  value?: Predicate<string>;
+  replacer: Replacer<string>;
+}>;
+
+type ReplaceOptions = Readonly<{
+  matchCase?: boolean;
+  keepCase?: boolean;
+  lang?: string | string[];
+  namespaces?: string | string[];
+}>;
+
+type EntryOptions = { lang?: string };
+
+export type LangEmitter = {
+  replaceValue(match: string, value: string, options?: ReplaceOptions): void;
+
+  replaceValue(
+    match: RegExp,
+    value: string,
+    options?: Omit<ReplaceOptions, "matchCase">,
+  ): void;
+
+  addCustom(file: IdInput, key: string, value: string): void;
+
+  entryName<T extends RegistryId>(
+    registry: T,
+    id: IdInput<InferIds<T>>,
+    value: string,
+    options?: EntryOptions,
+  ): void;
+};
+
+export class LangEmitterImpl implements LangEmitter, ClearableEmitter {
+  private custom = new Registry<LangDefinition>();
+  private rules: LangRule[] = [];
+
+  constructor(private readonly registry: RegistryProvider<LangDefinition>) {}
+
+  resolver(context: LoaderContext) {
+    return simpleResolver(async (acceptor) => {
+      const missingCustomFiles = new Set(this.custom.keys());
+
+      await this.registry.forEachAsync(async (lang, id) => {
+        const allRules = this.rules.filter((rule) => {
+          return (
+            (rule.languages.length === 0 || rule.languages.includes(id.path)) &&
+            (rule.namespaces.length === 0 ||
+              rule.namespaces.includes(id.namespace))
+          );
+        });
+
+        const replaced = omitBy(
+          mapValues(lang, (value, key) => {
+            const rules = allRules.filter(
+              (rule) => rule.key?.(key) || rule.value?.(value),
+            );
+            if (rules.length === 0) return undefined;
+            return rules.reduce(
+              (previous, rule) => rule.replacer(previous),
+              value,
+            );
+          }),
+          (it) => !it,
+        );
+
+        const custom = this.custom.get(id) ?? {};
+
+        const output = {
+          ...replaced,
+          ...custom,
+        };
+
+        if (Object.keys(output).length > 0) {
+          missingCustomFiles.delete(encodeId(id));
+          const path = this.langPath(id);
+          await acceptor(path, toJson(output));
+        }
+      });
+
+      await Promise.all(
+        Array.from(missingCustomFiles).map(async (id) => {
+          const path = this.langPath(createId(id));
+          await acceptor(path, toJson(this.custom.get(id)));
+        }),
+      );
+    }, context);
+  }
+
+  clear() {
+    this.rules = [];
+    this.custom.clear();
+  }
+
+  private langPath(id: Id) {
+    return `assets/${id.namespace}/lang/${id.path}.json`;
+  }
+
+  replaceValue(
+    match: string | RegExp,
+    value: string,
+    options: ReplaceOptions = {},
+  ) {
+    const languages = arrayOrSelf(options.lang);
+    const namespaces = arrayOrSelf(options.namespaces);
+    const matcher: (it: string) => string =
+      options.keepCase === false ? () => value : keepCaseMatcher(value);
+
+    if (typeof match === "string") {
+      if (options.matchCase) {
+        this.rules.push({
+          languages,
+          namespaces,
+          value: (it) => it.includes(match),
+          replacer: (it) => it.replaceAll(match, matcher),
+        });
+      } else {
+        this.replaceValue(new RegExp(match, "i"), value, options);
+      }
+    } else {
+      this.rules.push({
+        languages,
+        namespaces,
+        value: (it) => match.test(it),
+        replacer: (it) => it.replace(match, matcher),
+      });
+    }
+  }
+
+  addCustom(file: IdInput, key: string, value: string) {
+    const definition = this.custom.getOrPut(file, () => ({}));
+    definition[key] = value;
+  }
+
+  entryName<T extends RegistryId>(
+    registry: T,
+    id: IdInput<InferIds<T>>,
+    value: string,
+    { lang }: EntryOptions = {},
+  ) {
+    const { namespace, path } = createId(id);
+    const file = createId({ namespace, path: lang ?? "en_us" });
+    const { path: registryPath } = createId(registry);
+    this.addCustom(file, `${registryPath}.${namespace}.${path}`, value);
+  }
+}
+
+// Taken from https://stackoverflow.com/questions/17264639/replace-text-but-keep-case
+function keepCaseMatcher(replaceValue: string) {
+  return (input: string) => {
+    let result = "";
+
+    for (let i = 0; i < replaceValue.length; i++) {
+      const c = replaceValue.charAt(i);
+      const p = input.charCodeAt(i);
+
+      if (p >= 65 && p < 65 + 26) {
+        result += c.toUpperCase();
+      } else {
+        result += c.toLowerCase();
+      }
+    }
+
+    return result;
+  };
+}

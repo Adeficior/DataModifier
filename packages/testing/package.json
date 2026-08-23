@@ -1,0 +1,21 @@
+{
+   "name": "@adeficior/testing",
+   "private": true,
+   "exports": {
+      ".": "./src/index.ts"
+   },
+   "type": "module",
+   "scripts": {
+      "check": "tsc --noEmit",
+      "lint": "eslint src",
+      "prepare": "datamod-dev --configs && datamod-dev --types"
+   },
+   "devDependencies": {
+      "@adeficior/configs": "workspace:*"
+   },
+   "peerDependencies": {
+      "typescript": "catalog:",
+      "@adeficior/pack-resolver": "catalog:",
+      "@adeficior/data-modifier-core": "workspace:*"
+   }
+}

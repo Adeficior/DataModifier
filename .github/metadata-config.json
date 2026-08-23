@@ -2,5 +2,7 @@
   "$schema": "https://workflows.somethingcatchy.net/schema/config.json",
   "$version": "1.0",
   "type": "bun-library",
-  "formatter": "prettier"
+  "formatter": "prettier",
+  "tsconfig": false,
+  "workflows": false
 }

@@ -1,9 +1,9 @@
 [
-  "minecraft:snow",
   "minecraft:desert",
-  "minecraft:plains",
   "minecraft:jungle",
-  "minecraft:taiga",
+  "minecraft:plains",
   "minecraft:savanna",
-  "minecraft:swamp"
+  "minecraft:snow",
+  "minecraft:swamp",
+  "minecraft:taiga"
 ]

@@ -1,0 +1,23 @@
+import { createId, encodeId } from "@adeficior/data-modifier-core";
+import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
+import { orderBy, uniqBy } from "lodash-es";
+import type { TagEntry } from "./schema";
+
+export function entryId(entry: TagEntry): NormalizedId {
+  if (typeof entry === "string") return encodeId(entry);
+  else return encodeId(entry.id);
+}
+
+export function orderTagEntries<T extends string>(
+  entries: TagEntry<T>[],
+): TagEntry<T>[] {
+  return orderBy(
+    uniqBy(entries, (it) => entryId(it)),
+    (it) => entryId(it),
+  );
+}
+
+export function tagFolderOf(registry: IdInput) {
+  const { path } = createId(registry);
+  return path;
+}
