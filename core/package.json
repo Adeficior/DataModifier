@@ -1,6 +1,6 @@
 {
    "name": "@adeficior/data-modifier-core",
-   "version": "1.0.0",
+   "version": "2.0.0",
    "description": "data-modfier core including module setup & common code",
    "exports": {
       ".": "./src/index.ts",
