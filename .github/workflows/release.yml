@@ -38,6 +38,7 @@ jobs:
           message: "updated package versions & changelogs"
           push: false
           dry_run: ${{ github.ref_name != 'main' }}
+          commit: --no-verify
 
       - name: Prepare packages
         run: bun run prune
