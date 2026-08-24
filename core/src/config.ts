@@ -12,6 +12,8 @@ export type DataModifierOptions = ModuleSetupOptions & CoreModuleOptions;
 
 export type CodeGenOptions = {
   typesDir?: string;
+  registryTypes?: boolean | "dump" | "stubs";
+  moduleTypes?: boolean;
 };
 
 export type DataModifierConfig = DataModifierOptions & {

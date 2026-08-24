@@ -3,6 +3,11 @@ import { uniqBy } from "lodash-es";
 import { exists } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 
+export type ModuleLoaderOptions = {
+  optional: boolean;
+  root?: string;
+};
+
 export async function findModuleIn(dir: string) {
   const candidates = [
     join(dir, "src", "module.ts"),
@@ -44,10 +49,13 @@ function resolveModuleIn(...folders: string[]): ModuleResolutionStrategy {
 async function loadDependencyModulesRecursive(
   nodeModules: string[],
   dependencies: ModuleConfig["dependencies"],
+  options: ModuleLoaderOptions,
   exclude: string[],
 ): Promise<ModuleConfig[]> {
   const found = await Promise.all(
     Object.entries(dependencies).map(async ([name, type]) => {
+      if (options.optional === false && type === "optional") return [];
+
       const strategy = resolveModuleIn(...nodeModules);
       const dependencyDir = await strategy(name);
       const dependencyModule = await findModuleIn(dependencyDir);
@@ -60,6 +68,7 @@ async function loadDependencyModulesRecursive(
           ...(await loadDependencyModulesRecursive(
             [...nodeModules, join(dependencyDir, "node_modules")],
             dependencyModule.dependencies,
+            options,
             [...exclude, name],
           )),
         ];
@@ -76,26 +85,38 @@ async function loadDependencyModulesRecursive(
 
 export function loadDependencyModules(
   dependencies: ModuleConfig["dependencies"],
-  root: string = ".",
+  options: ModuleLoaderOptions,
 ) {
   return loadDependencyModulesRecursive(
-    [join(root, "node_modules")],
+    [join(options.root ?? ".", "node_modules")],
     dependencies,
+    options,
     [],
   );
 }
 
-async function loadModule(module: string | ModuleConfig) {
+async function loadModule(
+  module: string | ModuleConfig,
+  options: ModuleLoaderOptions,
+) {
   if (typeof module === "string")
-    return loadDependencyModules({ [module]: "required" });
+    return loadDependencyModules({ [module]: "required" }, options);
 
-  return [module, ...(await loadDependencyModules(module.dependencies))];
+  return [
+    module,
+    ...(await loadDependencyModules(module.dependencies, options)),
+  ];
 }
 
-export async function loadModules(modules: (string | ModuleConfig)[]) {
+export async function loadModules(
+  modules: (string | ModuleConfig)[],
+  options: ModuleLoaderOptions,
+) {
   const withLib = ["@adeficior/data-modifier", ...modules];
 
-  const loaded = await Promise.all(withLib.map(loadModule));
+  const loaded = await Promise.all(
+    withLib.map((it) => loadModule(it, options)),
+  );
 
   return uniqBy(loaded.flat(), (it) => it.name);
 }

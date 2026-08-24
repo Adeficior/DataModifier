@@ -48,6 +48,6 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         run: bunx changeset publish
 
-      - name: Push Changes
+      - name: Push Tags
         if: ${{ github.ref_name == 'main' }}
         run: git push --tags

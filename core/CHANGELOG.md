@@ -1,5 +1,11 @@
 # @adeficior/data-modifier-core
 
+## 2.0.2
+
+### Patch Changes
+
+- 94bb070: don't load optional modules & more codegen options
+
 ## 2.0.1
 
 ### Patch Changes

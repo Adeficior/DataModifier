@@ -141,7 +141,7 @@ export async function createDataModifierFromConfig({
   modules = [],
   ...options
 }: DataModifierConfig) {
-  const loadedModules = await loadModules(modules);
+  const loadedModules = await loadModules(modules, { optional: false });
   return createDataModifier(options, (instance) => {
     loadedModules.forEach((it) => {
       instance.install(it);

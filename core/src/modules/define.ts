@@ -146,7 +146,7 @@ export function defineModule<T extends ModuleTypes>({
       ...it,
     })) ?? [];
 
-  return {
+  return validate({
     dependencies: actualDependencies,
     promote: actualPromote,
     setup: () => {},
@@ -160,5 +160,15 @@ export function defineModule<T extends ModuleTypes>({
     } as ModuleImports<T>,
     ...config,
     name,
-  };
+  });
+}
+
+function validate<T extends ModuleTypes>(
+  config: ModuleConfig<T>,
+): ModuleConfig<T> {
+  if (!config.name) {
+    throw new Error("module name missing");
+  }
+
+  return config;
 }

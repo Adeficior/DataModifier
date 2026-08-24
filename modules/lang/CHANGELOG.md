@@ -1,5 +1,12 @@
 # @adeficior/data-modifier-lang
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [94bb070]
+  - @adeficior/data-modifier-core@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

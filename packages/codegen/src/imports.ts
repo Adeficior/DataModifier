@@ -6,6 +6,17 @@ import type {
 } from "@adeficior/data-modifier-core";
 import { notNull, uniq } from "@adeficior/pack-resolver";
 
+class ImportUnresolvableError extends Error {
+  constructor(
+    readonly input: ImportOptions,
+    readonly target?: string,
+    options?: ErrorOptions,
+  ) {
+    const suffix = target ? ` for ${target}` : "";
+    super("unable to resolve import" + suffix, options);
+  }
+}
+
 function resolveImport(
   options: ImportOptions,
   fallbackModule: string | undefined,
@@ -19,7 +30,7 @@ function resolveImport(
     return { module, name, path };
   }
 
-  return null;
+  throw new ImportUnresolvableError(options);
 }
 
 function importStatement(it: ResolvedImport) {
@@ -41,8 +52,16 @@ class ImportMap {
     options: ImportOptions,
     fallbackModule: string | undefined,
   ) {
-    const resolved = resolveImport(options, fallbackModule);
-    if (resolved) this.add(key, resolved);
+    try {
+      const resolved = resolveImport(options, fallbackModule);
+      if (resolved) this.add(key, resolved);
+    } catch (cause) {
+      if (cause instanceof ImportUnresolvableError) {
+        throw new ImportUnresolvableError(cause.input, key, { cause });
+      } else {
+        throw cause;
+      }
+    }
   }
 
   get(key: string) {

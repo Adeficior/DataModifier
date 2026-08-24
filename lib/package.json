@@ -1,6 +1,6 @@
 {
    "name": "@adeficior/data-modifier",
-   "version": "2.0.1",
+   "version": "2.0.2",
    "description": "library to modify & generate minecraft data",
    "bin": {
       "datamod": "dist/cli.js"
