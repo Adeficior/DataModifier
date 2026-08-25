@@ -1,15 +1,10 @@
-import { createId } from "@adeficior/data-modifier-core";
 import type { Id, NormalizedId, Rule } from "@adeficior/data-modifier-core";
+import { createId } from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  always,
-  every,
-  resolveIdTest,
-  some,
-} from "@adeficior/data-modifier-core/serializer";
+import { always, every, some } from "@adeficior/data-modifier-core/serializer";
 import type {
   Ingredient,
   IngredientFilter,
@@ -69,8 +64,8 @@ export class RecipeRulesImpl implements RecipeRules {
     const ingredient: Predicate<Ingredient>[] = [];
     const result: Predicate<Result>[] = [];
 
-    if (test.id) id.push(resolveIdTest(test.id));
-    if (test.type) type.push(resolveIdTest(test.type));
+    if (test.id) id.push(this.predicates.id(test.id));
+    if (test.type) type.push(this.predicates.id(test.type));
     if (test.namespace) id.push((id) => id.namespace === test.namespace);
     if (test.output) result.push(this.predicates.result(test.output));
     if (test.input) ingredient.push(this.predicates.ingredient(test.input));

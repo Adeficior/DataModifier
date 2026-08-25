@@ -7,9 +7,13 @@ import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
-import type { TagRegistries, TagRegistry } from "@adeficior/data-modifier-tags";
+import type {
+  IdFilterContext,
+  TagRegistries,
+} from "@adeficior/data-modifier-tags";
+import { resolveIdFilter } from "@adeficior/data-modifier-tags";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
+import { notNull } from "@adeficior/pack-resolver";
 import type { Ingredient } from "../ingredient/impl";
 import type { Result } from "../result/impl";
 import type { IngredientSerializer } from "../serializer/ingredients";
@@ -19,6 +23,7 @@ import { createIngredientPredicate } from "./ingredients";
 export type Predicates = {
   ingredient(filter: IngredientFilter): Predicate<Ingredient>;
   result(filter: IngredientFilter): Predicate<Result>;
+  id(filter: CommonFilter<NormalizedId>): Predicate<IdInput>;
   id<T extends RegistryId>(
     filter: CommonFilter<NormalizedId<InferIds<T>>>,
     registry: T,
@@ -60,10 +65,16 @@ class PredicatesImpl implements Predicates {
 
   id<T extends RegistryId>(
     filter: CommonFilter<NormalizedId<InferIds<T>>>,
-    registry: T | TagRegistry<T>,
+    registry?: T,
   ): Predicate<IdInput<InferIds<T>>> {
-    const tags =
-      typeof registry == "string" ? this.tags.registry(registry) : registry;
-    return resolveIdTest(filter, tags);
+    const context = notNull(registry)
+      ? ({
+          tags: this.tags.registry(registry),
+          lookup: this.registries,
+          registry,
+        } satisfies IdFilterContext<T>)
+      : undefined;
+
+    return resolveIdFilter(filter, context);
   }
 }

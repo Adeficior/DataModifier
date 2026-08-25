@@ -26,13 +26,21 @@ export default defineModule<{
     },
   },
   promote: [{ key: "tags", service: "emitter:tags" }],
-  setup: (pack) => {
-    const loader = pack.loader(
+  setup: (instance) => {
+    const loader = instance.loader(
       "tags",
-      () => new TagsLoader(pack.options.packFormat),
+      () => new TagsLoader(instance.options.packFormat),
       "data/*/tags/**/*.json",
     );
 
-    pack.emitter("tags", () => new TagEmitterImpl(loader(), pack.options));
+    instance.emitter(
+      "tags",
+      (container) =>
+        new TagEmitterImpl(
+          loader(),
+          container.get("registries"),
+          instance.options,
+        ),
+    );
   },
 });

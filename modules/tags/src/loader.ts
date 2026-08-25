@@ -9,7 +9,6 @@ import {
   isAtLeastVersion,
   Registry,
 } from "@adeficior/data-modifier-core";
-import type { TagChecker } from "@adeficior/data-modifier-core/serializer";
 import { fromJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
@@ -21,9 +20,7 @@ import type {
   TagRegistry,
 } from "./schema";
 
-class WriteableTagRegistry<T extends RegistryId>
-  implements TagRegistry<T>, TagChecker<T>
-{
+class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   private readonly entries = new Registry<TagEntry<T>[]>();
 
   constructor(public readonly folder: string) {}

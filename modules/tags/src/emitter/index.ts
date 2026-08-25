@@ -2,6 +2,7 @@ import type {
   ClearableEmitter,
   LoaderContext,
   NormalizedId,
+  RegistryLookup,
   TagInput,
 } from "@adeficior/data-modifier-core";
 import type { CommonFilter } from "@adeficior/data-modifier-core/serializer";
@@ -9,6 +10,7 @@ import { toJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { simpleResolver } from "@adeficior/pack-resolver";
 import { orderTagEntries, tagFolderOf } from "../helper";
+import type { IdFilterContext } from "../predicates";
 import type { TagEntry, TagRegistries } from "../schema";
 import type { TagEmitterOptions } from "./options";
 import type { ScopedTagEmitter } from "./scoped";
@@ -53,9 +55,9 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
   readonly fluids: ScopedTagEmitter<"minecraft:fluid">;
 
   constructor(
-    // TODO use container or inject?
     private readonly registry: TagRegistries,
-    private readonly options: TagEmitterOptions,
+    private readonly lookup: RegistryLookup,
+    private readonly options: TagEmitterOptions = {},
   ) {
     this.blocks = this.scoped("minecraft:block", "blocks");
     this.items = this.scoped("minecraft:item", "items");
@@ -122,11 +124,12 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
     const existing = this.emitters.get(registry);
     if (existing) return existing as ScopedTagEmitter<T>;
     else {
-      const emitter = new ScopedTagEmitterImpl(
-        this.registry.registry(registry),
-        folder,
-        this.options,
-      );
+      const context: Required<IdFilterContext<T>> = {
+        registry,
+        tags: this.registry.registry(registry),
+        lookup: this.lookup,
+      };
+      const emitter = new ScopedTagEmitterImpl(context, folder, this.options);
       this.emitters.set(registry, emitter);
       return emitter as ScopedTagEmitter<T>;
     }

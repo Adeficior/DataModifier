@@ -6,10 +6,8 @@ import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import {
-  createIdPredicate,
-  IllegalShapeError,
-} from "@adeficior/data-modifier-core/serializer";
+import { IllegalShapeError } from "@adeficior/data-modifier-core/serializer";
+import { createIdPredicate } from "@adeficior/data-modifier-tags";
 import type { TagRegistries } from "@adeficior/data-modifier-tags";
 import type { RegistryId } from "@adeficior/data-modifier/generated";
 import {

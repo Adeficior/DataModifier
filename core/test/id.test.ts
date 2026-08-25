@@ -1,7 +1,6 @@
 import { expect, it } from "bun:test";
-import type { Id, NormalizedId } from "../src";
+import type { Id } from "../src";
 import { Registry, createId, encodeId } from "../src";
-import { resolveIdTest } from "../src/serializer";
 
 it("parses id from string", () => {
   expect(createId("minecraft:stone")).toMatchObject({
@@ -55,42 +54,6 @@ it("encodes id correctly", () => {
   expect(
     encodeId({ namespace: "minecraft", path: "pickaxes", isTag: true }),
   ).toBe("#minecraft:pickaxes");
-});
-
-it("correctly tests id using string", () => {
-  const predicate = resolveIdTest<NormalizedId>("minecraft:stone");
-
-  expect(predicate({ namespace: "minecraft", path: "stone" })).toBeTruthy();
-  expect(predicate("minecraft:stone")).toBeTruthy();
-
-  expect(predicate({ namespace: "minecraft", path: "planks" })).toBeFalsy();
-  expect(predicate("minecraft:end_stone")).toBeFalsy();
-  expect(predicate("example:stone")).toBeFalsy();
-});
-
-it("correctly tests id using regex", () => {
-  const predicate = resolveIdTest(/.+:oak_.+/);
-
-  expect(
-    predicate({ namespace: "minecraft", path: "oak_planks" }),
-  ).toBeTruthy();
-  expect(predicate("minecraft:oak_log")).toBeTruthy();
-  expect(predicate("something:oak_quibbels")).toBeTruthy();
-
-  expect(predicate({ namespace: "example", path: "spruce_log" })).toBeFalsy();
-  expect(predicate("minecraft:stripped_oak_log")).toBeFalsy();
-});
-
-it("correctly tests id using predicate", () => {
-  const predicate = resolveIdTest((it) => it.includes("one"));
-
-  expect(predicate({ namespace: "minecraft", path: "stone" })).toBeTruthy();
-  expect(predicate("minecraft:bone_block")).toBeTruthy();
-  expect(predicate("something:kwoner")).toBeTruthy();
-  expect(predicate("one:two")).toBeTruthy();
-
-  expect(predicate({ namespace: "example", path: "spruce_log" })).toBeFalsy();
-  expect(predicate("minecraft:andesite")).toBeFalsy();
 });
 
 it("works as unique map key", () => {

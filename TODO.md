@@ -5,4 +5,4 @@
 - [x] add Predicates services for loot tables & recipes
 - [x] fix JSON loader not working with subfolders (worldgen/structure) to create IDs, pass folder to them?
 - [x] predicates helpers (and, or, always, never), simplify existing rules
-- [ ] expose API to register stub registry ID types & add all vanilla ones by default (depending on pack format)
+- [x] expose API to register stub registry ID types & add all vanilla ones by default (depending on pack format)

@@ -4,6 +4,7 @@ import {
   createTestAcceptor,
   createTestLogger,
 } from "@adeficior/pack-resolver/testing";
+import { setupLookup } from "@adeficior/testing";
 import { afterEach, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import { TagEmitterImpl } from "../../src/emitter";
@@ -12,7 +13,8 @@ import { TagsLoader } from "../../src/loader";
 const version = basename(import.meta.dir);
 const context: LoaderContext = { logger: createTestLogger() };
 const loader = new TagsLoader(packFormatOf(version));
-const emitter = new TagEmitterImpl(loader, { advancedTags: true });
+const lookup = setupLookup(version);
+const emitter = new TagEmitterImpl(loader, lookup, { advancedTags: true });
 
 afterEach(() => {
   emitter.clear();

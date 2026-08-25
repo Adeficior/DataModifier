@@ -4,10 +4,11 @@ import type {
   CommonFilter,
   Replacer,
 } from "@adeficior/data-modifier-core/serializer";
-import { resolveIdTest } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import type { TagDefinition, TagEntry, TagRegistry } from "../schema";
+import { resolveIdFilter } from "../predicates";
+import type { IdFilterContext } from "../predicates";
+import type { TagDefinition, TagEntry } from "../schema";
 import type { TagEmitterOptions } from "./options";
 
 type TagModifier = Replacer<TagDefinition>;
@@ -26,7 +27,7 @@ export class ScopedTagEmitterImpl<
   T extends RegistryId,
 > implements ScopedTagEmitter<T> {
   constructor(
-    private readonly registry: TagRegistry<RegistryId>,
+    private readonly context: Required<IdFilterContext<T>>,
     public readonly folder: string,
     private readonly options: TagEmitterOptions,
   ) {}
@@ -64,9 +65,9 @@ export class ScopedTagEmitterImpl<
     });
   }
 
-  remove(id: TagInput, test: CommonFilter<NormalizedId<InferIds<T>>>) {
+  remove(id: TagInput, filter: CommonFilter<NormalizedId<InferIds<T>>>) {
     if (this.options.advancedTags) {
-      if (test instanceof RegExp || typeof test === "function") {
+      if (filter instanceof RegExp || typeof filter === "function") {
         throw new Error(
           "advanced tag loader only accepts tag entries in removal",
         );
@@ -75,14 +76,14 @@ export class ScopedTagEmitterImpl<
       this.modify(id, (previous) => {
         return {
           ...previous,
-          remove: [...(previous.remove ?? []), test],
+          remove: [...(previous.remove ?? []), filter],
         };
       });
     } else {
-      const predicate = resolveIdTest(test, this.registry);
+      const predicate = resolveIdFilter(filter, this.context);
       this.modify(id, (previous) => {
         const defaultValues =
-          (previous.replace ? undefined : this.registry.resolve(id)) ?? [];
+          (previous.replace ? undefined : this.context.tags.resolve(id)) ?? [];
         return {
           replace: true,
           values: [...defaultValues, ...(previous.values ?? [])].filter(

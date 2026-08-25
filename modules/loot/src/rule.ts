@@ -1,9 +1,9 @@
 import type { Id, NormalizedId, Rule } from "@adeficior/data-modifier-core";
-import { always, every, some } from "@adeficior/data-modifier-core/serializer";
 import type {
   CommonFilter,
   Predicate,
 } from "@adeficior/data-modifier-core/serializer";
+import { always, every, some } from "@adeficior/data-modifier-core/serializer";
 import type {
   Ingredient,
   IngredientFilter,
@@ -73,7 +73,7 @@ export class LootTableRulesImpl implements LootTableRules {
     const id: Predicate<Id>[] = [];
     const output: Predicate<Ingredient>[] = [];
 
-    if (test.id) id.push(this.predicates.id(test.id, "minecraft:item"));
+    if (test.id) id.push(this.predicates.id(test.id));
     if (test.output) output.push(this.predicates.ingredient(test.output));
 
     return { id, output };
