@@ -2,8 +2,8 @@ import { defineModule, encodeId } from "@adeficior/data-modifier-core";
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { createDumpResolver } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
-import { PolytoneTabsEmitter } from "../src/emit/polytoneTabs";
 import type { PolytoneTabs } from "../src/emit/polytoneTabs";
+import { PolytoneTabsEmitter } from "../src/emit/polytoneTabs";
 import { setupInstance } from "./util/setup";
 
 const module = defineModule<{
@@ -162,17 +162,20 @@ describe("create new tabs", () => {
     const acceptor = createTestAcceptor();
 
     const id = tabs.create("something:test_tab");
-    tabs.create("something:another_tab");
-    tabs.create("minecraft:more_blocks");
+    tabs.create("minecraft:another_tab");
 
     await instance.emit(acceptor);
 
     expect(encodeId(id)).toMatch("something:test_tab");
     expect(
-      acceptor.at("assets/something/polytone/creative_tabs.csv"),
-    ).toMatchSnapshot("tab csv 1 for something");
+      acceptor.at(
+        "assets/something/polytone/creative_tab_modifiers/create/test_tab.json",
+      ),
+    ).toMatchSnapshot("tab creation modifier for minecraft");
     expect(
-      acceptor.at("assets/minecraft/polytone/creative_tabs.csv"),
-    ).toMatchSnapshot("tab csv for minecraft");
+      acceptor.at(
+        "assets/minecraft/polytone/creative_tab_modifiers/create/another_tab.json",
+      ),
+    ).toMatchSnapshot("tab creation modifier for something");
   });
 });

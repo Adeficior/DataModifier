@@ -1,9 +1,8 @@
-import { simpleResolver } from "@adeficior/pack-resolver";
 import type { ContextLike } from "@adeficior/pack-resolver";
+import { simpleResolver } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
-import type { Id } from "../common/id";
-import { RuleHandler } from "../common/rules";
 import type { Rule } from "../common/rules";
+import { RuleHandler } from "../common/rules";
 import type { RegistryProvider } from "../registry/abstract";
 import { toJson } from "../serializer/textHelper";
 import type { ClearableEmitter, PathProvider } from "./abstract";
@@ -18,9 +17,8 @@ export class RuledEmitter<T> implements ClearableEmitter {
     private readonly pathProvider: PathProvider,
     private readonly disabledValue: unknown,
     private readonly serialize: (entry: T) => unknown,
-    shouldSkip: (id: Id) => boolean = () => true,
   ) {
-    this.handler = new RuleHandler<T, Modifier<T>>(type, shouldSkip);
+    this.handler = new RuleHandler<T, Modifier<T>>(type);
   }
 
   clear() {

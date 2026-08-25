@@ -1,6 +1,4 @@
 import type {
-  ClearableEmitter,
-  Id,
   IdInput,
   LoaderContext,
   RegistryLookup,
@@ -11,7 +9,7 @@ import {
   CustomEmitter,
   encodeId,
   prefix,
-  RuledEmitter,
+  SimpleEmitter,
 } from "@adeficior/data-modifier-core";
 import type {
   IngredientFilter,
@@ -56,57 +54,43 @@ export type LootEmitter = {
   disabledModifier(id: IdInput): void;
 };
 
-export class LootEmitterImpl implements LootEmitter, ClearableEmitter {
-  private readonly customTables = new CustomEmitter<LootTable>((it) =>
-    lootTablePath(this.packFormat, it),
+export class LootEmitterImpl
+  extends SimpleEmitter<LootTable, LootTable>
+  implements LootEmitter
+{
+  private readonly customModifiers = new CustomEmitter<LootModifier>(
+    (id) => `data/${id.namespace}/loot_modifiers/${id.path}.json`,
   );
-  private readonly customModifiers = new CustomEmitter<LootModifier>((it) =>
-    this.modifierPath(it),
-  );
-
-  private readonly ruled;
 
   constructor(
-    private readonly packFormat: SemVerInput,
-    private readonly lootTables: RegistryProvider<LootTable>,
+    packFormat: SemVerInput,
+    registry: RegistryProvider<LootTable>,
     private readonly lookup: RegistryLookup,
     private readonly predicates: Predicates,
     private readonly rules: LootTableRules,
   ) {
-    this.ruled = new RuledEmitter<LootTable>(
+    super(
       "loot tables",
-      this.lootTables,
-      (id) => lootTablePath(packFormat, id),
+      registry,
+      (it) => lootTablePath(packFormat, it),
       EMPTY_LOOT_TABLE,
-      // TODO also add value object here?
-      (it) => it,
-      (id) => this.customTables.has(id),
     );
   }
 
-  resolver(context: LoaderContext) {
+  override resolver(context: LoaderContext) {
     return combineResolvers(
-      [
-        this.ruled.resolver(context),
-        this.customTables.resolver(context),
-        this.customModifiers.resolver(context),
-      ],
+      [super.resolver(context), this.customModifiers.resolver(context)],
       { async: true },
     );
   }
 
-  private modifierPath(id: Id) {
-    return `data/${id.namespace}/loot_modifiers/${id.path}.json`;
-  }
-
-  clear() {
-    this.customTables.clear();
+  override clear() {
+    super.clear();
     this.customModifiers.clear();
-    this.ruled.clear();
   }
 
   add(id: IdInput, value: LootTable): void {
-    this.customTables.add(id, LootTableSchema.parse(value));
+    this.custom.add(id, LootTableSchema.parse(value));
   }
 
   disable(filter: LootTableFilter): void {

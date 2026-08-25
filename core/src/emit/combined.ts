@@ -23,3 +23,19 @@ export class CombinedEmitters implements ClearableEmitter {
     this.entries.forEach((it) => it.clear());
   }
 }
+
+export abstract class WrappedEmitter implements ClearableEmitter {
+  private emitters = new CombinedEmitters();
+
+  protected addEmitter<T extends ClearableEmitter>(emitter: T): T {
+    return this.emitters.add(emitter);
+  }
+
+  resolver(context: LoaderContext) {
+    return this.emitters.resolver(context);
+  }
+
+  clear() {
+    this.emitters.clear();
+  }
+}

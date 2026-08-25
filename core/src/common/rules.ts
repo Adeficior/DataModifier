@@ -15,12 +15,7 @@ type RuleEntry<T, V> = {
 export class RuleHandler<T, V> {
   private entries: RuleEntry<T, V>[] = [];
 
-  constructor(
-    // pass filtered lookup instead
-    // TODO remove, will be somehow handled by writeable registry, or custom always overwriting ruled
-    private readonly type: string,
-    private readonly shouldSkip: (id: Id) => boolean = () => true,
-  ) {}
+  constructor(private readonly type: string) {}
 
   addRule(rule: Rule<T>, value: V, context: ContextLike) {
     this.entries.push({ rule, value, context });
@@ -42,8 +37,6 @@ export class RuleHandler<T, V> {
     const missing = new Set<RuleEntry<T, V>>(this.entries);
 
     await registry.forEachAsync(async (value, id) => {
-      if (this.shouldSkip(id)) return;
-
       const matches = this.findMatching(id, value);
       if (matches.length === 0) return;
 

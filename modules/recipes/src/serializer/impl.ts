@@ -15,7 +15,7 @@ import type { Recipe } from "../model";
 import type { RecipeDefinition } from "../schema";
 import type { RecipesSerializer, RecipeTypeSerializer } from "./abstract";
 import type { RecipeParseContext } from "./context";
-import { RecipeHolder } from "./holder";
+import { isFakeHolder, RecipeHolder } from "./holder";
 
 export class RecipeSerializerImpl implements RecipesSerializer {
   private readonly typeSerializers = new Map<string, RecipeTypeSerializer>();
@@ -52,6 +52,10 @@ export class RecipeSerializerImpl implements RecipesSerializer {
     holder: RecipeHolder | IdInput<RecipeSerializerId>,
     recipe?: Recipe,
   ): RecipeDefinition {
+    if (isFakeHolder(holder)) {
+      return holder.serialize();
+    }
+
     if (holder instanceof RecipeHolder) {
       const parser = this.typeSerializers.get(holder.serializerType);
 

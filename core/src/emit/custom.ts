@@ -1,7 +1,7 @@
 import { simpleResolver } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
-import { createId } from "../common/id";
 import type { IdInput } from "../common/id";
+import { createId } from "../common/id";
 import { Registry } from "../registry/impl";
 import { toJson } from "../serializer/textHelper";
 import type { ClearableEmitter, PathProvider } from "./abstract";
@@ -9,9 +9,7 @@ import type { ClearableEmitter, PathProvider } from "./abstract";
 export class CustomEmitter<TEntry> implements ClearableEmitter {
   constructor(
     private readonly pathProvider: PathProvider,
-    private readonly encoder: (
-      value: TEntry,
-    ) => string | Promise<string> = toJson,
+    private readonly serialize: (entry: TEntry) => unknown = (it) => it,
   ) {}
 
   private readonly customEntries = new Registry<TEntry>();
@@ -41,7 +39,7 @@ export class CustomEmitter<TEntry> implements ClearableEmitter {
     return simpleResolver(async (acceptor) => {
       await this.customEntries.forEachAsync(async (entry, id) => {
         const path = this.pathProvider(id);
-        await acceptor(path, Promise.resolve(this.encoder(entry)));
+        await acceptor(path, toJson(this.serialize(entry)));
       });
     }, context);
   }

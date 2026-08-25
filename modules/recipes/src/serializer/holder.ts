@@ -20,7 +20,17 @@ function optional<T>(replacer: Replacer<T>): Replacer<T | undefined> {
   return (value) => value && replacer(value);
 }
 
-export class RecipeHolder {
+type CommonRecipeHolder = {
+  serialize(context: RecipeParseContext): RecipeDefinition;
+  getIngredients(): Ingredient[];
+  getResults(): Result[];
+  modify(modifier: RecipeModifier): RecipeHolder;
+  replaceIngredient(replace: Replacer<Ingredient>): RecipeHolder;
+  replaceResult(replace: Replacer<Result>): RecipeHolder;
+  getTypes(): NormalizedId[];
+};
+
+export class RecipeHolder implements CommonRecipeHolder {
   readonly serializerType: NormalizedId;
 
   private constructor(
@@ -81,4 +91,49 @@ export class RecipeHolder {
   ): RecipeHolder {
     return new RecipeHolder({ type: encodeId(type), ...conditions }, recipe);
   }
+}
+
+class FakeRecipeHolder implements CommonRecipeHolder {
+  constructor(private readonly definition: RecipeDefinition) {}
+
+  getIngredients(): Ingredient[] {
+    return [];
+  }
+
+  getResults(): Result[] {
+    return [];
+  }
+
+  getTypes(): NormalizedId[] {
+    return [encodeId(this.definition.type)];
+  }
+
+  cast() {
+    return this as unknown as RecipeHolder;
+  }
+
+  modify(): RecipeHolder {
+    return this.cast();
+  }
+
+  replaceIngredient(): RecipeHolder {
+    return this.cast();
+  }
+
+  replaceResult(): RecipeHolder {
+    return this.cast();
+  }
+
+  serialize(): RecipeDefinition {
+    return this.definition;
+  }
+}
+
+export function isFakeHolder(holder: unknown) {
+  return holder instanceof FakeRecipeHolder;
+}
+
+export function createFakeHolder(definition: RecipeDefinition): RecipeHolder {
+  const fake = new FakeRecipeHolder(definition);
+  return fake.cast();
 }

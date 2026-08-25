@@ -80,6 +80,22 @@ exports[`create removal entries uses custom file name: removal modifier with cus
 "
 `;
 
-exports[`create new tabs emits and mergers csv: tab csv 1 for something 1`] = `"test_tab,another_tab"`;
+exports[`create new tabs emits and mergers csv: tab creation modifier for minecraft 1`] = `
+"{
+  "create_new": true,
+  "targets": ["something:test_tab"],
+  "before_tabs": [],
+  "after_tabs": []
+}
+"
+`;
 
-exports[`create new tabs emits and mergers csv: tab csv for minecraft 1`] = `"more_blocks"`;
+exports[`create new tabs emits and mergers csv: tab creation modifier for something 1`] = `
+"{
+  "create_new": true,
+  "targets": ["minecraft:another_tab"],
+  "before_tabs": [],
+  "after_tabs": []
+}
+"
+`;

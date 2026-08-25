@@ -1,20 +1,19 @@
 import type {
-  ClearableEmitter,
   IdInput,
-  LoaderContext,
   NormalizedId,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import {
-  createId,
   CustomEmitter,
   encodeId,
+  prefix,
+  WrappedEmitter,
 } from "@adeficior/data-modifier-core";
 import type {
   CreativeModeTabId,
   ItemId,
 } from "@adeficior/data-modifier/generated";
-import { arrayOrSelf, combineResolvers } from "@adeficior/pack-resolver";
+import { arrayOrSelf } from "@adeficior/pack-resolver";
 import { difference, uniq } from "lodash-es";
 
 type TabModifications = {
@@ -72,6 +71,7 @@ type AdditionEntry = {
 };
 
 export type PolytoneTabModifier = {
+  create_new?: boolean;
   icon?: NormalizedId<ItemId>;
   before_tabs?: NormalizedId<CreativeModeTabId>[];
   after_tabs?: NormalizedId<CreativeModeTabId>[];
@@ -133,30 +133,20 @@ function translateOptions(options: AddOptions = {}): Partial<AdditionEntry> {
   }
 }
 
-export class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitter {
-  private readonly entries = new CustomEmitter<PolytoneTabModifier>(
-    (id) =>
-      `assets/${id.namespace}/polytone/creative_tab_modifiers/${id.path}.json`,
-  );
+export class PolytoneTabsEmitter
+  extends WrappedEmitter
+  implements PolytoneTabs
+{
+  private readonly entries;
 
-  private readonly tabs = new CustomEmitter<string[]>(
-    (id) => `assets/${id.namespace}/polytone/creative_tabs.csv`,
-    (it) => it.join(","),
-  );
+  constructor(private readonly registry: RegistryLookup) {
+    super();
 
-  constructor(private readonly lookup: RegistryLookup) {}
-
-  clear(): void {
-    this.entries.clear();
-    this.tabs.clear();
-  }
-
-  resolver(context: LoaderContext) {
-    return combineResolvers(
-      [this.entries.resolver(context), this.tabs.resolver(context)],
-      {
-        async: true,
-      },
+    this.entries = this.addEmitter(
+      new CustomEmitter<PolytoneTabModifier>(
+        (id) =>
+          `assets/${id.namespace}/polytone/creative_tab_modifiers/${id.path}.json`,
+      ),
     );
   }
 
@@ -191,14 +181,13 @@ export class PolytoneTabsEmitter implements PolytoneTabs, ClearableEmitter {
   }
 
   create(id: IdInput, modifications: TabModifications = {}) {
-    const { namespace, path } = createId(id);
-    this.tabs.merge({ namespace, path: "tab" }, [path], (a, b) =>
-      uniq([...a, ...b]),
-    );
-    if (Object.keys(modifications).length) {
-      this.modify(id, modifications);
-    }
-    return this.lookup.addCustom("minecraft:creative_mode_tab", id);
+    this.entries.add(prefix(id, "create/"), {
+      create_new: true,
+      targets: [encodeId(id)],
+      ...translateModifications(modifications),
+    });
+
+    return this.registry.addCustom("minecraft:creative_mode_tab", id);
   }
 
   modify(id: IdInput, modifications: TabModifications) {

@@ -1,7 +1,7 @@
 - [x] seperate rules from modifier, turn into glorified predicate (or simply predicate)
 - [x] add rule service as parent of rule emitter, usuable for something like recipe graph
 - [ ] write-able registry wrapper around loaded values, allowing emitters to update/add entries
-- [ ] add abstract emitter combining ruled & custom
+- [x] add abstract emitter combining ruled & custom
 - [x] add Predicates services for loot tables & recipes
 - [x] fix JSON loader not working with subfolders (worldgen/structure) to create IDs, pass folder to them?
 - [x] predicates helpers (and, or, always, never), simplify existing rules
