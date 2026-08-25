@@ -4,6 +4,7 @@ import type { LangEmitter } from "./emitter";
 import { LangEmitterImpl } from "./emitter";
 import type { LangLoader } from "./loader";
 import { LangLoaderImpl } from "./loader";
+import { langFolder } from "./schema";
 
 export default defineModule<{
   loaders: {
@@ -26,8 +27,8 @@ export default defineModule<{
   setup: (pack) => {
     const loader = pack.loader(
       "lang",
-      () => new LangLoaderImpl(),
-      jsonFilePattern("assets", "lang"),
+      () => new LangLoaderImpl(langFolder()),
+      jsonFilePattern(langFolder()),
     );
     pack.emitter("lang", () => new LangEmitterImpl(loader()));
   },

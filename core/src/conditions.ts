@@ -1,6 +1,7 @@
+import { notNull } from "@adeficior/pack-resolver";
 import { createId } from "./common/id";
 import type { Predicate } from "./serializer/predicate";
-import { any, every } from "./serializer/predicate";
+import { always, any, every, never } from "./serializer/predicate";
 
 export type ForgeCondition = Readonly<{
   type: string;
@@ -45,8 +46,20 @@ export function withDisabledConditions<T>(value: T): WithConditions<T> {
   };
 }
 
+export function withModLoaded<T>(value: T, mod: string): WithConditions<T> {
+  // TODO don't overwrite, append
+  return {
+    ...value,
+    conditions: [{ type: "forge:mod_loaded", mod_id: mod }],
+    "neoforge:conditions": [{ type: "neoforge:mod_loaded", mod_id: mod }],
+    "fabric:load_conditions": [
+      { condition: "fabric:all_mods_loaded", values: [mod] },
+    ],
+  };
+}
+
 export type ConditionContext = {
-  mods: string[];
+  mods?: string[];
 };
 
 function forgePredicate(
@@ -54,13 +67,15 @@ function forgePredicate(
 ): Predicate<ConditionContext> {
   const { path } = createId(condition.type);
   if (path === "mod_loaded")
-    return ({ mods }) => mods.includes(condition.mod_id as string);
+    return ({ mods }) =>
+      !notNull(mods) || mods.includes(condition.mod_id as string);
   if (path === "and")
     return every(...(condition.values as ForgeCondition[]).map(forgePredicate));
   if (path === "or")
     return any(...(condition.values as ForgeCondition[]).map(forgePredicate));
+  if (path === "false") return never();
 
-  return () => true;
+  return always();
 }
 
 export function conditionsPredicate(

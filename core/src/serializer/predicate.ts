@@ -1,6 +1,6 @@
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
-import { encodeId } from "../common/id";
 import type { IdInput, NormalizedId, TagInput } from "../common/id";
+import { encodeId } from "../common/id";
 
 export type TagChecker<T extends RegistryId> = {
   contains(id: TagInput, entry: IdInput<InferIds<T>>): boolean;
@@ -54,4 +54,12 @@ export function every<T>(...predicates: Predicate<T>[]): Predicate<T> {
 
 export function any<T>(...predicates: Predicate<T>[]): Predicate<T> {
   return (...args) => predicates.some((it) => it(...args));
+}
+
+export function always<T>(): Predicate<T> {
+  return () => true;
+}
+
+export function never<T>(): Predicate<T> {
+  return () => false;
 }

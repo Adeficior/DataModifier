@@ -1,6 +1,7 @@
 import type {
   ConditionContext,
   RegistryProvider,
+  ResourceFolder,
 } from "@adeficior/data-modifier-core";
 import { JsonLoader } from "@adeficior/data-modifier-core";
 import { omit } from "lodash-es";
@@ -21,9 +22,10 @@ export class RecipeLoaderImpl
 
   constructor(
     private readonly serializer: RecipesSerializer,
+    folder: ResourceFolder,
     context?: ConditionContext,
   ) {
-    super(context);
+    super(folder, context);
 
     this.ignoreType("jeed:*");
   }

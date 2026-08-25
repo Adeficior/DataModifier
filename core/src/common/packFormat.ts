@@ -73,7 +73,3 @@ export const packFormatOf = defineFormats({
   "1.21.7": "81",
   "1.21.9": "88.0",
 });
-
-export function jsonFilePattern(packType: string, folder: string) {
-  return `${packType}/*/${folder}/**/*.json`;
-}

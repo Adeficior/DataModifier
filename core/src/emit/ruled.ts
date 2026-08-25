@@ -12,7 +12,7 @@ export abstract class Rule<T> {
   protected constructor(private readonly modifier: Modifier<T>) {}
 
   // TODO why logger?
-  abstract matches(id: Id, recipe: T, logger: Logger): boolean;
+  abstract matches(id: Id, value: T, logger: Logger): boolean;
 
   abstract printWarning(logger: Logger): void;
 

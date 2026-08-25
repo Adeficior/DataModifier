@@ -9,7 +9,7 @@ import type { TestDataOptions } from "@adeficior/testing";
 import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import { LootEmitterImpl } from "../emitter";
-import { lootTablePattern } from "../helper";
+import { lootTableFolder, lootTablePattern } from "../helper";
 import { LootTableLoader } from "../loader";
 
 export type TestLootLoaderOptions = TestDataOptions & {
@@ -20,7 +20,9 @@ export function setupLootLoader(
   version: string,
   { mods = [], ...resolverOptions }: TestLootLoaderOptions = {},
 ) {
-  const loader = new LootTableLoader({ mods: ["minecraft", ...mods] });
+  const loader = new LootTableLoader(lootTableFolder(packFormatOf(version)), {
+    mods: ["minecraft", ...mods],
+  });
   const logger = createTestLogger();
 
   beforeAll(async () => {

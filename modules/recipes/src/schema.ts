@@ -1,11 +1,12 @@
 import type {
   IdInput,
+  ResourceFolder,
   SemVerInput,
   WithConditions,
 } from "@adeficior/data-modifier-core";
 import {
-  createId,
   isAtLeastVersion,
+  jsonFilePath,
   jsonFilePattern,
 } from "@adeficior/data-modifier-core";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
@@ -16,16 +17,15 @@ export type RecipeDefinition = WithConditions<
   }>
 >;
 
-function recipeFolder(packFormat: SemVerInput) {
-  return isAtLeastVersion(packFormat, "44") ? "recipe" : "recipes";
+export function recipeFolder(packFormat: SemVerInput): ResourceFolder {
+  const folder = isAtLeastVersion(packFormat, "44") ? "recipe" : "recipes";
+  return { packType: "data", folder };
 }
 
 export function recipePath(packFormat: SemVerInput, id: IdInput) {
-  const folder = recipeFolder(packFormat);
-  const { namespace, path } = createId(id);
-  return `data/${namespace}/${folder}/${path}.json`;
+  return jsonFilePath(recipeFolder(packFormat), id);
 }
 
 export function recipePattern(packFormat: SemVerInput) {
-  return jsonFilePattern("data", recipeFolder(packFormat));
+  return jsonFilePattern(recipeFolder(packFormat));
 }

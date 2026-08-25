@@ -5,12 +5,13 @@ import {
 } from "@adeficior/pack-resolver/testing";
 import { createTestDataResolver } from "@adeficior/testing";
 import { afterEach, beforeAll, describe, expect, it } from "bun:test";
+import { langFolder } from "../src";
 import { LangEmitterImpl } from "../src/emitter";
 import { LangLoaderImpl } from "../src/loader";
 
 const version = "1.20.1";
 const context: LoaderContext = { logger: createTestLogger() };
-const loader = new LangLoaderImpl();
+const loader = new LangLoaderImpl(langFolder());
 const emitter = new LangEmitterImpl(loader);
 
 beforeAll(async () => {

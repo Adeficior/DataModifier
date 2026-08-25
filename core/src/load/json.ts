@@ -1,5 +1,6 @@
-import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
+import type { Acceptable } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
+import { createId } from "../common/id";
 import type { Id, IdInput } from "../common/id";
 import type { ConditionContext, WithConditions } from "../conditions";
 import { conditionsPredicate } from "../conditions";
@@ -7,11 +8,20 @@ import type { RegistryProvider } from "../registry/abstract";
 import { Registry } from "../registry/impl";
 import { tryCatching } from "../serializer/error";
 import { tryParseJson } from "../serializer/textHelper";
+import type { Loader } from "./abstract";
 
-export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
+export abstract class JsonLoader<T> implements RegistryProvider<T>, Loader {
   private readonly registry = new Registry<T>();
+  private readonly pattern;
 
-  constructor(private readonly context?: ConditionContext) {}
+  constructor(
+    { packType, folder }: ResourceFolder,
+    private readonly context: ConditionContext = {},
+  ) {
+    this.pattern = new RegExp(
+      `${packType}\\/(?<namespace>[\\w-]+)\\/${folder}\\/(?<rest>[\\w-_/]+).json`,
+    );
+  }
 
   protected abstract parse(json: unknown, id: Id): T | null;
 
@@ -30,7 +40,6 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
   }
 
   private shouldLoad(value: WithConditions<T>) {
-    if (!this.context) return true;
     const predicate = conditionsPredicate(value);
     return predicate(this.context);
   }
@@ -40,10 +49,7 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
     content: PromiseLike<Acceptable>,
     context: LoaderContext,
   ) {
-    const match =
-      /(data|assets)\/(?<namespace>[\w-]+)\/\w+\/(?<rest>[\w-_/]+).json/.exec(
-        path,
-      );
+    const match = this.pattern.exec(path);
     if (!match?.groups) return false;
 
     const { namespace, rest } = match.groups;
@@ -59,4 +65,27 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Acceptor {
 
     this.registry.set(id, parsed);
   }
+}
+
+export type ResourceFolder = Readonly<{
+  /**
+   * for example 'data' or 'assets'
+   */
+  packType: string;
+  /**
+   * for example 'recipe' or 'loot_table'
+   */
+  folder: string;
+}>;
+
+export function jsonFilePattern({ packType, folder }: ResourceFolder) {
+  return `${packType}/*/${folder}/**/*.json`;
+}
+
+export function jsonFilePath(
+  { packType, folder }: ResourceFolder,
+  id: IdInput,
+) {
+  const { namespace, path } = createId(id);
+  return `${packType}/${namespace}/${folder}/${path}.json`;
 }

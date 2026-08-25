@@ -17,17 +17,17 @@ export class RecipeRule extends Rule<RecipeHolder> {
     super(modifier);
   }
 
-  matches(id: Id, recipe: RecipeHolder): boolean {
-    const types = recipe.getTypes().map(createId);
+  matches(id: Id, value: RecipeHolder): boolean {
+    const types = value.getTypes().map(createId);
 
     return (
       this.idsTests.every((test) => test(id)) &&
       this.typeTests.every((test) => types.some((it) => test(it))) &&
       this.ingredientTests.every((test) =>
-        recipe.getIngredients().some((it) => test(it)),
+        value.getIngredients().some((it) => test(it)),
       ) &&
       this.resultTests.every((test) =>
-        recipe.getResults().some((it) => test(it)),
+        value.getResults().some((it) => test(it)),
       )
     );
   }

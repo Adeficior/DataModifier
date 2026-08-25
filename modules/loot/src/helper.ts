@@ -1,20 +1,25 @@
+import type {
+  IdInput,
+  ResourceFolder,
+  SemVerInput,
+} from "@adeficior/data-modifier-core";
 import {
-  createId,
   isAtLeastVersion,
+  jsonFilePath,
   jsonFilePattern,
 } from "@adeficior/data-modifier-core";
-import type { IdInput, SemVerInput } from "@adeficior/data-modifier-core";
 
-function lootTableFolder(packFormat: SemVerInput) {
-  return isAtLeastVersion(packFormat, "44") ? "loot_table" : "loot_tables";
+export function lootTableFolder(packFormat: SemVerInput): ResourceFolder {
+  const folder = isAtLeastVersion(packFormat, "44")
+    ? "loot_table"
+    : "loot_tables";
+  return { packType: "data", folder };
 }
 
 export function lootTablePath(packFormat: SemVerInput, id: IdInput) {
-  const folder = lootTableFolder(packFormat);
-  const { namespace, path } = createId(id);
-  return `data/${namespace}/${folder}/${path}.json`;
+  return jsonFilePath(lootTableFolder(packFormat), id);
 }
 
 export function lootTablePattern(packFormat: SemVerInput) {
-  return jsonFilePattern("data", lootTableFolder(packFormat));
+  return jsonFilePattern(lootTableFolder(packFormat));
 }

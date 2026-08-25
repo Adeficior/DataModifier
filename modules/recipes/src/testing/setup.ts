@@ -10,15 +10,15 @@ import {
 } from "@adeficior/data-modifier-ingredients/testing";
 import { setupTagRegistry } from "@adeficior/data-modifier-tags/testing";
 import { createTestLogger } from "@adeficior/pack-resolver/testing";
-import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import type { TestDataOptions } from "@adeficior/testing";
+import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { afterAll, afterEach, beforeAll } from "bun:test";
 import type { RecipeEmitter } from "../emitter";
 import { RecipeEmitterImpl } from "../emitter";
 import type { RegisterRecipeSerializer } from "../hooks";
 import type { RecipeLoader } from "../loader";
 import { RecipeLoaderImpl } from "../loader";
-import { recipePattern } from "../schema";
+import { recipeFolder, recipePattern } from "../schema";
 import type { RecipesSerializer } from "../serializer";
 import { registerDefaultSerializers } from "../serializer/default";
 import { RecipeSerializerImpl } from "../serializer/impl";
@@ -55,9 +55,13 @@ export function setupRecipeLoader(
 ) {
   const { lookup, serializer } = setupRecipeSerializer(version, { parsers });
 
-  const loader = new RecipeLoaderImpl(serializer, {
-    mods: ["minecraft", ...mods],
-  });
+  const loader = new RecipeLoaderImpl(
+    serializer,
+    recipeFolder(packFormatOf(version)),
+    {
+      mods: ["minecraft", ...mods],
+    },
+  );
   const logger = createTestLogger();
 
   beforeAll(async () => {

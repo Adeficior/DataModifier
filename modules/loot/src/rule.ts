@@ -1,18 +1,18 @@
-import { Rule } from "@adeficior/data-modifier-core";
 import type { Id, Modifier } from "@adeficior/data-modifier-core";
+import { Rule } from "@adeficior/data-modifier-core";
+import type { Predicate } from "@adeficior/data-modifier-core/serializer";
 import {
   IllegalShapeError,
   tryCatching,
 } from "@adeficior/data-modifier-core/serializer";
-import type { Predicate } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import { extendLootEntry } from "./schema";
 import type { LootEntryBase, LootTable } from "./schema";
+import { extendLootEntry } from "./schema";
 
 // TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
 
@@ -59,10 +59,10 @@ export class LootTableRule extends Rule<LootTable> {
     super(modifier);
   }
 
-  matches(id: Id, table: LootTable, logger: Logger): boolean {
+  matches(id: Id, value: LootTable, logger: Logger): boolean {
     return (
       this.idTests.every((test) => test(id)) &&
-      this.outputTests.every((test) => hasOutput(logger, test, table))
+      this.outputTests.every((test) => hasOutput(logger, test, value))
     );
   }
 

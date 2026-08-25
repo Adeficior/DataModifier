@@ -2,12 +2,12 @@ import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import type { RecipeEmitter } from "./emitter";
 import { RecipeEmitterImpl } from "./emitter";
-import { VanillaRecipeHelperImpl } from "./helper/vanilla";
 import type { VanillaRecipeHelper } from "./helper/vanilla";
+import { VanillaRecipeHelperImpl } from "./helper/vanilla";
 import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
 import { RecipeLoaderImpl } from "./loader";
-import { recipePattern } from "./schema";
+import { recipeFolder, recipePattern } from "./schema";
 import type { RecipesSerializer } from "./serializer/abstract";
 import { registerDefaultSerializers } from "./serializer/default";
 import { RecipeSerializerImpl } from "./serializer/impl";
@@ -50,8 +50,8 @@ export default defineModule<{
     { service: "emitter:recipes", key: "recipes" },
     { service: "helper:recipes:vanilla", key: "recipes.vanilla" },
   ],
-  setup: (pack) => {
-    const serializer = pack.service(
+  setup: (instance) => {
+    const serializer = instance.service(
       "serializer:recipes",
       (container) =>
         new RecipeSerializerImpl(
@@ -60,18 +60,22 @@ export default defineModule<{
         ),
     );
 
-    const loader = pack.loader(
+    const loader = instance.loader(
       "recipes",
-      () => new RecipeLoaderImpl(serializer()),
-      recipePattern(pack.options.packFormat),
+      () =>
+        new RecipeLoaderImpl(
+          serializer(),
+          recipeFolder(instance.options.packFormat),
+        ),
+      recipePattern(instance.options.packFormat),
     );
 
-    const emitter = pack.emitter(
+    const emitter = instance.emitter(
       "recipes",
       (container) =>
         new RecipeEmitterImpl(
           container.get("logger"),
-          pack.options.packFormat,
+          instance.options.packFormat,
           loader(),
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
@@ -80,7 +84,7 @@ export default defineModule<{
         ),
     );
 
-    pack.service(
+    instance.service(
       "helper:recipes:vanilla",
       (container) =>
         new VanillaRecipeHelperImpl(
@@ -90,9 +94,9 @@ export default defineModule<{
         ),
     );
 
-    pack.hook("recipes:register-serializer", registerDefaultSerializers);
+    instance.hook("recipes:register-serializer", registerDefaultSerializers);
 
-    pack.hook("setup:after", ({ callHook }) => {
+    instance.hook("setup:after", ({ callHook }) => {
       callHook("recipes:register-serializer", serializer().createEvent());
     });
   },
