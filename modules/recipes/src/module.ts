@@ -1,4 +1,4 @@
-import { defineModule } from "@adeficior/data-modifier-core";
+import { defineModule, PatchedRegistry } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import type { RecipeEmitter } from "./emitter";
 import { RecipeEmitterImpl } from "./emitter";
@@ -7,8 +7,9 @@ import { VanillaRecipeHelperImpl } from "./helper/vanilla";
 import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
 import { RecipeLoaderImpl } from "./loader";
-import { RecipeRulesImpl } from "./rule";
+import type { RecipeRegistry } from "./registry";
 import type { RecipeRules } from "./rule";
+import { RecipeRulesImpl } from "./rule";
 import { recipeFolder, recipePattern } from "./schema";
 import type { RecipesSerializer } from "./serializer/abstract";
 import { registerDefaultSerializers } from "./serializer/default";
@@ -28,6 +29,7 @@ export default defineModule<{
     "serializer:recipes": RecipesSerializer;
     "rules:recipes": RecipeRules;
     "helper:recipes:vanilla": VanillaRecipeHelper;
+    "registry:recipes": RecipeRegistry;
   };
 }>({
   importModule: name,
@@ -48,6 +50,7 @@ export default defineModule<{
       "serializer:recipes": "RecipesSerializer",
       "rules:recipes": "RecipeRules",
       "helper:recipes:vanilla": "VanillaRecipeHelper",
+      "registry:recipes": "RecipeRegistry",
     },
   },
   promote: [
@@ -79,13 +82,18 @@ export default defineModule<{
       (container) => new RecipeRulesImpl(container.get("predicates")),
     );
 
+    const registry = instance.service(
+      "registry:recipes",
+      () => new PatchedRegistry(loader()),
+    );
+
     const emitter = instance.emitter(
       "recipes",
       (container) =>
         new RecipeEmitterImpl(
           container.get("logger"),
           instance.options.packFormat,
-          loader(),
+          registry(),
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
           container.get("predicates"),

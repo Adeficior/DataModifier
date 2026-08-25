@@ -1,5 +1,5 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import type { Id, NormalizedId } from "@adeficior/data-modifier-core";
+import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   ItemResult,
   ItemTagIngredient,
@@ -8,8 +8,8 @@ import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { provided } from "@adeficior/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
-import { recipePath, ShapelessRecipe } from "../../src";
 import type { ShapedRecipeDefinition } from "../../src";
+import { recipePath, ShapelessRecipe } from "../../src";
 import { setupRecipeEmitter } from "../../src/testing";
 import { recipes } from "../providers/recipes";
 
@@ -89,7 +89,7 @@ describe("custom recipe creation", () => {
     emitter.add(id, { type: "example:something_else" });
 
     expect(logger.error).toHaveBeenCalledWith(
-      `Overwriting custom recipe with ID ${id}`,
+      `overwriting custom recipes with ID ${id}`,
     );
   });
 });

@@ -23,6 +23,7 @@ export * from "./registry/empty";
 export * from "./registry/filtered";
 export type * from "./registry/lookup";
 export * from "./registry/map";
+export * from "./registry/patched";
 export type * from "./registry/registered";
 
 export * from "./conditions";

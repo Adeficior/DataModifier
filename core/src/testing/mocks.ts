@@ -12,7 +12,7 @@ export function mockRegistryLookup() {
   } satisfies RegistryLookup;
 }
 
-export function mockRegistryProvider<T>() {
+export function mockRegistry<T>() {
   return {
     forEach: mock(),
     forEachAsync: mock(),

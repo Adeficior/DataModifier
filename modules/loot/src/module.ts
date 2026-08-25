@@ -1,11 +1,12 @@
-import { defineModule } from "@adeficior/data-modifier-core";
+import { defineModule, PatchedRegistry } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
 import type { LootEmitter } from "./emitter";
 import { LootEmitterImpl } from "./emitter";
 import { lootTableFolder, lootTablePattern } from "./helper";
 import { LootTableLoader } from "./loader";
-import { LootTableRulesImpl } from "./rule";
+import type { LootTableRegistry } from "./registry";
 import type { LootTableRules } from "./rule";
+import { LootTableRulesImpl } from "./rule";
 
 export default defineModule<{
   loaders: {
@@ -16,6 +17,7 @@ export default defineModule<{
   };
   services: {
     "rules:loot": LootTableRules;
+    "registry:loot": LootTableRegistry;
   };
 }>({
   importModule: name,
@@ -33,6 +35,7 @@ export default defineModule<{
     },
     services: {
       "rules:loot": "LootTableRules",
+      "registry:loot": "LootTableRegistry",
     },
   },
   promote: [{ key: "loot", service: "emitter:loot" }],
@@ -48,12 +51,18 @@ export default defineModule<{
       (container) => new LootTableRulesImpl(container.get("predicates")),
     );
 
+    const registry = instance.service(
+      "registry:loot",
+      () => new PatchedRegistry(loader()),
+    );
+
     instance.emitter(
       "loot",
       (container) =>
         new LootEmitterImpl(
           instance.options.packFormat,
-          loader(),
+          registry(),
+          container.get("logger"),
           container.get("registries"),
           container.get("predicates"),
           rules(),

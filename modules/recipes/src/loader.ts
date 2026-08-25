@@ -1,18 +1,18 @@
 import type {
   ConditionContext,
-  Registry,
   ResourceFolder,
 } from "@adeficior/data-modifier-core";
 import { JsonLoader } from "@adeficior/data-modifier-core";
 import { omit } from "lodash-es";
 import { minimatch } from "minimatch";
+import type { RecipeRegistry } from "./registry";
 import type { RecipeDefinition } from "./schema";
 import type { RecipesSerializer } from "./serializer/abstract";
 import type { RecipeHolder } from "./serializer/holder";
 
-export type RecipeLoader = {
+export type RecipeLoader = RecipeRegistry & {
   ignoreType(pattern: string): void;
-} & Registry<RecipeHolder>;
+};
 
 export class RecipeLoaderImpl
   extends JsonLoader<RecipeHolder>

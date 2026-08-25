@@ -1,12 +1,13 @@
 import type { LoaderContext, SemVerInput } from "@adeficior/data-modifier-core";
 import { CombinedEmitters, packFormatOf } from "@adeficior/data-modifier-core";
 import {
+  mockRegistry,
   mockRegistryLookup,
-  mockRegistryProvider,
 } from "@adeficior/data-modifier-core/testing";
 import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
 import { mockRules } from "@adeficior/data-modifier-loot/testing";
 import type { Resolver } from "@adeficior/pack-resolver";
+import { createTestLogger } from "@adeficior/pack-resolver/testing";
 import { LootEmitterImpl } from "../../../loot/src/emitter";
 import { BlockstateEmitterImpl } from "../../../models/src/emitter/blockstates";
 import { ModelEmitterImpl } from "../../../models/src/emitter/models";
@@ -31,7 +32,8 @@ export function createBlockDefinitionEmitter(
   const loot = emitters.add(
     new LootEmitterImpl(
       packFormatOf(version),
-      mockRegistryProvider(),
+      mockRegistry(),
+      createTestLogger(),
       mockRegistryLookup(),
       mockPredicates(),
       mockRules(),
@@ -60,7 +62,8 @@ export function createItemDefinitionEmitter(
   const loot = emitters.add(
     new LootEmitterImpl(
       packFormatOf(version),
-      mockRegistryProvider(),
+      mockRegistry(),
+      createTestLogger(),
       mockRegistryLookup(),
       mockPredicates(),
       mockRules(),

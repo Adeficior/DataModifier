@@ -4,6 +4,7 @@ export type * from "./hooks";
 export type { RecipeLoader } from "./loader";
 export type * from "./model";
 export { default } from "./module";
+export type * from "./registry";
 export type { RecipeFilter, RecipeRules } from "./rule";
 export * from "./schema";
 export type { RecipesSerializer } from "./serializer/abstract";

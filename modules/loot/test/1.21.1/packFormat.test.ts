@@ -1,8 +1,8 @@
 import type { LoaderContext } from "@adeficior/data-modifier-core";
 import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
+  mockRegistry,
   mockRegistryLookup,
-  mockRegistryProvider,
 } from "@adeficior/data-modifier-core/testing";
 import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
 import {
@@ -19,7 +19,8 @@ const version = basename(import.meta.dir);
 const context: LoaderContext = { logger: createTestLogger() };
 const emitter = new LootEmitterImpl(
   packFormatOf(version),
-  mockRegistryProvider(),
+  mockRegistry(),
+  context.logger,
   mockRegistryLookup(),
   mockPredicates(),
   mockRules(),

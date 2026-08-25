@@ -22,7 +22,7 @@ export type TagRegistries = {
 export type TagRegistry<T extends RegistryId> = {
   contains(id: TagInput, entry: IdInput<InferIds<T>>): boolean;
 
-  list(): string[];
+  list(): IteratorObject<string>;
 
   get(id: TagInput): TagEntry<InferIds<T>>[] | undefined;
 

@@ -1,7 +1,6 @@
 import type {
   IdInput,
   LoaderContext,
-  Registry,
   RegistryLookup,
   SemVerInput,
 } from "@adeficior/data-modifier-core";
@@ -16,7 +15,9 @@ import type {
   Predicates,
 } from "@adeficior/data-modifier-ingredients";
 import { combineResolvers } from "@adeficior/pack-resolver";
+import type { Logger } from "@adeficior/pack-resolver";
 import { lootTablePath } from "./helper";
+import type { LootTableRegistry } from "./registry";
 import type { LootTableFilter, LootTableRules } from "./rule";
 import type { LootItemInput, LootModifier, LootTable } from "./schema";
 import { EmptyLootEntry, LootTableSchema } from "./schema";
@@ -64,7 +65,8 @@ export class LootEmitterImpl
 
   constructor(
     packFormat: SemVerInput,
-    registry: Registry<LootTable>,
+    registry: LootTableRegistry,
+    logger: Logger,
     private readonly lookup: RegistryLookup,
     private readonly predicates: Predicates,
     private readonly rules: LootTableRules,
@@ -72,6 +74,7 @@ export class LootEmitterImpl
     super(
       "loot tables",
       registry,
+      logger,
       (it) => lootTablePath(packFormat, it),
       EMPTY_LOOT_TABLE,
     );
@@ -90,7 +93,7 @@ export class LootEmitterImpl
   }
 
   add(id: IdInput, value: LootTable): void {
-    this.custom.add(id, LootTableSchema.parse(value));
+    this.addCustom(id, LootTableSchema.parse(value));
   }
 
   disable(filter: LootTableFilter): void {

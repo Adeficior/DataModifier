@@ -57,15 +57,17 @@ export function setupLootEmitter(
   );
   const rules = new LootTableRulesImpl(predicates);
 
+  const logger = createTestLogger();
+
   const emitter = new LootEmitterImpl(
     packFormatOf(version),
     loader,
+    logger,
     lookup,
     predicates,
     rules,
   );
 
-  const logger = createTestLogger();
   const resolver = emitter.resolver({ logger });
 
   afterEach(() => {

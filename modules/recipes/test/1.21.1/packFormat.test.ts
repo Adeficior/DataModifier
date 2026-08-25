@@ -1,6 +1,6 @@
 import type { LoaderContext } from "@adeficior/data-modifier-core";
 import { packFormatOf } from "@adeficior/data-modifier-core";
-import { mockRegistryProvider } from "@adeficior/data-modifier-core/testing";
+import { mockRegistry } from "@adeficior/data-modifier-core/testing";
 import {
   mockIngredientSerializer,
   mockPredicates,
@@ -26,7 +26,7 @@ const serializer = new RecipeSerializerImpl(
 const emitter = new RecipeEmitterImpl(
   context.logger,
   packFormatOf(version),
-  mockRegistryProvider(),
+  mockRegistry(),
   mockResultSerializer(),
   mockIngredientSerializer(),
   mockPredicates(),
