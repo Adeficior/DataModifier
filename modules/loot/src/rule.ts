@@ -1,72 +1,107 @@
-import type { Id, Modifier } from "@adeficior/data-modifier-core";
-import { Rule } from "@adeficior/data-modifier-core";
-import type { Predicate } from "@adeficior/data-modifier-core/serializer";
-import {
-  IllegalShapeError,
-  tryCatching,
+import type { Id, NormalizedId, Rule } from "@adeficior/data-modifier-core";
+import { always, every, some } from "@adeficior/data-modifier-core/serializer";
+import type {
+  CommonFilter,
+  Predicate,
 } from "@adeficior/data-modifier-core/serializer";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
+import type {
+  Ingredient,
+  IngredientFilter,
+  Predicates,
+} from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import type { ContextLike, Logger } from "@adeficior/pack-resolver";
+import { notNull } from "@adeficior/pack-resolver";
 import type { LootEntryBase, LootTable } from "./schema";
 import { extendLootEntry } from "./schema";
 
-// TODO add function Predicate<Ingredient> -> Predicate<LootEntry>
-
 function entryMatches(
-  test: Predicate<Ingredient>,
+  predicate: Predicate<Ingredient>,
   base: LootEntryBase,
 ): boolean {
   try {
     const entry = extendLootEntry(base);
     switch (entry.type) {
       case "minecraft:alternatives":
-        return entry.children.some((it) => entryMatches(test, it));
+        return entry.children.some((it) => entryMatches(predicate, it));
       case "minecraft:item":
-        return test(new ItemIngredient(entry.name));
+        return predicate(new ItemIngredient(entry.name));
       case "minecraft:tag":
-        return test(new ItemTagIngredient(entry.name));
+        return predicate(new ItemTagIngredient(entry.name));
       default:
         return false;
     }
   } catch {
-    throw new IllegalShapeError(`unknown loot entry type:`, base);
+    return false;
   }
 }
 
-function hasOutput(
-  logger: Logger,
-  test: Predicate<Ingredient>,
-  table: LootTable,
-): boolean {
-  return table.pools.some((pool) =>
-    pool.entries.some((entry) => {
-      return tryCatching(logger, () => entryMatches(test, entry)) ?? false;
-    }),
-  );
-}
+export type LootTableFilter = Readonly<{
+  id?: CommonFilter<NormalizedId>;
+  output?: IngredientFilter;
+}>;
 
-export class LootTableRule extends Rule<LootTable> {
+type SubjectFilters = Readonly<{
+  output?: IngredientFilter;
+}>;
+
+class LootTableRule implements Rule<LootTable> {
   constructor(
-    private readonly context: ContextLike,
-    private readonly idTests: Predicate<Id>[],
-    private readonly outputTests: Predicate<Ingredient>[],
-    modifier: Modifier<LootTable>,
-  ) {
-    super(modifier);
+    private readonly idFilter: Predicate<Id>,
+    private readonly outputsFilter: Predicate<LootEntryBase[]>,
+  ) {}
+
+  matches(id: Id, value: LootTable): boolean {
+    const outputs = value.pools.flatMap((it) => it.entries);
+    return this.idFilter(id) && this.outputsFilter(outputs);
+  }
+}
+
+export type LootTableRules = {
+  resolve(
+    filter?: LootTableFilter,
+    subjectFilters?: SubjectFilters,
+  ): Rule<LootTable>;
+};
+
+export class LootTableRulesImpl implements LootTableRules {
+  constructor(private readonly predicates: Predicates) {}
+
+  private resolveLootTableFilter(test: LootTableFilter) {
+    const id: Predicate<Id>[] = [];
+    const output: Predicate<Ingredient>[] = [];
+
+    if (test.id) id.push(this.predicates.id(test.id, "minecraft:item"));
+    if (test.output) output.push(this.predicates.ingredient(test.output));
+
+    return { id, output };
   }
 
-  matches(id: Id, value: LootTable, logger: Logger): boolean {
-    return (
-      this.idTests.every((test) => test(id)) &&
-      this.outputTests.every((test) => hasOutput(logger, test, value))
+  private resolveSubjectFilters({ output }: SubjectFilters) {
+    return {
+      output: notNull(output) ? this.predicates.ingredient(output) : always(),
+    };
+  }
+
+  private toLootEntryPredicate(
+    predicate: Predicate<Ingredient>,
+  ): Predicate<LootEntryBase> {
+    return (base) => entryMatches(predicate, base);
+  }
+
+  resolve(filter: LootTableFilter = {}, subjectFilters: SubjectFilters = {}) {
+    const predicates = this.resolveLootTableFilter(filter);
+    const subjectPredicates = this.resolveSubjectFilters(subjectFilters);
+
+    return new LootTableRule(
+      every(predicates.id),
+      every(
+        [...predicates.output, subjectPredicates.output]
+          .map((it) => this.toLootEntryPredicate(it))
+          .map(some),
+      ),
     );
-  }
-
-  printWarning(logger: Logger) {
-    logger.trace("could not find any matching loot table", this.context);
   }
 }

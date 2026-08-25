@@ -11,6 +11,7 @@ import { afterAll, afterEach, beforeAll } from "bun:test";
 import { LootEmitterImpl } from "../emitter";
 import { lootTableFolder, lootTablePattern } from "../helper";
 import { LootTableLoader } from "../loader";
+import { LootTableRulesImpl } from "../rule";
 
 export type TestLootLoaderOptions = TestDataOptions & {
   mods?: string[];
@@ -54,12 +55,14 @@ export function setupLootEmitter(
     tags,
     setupIngredientSerializer(version, lookup),
   );
+  const rules = new LootTableRulesImpl(predicates);
 
   const emitter = new LootEmitterImpl(
     packFormatOf(version),
     loader,
     lookup,
     predicates,
+    rules,
   );
 
   const logger = createTestLogger();

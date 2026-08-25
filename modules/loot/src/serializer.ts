@@ -1,22 +1,19 @@
+import type { Modifier, RegistryLookup } from "@adeficior/data-modifier-core";
 import { encodeId, stripTag } from "@adeficior/data-modifier-core";
-import type { RegistryLookup } from "@adeficior/data-modifier-core";
-import type {
-  Predicate,
-  Replacer,
-} from "@adeficior/data-modifier-core/serializer";
+import type { Predicate } from "@adeficior/data-modifier-core/serializer";
+import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import {
   ItemIngredient,
   ItemResult,
   ItemTagIngredient,
 } from "@adeficior/data-modifier-ingredients";
-import type { Ingredient } from "@adeficior/data-modifier-ingredients";
-import { extendLootEntry } from "./schema";
 import type {
   LootEntry,
   LootEntryBase,
   LootItemInput,
   LootTable,
 } from "./schema";
+import { extendLootEntry } from "./schema";
 
 function createUnvalidatedLootEntry(input: LootItemInput): LootEntry {
   if (input instanceof ItemIngredient || input instanceof ItemResult) {
@@ -92,7 +89,7 @@ function replaceItemInEntry(predicate: Predicate<Ingredient>, to: LootEntry) {
 export function replaceItemInTable(
   predicate: Predicate<Ingredient>,
   to: LootEntry,
-): Replacer<LootTable> {
+): Modifier<LootTable> {
   const replaceEntry = replaceItemInEntry(predicate, to);
   return (table) => {
     return {

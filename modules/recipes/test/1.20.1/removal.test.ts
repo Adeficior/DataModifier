@@ -1,8 +1,8 @@
 import { createTestAcceptor } from "@adeficior/pack-resolver/testing";
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
+import type { RecipeFilter } from "../../src";
 import { EMPTY_RECIPE } from "../../src";
-import type { RecipeTest } from "../../src";
 import { setupRecipeEmitter } from "../../src/testing";
 
 const version = basename(import.meta.dir);
@@ -65,11 +65,11 @@ describe("recipe removal", () => {
   });
 
   it("warns about missing matches", async () => {
-    const test: RecipeTest = {
+    const filter: RecipeFilter = {
       type: "example:not_existing",
     };
 
-    emitter.remove(test);
+    emitter.remove(filter);
 
     const acceptor = createTestAcceptor();
     await resolver.extract(acceptor);
@@ -78,7 +78,7 @@ describe("recipe removal", () => {
       "could not find any recipes matching",
       expect.objectContaining({
         operation: "remove",
-        test,
+        filter,
       }),
     );
   });

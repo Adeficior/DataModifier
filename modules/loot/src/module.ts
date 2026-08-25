@@ -4,6 +4,8 @@ import type { LootEmitter } from "./emitter";
 import { LootEmitterImpl } from "./emitter";
 import { lootTableFolder, lootTablePattern } from "./helper";
 import { LootTableLoader } from "./loader";
+import { LootTableRulesImpl } from "./rule";
+import type { LootTableRules } from "./rule";
 
 export default defineModule<{
   loaders: {
@@ -12,9 +14,13 @@ export default defineModule<{
   emitters: {
     loot: LootEmitter;
   };
+  services: {
+    "rules:loot": LootTableRules;
+  };
 }>({
   importModule: name,
   dependencies: {
+    "@adeficior/data-modifier-ingredients": "required",
     // TODO make optional?
     "@adeficior/data-modifier-tags": "required",
   },
@@ -25,6 +31,9 @@ export default defineModule<{
     emitters: {
       loot: "LootEmitter",
     },
+    services: {
+      "rules:loot": "LootTableRules",
+    },
   },
   promote: [{ key: "loot", service: "emitter:loot" }],
   setup(instance) {
@@ -32,6 +41,11 @@ export default defineModule<{
       "loot",
       () => new LootTableLoader(lootTableFolder(instance.options.packFormat)),
       lootTablePattern(instance.options.packFormat),
+    );
+
+    const rules = instance.service(
+      "rules:loot",
+      (container) => new LootTableRulesImpl(container.get("predicates")),
     );
 
     instance.emitter(
@@ -42,6 +56,7 @@ export default defineModule<{
           loader(),
           container.get("registries"),
           container.get("predicates"),
+          rules(),
         ),
     );
   },

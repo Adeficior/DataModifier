@@ -3,7 +3,6 @@ import type {
   Id,
   IdInput,
   LoaderContext,
-  NormalizedId,
   RegistryLookup,
   RegistryProvider,
   SemVerInput,
@@ -15,17 +14,12 @@ import {
   RuledEmitter,
 } from "@adeficior/data-modifier-core";
 import type {
-  CommonFilter,
-  Predicate,
-} from "@adeficior/data-modifier-core/serializer";
-import type {
-  Ingredient,
   IngredientFilter,
   Predicates,
 } from "@adeficior/data-modifier-ingredients";
 import { combineResolvers } from "@adeficior/pack-resolver";
 import { lootTablePath } from "./helper";
-import { LootTableRule } from "./rule";
+import type { LootTableFilter, LootTableRules } from "./rule";
 import type { LootItemInput, LootModifier, LootTable } from "./schema";
 import { EmptyLootEntry, LootTableSchema } from "./schema";
 import { createLootEntry, replaceItemInTable } from "./serializer";
@@ -39,23 +33,21 @@ export const EMPTY_LOOT_MODIFIER: LootModifier = {
   type: "noop",
 };
 
-type LootTableTest = Readonly<{
-  id?: CommonFilter<NormalizedId>;
-  output?: IngredientFilter;
-}>;
-
 export type LootEmitter = {
   replaceOutput(
     from: IngredientFilter,
     to: LootItemInput,
-    additionalTests?: LootTableTest,
+    additionalFilters?: LootTableFilter,
   ): void;
 
-  removeOutput(from: IngredientFilter, additionalTests?: LootTableTest): void;
+  removeOutput(
+    from: IngredientFilter,
+    additionalFilters?: LootTableFilter,
+  ): void;
 
   add(id: IdInput, value: LootTable): void;
 
-  disable(test: LootTableTest): void;
+  disable(filter: LootTableFilter): void;
 
   block(id: IdInput): void;
 
@@ -72,16 +64,17 @@ export class LootEmitterImpl implements LootEmitter, ClearableEmitter {
     this.modifierPath(it),
   );
 
-  private readonly ruled: RuledEmitter<LootTable, LootTableRule>;
+  private readonly ruled;
 
   constructor(
-    // TODO inject
     private readonly packFormat: SemVerInput,
     private readonly lootTables: RegistryProvider<LootTable>,
     private readonly lookup: RegistryLookup,
     private readonly predicates: Predicates,
+    private readonly rules: LootTableRules,
   ) {
-    this.ruled = new RuledEmitter<LootTable, LootTableRule>(
+    this.ruled = new RuledEmitter<LootTable>(
+      "loot tables",
       this.lootTables,
       (id) => lootTablePath(packFormat, id),
       EMPTY_LOOT_TABLE,
@@ -112,55 +105,33 @@ export class LootEmitterImpl implements LootEmitter, ClearableEmitter {
     this.ruled.clear();
   }
 
-  private resolveLootTableTest(test: LootTableTest) {
-    const id: Predicate<Id>[] = [];
-    const output: Predicate<Ingredient>[] = [];
-
-    if (test.id) id.push(this.predicates.id(test.id, "minecraft:item"));
-    if (test.output) output.push(this.predicates.ingredient(test.output));
-
-    return { id, output };
-  }
-
   add(id: IdInput, value: LootTable): void {
     this.customTables.add(id, LootTableSchema.parse(value));
   }
 
-  disable(test: LootTableTest): void {
-    const predicates = this.resolveLootTableTest(test);
-    this.ruled.addRule(
-      new LootTableRule(
-        { operation: "remove", test },
-        predicates.id,
-        predicates.output,
-        () => null,
-      ),
-    );
+  disable(filter: LootTableFilter): void {
+    this.ruled.addRemoval(this.rules.resolve(filter), { filter });
   }
 
   replaceOutput(
     from: IngredientFilter,
     to: LootItemInput,
-    additionalTests: LootTableTest = {},
+    additionalFilters: LootTableFilter = {},
   ): void {
-    const predicates = this.resolveLootTableTest(additionalTests);
-    const outputPredicate = this.predicates.ingredient(from);
-    const replacer = replaceItemInTable(
-      outputPredicate,
+    const modifier = replaceItemInTable(
+      this.predicates.ingredient(from),
       createLootEntry(to, this.lookup),
     );
+
     this.ruled.addRule(
-      new LootTableRule(
-        { operation: "replace output", from, to, test: additionalTests },
-        predicates.id,
-        [outputPredicate, ...predicates.output],
-        replacer,
-      ),
+      this.rules.resolve(additionalFilters, { output: from }),
+      modifier,
+      { operation: "replace output", from, to, filter: additionalFilters },
     );
   }
 
-  removeOutput(from: IngredientFilter, additionalTests?: LootTableTest) {
-    this.replaceOutput(from, EmptyLootEntry, additionalTests);
+  removeOutput(from: IngredientFilter, additionalFilters?: LootTableFilter) {
+    this.replaceOutput(from, EmptyLootEntry, additionalFilters);
   }
 
   block(id: IdInput) {

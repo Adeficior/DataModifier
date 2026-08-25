@@ -5,6 +5,7 @@ import {
   mockRegistryProvider,
 } from "@adeficior/data-modifier-core/testing";
 import { mockPredicates } from "@adeficior/data-modifier-ingredients/testing";
+import { mockRules } from "@adeficior/data-modifier-loot/testing";
 import type { Resolver } from "@adeficior/pack-resolver";
 import { LootEmitterImpl } from "../../../loot/src/emitter";
 import { BlockstateEmitterImpl } from "../../../models/src/emitter/blockstates";
@@ -33,6 +34,7 @@ export function createBlockDefinitionEmitter(
       mockRegistryProvider(),
       mockRegistryLookup(),
       mockPredicates(),
+      mockRules(),
     ),
   );
 
@@ -61,6 +63,7 @@ export function createItemDefinitionEmitter(
       mockRegistryProvider(),
       mockRegistryLookup(),
       mockPredicates(),
+      mockRules(),
     ),
   );
 

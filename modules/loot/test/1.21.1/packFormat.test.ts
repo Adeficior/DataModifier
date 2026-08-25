@@ -12,6 +12,7 @@ import {
 import { describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import { EMPTY_LOOT_TABLE, LootEmitterImpl } from "../../src/emitter";
+import { mockRules } from "../../src/testing";
 
 const version = basename(import.meta.dir);
 // TODO common method?
@@ -21,6 +22,7 @@ const emitter = new LootEmitterImpl(
   mockRegistryProvider(),
   mockRegistryLookup(),
   mockPredicates(),
+  mockRules(),
 );
 
 describe("loader respects different pack format versions", () => {

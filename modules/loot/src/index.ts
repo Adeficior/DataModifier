@@ -6,6 +6,7 @@ export {
 export type * from "./helper";
 export type * from "./loader";
 export { default } from "./module";
+export type { LootTableFilter, LootTableRules } from "./rule";
 export type {
   EmptyLootEntry,
   LootEntry,

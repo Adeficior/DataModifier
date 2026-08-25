@@ -70,9 +70,9 @@ function forgePredicate(
     return ({ mods }) =>
       !notNull(mods) || mods.includes(condition.mod_id as string);
   if (path === "and")
-    return every(...(condition.values as ForgeCondition[]).map(forgePredicate));
+    return every((condition.values as ForgeCondition[]).map(forgePredicate));
   if (path === "or")
-    return any(...(condition.values as ForgeCondition[]).map(forgePredicate));
+    return any((condition.values as ForgeCondition[]).map(forgePredicate));
   if (path === "false") return never();
 
   return always();
@@ -84,8 +84,8 @@ export function conditionsPredicate(
   // TODO fabric
   // TODO tests
 
-  return every(
+  return every([
     ...(value["neoforge:conditions"] ?? []).map(forgePredicate),
     ...(value["conditions"] ?? []).map(forgePredicate),
-  );
+  ]);
 }

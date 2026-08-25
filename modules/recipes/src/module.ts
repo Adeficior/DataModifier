@@ -7,6 +7,8 @@ import { VanillaRecipeHelperImpl } from "./helper/vanilla";
 import type { RegisterRecipeSerializer } from "./hooks";
 import type { RecipeLoader } from "./loader";
 import { RecipeLoaderImpl } from "./loader";
+import { RecipeRulesImpl } from "./rule";
+import type { RecipeRules } from "./rule";
 import { recipeFolder, recipePattern } from "./schema";
 import type { RecipesSerializer } from "./serializer/abstract";
 import { registerDefaultSerializers } from "./serializer/default";
@@ -24,6 +26,7 @@ export default defineModule<{
   };
   services: {
     "serializer:recipes": RecipesSerializer;
+    "rules:recipes": RecipeRules;
     "helper:recipes:vanilla": VanillaRecipeHelper;
   };
 }>({
@@ -43,6 +46,7 @@ export default defineModule<{
     },
     services: {
       "serializer:recipes": "RecipesSerializer",
+      "rules:recipes": "RecipeRules",
       "helper:recipes:vanilla": "VanillaRecipeHelper",
     },
   },
@@ -70,6 +74,11 @@ export default defineModule<{
       recipePattern(instance.options.packFormat),
     );
 
+    const rules = instance.service(
+      "rules:recipes",
+      (container) => new RecipeRulesImpl(container.get("predicates")),
+    );
+
     const emitter = instance.emitter(
       "recipes",
       (container) =>
@@ -80,6 +89,7 @@ export default defineModule<{
           container.get("serializer:results"),
           container.get("serializer:ingredients"),
           container.get("predicates"),
+          rules(),
           serializer(),
         ),
     );

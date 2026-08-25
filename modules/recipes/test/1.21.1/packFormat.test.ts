@@ -14,6 +14,7 @@ import { describe, expect, it } from "bun:test";
 import { EMPTY_RECIPE } from "../../src";
 import { RecipeEmitterImpl } from "../../src/emitter";
 import { RecipeSerializerImpl } from "../../src/serializer/impl";
+import { mockRules } from "../../src/testing";
 
 const version = "1.21.1";
 // TODO common method?
@@ -29,6 +30,7 @@ const emitter = new RecipeEmitterImpl(
   mockResultSerializer(),
   mockIngredientSerializer(),
   mockPredicates(),
+  mockRules(),
   serializer,
 );
 

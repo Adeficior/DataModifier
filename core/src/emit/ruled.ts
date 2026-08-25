@@ -1,78 +1,60 @@
-import type { Logger } from "@adeficior/pack-resolver";
-import { extendLoggerContext, simpleResolver } from "@adeficior/pack-resolver";
+import { simpleResolver } from "@adeficior/pack-resolver";
+import type { ContextLike } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
 import type { Id } from "../common/id";
+import { RuleHandler } from "../common/rules";
+import type { Rule } from "../common/rules";
 import type { RegistryProvider } from "../registry/abstract";
 import { toJson } from "../serializer/textHelper";
 import type { ClearableEmitter, PathProvider } from "./abstract";
 
 export type Modifier<T> = (value: T) => T | null;
 
-export abstract class Rule<T> {
-  protected constructor(private readonly modifier: Modifier<T>) {}
-
-  // TODO why logger?
-  abstract matches(id: Id, value: T, logger: Logger): boolean;
-
-  abstract printWarning(logger: Logger): void;
-
-  modify(value: T) {
-    return this.modifier(value);
-  }
-}
-
-export class RuledEmitter<
-  TEntry,
-  TRule extends Rule<TEntry>,
-> implements ClearableEmitter {
+export class RuledEmitter<T> implements ClearableEmitter {
+  private readonly handler;
   constructor(
-    private readonly provider: RegistryProvider<TEntry>,
+    type: string,
+    private readonly registry: RegistryProvider<T>,
     private readonly pathProvider: PathProvider,
-    private readonly emptyValue: unknown,
-    private readonly serialize: (entry: TEntry) => unknown,
-    private readonly shouldSkip: (id: Id) => boolean = () => true,
-  ) {}
-
-  private rules: TRule[] = [];
+    private readonly disabledValue: unknown,
+    private readonly serialize: (entry: T) => unknown,
+    shouldSkip: (id: Id) => boolean = () => true,
+  ) {
+    this.handler = new RuleHandler<T, Modifier<T>>(type, shouldSkip);
+  }
 
   clear() {
-    this.rules = [];
+    this.handler.clear();
   }
 
-  addRule(rule: TRule) {
-    this.rules.push(rule);
+  addRule(rule: Rule<T>, modifier: Modifier<T>, context: ContextLike) {
+    this.handler.addRule(rule, modifier, context);
+  }
+
+  addRemoval(rule: Rule<T>, context: ContextLike = {}) {
+    this.addRule(rule, () => null, { operation: "remove", ...context });
   }
 
   resolver(context: LoaderContext) {
     return simpleResolver(async (acceptor) => {
-      const missingRules = new Set<TRule>(this.rules);
-      await this.provider.forEachAsync(async (recipe, id) => {
-        if (this.shouldSkip(id)) return;
+      await this.handler.run(
+        this.registry,
+        context.logger,
+        async (id, value, matches) => {
+          const path = this.pathProvider(id);
 
-        const path = this.pathProvider(id);
+          const modified = matches.reduce<T | null>(
+            (previous, modifier) => previous && modifier(previous),
+            value,
+          );
 
-        const rules = this.rules.filter((it) =>
-          it.matches(id, recipe, extendLoggerContext(context.logger, { path })),
-        );
-        if (rules.length === 0) return;
+          const serialized = modified
+            ? this.serialize(modified)
+            : this.disabledValue;
 
-        rules.forEach((it) => missingRules.delete(it));
-
-        const modified = rules.reduce<TEntry | null>(
-          (previous, rule) => previous && rule.modify(previous),
-          recipe,
-        );
-
-        const serialized = modified
-          ? this.serialize(modified)
-          : this.emptyValue;
-
-        await acceptor(path, toJson(serialized));
-      });
-
-      missingRules.forEach((rule) => {
-        rule.printWarning(context.logger);
-      });
+          await acceptor(path, toJson(serialized));
+        },
+      );
     }, context);
   }
 }

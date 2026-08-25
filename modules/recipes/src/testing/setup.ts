@@ -18,6 +18,7 @@ import { RecipeEmitterImpl } from "../emitter";
 import type { RegisterRecipeSerializer } from "../hooks";
 import type { RecipeLoader } from "../loader";
 import { RecipeLoaderImpl } from "../loader";
+import { RecipeRulesImpl } from "../rule";
 import { recipeFolder, recipePattern } from "../schema";
 import type { RecipesSerializer } from "../serializer";
 import { registerDefaultSerializers } from "../serializer/default";
@@ -94,6 +95,7 @@ export function setupRecipeEmitter(
   const ingredients = setupIngredientSerializer(version, lookup);
   const tags = setupTagRegistry(version, options);
   const predicates = setupPredicates(lookup, tags, ingredients);
+  const rules = new RecipeRulesImpl(predicates);
 
   const logger = createTestLogger();
 
@@ -104,6 +106,7 @@ export function setupRecipeEmitter(
     results,
     ingredients,
     predicates,
+    rules,
     serializer,
   );
 

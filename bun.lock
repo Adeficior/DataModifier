@@ -14,7 +14,7 @@
     },
     "core": {
       "name": "@adeficior/data-modifier-core",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "dependencies": {
         "json5": "^2.2.3",
         "lodash-es": "catalog:",
@@ -55,7 +55,7 @@
     },
     "lib": {
       "name": "@adeficior/data-modifier",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "bin": {
         "datamod": "dist/cli.js",
       },
@@ -82,7 +82,7 @@
     },
     "modules/botania": {
       "name": "@adeficior/data-modifier-botania",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -100,7 +100,7 @@
     },
     "modules/content": {
       "name": "@adeficior/data-modifier-content",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
@@ -121,7 +121,7 @@
     },
     "modules/create": {
       "name": "@adeficior/data-modifier-create",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -138,7 +138,7 @@
     },
     "modules/farmersdelight": {
       "name": "@adeficior/data-modifier-farmersdelight",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -156,7 +156,7 @@
     },
     "modules/ingredients": {
       "name": "@adeficior/data-modifier-ingredients",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
@@ -174,7 +174,7 @@
     },
     "modules/lang": {
       "name": "@adeficior/data-modifier-lang",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -191,7 +191,7 @@
     },
     "modules/loot": {
       "name": "@adeficior/data-modifier-loot",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -208,7 +208,7 @@
     },
     "modules/models": {
       "name": "@adeficior/data-modifier-models",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -222,7 +222,7 @@
     },
     "modules/recipes": {
       "name": "@adeficior/data-modifier-recipes",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -241,7 +241,7 @@
     },
     "modules/tags": {
       "name": "@adeficior/data-modifier-tags",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -257,7 +257,7 @@
     },
     "modules/thermal": {
       "name": "@adeficior/data-modifier-thermal",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -292,7 +292,7 @@
     },
     "packages/codegen": {
       "name": "@adeficior/data-modifier-codegen",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "bin": {
         "datamod-codegen": "./dist/cli.ts",
       },
@@ -332,7 +332,7 @@
     },
     "packages/loader": {
       "name": "@adeficior/data-modifier-loader",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
