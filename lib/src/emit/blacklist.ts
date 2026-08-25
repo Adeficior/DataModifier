@@ -84,12 +84,12 @@ export class BlacklistEmitterImpl
 
     const predicate = this.predicates.ingredient(test);
 
-    return [...keys.keys()].filter((it) => predicate(new ItemIngredient(it)));
+    return keys.filter((it) => predicate(new ItemIngredient(it)));
   }
 
   private resolveIds(input: IngredientFilter): string[] {
     if (input instanceof RegExp || typeof input === "function") {
-      return this.filterItemIds(input);
+      return this.filterItemIds(input).toArray();
     }
 
     const ingredient = this.ingredientSerializer.deserialize(input);
@@ -134,7 +134,7 @@ export class BlacklistEmitterImpl
       );
 
     const content = toJson({
-      targets: [...tabs.values()].toSorted(),
+      targets: tabs.toArray().toSorted(),
       removals: [
         {
           type: "items_match",

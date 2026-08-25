@@ -1,5 +1,5 @@
 import type { ContextLike, Logger } from "@adeficior/pack-resolver";
-import type { RegistryProvider } from "../registry/abstract";
+import type { Registry } from "../registry/abstract";
 import type { Id } from "./id";
 
 export type Rule<T> = {
@@ -30,7 +30,7 @@ export class RuleHandler<T, V> {
   }
 
   async run(
-    registry: RegistryProvider<T>,
+    registry: Registry<T>,
     logger: Logger,
     acceptor: (id: Id, value: T, matches: V[]) => PromiseLike<void>,
   ) {

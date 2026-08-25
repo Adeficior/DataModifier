@@ -7,7 +7,7 @@ import type {
 import {
   encodeId,
   isAtLeastVersion,
-  Registry,
+  RegistryMap,
 } from "@adeficior/data-modifier-core";
 import { fromJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
@@ -21,7 +21,7 @@ import type {
 } from "./schema";
 
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
-  private readonly entries = new Registry<TagEntry<T>[]>();
+  private readonly entries = new RegistryMap<TagEntry<T>[]>();
 
   constructor(public readonly folder: string) {}
 

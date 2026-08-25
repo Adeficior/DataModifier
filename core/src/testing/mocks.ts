@@ -1,5 +1,5 @@
 import { mock } from "bun:test";
-import type { RegistryProvider } from "../registry/abstract";
+import type { Registry } from "../registry/abstract";
 import type { RegistryLookup } from "../registry/lookup";
 
 export function mockRegistryLookup() {
@@ -17,5 +17,7 @@ export function mockRegistryProvider<T>() {
     forEach: mock(),
     forEachAsync: mock(),
     get: mock(),
-  } satisfies RegistryProvider<T>;
+    has: mock(),
+    keys: mock(),
+  } satisfies Registry<T>;
 }

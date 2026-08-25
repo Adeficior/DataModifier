@@ -1,13 +1,13 @@
 import type { Id, NormalizedId, TagInput } from "@adeficior/data-modifier-core";
-import { createId, Registry } from "@adeficior/data-modifier-core";
+import { createId, RegistryMap } from "@adeficior/data-modifier-core";
 import type {
   CommonFilter,
   Replacer,
 } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import { entryId } from "../helper";
-import { resolveIdFilter } from "../predicates";
 import type { IdFilterContext } from "../predicates";
+import { resolveIdFilter } from "../predicates";
 import type { TagDefinition, TagEntry } from "../schema";
 import type { TagEmitterOptions } from "./options";
 
@@ -32,7 +32,7 @@ export class ScopedTagEmitterImpl<
     private readonly options: TagEmitterOptions,
   ) {}
 
-  private readonly modifiers = new Registry<TagModifier[]>();
+  private readonly modifiers = new RegistryMap<TagModifier[]>();
 
   getModified<R>(consumer: (id: Id, definition: TagDefinition) => R): R[] {
     const results: R[] = [];

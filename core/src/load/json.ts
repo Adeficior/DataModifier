@@ -1,17 +1,17 @@
 import type { Acceptable } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
-import { createId } from "../common/id";
 import type { Id, IdInput } from "../common/id";
+import { createId } from "../common/id";
 import type { ConditionContext, WithConditions } from "../conditions";
 import { conditionsPredicate } from "../conditions";
-import type { RegistryProvider } from "../registry/abstract";
-import { Registry } from "../registry/impl";
+import type { Registry } from "../registry/abstract";
+import { RegistryMap } from "../registry/map";
 import { tryCatching } from "../serializer/error";
 import { tryParseJson } from "../serializer/textHelper";
 import type { Loader } from "./abstract";
 
-export abstract class JsonLoader<T> implements RegistryProvider<T>, Loader {
-  private readonly registry = new Registry<T>();
+export abstract class JsonLoader<T> implements Registry<T>, Loader {
+  private readonly registry = new RegistryMap<T>();
   private readonly pattern;
 
   constructor(
@@ -37,6 +37,14 @@ export abstract class JsonLoader<T> implements RegistryProvider<T>, Loader {
     consumer: (value: T, id: Id) => Promise<void>,
   ): Promise<void> {
     await this.registry.forEachAsync(consumer);
+  }
+
+  keys() {
+    return this.registry.keys();
+  }
+
+  has(id: IdInput) {
+    return this.registry.has(id);
   }
 
   private shouldLoad(value: WithConditions<T>) {

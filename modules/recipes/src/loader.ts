@@ -1,6 +1,6 @@
 import type {
   ConditionContext,
-  RegistryProvider,
+  Registry,
   ResourceFolder,
 } from "@adeficior/data-modifier-core";
 import { JsonLoader } from "@adeficior/data-modifier-core";
@@ -12,7 +12,7 @@ import type { RecipeHolder } from "./serializer/holder";
 
 export type RecipeLoader = {
   ignoreType(pattern: string): void;
-} & RegistryProvider<RecipeHolder>;
+} & Registry<RecipeHolder>;
 
 export class RecipeLoaderImpl
   extends JsonLoader<RecipeHolder>

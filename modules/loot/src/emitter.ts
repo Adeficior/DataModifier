@@ -1,8 +1,8 @@
 import type {
   IdInput,
   LoaderContext,
+  Registry,
   RegistryLookup,
-  RegistryProvider,
   SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
@@ -64,7 +64,7 @@ export class LootEmitterImpl
 
   constructor(
     packFormat: SemVerInput,
-    registry: RegistryProvider<LootTable>,
+    registry: Registry<LootTable>,
     private readonly lookup: RegistryLookup,
     private readonly predicates: Predicates,
     private readonly rules: LootTableRules,

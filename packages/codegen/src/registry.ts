@@ -35,11 +35,11 @@ export async function generateRegistryTypes(
   typesDir: string,
   lookup: RegistryLookup,
 ) {
-  const registryBlock = idTemplate("Registry", lookup.registries());
-  const inferIdBlock = inferRegistryTemplate(lookup.registries());
+  const registries = lookup.registries().toArray();
+  const registryBlock = idTemplate("Registry", registries);
+  const inferIdBlock = inferRegistryTemplate(registries);
 
-  const idBlocks = lookup
-    .registries()
+  const idBlocks = registries
     .map(createId)
     .filter((it) => it.namespace === "minecraft")
     .map((id) => {

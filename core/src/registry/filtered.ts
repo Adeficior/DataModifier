@@ -1,38 +1,49 @@
-import type { Id, IdInput } from "../common/id";
+import type { Id, IdInput, NormalizedId } from "../common/id";
 import { createId } from "../common/id";
-import type { Rule } from "../common/rules";
-import type { RegistryProvider } from "./abstract";
+import type { Predicate } from "../serializer";
+import type { Registry } from "./abstract";
 
-class FilteredRegistryProvider<T> implements RegistryProvider<T> {
+class FilteredRegistryProvider<T> implements Registry<T> {
+  private readonly exclude: Predicate<IdInput>;
+
   constructor(
-    private readonly inner: RegistryProvider<T>,
-    private readonly exclude: Rule<T>,
-  ) {}
+    private readonly inner: Registry<T>,
+    exclude: Predicate<Id>,
+  ) {
+    this.exclude = (it) => exclude(createId(it));
+  }
 
   forEach(consumer: (value: T, id: Id) => void): void {
     this.inner.forEach((value, id) => {
-      if (this.exclude.matches(id, value)) return;
+      if (this.exclude(id)) return;
       consumer(value, id);
     });
   }
 
   async forEachAsync(consumer: (value: T, id: Id) => Promise<void>) {
     await this.inner.forEachAsync(async (value, id) => {
-      if (this.exclude.matches(id, value)) return;
+      if (this.exclude(id)) return;
       await consumer(value, id);
     });
   }
 
   get(id: IdInput) {
-    const entry = this.inner.get(id);
-    if (entry && this.exclude.matches(createId(id), entry)) return undefined;
-    return entry;
+    if (this.exclude(id)) return undefined;
+    return this.inner.get(id);
+  }
+
+  has(id: IdInput) {
+    return !this.exclude(id) && this.inner.has(id);
+  }
+
+  keys(): IteratorObject<NormalizedId> {
+    return this.inner.keys().filter((it) => !this.exclude(it));
   }
 }
 
 export function filterRegistry<T>(
-  registry: RegistryProvider<T>,
-  exclude: Rule<T>,
+  registry: Registry<T>,
+  exclude: Predicate<Id>,
 ) {
   return new FilteredRegistryProvider(registry, exclude);
 }

@@ -21,8 +21,8 @@ export type * from "./registry/abstract";
 export * from "./registry/dump";
 export * from "./registry/empty";
 export * from "./registry/filtered";
-export * from "./registry/impl";
 export type * from "./registry/lookup";
+export * from "./registry/map";
 export type * from "./registry/registered";
 
 export * from "./conditions";

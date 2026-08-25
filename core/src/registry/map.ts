@@ -1,11 +1,11 @@
 import type { Id, IdInput, NormalizedId } from "../common/id";
 import { createId, encodeId } from "../common/id";
-import type { RegistryProvider } from "./abstract";
+import type { Registry } from "./abstract";
 
-export class Registry<
+export class RegistryMap<
   TEntry,
   TId extends string = string,
-> implements RegistryProvider<TEntry> {
+> implements Registry<TEntry> {
   private readonly entries = new Map<NormalizedId<TId>, TEntry>();
 
   set(key: IdInput<TId>, value: TEntry) {
@@ -37,14 +37,6 @@ export class Registry<
     await Promise.all(promises);
   }
 
-  filter(
-    predicate: (value: TEntry, key: Id) => boolean,
-  ): [NormalizedId<TId>, TEntry][] {
-    return [...this.entries.entries()].filter(([id, v]) =>
-      predicate(v, createId(id)),
-    );
-  }
-
   delete(id: IdInput<TId>) {
     this.entries.delete(encodeId(id));
   }
@@ -54,15 +46,7 @@ export class Registry<
   }
 
   keys() {
-    return [...this.entries.keys()];
-  }
-
-  values() {
-    return [...this.entries.values()];
-  }
-
-  valuesWithId() {
-    return [...this.entries.entries()].map(([id, value]) => ({ ...value, id }));
+    return this.entries.keys();
   }
 
   has(key: IdInput<TId>) {

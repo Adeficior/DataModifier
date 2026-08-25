@@ -2,7 +2,7 @@ import type {
   Conditions,
   IdInput,
   NormalizedId,
-  RegistryProvider,
+  Registry,
   SemVerInput,
 } from "@adeficior/data-modifier-core";
 import {
@@ -63,7 +63,7 @@ export class RecipeEmitterImpl
   constructor(
     private readonly logger: Logger,
     private readonly packFormat: SemVerInput,
-    registry: RegistryProvider<RecipeHolder>,
+    registry: Registry<RecipeHolder>,
     private readonly resultSerializer: ResultSerializer,
     private readonly ingredientSerializer: IngredientSerializer,
     private readonly predicates: Predicates,

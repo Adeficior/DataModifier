@@ -40,7 +40,6 @@ export function createPredicates(
 
 class PredicatesImpl implements Predicates {
   constructor(
-    // TODO inject
     private readonly registries: RegistryLookup,
     private readonly tags: TagRegistries,
     private readonly ingredientSerializer: IngredientSerializer,

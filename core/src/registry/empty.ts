@@ -1,6 +1,6 @@
 import type { RegistryId } from "@adeficior/data-modifier/generated";
-import { encodeId } from "../common/id";
 import type { IdInput, NormalizedId } from "../common/id";
+import { encodeId } from "../common/id";
 import type { RegistryLookup } from "./lookup";
 
 export class EmptyRegistryLookup implements RegistryLookup {
@@ -8,8 +8,8 @@ export class EmptyRegistryLookup implements RegistryLookup {
     return false;
   }
 
-  registries(): NormalizedId<RegistryId>[] {
-    return [];
+  registries(): IteratorObject<NormalizedId<RegistryId>> {
+    return Iterator.from([]);
   }
 
   keys() {

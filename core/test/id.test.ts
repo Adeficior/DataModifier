@@ -1,6 +1,6 @@
 import { expect, it } from "bun:test";
 import type { Id } from "../src";
-import { Registry, createId, encodeId } from "../src";
+import { RegistryMap, createId, encodeId } from "../src";
 
 it("parses id from string", () => {
   expect(createId("minecraft:stone")).toMatchObject({
@@ -57,7 +57,7 @@ it("encodes id correctly", () => {
 });
 
 it("works as unique map key", () => {
-  const map = new Registry<number>();
+  const map = new RegistryMap<number>();
 
   map.set({ namespace: "minecraft", path: "air" }, 1);
   map.set({ namespace: "minecraft", path: "dirt" }, 2);

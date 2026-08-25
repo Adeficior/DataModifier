@@ -3,9 +3,9 @@ import type {
   Id,
   IdInput,
   LoaderContext,
-  RegistryProvider,
+  Registry,
 } from "@adeficior/data-modifier-core";
-import { createId, encodeId, Registry } from "@adeficior/data-modifier-core";
+import { createId, encodeId, RegistryMap } from "@adeficior/data-modifier-core";
 import type {
   Predicate,
   Replacer,
@@ -53,10 +53,10 @@ export type LangEmitter = {
 };
 
 export class LangEmitterImpl implements LangEmitter, ClearableEmitter {
-  private custom = new Registry<LangDefinition>();
+  private custom = new RegistryMap<LangDefinition>();
   private rules: LangRule[] = [];
 
-  constructor(private readonly registry: RegistryProvider<LangDefinition>) {}
+  constructor(private readonly registry: Registry<LangDefinition>) {}
 
   resolver(context: LoaderContext) {
     return simpleResolver(async (acceptor) => {

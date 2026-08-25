@@ -2,7 +2,7 @@ import { simpleResolver } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
 import type { IdInput } from "../common/id";
 import { createId } from "../common/id";
-import { Registry } from "../registry/impl";
+import { RegistryMap } from "../registry/map";
 import { toJson } from "../serializer/textHelper";
 import type { ClearableEmitter, PathProvider } from "./abstract";
 
@@ -12,7 +12,7 @@ export class CustomEmitter<TEntry> implements ClearableEmitter {
     private readonly serialize: (entry: TEntry) => unknown = (it) => it,
   ) {}
 
-  private readonly customEntries = new Registry<TEntry>();
+  private readonly customEntries = new RegistryMap<TEntry>();
 
   clear() {
     this.customEntries.clear();

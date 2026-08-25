@@ -1,4 +1,4 @@
-import type { RegistryProvider } from "../registry/abstract";
+import type { Registry } from "../registry/abstract";
 import { filterRegistry } from "../registry/filtered";
 import type { PathProvider } from "./abstract";
 import { WrappedEmitter } from "./combined";
@@ -14,7 +14,7 @@ export abstract class SimpleEmitter<T, D> extends WrappedEmitter {
 
   constructor(
     type: string,
-    registry: RegistryProvider<T>,
+    registry: Registry<T>,
     pathProvider: PathProvider,
     disabledValue: D,
     serialize: (entry: T) => D = (it) => it as unknown as D,
@@ -23,9 +23,9 @@ export abstract class SimpleEmitter<T, D> extends WrappedEmitter {
 
     this.custom = this.addEmitter(new CustomEmitter(pathProvider, serialize));
 
-    const filteredRegistry = filterRegistry(registry, {
-      matches: (id) => this.custom.has(id),
-    });
+    const filteredRegistry = filterRegistry(registry, (id) =>
+      this.custom.has(id),
+    );
 
     this.ruled = this.addEmitter(
       new RuledEmitter(

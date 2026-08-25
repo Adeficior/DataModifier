@@ -3,7 +3,7 @@ import { simpleResolver } from "@adeficior/pack-resolver";
 import type { LoaderContext } from "../common/context";
 import type { Rule } from "../common/rules";
 import { RuleHandler } from "../common/rules";
-import type { RegistryProvider } from "../registry/abstract";
+import type { Registry } from "../registry/abstract";
 import { toJson } from "../serializer/textHelper";
 import type { ClearableEmitter, PathProvider } from "./abstract";
 
@@ -13,7 +13,7 @@ export class RuledEmitter<T> implements ClearableEmitter {
   private readonly handler;
   constructor(
     type: string,
-    private readonly registry: RegistryProvider<T>,
+    private readonly registry: Registry<T>,
     private readonly pathProvider: PathProvider,
     private readonly disabledValue: unknown,
     private readonly serialize: (entry: T) => unknown,

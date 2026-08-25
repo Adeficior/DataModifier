@@ -2,11 +2,11 @@ import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { IdInput, NormalizedId } from "../common/id";
 
 export type RegistryLookup = {
-  registries(): NormalizedId<RegistryId>[];
+  registries(): IteratorObject<NormalizedId<RegistryId>>;
 
   keys<T extends RegistryId>(
     registry: IdInput<T>,
-  ): ReadonlySet<NormalizedId<InferIds<T>>> | undefined;
+  ): IteratorObject<NormalizedId<InferIds<T>>> | undefined;
 
   isKnown(registry: IdInput<RegistryId>): boolean;
 
