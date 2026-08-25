@@ -1,7 +1,7 @@
 import { defineModule } from "@adeficior/data-modifier-core";
 import { name } from "../package.json";
-import { BotaniaRecipeHelperImpl } from "./helper";
 import type { BotaniaRecipeHelper } from "./helper";
+import { BotaniaRecipeHelperImpl } from "./helper";
 import { registerSerializers } from "./registration";
 
 export default defineModule<{
@@ -17,6 +17,7 @@ export default defineModule<{
     services: {
       "helper:recipes:botania": "BotaniaRecipeHelper",
     },
+    registries: ["botania:brews"],
   },
   promote: [{ service: "helper:recipes:botania", key: "recipes.botania" }],
   setup: (pack) => {

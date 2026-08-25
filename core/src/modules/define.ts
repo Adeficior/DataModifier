@@ -1,5 +1,6 @@
 import type { Hooks } from "@adeficior/data-modifier-core/generated";
 import packageJson from "../../package.json";
+import type { IdInput } from "../common/id";
 import type { ModuleSetupOptions } from "../config";
 import type { ModulesContainer } from "../container";
 import type { ClearableEmitter } from "../emit/abstract";
@@ -83,6 +84,7 @@ type ModuleImports<T extends ModuleTypes> = {
   emitters: Record<keyof ModuleType<T, "emitters">, ImportOptions>;
   loaders: Record<keyof ModuleType<T, "loaders">, ImportOptions>;
   hooks: Record<keyof ModuleType<T, "hooks">, ImportOptions>;
+  registries: IdInput[];
   rewrite: ImportRewriter;
 };
 
@@ -156,6 +158,7 @@ export function defineModule<T extends ModuleTypes>({
       loaders: types?.loaders ?? {},
       hooks: types?.hooks ?? {},
       services: types?.services ?? {},
+      registries: types?.registries ?? [],
       rewrite: types?.rewrite ?? ((it) => it),
     } as ModuleImports<T>,
     ...config,

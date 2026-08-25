@@ -95,7 +95,7 @@ export function loadDependencyModules(
   );
 }
 
-async function loadModule(
+export async function loadModule(
   module: string | ModuleConfig,
   options: ModuleLoaderOptions,
 ) {

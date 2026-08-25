@@ -1,4 +1,3 @@
-import type { NormalizedId } from "@adeficior/data-modifier-core";
 import { encodeId } from "@adeficior/data-modifier-core";
 import type { Ingredient } from "@adeficior/data-modifier-ingredients";
 import type {
@@ -11,6 +10,7 @@ import type {
   SerializedRecipe,
 } from "@adeficior/data-modifier-recipes/serializer";
 import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
+import type { BrewsId } from "@adeficior/data-modifier/generated";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -20,8 +20,7 @@ export type BrewRecipeDefinition = RecipeDefinition &
 
 export class BrewRecipe implements Recipe {
   constructor(
-    // TODO this is an ID?
-    readonly brew: NormalizedId,
+    readonly brew: BrewsId,
     readonly ingredients: Ingredient[],
   ) {}
 

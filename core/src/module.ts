@@ -1,6 +1,7 @@
 import type { Logger, Resolver } from "@adeficior/pack-resolver";
 import { createLogger } from "@adeficior/pack-resolver";
 import { resolveDumpDir } from ".";
+import type { NormalizedId } from ".";
 import { name } from "../package.json";
 import type { AfterSetupEvent } from "./modules/define";
 import { defineModule } from "./modules/define";
@@ -12,6 +13,15 @@ export type CoreModuleOptions = {
   logger?: Logger;
   dump?: boolean | string | Resolver;
 };
+
+const registries: NormalizedId[] = [
+  "minecraft:item",
+  "minecraft:block",
+  "minecraft:fluid",
+  "minecraft:recipe_serializer",
+  "minecraft:entity_type",
+  "minecraft:creative_mode_tab",
+];
 
 export default defineModule<{
   hooks: {
@@ -25,6 +35,7 @@ export default defineModule<{
 }>({
   importModule: name,
   types: {
+    registries,
     options: "CoreModuleOptions",
     services: {
       registries: "RegistryLookup",

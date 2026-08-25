@@ -8,14 +8,15 @@ import { camelCase } from "lodash-es";
 import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
-function idType(id: Id) {
+export function idType(id: Id) {
   const cased = camelCase(id.path.replaceAll("/", " "));
-  return cased.charAt(0).toUpperCase() + cased.substring(1);
+  const transformed = cased.charAt(0).toUpperCase() + cased.substring(1);
+  return `${transformed}Id`;
 }
 
 function idTemplate(type: string, values: string[]) {
   return `
-        export type ${type}Id = ${values.map((it) => `'${it}'`).join(" | ")}
+        export type ${type} = ${values.map((it) => `'${it}'`).join(" | ")}
    `;
 }
 
@@ -24,7 +25,7 @@ function inferRegistryTemplate(keys: IdInput[]) {
   return `
         export type InferIds<T extends RegistryId> = {
             ${keys
-              .map((it) => `'${encodeId(it)}': ${idType(createId(it))}Id`)
+              .map((it) => `'${encodeId(it)}': ${idType(createId(it))}`)
               .join("\n")}
         }[T]
       `;

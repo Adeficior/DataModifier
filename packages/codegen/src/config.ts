@@ -35,7 +35,7 @@ export async function generateUsingConfig({
       }
 
       logger?.info("generated stub registry types");
-      await generateStubTypes(typesDir);
+      await generateStubTypes(typesDir, loadedModules);
     }
   }
 
