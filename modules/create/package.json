@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-create",
    "description": "data-modifier module adding compatibility for create",
-   "version": "2.0.2",
+   "version": "2.0.3",
    "exports": {
       ".": "./src/index.ts"
    },

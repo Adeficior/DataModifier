@@ -1,5 +1,15 @@
 # @adeficior/data-modifier-farmersdelight
 
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.1.0
+  - @adeficior/data-modifier-recipes@2.1.0
+  - @adeficior/data-modifier-ingredients@2.0.3
+  - @adeficior/data-modifier-tags@2.0.3
+
 ## 2.0.2
 
 ### Patch Changes

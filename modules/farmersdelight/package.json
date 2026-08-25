@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-farmersdelight",
    "description": "data-modifier module adding compatibility for farmer's delight",
-   "version": "2.0.2",
+   "version": "2.0.3",
    "exports": {
       ".": "./src/index.ts"
    },

@@ -1,5 +1,17 @@
 # @adeficior/data-modifier-codegen
 
+## 2.1.1
+
+### Patch Changes
+
+- - refactored rule logic to seperate it from modifiers
+  - added LootRules & RecipeRules helper services
+  - let modules define which stub IDs to generate
+  - switch to new polytone tab creation format
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.1.0
+  - @adeficior/data-modifier-loader@2.1.1
+
 ## 2.1.0
 
 ### Minor Changes
