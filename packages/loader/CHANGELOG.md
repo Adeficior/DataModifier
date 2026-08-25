@@ -1,5 +1,13 @@
 # @adeficior/data-modifier-loader
 
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [8e552d5]
+- Updated dependencies [e045807]
+  - @adeficior/data-modifier-core@2.2.0
+
 ## 2.1.1
 
 ### Patch Changes

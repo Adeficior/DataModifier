@@ -1,5 +1,15 @@
 # @adeficior/data-modifier-core
 
+## 2.2.0
+
+### Minor Changes
+
+- 8e552d5: moved ID Filter -> Predicate logic into tags module. Other modules should use it via `Predicates.id(...)`, which now also validates a given filter against the registry lookup.
+
+### Patch Changes
+
+- e045807: added add PatchedRegistry that received values added to custom emitters
+
 ## 2.1.0
 
 ### Minor Changes

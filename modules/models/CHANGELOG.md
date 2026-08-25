@@ -1,5 +1,13 @@
 # @adeficior/data-modifier-models
 
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [8e552d5]
+- Updated dependencies [e045807]
+  - @adeficior/data-modifier-core@2.2.0
+
 ## 2.0.3
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-botania",
    "description": "data-modifier module adding compatibility for botania",
-   "version": "2.0.3",
+   "version": "2.0.4",
    "exports": {
       ".": "./src/index.ts"
    },

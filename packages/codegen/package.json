@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-codegen",
    "description": "code-generation for data-modifier projects",
-   "version": "2.1.1",
+   "version": "2.1.2",
    "exports": {
       ".": "./src/index.ts"
    },
