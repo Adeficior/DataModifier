@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 permissions:
   id-token: write
@@ -24,10 +23,6 @@ jobs:
 
       - run: bun run build
 
-      - name: Set snapshot version
-        if: ${{ github.ref_name != 'main' }}
-        run: bunx changeset version --snapshot
-
       - name: Prepare packages
         run: bun run prune
 
@@ -41,13 +36,7 @@ jobs:
           package-manager-cache: false
 
       - name: Publish Packages
-        if: ${{ github.ref_name != 'main' }}
-        run: bunx changeset publish --tag rc --no-git-tag
-
-      - name: Publish Packages
-        if: ${{ github.ref_name == 'main' }}
         run: bunx changeset publish
 
-      - name: Push Tags
-        if: ${{ github.ref_name == 'main' }}
-        run: git push --tags
+      - name: Create & Push Tags
+        run: bunx changeset git-tag && git push --tags
