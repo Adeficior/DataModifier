@@ -37,7 +37,15 @@ class FilteredRegistryProvider<T> implements Registry<T> {
   }
 
   keys(): IteratorObject<NormalizedId> {
-    return this.inner.keys().filter((it) => !this.exclude(it));
+    return this.inner.keys().filter((id) => !this.exclude(id));
+  }
+
+  entries() {
+    return this.inner.entries().filter(([id]) => !this.exclude(id));
+  }
+
+  values() {
+    return this.entries().map(([, value]) => value);
   }
 }
 

@@ -26,6 +26,14 @@ export class CombinedRegistry<T> implements Registry<T> {
   keys() {
     return concat(this.registries.map((it) => it.keys()));
   }
+
+  entries() {
+    return concat(this.registries.map((it) => it.entries()));
+  }
+
+  values() {
+    return concat(this.registries.map((it) => it.values()));
+  }
 }
 
 function* concat<T>(iterables: Iterable<T>[]) {

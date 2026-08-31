@@ -5,5 +5,7 @@ export type Registry<T> = {
   forEach(consumer: (value: T, id: Id) => void): void;
   forEachAsync(consumer: (value: T, id: Id) => Promise<void>): Promise<void>;
   keys(): IteratorObject<NormalizedId>;
+  entries(): IteratorObject<[NormalizedId, T]>;
+  values(): IteratorObject<T>;
   has(id: IdInput): boolean;
 };

@@ -19,5 +19,7 @@ export function mockRegistry<T>() {
     get: mock(),
     has: mock(),
     keys: mock(),
+    values: mock(),
+    entries: mock(),
   } satisfies Registry<T>;
 }

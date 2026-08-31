@@ -43,6 +43,14 @@ export abstract class JsonLoader<T> implements Registry<T>, Loader {
     return this.registry.keys();
   }
 
+  entries() {
+    return this.registry.entries();
+  }
+
+  values() {
+    return this.registry.values();
+  }
+
   has(id: IdInput) {
     return this.registry.has(id);
   }

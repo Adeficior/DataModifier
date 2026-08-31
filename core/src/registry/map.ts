@@ -6,14 +6,14 @@ export class RegistryMap<
   TEntry,
   TId extends string = string,
 > implements Registry<TEntry> {
-  private readonly entries = new Map<NormalizedId<TId>, TEntry>();
+  private readonly _entries = new Map<NormalizedId<TId>, TEntry>();
 
   set(key: IdInput<TId>, value: TEntry) {
-    this.entries.set(encodeId(key), value);
+    this._entries.set(encodeId(key), value);
   }
 
   get(key: IdInput<TId>) {
-    return this.entries.get(encodeId(key));
+    return this._entries.get(encodeId(key));
   }
 
   getOrPut(key: IdInput<TId>, defaultValue: () => TEntry) {
@@ -26,7 +26,7 @@ export class RegistryMap<
   }
 
   forEach(consumer: (value: TEntry, key: Id) => void) {
-    this.entries.forEach((value, key) => consumer(value, createId(key)));
+    this._entries.forEach((value, key) => consumer(value, createId(key)));
   }
 
   async forEachAsync(
@@ -38,18 +38,26 @@ export class RegistryMap<
   }
 
   delete(id: IdInput<TId>) {
-    this.entries.delete(encodeId(id));
+    this._entries.delete(encodeId(id));
   }
 
   clear() {
-    this.entries.clear();
+    this._entries.clear();
   }
 
   keys() {
-    return this.entries.keys();
+    return this._entries.keys();
+  }
+
+  values() {
+    return this._entries.values();
+  }
+
+  entries() {
+    return this._entries.entries();
   }
 
   has(key: IdInput<TId>) {
-    return this.entries.has(encodeId(key));
+    return this._entries.has(encodeId(key));
   }
 }
