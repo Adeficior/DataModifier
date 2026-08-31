@@ -122,11 +122,20 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
     folder: string = tagFolderOf(registry),
   ): ScopedTagEmitter<T> {
     const existing = this.emitters.get(registry);
+
     if (existing) return existing as ScopedTagEmitter<T>;
     else {
+      const tags = this.registry.registry(registry);
+
+      if (!tags) {
+        throw new Error(
+          `unknown registry tags '${registry}', register them using \`registerRegistry\``,
+        );
+      }
+
       const context: Required<IdFilterContext<T>> = {
         registry,
-        tags: this.registry.registry(registry),
+        tags,
         lookup: this.lookup,
       };
       const emitter = new ScopedTagEmitterImpl(context, folder, this.options);

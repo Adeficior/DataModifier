@@ -7,6 +7,9 @@ import { TagsLoader } from "../../src/loader";
 const version = basename(import.meta.dir);
 const loader = new TagsLoader(packFormatOf(version));
 
+const itemTags = loader.registry("item")!;
+const blockTags = loader.registry("block")!;
+
 beforeAll(async () => {
   const resolver = await createTestDataResolver(version, {
     include: "data/*/tags/**/*.json",
@@ -16,9 +19,6 @@ beforeAll(async () => {
 
 describe("loading of tags", () => {
   it("loads tags correctly", async () => {
-    const itemTags = loader.registry("item");
-    const blockTags = loader.registry("block");
-
     expect(blockTags.list().toArray().length).toBe(271);
     expect(itemTags.list().toArray().length).toBe(269);
 
@@ -29,9 +29,6 @@ describe("loading of tags", () => {
   });
 
   it("resolves tags correctly", async () => {
-    const itemTags = loader.registry("item");
-    const blockTags = loader.registry("block");
-
     expect(blockTags.resolve("#minecraft:mineable/axe")).toMatchSnapshot(
       "resolved #mineable/axe entries",
     );
@@ -43,8 +40,6 @@ describe("loading of tags", () => {
 
 describe("tag contain tests", () => {
   it("finds item in tag", async () => {
-    const blockTags = loader.registry("block");
-
     expect(
       blockTags.contains("#minecraft:mineable/axe", "minecraft:note_block"),
     ).toBeTruthy();
@@ -67,8 +62,6 @@ describe("tag contain tests", () => {
   });
 
   it("finds tag in tag", async () => {
-    const blockTags = loader.registry("block");
-
     expect(
       blockTags.contains("#minecraft:mineable/axe", "#minecraft:logs"),
     ).toBeTruthy();

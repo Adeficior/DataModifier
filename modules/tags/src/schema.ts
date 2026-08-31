@@ -16,7 +16,8 @@ export type TagEntry<T extends string = string> =
     }>;
 
 export type TagRegistries = {
-  registry<T extends RegistryId>(key: T): TagRegistry<T>;
+  registry<T extends RegistryId>(key: T): TagRegistry<T> | undefined;
+  registerRegistry(key: IdInput, folder?: string): void;
 };
 
 export type TagRegistry<T extends RegistryId> = {

@@ -121,12 +121,9 @@ export class TagsLoader implements TagRegistries, Acceptor {
     this.registries[encodeId(key)] = new WriteableTagRegistry(folder);
   }
 
-  registry<T extends RegistryId>(key: IdInput<T>): TagRegistry<T> {
+  registry<T extends RegistryId>(key: IdInput<T>) {
     const id = encodeId(key);
-    if (!(id in this.registries))
-      throw new Error(
-        `unknown registry tags '${id}'. Register them using \`registerRegistry\``,
-      );
+    if (!(id in this.registries)) return undefined;
     return this.registries[id];
   }
 
