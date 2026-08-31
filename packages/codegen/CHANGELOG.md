@@ -1,5 +1,16 @@
 # @adeficior/data-modifier-codegen
 
+## 2.1.3
+
+### Patch Changes
+
+- - only generate dump registry types for registered registries
+  - add `.entries()` and `.values()` methods to `Registry`
+  - export pack metadata helpers & types from lib
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.2.1
+  - @adeficior/data-modifier-loader@2.1.3
+
 ## 2.1.2
 
 ### Patch Changes

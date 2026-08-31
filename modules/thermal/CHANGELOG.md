@@ -1,5 +1,15 @@
 # @adeficior/data-modifier-thermal
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.2.1
+  - @adeficior/data-modifier-ingredients@2.0.5
+  - @adeficior/data-modifier-recipes@2.1.2
+  - @adeficior/data-modifier-tags@2.0.5
+
 ## 2.0.4
 
 ### Patch Changes

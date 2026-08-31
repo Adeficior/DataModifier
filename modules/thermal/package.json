@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-thermal",
    "description": "data-modifier module adding compatibility for the thermal series",
-   "version": "2.0.4",
+   "version": "2.0.5",
    "exports": {
       ".": "./src/index.ts"
    },

@@ -1,5 +1,20 @@
 # @adeficior/data-modifier
 
+## 2.0.5
+
+### Patch Changes
+
+- - only generate dump registry types for registered registries
+  - add `.entries()` and `.values()` methods to `Registry`
+  - export pack metadata helpers & types from lib
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.2.1
+  - @adeficior/data-modifier-ingredients@2.0.5
+  - @adeficior/data-modifier-loot@2.1.2
+  - @adeficior/data-modifier-recipes@2.1.2
+  - @adeficior/data-modifier-tags@2.0.5
+  - @adeficior/data-modifier-loader@2.1.3
+
 ## 2.0.4
 
 ### Patch Changes
