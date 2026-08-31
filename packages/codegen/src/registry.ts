@@ -10,7 +10,9 @@ import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
 export function idType(id: Id) {
-  const cased = camelCase(id.path.replaceAll("/", " "));
+  const path =
+    id.namespace === "minecraft" ? id.path : `${id.namespace}/${id.path}`;
+  const cased = camelCase(path.replaceAll("/", " "));
   const transformed = cased.charAt(0).toUpperCase() + cased.substring(1);
   return `${transformed}Id`;
 }
@@ -45,16 +47,16 @@ export async function generateRegistryTypes(
   modules: ModuleConfig[],
 ) {
   const registries = gatherRegistryIds(modules);
-  const registryBlock = idTemplate("Registry", registries);
+  const registryBlock = idTemplate("RegistryId", registries);
   const inferIdBlock = inferRegistryTemplate(registries);
 
-  const idBlocks = gatherRegistryIds(modules)
-    .filter((it) => it.namespace === "minecraft")
-    .map((id) => {
-      const keys = [...lookup.keys(id)!].sort();
-      const type = idType(id);
-      return idTemplate(type, keys);
-    });
+  const idBlocks = registries.map((id) => {
+    // ID will always have no namespace, fix in registry dump
+    const keys = lookup.keys(id)?.toArray().toSorted();
+    const type = idType(id);
+    if (!keys?.length) return `export type ${type} = never`;
+    return idTemplate(type, keys);
+  });
 
   await writeTemplate(
     typesDir,

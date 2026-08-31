@@ -28,7 +28,7 @@ export async function generateUsingConfig({
 
     if (dumpResolver && registryTypes !== "stubs") {
       logger?.info("generated registry types using dump");
-      await generateDumpTypesFrom(dumpResolver, typesDir);
+      await generateDumpTypesFrom(dumpResolver, typesDir, loadedModules);
     } else {
       if (registryTypes === "dump") {
         throw new Error("unable to locate registry dump");

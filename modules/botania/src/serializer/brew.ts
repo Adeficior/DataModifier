@@ -10,7 +10,7 @@ import type {
   SerializedRecipe,
 } from "@adeficior/data-modifier-recipes/serializer";
 import { RecipeTypeSerializer } from "@adeficior/data-modifier-recipes/serializer";
-import type { BrewsId } from "@adeficior/data-modifier/generated";
+import type { BotaniaBrewsId } from "@adeficior/data-modifier/generated";
 
 export type BrewRecipeDefinition = RecipeDefinition &
   Readonly<{
@@ -20,7 +20,7 @@ export type BrewRecipeDefinition = RecipeDefinition &
 
 export class BrewRecipe implements Recipe {
   constructor(
-    readonly brew: BrewsId,
+    readonly brew: BotaniaBrewsId,
     readonly ingredients: Ingredient[],
   ) {}
 
