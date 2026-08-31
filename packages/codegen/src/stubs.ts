@@ -1,7 +1,5 @@
-import { createId } from "@adeficior/data-modifier-core";
 import type { ModuleConfig } from "@adeficior/data-modifier-core";
-import { uniq } from "@adeficior/pack-resolver";
-import { idType } from "./registry";
+import { gatherRegistryIds, idType } from "./registry";
 import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
@@ -12,12 +10,7 @@ export async function generateStubTypes(
 ) {
   const stubIdType = strictIds ? "`${string}:${string}`" : "string";
 
-  const idTypes = uniq(
-    modules
-      .flatMap((it) => it.types.registries)
-      .map(createId)
-      .map(idType),
-  );
+  const idTypes = gatherRegistryIds(modules).map(idType);
 
   await writeTemplate(
     typesDir,

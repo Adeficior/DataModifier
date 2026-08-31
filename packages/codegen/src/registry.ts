@@ -1,10 +1,11 @@
 import type {
   Id,
   IdInput,
+  ModuleConfig,
   RegistryLookup,
 } from "@adeficior/data-modifier-core";
 import { createId, encodeId } from "@adeficior/data-modifier-core";
-import { camelCase } from "lodash-es";
+import { camelCase, uniqBy } from "lodash-es";
 import { moduleTemplate } from "./typescript";
 import { writeTemplate } from "./write";
 
@@ -14,9 +15,9 @@ export function idType(id: Id) {
   return `${transformed}Id`;
 }
 
-function idTemplate(type: string, values: string[]) {
+function idTemplate(type: string, values: IdInput[]) {
   return `
-        export type ${type} = ${values.map((it) => `'${it}'`).join(" | ")}
+        export type ${type} = ${values.map((it) => `'${encodeId(it)}'`).join(" | ")}
    `;
 }
 
@@ -31,16 +32,23 @@ function inferRegistryTemplate(keys: IdInput[]) {
       `;
 }
 
+export function gatherRegistryIds(modules: ModuleConfig[]) {
+  return uniqBy(
+    modules.flatMap((it) => it.types.registries).map(createId),
+    encodeId,
+  );
+}
+
 export async function generateRegistryTypes(
   typesDir: string,
   lookup: RegistryLookup,
+  modules: ModuleConfig[],
 ) {
-  const registries = lookup.registries().toArray();
+  const registries = gatherRegistryIds(modules);
   const registryBlock = idTemplate("Registry", registries);
   const inferIdBlock = inferRegistryTemplate(registries);
 
-  const idBlocks = registries
-    .map(createId)
+  const idBlocks = gatherRegistryIds(modules)
     .filter((it) => it.namespace === "minecraft")
     .map((id) => {
       const keys = [...lookup.keys(id)!].sort();
