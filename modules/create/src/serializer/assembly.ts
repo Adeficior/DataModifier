@@ -21,13 +21,15 @@ export type AssemblyRecipeDefinition = RecipeDefinition &
     sequence: RecipeDefinition[];
   }>;
 
+export type AssembleRecipeOptions = { loops?: number };
+
 export class AssemblyRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly transitionalItem: Ingredient,
     readonly results: Result[],
     readonly sequence: RecipeHolder[],
-    readonly options: { loops?: number } = {},
+    readonly options: AssembleRecipeOptions = {},
   ) {}
 
   getIngredients() {

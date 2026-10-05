@@ -20,11 +20,16 @@ export type ManaInfusionRecipeDefinition = RecipeDefinition &
     mana?: number;
   }>;
 
+export type ManaInfusionRecipeOptions = {
+  mana?: number;
+  catalyst?: Ingredient;
+};
+
 export class ManaInfusionRecipe implements Recipe {
   constructor(
     readonly ingredient: Ingredient,
     readonly result: Result,
-    readonly options: { mana?: number; catalyst?: Ingredient } = {},
+    readonly options: ManaInfusionRecipeOptions = {},
   ) {}
 
   getIngredients() {

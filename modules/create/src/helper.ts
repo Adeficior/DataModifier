@@ -1,46 +1,159 @@
+import { encodeId } from "@adeficior/data-modifier-core";
 import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
 import type {
   IngredientInput,
-  IngredientSerializer,
   ResultInput,
-  ResultSerializer,
 } from "@adeficior/data-modifier-ingredients";
 import type { RecipeEmitter } from "@adeficior/data-modifier-recipes";
 import {
+  AbstractRecipeHelper,
   createResultId,
   withDefaultId,
 } from "@adeficior/data-modifier-recipes/helper";
+import type {
+  ManyToManyHelper,
+  ShapedHelper,
+} from "@adeficior/data-modifier-recipes/helper";
+import { RecipeHolder } from "@adeficior/data-modifier-recipes/serializer";
+import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
+import { AssemblyRecipe } from "./serializer/assembly";
+import type { AssembleRecipeOptions } from "./serializer/assembly";
 import { ProcessingRecipe } from "./serializer/processing";
 
-export type CreateRecipeHelper = {
-  mixing(
-    id: IdInput,
-    ingredients: IngredientInput[],
-    results: ResultInput[],
-  ): NormalizedId;
-  mixing(ingredients: IngredientInput[], results: ResultInput[]): NormalizedId;
+export type AssemblyBuilder = {
+  deploying: ManyToManyHelper;
+  filling: ManyToManyHelper;
+  cutting: ManyToManyHelper;
+  pressing: ManyToManyHelper;
 };
 
-export class CreateRecipeHelperImpl implements CreateRecipeHelper {
-  constructor(
-    private readonly emitter: RecipeEmitter,
-    private readonly ingredients: IngredientSerializer,
-    private readonly results: ResultSerializer,
-  ) {}
+type AssemblyFactory = (builder: AssemblyBuilder) => void;
 
-  readonly mixing: CreateRecipeHelper["mixing"] = withDefaultId(
+export type CreateRecipeHelper = AssemblyBuilder & {
+  mixing: ManyToManyHelper;
+  compacting: ManyToManyHelper;
+  emptying: ManyToManyHelper;
+  crushing: ManyToManyHelper;
+  milling: ManyToManyHelper;
+  itemApplication: ManyToManyHelper;
+  polishing: ManyToManyHelper;
+  splashing: ManyToManyHelper;
+  haunting: ManyToManyHelper;
+  mechanicalCrafting: ShapedHelper;
+
+  sequencedAssembly(
+    id: IdInput,
+    ingredient: IngredientInput,
+    transitionalItem: IngredientInput,
+    results: ResultInput[],
+    sequence: AssemblyFactory,
+    options?: AssembleRecipeOptions,
+  ): NormalizedId;
+  sequencedAssembly(
+    ingredient: IngredientInput,
+    transitionalItem: IngredientInput,
+    results: ResultInput[],
+    sequence: AssemblyFactory,
+    options?: AssembleRecipeOptions,
+  ): NormalizedId;
+};
+
+export class CreateRecipeHelperImpl
+  extends AbstractRecipeHelper
+  implements CreateRecipeHelper
+{
+  private processingHelper(
+    type: IdInput<RecipeSerializerId>,
+  ): ManyToManyHelper {
+    return withDefaultId(
+      (
+        id: IdInput | null,
+        ingredientsInput: IngredientInput[],
+        resultsInput: ResultInput[],
+      ) => {
+        const ingredients = this.ingredients.deserializeList(ingredientsInput);
+        const results = this.results.deserializeList(resultsInput);
+
+        return this.emitter.add(
+          id ?? createResultId(results),
+          type,
+          new ProcessingRecipe(ingredients, results),
+        );
+      },
+    );
+  }
+
+  readonly mixing = this.processingHelper("create:mixing");
+
+  readonly pressing = this.processingHelper("create:pressing");
+
+  readonly emptying = this.processingHelper("create:emptying");
+
+  readonly crushing = this.processingHelper("create:crushing");
+
+  readonly milling = this.processingHelper("create:milling");
+
+  readonly compacting = this.processingHelper("create:compacting");
+
+  readonly filling = this.processingHelper("create:filling");
+
+  readonly cutting = this.processingHelper("create:cutting");
+
+  readonly itemApplication = this.processingHelper("create:item_application");
+
+  readonly polishing = this.processingHelper("create:sandpaper_polishing");
+
+  readonly deploying = this.processingHelper("create:deploying");
+
+  readonly splashing = this.processingHelper("create:splashing");
+
+  readonly haunting = this.processingHelper("create:haunting");
+
+  readonly mechanicalCrafting = this.shapedHelper("create:mechanical_crafting");
+
+  readonly sequencedAssembly = withDefaultId(
     (
       id: IdInput | null,
-      ingredientsInput: IngredientInput[],
+      ingredientInput: IngredientInput,
+      transitionalItemInput: IngredientInput,
       resultsInput: ResultInput[],
+      sequenceFactory: AssemblyFactory,
+      options: AssembleRecipeOptions = {},
     ) => {
-      const ingredients = this.ingredients.deserializeList(ingredientsInput);
+      const ingredient = this.ingredients.deserialize(ingredientInput);
+      const transitionalItem = this.ingredients.deserialize(
+        transitionalItemInput,
+      );
       const results = this.results.deserializeList(resultsInput);
+
+      const sequence: RecipeHolder[] = [];
+
+      const emitter = {
+        add: (id, type, recipe) => {
+          const holder = RecipeHolder.of(type, recipe);
+          sequence.push(holder);
+          return encodeId(id);
+        },
+      } as RecipeEmitter;
+
+      const assemblyBuilder: AssemblyBuilder = new CreateRecipeHelperImpl(
+        emitter,
+        this.ingredients,
+        this.results,
+      );
+
+      sequenceFactory(assemblyBuilder);
 
       return this.emitter.add(
         id ?? createResultId(results),
-        "create:mixing",
-        new ProcessingRecipe(ingredients, results),
+        "create:sequenced_assembly",
+        new AssemblyRecipe(
+          ingredient,
+          transitionalItem,
+          results,
+          [...sequence],
+          options,
+        ),
       );
     },
   );

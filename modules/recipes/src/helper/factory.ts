@@ -1,4 +1,8 @@
 import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
+import type {
+  IngredientInput,
+  ResultInput,
+} from "@adeficior/data-modifier-ingredients";
 
 type RecipeFactory<Args extends unknown[]> = (
   id: IdInput | null,
@@ -22,3 +26,30 @@ export function withDefaultId<Args extends unknown[]>(
     }
   }) as CurriedRecipeFactory<Args>;
 }
+
+export type ManyToManyHelper = {
+  (ingredients: IngredientInput[], results: ResultInput[]): NormalizedId;
+  (
+    id: IdInput,
+    ingredients: IngredientInput[],
+    results: ResultInput[],
+  ): NormalizedId;
+};
+
+export type ManyToOneHelper = {
+  (ingredients: IngredientInput[], results: ResultInput): NormalizedId;
+  (
+    id: IdInput,
+    ingredients: IngredientInput[],
+    results: ResultInput,
+  ): NormalizedId;
+};
+
+export type ShapedHelper = {
+  (
+    id: IdInput,
+    ingredients: IngredientInput[][],
+    result: ResultInput,
+  ): NormalizedId;
+  (ingredients: IngredientInput[][], result: ResultInput): NormalizedId;
+};
