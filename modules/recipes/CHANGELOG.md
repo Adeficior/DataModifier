@@ -1,5 +1,17 @@
 # @adeficior/data-modifier-recipes
 
+## 2.2.0
+
+### Minor Changes
+
+- c646d3e: missing create recipe helper functions
+
+### Patch Changes
+
+- Updated dependencies [3280392]
+  - @adeficior/data-modifier-tags@2.0.6
+  - @adeficior/data-modifier-ingredients@2.0.6
+
 ## 2.1.2
 
 ### Patch Changes

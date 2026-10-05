@@ -1,5 +1,11 @@
 # @adeficior/data-modifier-tags
 
+## 2.0.6
+
+### Patch Changes
+
+- 3280392: allow Predicates.id without registered tags
+
 ## 2.0.5
 
 ### Patch Changes
