@@ -1,0 +1,5 @@
+{
+  "namespace": "minecraft",
+  "path": "worldgen/chunk_generator",
+  "tags": "tags/worldgen/chunk_generator"
+}

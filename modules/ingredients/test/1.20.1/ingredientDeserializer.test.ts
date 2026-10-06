@@ -9,7 +9,7 @@ import {
 } from "../util/providers/1.20.1/ingredientInputs";
 
 const version = basename(import.meta.dir);
-const lookup = setupLookup(version);
+const lookup = await setupLookup(version);
 const ingredients = createIngredientSerializer(packFormatOf(version), lookup);
 
 describe(`ingredient deserialization on ${version}`, () => {

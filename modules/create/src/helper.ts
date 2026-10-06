@@ -1,23 +1,23 @@
-import { encodeId } from "@adeficior/data-modifier-core";
 import type { IdInput, NormalizedId } from "@adeficior/data-modifier-core";
+import { createId, encodeId } from "@adeficior/data-modifier-core";
 import type {
   IngredientInput,
   ResultInput,
 } from "@adeficior/data-modifier-ingredients";
 import type { RecipeEmitter } from "@adeficior/data-modifier-recipes";
+import type {
+  ManyToManyHelper,
+  ShapedHelper,
+} from "@adeficior/data-modifier-recipes/helper";
 import {
   AbstractRecipeHelper,
   createResultId,
   withDefaultId,
 } from "@adeficior/data-modifier-recipes/helper";
-import type {
-  ManyToManyHelper,
-  ShapedHelper,
-} from "@adeficior/data-modifier-recipes/helper";
 import { RecipeHolder } from "@adeficior/data-modifier-recipes/serializer";
 import type { RecipeSerializerId } from "@adeficior/data-modifier/generated";
-import { AssemblyRecipe } from "./serializer/assembly";
 import type { AssembleRecipeOptions } from "./serializer/assembly";
+import { AssemblyRecipe } from "./serializer/assembly";
 import { ProcessingRecipe } from "./serializer/processing";
 
 export type AssemblyBuilder = {
@@ -75,7 +75,7 @@ export class CreateRecipeHelperImpl
         const results = this.results.deserializeList(resultsInput);
 
         return this.emitter.add(
-          id ?? createResultId(results),
+          id ?? createResultId(results, createId(type).path),
           type,
           new ProcessingRecipe(ingredients, results),
         );

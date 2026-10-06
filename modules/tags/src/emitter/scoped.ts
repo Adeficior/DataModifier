@@ -28,7 +28,6 @@ export class ScopedTagEmitterImpl<
 > implements ScopedTagEmitter<T> {
   constructor(
     private readonly context: Required<IdFilterContext<T>>,
-    public readonly folder: string,
     private readonly options: TagEmitterOptions,
   ) {}
 

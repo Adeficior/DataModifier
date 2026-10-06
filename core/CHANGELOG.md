@@ -1,5 +1,11 @@
 # @adeficior/data-modifier-core
 
+## 2.3.0
+
+### Minor Changes
+
+- support for new v2 version of registry dump
+
 ## 2.2.1
 
 ### Patch Changes

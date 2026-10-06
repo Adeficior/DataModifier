@@ -1,5 +1,4 @@
 import type { LoaderContext } from "@adeficior/data-modifier-core";
-import { packFormatOf } from "@adeficior/data-modifier-core";
 import {
   createTestAcceptor,
   createTestLogger,
@@ -12,8 +11,8 @@ import { TagsLoader } from "../../src/loader";
 
 const version = basename(import.meta.dir);
 const context: LoaderContext = { logger: createTestLogger() };
-const loader = new TagsLoader(packFormatOf(version));
 const lookup = setupLookup(version);
+const loader = new TagsLoader(lookup);
 const emitter = new TagEmitterImpl(loader, lookup, { advancedTags: true });
 
 afterEach(() => {

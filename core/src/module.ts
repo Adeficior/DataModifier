@@ -1,11 +1,11 @@
 import type { Logger, Resolver } from "@adeficior/pack-resolver";
 import { createLogger } from "@adeficior/pack-resolver";
-import { resolveDumpDir } from ".";
 import type { NormalizedId } from ".";
+import { resolveDumpDir } from ".";
 import { name } from "../package.json";
 import type { AfterSetupEvent } from "./modules/define";
 import { defineModule } from "./modules/define";
-import { RegistryDumpLoader } from "./registry/dump";
+import { createDumpLookup } from "./registry/dump";
 import { EmptyRegistryLookup } from "./registry/empty";
 import type { RegistryLookup } from "./registry/lookup";
 
@@ -52,9 +52,8 @@ export default defineModule<{
     const dumpResolver = await resolveDumpDir(pack.options.dump);
 
     if (dumpResolver) {
-      const loader = new RegistryDumpLoader();
-      await dumpResolver.extract(loader);
-      pack.service("registries", () => loader);
+      const lookup = await createDumpLookup(dumpResolver);
+      pack.service("registries", () => lookup);
     } else {
       pack.service("registries", () => new EmptyRegistryLookup());
     }

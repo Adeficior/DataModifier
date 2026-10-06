@@ -5,6 +5,7 @@ import type {
   RegistryLookup,
   TagInput,
 } from "@adeficior/data-modifier-core";
+import { RegistryMap } from "@adeficior/data-modifier-core";
 import type { CommonFilter } from "@adeficior/data-modifier-core/serializer";
 import { toJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
@@ -45,23 +46,23 @@ export type TagEmitter = {
 };
 
 export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
-  private readonly emitters = new Map<
-    string,
-    ScopedTagEmitterImpl<RegistryId>
+  private readonly emitters = new RegistryMap<
+    ScopedTagEmitterImpl<RegistryId>,
+    RegistryId
   >();
 
-  readonly blocks: ScopedTagEmitter<"minecraft:block">;
-  readonly items: ScopedTagEmitter<"minecraft:item">;
-  readonly fluids: ScopedTagEmitter<"minecraft:fluid">;
+  readonly blocks;
+  readonly items;
+  readonly fluids;
 
   constructor(
     private readonly registry: TagRegistries,
     private readonly lookup: RegistryLookup,
     private readonly options: TagEmitterOptions = {},
   ) {
-    this.blocks = this.scoped("minecraft:block", "blocks");
-    this.items = this.scoped("minecraft:item", "items");
-    this.fluids = this.scoped("minecraft:fluid", "fluids");
+    this.blocks = this.scoped("minecraft:block");
+    this.items = this.scoped("minecraft:item");
+    this.fluids = this.scoped("minecraft:fluid");
   }
 
   clear() {
@@ -70,11 +71,13 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
 
   resolver(context: LoaderContext) {
     return simpleResolver(async (acceptor) => {
-      const emitters = Array.from(this.emitters.values());
-      await Promise.all(
-        emitters.flatMap((scoped) =>
+      await this.emitters.forEachAsync(async (scoped, key) => {
+        const metadata = this.lookup.metadata(key);
+        const folder = metadata?.tags ?? tagFolderOf(key);
+
+        await Promise.all(
           scoped.getModified(async (id, definition) => {
-            const path = `data/${id.namespace}/tags/${scoped.folder}/${id.path}.json`;
+            const path = `data/${id.namespace}/${folder}/${id.path}.json`;
             await acceptor(
               path,
               toJson({
@@ -84,8 +87,8 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
               }),
             );
           }),
-        ),
-      );
+        );
+      });
     }, context);
   }
 
@@ -117,28 +120,19 @@ export class TagEmitterImpl implements TagEmitter, ClearableEmitter {
     this.scoped(registry).empty(id);
   }
 
-  scoped<T extends RegistryId>(
-    registry: T,
-    folder: string = tagFolderOf(registry),
-  ): ScopedTagEmitter<T> {
+  scoped<T extends RegistryId>(registry: T): ScopedTagEmitter<T> {
     const existing = this.emitters.get(registry);
 
     if (existing) return existing as ScopedTagEmitter<T>;
     else {
       const tags = this.registry.registry(registry);
 
-      if (!tags) {
-        throw new Error(
-          `unknown registry tags '${registry}', register them using \`registerRegistry\``,
-        );
-      }
-
       const context: Required<IdFilterContext<T>> = {
         registry,
         tags,
         lookup: this.lookup,
       };
-      const emitter = new ScopedTagEmitterImpl(context, folder, this.options);
+      const emitter = new ScopedTagEmitterImpl(context, this.options);
       this.emitters.set(registry, emitter);
       return emitter as ScopedTagEmitter<T>;
     }

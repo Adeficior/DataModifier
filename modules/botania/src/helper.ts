@@ -8,8 +8,8 @@ import {
   createResultId,
   withDefaultId,
 } from "@adeficior/data-modifier-recipes/helper";
-import { ManaInfusionRecipe } from "./serializer/manaInfusion";
 import type { ManaInfusionRecipeOptions } from "./serializer/manaInfusion";
+import { ManaInfusionRecipe } from "./serializer/manaInfusion";
 
 export type BotaniaRecipeHelper = {
   manaInfusion(
@@ -40,7 +40,7 @@ export class BotaniaRecipeHelperImpl
       const result = this.results.deserialize(resultInput);
 
       return this.emitter.add(
-        id ?? createResultId(result),
+        id ?? createResultId(result, "mana_infusion"),
         "botania:mana_infusion",
         new ManaInfusionRecipe(ingredients, result, options),
       );

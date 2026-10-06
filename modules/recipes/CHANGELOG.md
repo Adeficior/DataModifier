@@ -1,5 +1,18 @@
 # @adeficior/data-modifier-recipes
 
+## 2.3.0
+
+### Minor Changes
+
+- support for new v2 version of registry dump
+
+### Patch Changes
+
+- Updated dependencies
+  - @adeficior/data-modifier-core@2.3.0
+  - @adeficior/data-modifier-ingredients@2.1.0
+  - @adeficior/data-modifier-tags@2.1.0
+
 ## 2.2.0
 
 ### Minor Changes

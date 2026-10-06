@@ -29,7 +29,7 @@ export default defineModule<{
   setup: (instance) => {
     const loader = instance.loader(
       "tags",
-      () => new TagsLoader(instance.options.packFormat),
+      (container) => new TagsLoader(container.get("registries")),
       "data/*/tags/**/*.json",
     );
 

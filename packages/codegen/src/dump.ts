@@ -1,4 +1,4 @@
-import { RegistryDumpLoader } from "@adeficior/data-modifier-core";
+import { createDumpLookup } from "@adeficior/data-modifier-core";
 import type { ModuleConfig } from "@adeficior/data-modifier-core";
 import type { Resolver } from "@adeficior/pack-resolver";
 import { createResolver } from "@adeficior/pack-resolver";
@@ -20,7 +20,6 @@ export async function generateDumpTypesFrom(
   typesDir: string,
   modules: ModuleConfig[] = [],
 ) {
-  const loader = new RegistryDumpLoader();
-  await from.extract(loader);
-  await generateRegistryTypes(typesDir, loader, modules);
+  const lookup = await createDumpLookup(from);
+  await generateRegistryTypes(typesDir, lookup, modules);
 }

@@ -1,0 +1,19 @@
+[
+  "create:basin",
+  "create:compacting",
+  "create:conversion",
+  "create:crushing",
+  "create:cutting",
+  "create:deploying",
+  "create:emptying",
+  "create:filling",
+  "create:haunting",
+  "create:item_application",
+  "create:mechanical_crafting",
+  "create:milling",
+  "create:mixing",
+  "create:pressing",
+  "create:sandpaper_polishing",
+  "create:sequenced_assembly",
+  "create:splashing"
+]

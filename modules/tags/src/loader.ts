@@ -1,14 +1,9 @@
 import type {
   IdInput,
-  NormalizedId,
-  SemVerInput,
+  RegistryLookup,
   TagInput,
 } from "@adeficior/data-modifier-core";
-import {
-  encodeId,
-  isAtLeastVersion,
-  RegistryMap,
-} from "@adeficior/data-modifier-core";
+import { encodeId, RegistryMap } from "@adeficior/data-modifier-core";
 import { fromJson } from "@adeficior/data-modifier-core/serializer";
 import type { InferIds, RegistryId } from "@adeficior/data-modifier/generated";
 import type { Acceptable, Acceptor } from "@adeficior/pack-resolver";
@@ -23,7 +18,7 @@ import type {
 class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
   private readonly entries = new RegistryMap<TagEntry<T>[]>();
 
-  constructor(public readonly folder: string) {}
+  constructor() {}
 
   private validateId(input: IdInput) {
     const id = encodeId(input);
@@ -92,44 +87,32 @@ class WriteableTagRegistry<T extends RegistryId> implements TagRegistry<T> {
 }
 
 export class TagsLoader implements TagRegistries, Acceptor {
-  private registries: Record<NormalizedId, WriteableTagRegistry<RegistryId>> =
-    {};
+  private readonly registries = new RegistryMap<
+    WriteableTagRegistry<RegistryId>,
+    RegistryId
+  >();
 
-  constructor(packFormat: SemVerInput) {
-    const withSuffix = (it: string) => {
-      if (isAtLeastVersion(packFormat, "44")) return it;
-      return it + "s";
-    };
-
-    this.registerRegistry("minecraft:banner_pattern");
-    this.registerRegistry("minecraft:block", withSuffix("block"));
-    this.registerRegistry("minecraft:cat_variant");
-    this.registerRegistry("minecraft:damage_type");
-    this.registerRegistry("minecraft:entity_type", withSuffix("entity_type"));
-    this.registerRegistry("minecraft:fluid", withSuffix("fluid"));
-    this.registerRegistry("minecraft:game_event", withSuffix("game_event"));
-    this.registerRegistry("minecraft:instrument");
-    this.registerRegistry("minecraft:item", withSuffix("item"));
-    this.registerRegistry("minecraft:painting_variant");
-    this.registerRegistry("minecraft:worldgen/biome");
-    this.registerRegistry("minecraft:worldgen/structure");
-    this.registerRegistry("minecraft:worldgen/flat_level_generator_preset");
-    this.registerRegistry("minecraft:worldgen/world_preset");
-  }
-
-  registerRegistry(key: IdInput, folder = tagFolderOf(key)) {
-    this.registries[encodeId(key)] = new WriteableTagRegistry(folder);
-  }
+  constructor(private readonly lookup: RegistryLookup) {}
 
   registry<T extends RegistryId>(key: IdInput<T>) {
-    const id = encodeId(key);
-    if (!(id in this.registries)) return undefined;
-    return this.registries[id];
+    return this.registries.getOrPut(key, () => new WriteableTagRegistry());
+  }
+
+  private registryOf(path: string) {
+    for (const key of this.lookup.registries()) {
+      const folder = this.lookup.metadata(key)?.tags ?? tagFolderOf(key);
+      if (path.startsWith(`${folder}/`)) {
+        return { key, folder };
+      }
+    }
+
+    return null;
   }
 
   private parsePath(input: string) {
-    const match =
-      /data\/(?<namespace>[\w-]+)\/tags\/(?<rest>[\w-/]+).json/.exec(input);
+    const match = /data\/(?<namespace>[\w-]+)\/(?<rest>[\w-/]+).json/.exec(
+      input,
+    );
     if (!match?.groups) return null;
 
     const { namespace, rest } = match.groups as {
@@ -137,9 +120,7 @@ export class TagsLoader implements TagRegistries, Acceptor {
       rest: string;
     };
 
-    const registry = Object.values(this.registries).find((it) =>
-      rest.startsWith(`${it.folder}/`),
-    );
+    const registry = this.registryOf(rest);
 
     if (!registry) return null;
 
@@ -154,6 +135,7 @@ export class TagsLoader implements TagRegistries, Acceptor {
 
     const parsed: TagDefinition = fromJson(await content);
     const id = encodeId(info) as TagInput;
-    info.registry.load(id, parsed);
+
+    this.registry(info.registry.key).load(id, parsed);
   }
 }

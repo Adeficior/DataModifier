@@ -9,6 +9,7 @@ export function mockRegistryLookup() {
     keys: mock(),
     registries: mock(),
     validateEntry: mock(),
+    metadata: mock(),
   } satisfies RegistryLookup;
 }
 

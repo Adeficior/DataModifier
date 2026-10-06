@@ -1,14 +1,14 @@
-import { packFormatOf } from "@adeficior/data-modifier-core";
-import { createTestDataResolver } from "@adeficior/testing";
+import { createTestDataResolver, setupLookup } from "@adeficior/testing";
 import { beforeAll, describe, expect, it } from "bun:test";
 import { basename } from "node:path";
 import { TagsLoader } from "../../src/loader";
 
 const version = basename(import.meta.dir);
-const loader = new TagsLoader(packFormatOf(version));
+const lookup = setupLookup(version);
+const loader = new TagsLoader(lookup);
 
-const itemTags = loader.registry("item")!;
-const blockTags = loader.registry("block")!;
+const itemTags = loader.registry("item");
+const blockTags = loader.registry("block");
 
 beforeAll(async () => {
   const resolver = await createTestDataResolver(version, {
