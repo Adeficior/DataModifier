@@ -1,5 +1,11 @@
 # @adeficior/data-modifier-ingredients
 
+## 2.2.1
+
+### Patch Changes
+
+- fix type for fluid ingredients not being emitted
+
 ## 2.2.0
 
 ### Minor Changes

@@ -48,6 +48,7 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
     FluidTagIngredient,
     isObjectWith("tag", "amount"),
     z.object({
+      type: z.string().optional(),
       tag: IdSchema,
       amount: AmountSchema,
     }),
@@ -85,6 +86,7 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
     FluidIngredient,
     isObjectWith("fluid"),
     z.object({
+      type: z.string().optional(),
       fluid: IdSchema,
       amount: AmountSchema,
     }),
