@@ -6,6 +6,7 @@ import {
 } from "@adeficior/data-modifier-core/serializer";
 import * as z from "zod";
 import { AmountSchema, CountSchema } from "../../fields";
+import type { Ingredient } from "../../ingredient/impl";
 import {
   FluidIngredient,
   FluidTagIngredient,
@@ -15,7 +16,6 @@ import {
   ListIngredient,
   ToolActionIngredient,
 } from "../../ingredient/impl";
-import type { Ingredient } from "../../ingredient/impl";
 import { commonSerialization } from "./common";
 
 export const serializer44 = createSerializerModule<Ingredient>((builder) => {
@@ -45,6 +45,21 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
   );
 
   builder.register(
+    FluidTagIngredient,
+    isObjectWith("tag", "amount"),
+    z.object({
+      tag: IdSchema,
+      amount: AmountSchema,
+    }),
+    (it) => new FluidTagIngredient(it.tag, it.amount),
+    ({ amount, tag }) => ({
+      type: "neoforge:tag",
+      tag: stripTag(tag),
+      amount,
+    }),
+  );
+
+  builder.register(
     ItemTagIngredient,
     isObjectWith("tag"),
     z.object({
@@ -53,17 +68,6 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
     }),
     (it) => new ItemTagIngredient(it.tag, it.count),
     ({ count, tag }) => ({ tag: stripTag(tag), count }),
-  );
-
-  builder.register(
-    FluidTagIngredient,
-    isObjectWith("fluidTag"),
-    z.object({
-      fluidTag: IdSchema,
-      amount: AmountSchema,
-    }),
-    (it) => new FluidTagIngredient(it.fluidTag, it.amount),
-    ({ amount, tag }) => ({ fluidTag: stripTag(tag), amount }),
   );
 
   builder.register(
@@ -77,7 +81,6 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
     ({ id, ...rest }) => ({ item: id, ...rest }),
   );
 
-  // TODO "type": "neoforge:single",
   builder.register(
     FluidIngredient,
     isObjectWith("fluid"),
@@ -86,7 +89,11 @@ export const serializer44 = createSerializerModule<Ingredient>((builder) => {
       amount: AmountSchema,
     }),
     (it) => new FluidIngredient(it.fluid, it.amount),
-    ({ id, ...rest }) => ({ fluid: id, ...rest }),
+    ({ id, ...rest }) => ({
+      type: "neoforge:single",
+      fluid: id,
+      ...rest,
+    }),
   );
 
   // TODO add support for these?

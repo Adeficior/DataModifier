@@ -1,5 +1,6 @@
 import type { Class } from "@adeficior/data-modifier-core/serializer";
 import type { DataProvider } from "@adeficior/testing";
+import type { Ingredient } from "../../../../src";
 import {
   BUCKET,
   FluidIngredient,
@@ -7,7 +8,6 @@ import {
   ItemIngredient,
   ItemTagIngredient,
 } from "../../../../src";
-import type { Ingredient } from "../../../../src";
 import { ingredientLikeResults } from "../ingredientInputs";
 
 export function* invalidIngredientInputs(): DataProvider<
@@ -30,8 +30,8 @@ export function* invalidIngredientInputs(): DataProvider<
   ];
   yield [
     "fluid tag with #",
-    { fluidTag: "#test", amount: BUCKET },
-    "fluidTag: IDs may not start with a hashtag",
+    { tag: "#test", amount: BUCKET },
+    "tag: IDs may not start with a hashtag",
   ];
   yield [
     "item tag with negative count",
@@ -45,7 +45,7 @@ export function* invalidIngredientInputs(): DataProvider<
   ];
   yield [
     "fluid tag with negative amount",
-    { fluidTag: "water", amount: -21 },
+    { tag: "water", amount: -21 },
     "amount: Too small: expected number to be >0",
   ];
   yield [
@@ -124,7 +124,7 @@ export function* ingredientInputs(): DataProvider<
 
   yield [
     "fluid tag",
-    { fluidTag: "minecraft:water", amount: BUCKET },
+    { tag: "minecraft:water", amount: BUCKET },
     FluidTagIngredient,
   ];
 

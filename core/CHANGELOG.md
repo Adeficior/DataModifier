@@ -1,5 +1,11 @@
 # @adeficior/data-modifier-core
 
+## 2.3.1
+
+### Patch Changes
+
+- 46d6fbc: correct serialize fluid ingredients on 1.21.1 using neoforge: types
+
 ## 2.3.0
 
 ### Minor Changes

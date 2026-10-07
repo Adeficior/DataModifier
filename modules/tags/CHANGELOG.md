@@ -1,5 +1,12 @@
 # @adeficior/data-modifier-tags
 
+## 2.1.1
+
+### Patch Changes
+
+- Updated dependencies [46d6fbc]
+  - @adeficior/data-modifier-core@2.3.1
+
 ## 2.1.0
 
 ### Minor Changes

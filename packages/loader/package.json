@@ -1,7 +1,7 @@
 {
    "name": "@adeficior/data-modifier-loader",
    "description": "module loading logic",
-   "version": "2.1.4",
+   "version": "2.1.5",
    "exports": {
       ".": "./src/index.ts"
    },

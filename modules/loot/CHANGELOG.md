@@ -1,5 +1,14 @@
 # @adeficior/data-modifier-loot
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [46d6fbc]
+  - @adeficior/data-modifier-ingredients@2.2.0
+  - @adeficior/data-modifier-core@2.3.1
+  - @adeficior/data-modifier-tags@2.1.1
+
 ## 2.1.4
 
 ### Patch Changes

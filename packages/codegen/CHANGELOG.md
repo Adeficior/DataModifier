@@ -1,5 +1,13 @@
 # @adeficior/data-modifier-codegen
 
+## 2.2.1
+
+### Patch Changes
+
+- Updated dependencies [46d6fbc]
+  - @adeficior/data-modifier-core@2.3.1
+  - @adeficior/data-modifier-loader@2.1.5
+
 ## 2.2.0
 
 ### Minor Changes

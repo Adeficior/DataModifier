@@ -1,9 +1,9 @@
-export function isObjectWith(property: string) {
+export function isObjectWith(...properties: string[]) {
   return (input: unknown): input is Record<string, unknown> =>
     input !== undefined &&
     input !== null &&
     typeof input === "object" &&
-    property in input;
+    properties.every((it) => it in input);
 }
 
 export function hasType(type: string) {

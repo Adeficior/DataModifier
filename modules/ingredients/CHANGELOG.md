@@ -1,5 +1,17 @@
 # @adeficior/data-modifier-ingredients
 
+## 2.2.0
+
+### Minor Changes
+
+- 46d6fbc: correct serialize fluid ingredients on 1.21.1 using neoforge: types
+
+### Patch Changes
+
+- Updated dependencies [46d6fbc]
+  - @adeficior/data-modifier-core@2.3.1
+  - @adeficior/data-modifier-tags@2.1.1
+
 ## 2.1.0
 
 ### Minor Changes
