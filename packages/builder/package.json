@@ -15,7 +15,7 @@
       "prepare": "datamod-dev --configs && datamod-dev --types"
    },
    "dependencies": {
-      "handlebars": "^4.7.9",
+      "handlebars": "^4.7.10",
       "arg": "catalog:"
    },
    "devDependencies": {
