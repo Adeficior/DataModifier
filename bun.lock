@@ -6,7 +6,7 @@
       "name": "@adeficior/monorepo",
       "devDependencies": {
         "@changesets/cli": "^3.0.1",
-        "@types/bun": "^1.4.0",
+        "@types/bun": "^1.4.3",
         "husky": "^9.1.7",
         "prettier": "catalog:",
         "turbo": "^2.10.7",
@@ -14,7 +14,7 @@
     },
     "core": {
       "name": "@adeficior/data-modifier-core",
-      "version": "2.2.1",
+      "version": "2.3.1",
       "dependencies": {
         "json5": "^2.2.3",
         "lodash-es": "catalog:",
@@ -55,7 +55,7 @@
     },
     "lib": {
       "name": "@adeficior/data-modifier",
-      "version": "2.0.5",
+      "version": "2.0.9",
       "bin": {
         "datamod": "dist/cli.js",
       },
@@ -82,7 +82,7 @@
     },
     "modules/botania": {
       "name": "@adeficior/data-modifier-botania",
-      "version": "2.0.5",
+      "version": "2.2.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -100,7 +100,7 @@
     },
     "modules/content": {
       "name": "@adeficior/data-modifier-content",
-      "version": "2.0.5",
+      "version": "2.0.9",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-loot": "workspace:*",
@@ -121,7 +121,7 @@
     },
     "modules/create": {
       "name": "@adeficior/data-modifier-create",
-      "version": "2.0.5",
+      "version": "2.2.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -138,7 +138,7 @@
     },
     "modules/farmersdelight": {
       "name": "@adeficior/data-modifier-farmersdelight",
-      "version": "2.0.5",
+      "version": "2.0.9",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -156,7 +156,7 @@
     },
     "modules/ingredients": {
       "name": "@adeficior/data-modifier-ingredients",
-      "version": "2.0.5",
+      "version": "2.2.1",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-tags": "workspace:*",
@@ -174,7 +174,7 @@
     },
     "modules/lang": {
       "name": "@adeficior/data-modifier-lang",
-      "version": "2.0.5",
+      "version": "2.0.7",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -191,7 +191,7 @@
     },
     "modules/loot": {
       "name": "@adeficior/data-modifier-loot",
-      "version": "2.1.2",
+      "version": "2.1.6",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -208,7 +208,7 @@
     },
     "modules/models": {
       "name": "@adeficior/data-modifier-models",
-      "version": "2.0.5",
+      "version": "2.0.7",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -222,7 +222,7 @@
     },
     "modules/recipes": {
       "name": "@adeficior/data-modifier-recipes",
-      "version": "2.1.2",
+      "version": "2.3.2",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-ingredients": "workspace:*",
@@ -241,7 +241,7 @@
     },
     "modules/tags": {
       "name": "@adeficior/data-modifier-tags",
-      "version": "2.0.5",
+      "version": "2.1.1",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -257,7 +257,7 @@
     },
     "modules/thermal": {
       "name": "@adeficior/data-modifier-thermal",
-      "version": "2.0.5",
+      "version": "2.0.9",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-recipes": "workspace:*",
@@ -292,7 +292,7 @@
     },
     "packages/codegen": {
       "name": "@adeficior/data-modifier-codegen",
-      "version": "2.1.3",
+      "version": "2.2.1",
       "bin": {
         "datamod-codegen": "./dist/cli.ts",
       },
@@ -332,7 +332,7 @@
     },
     "packages/loader": {
       "name": "@adeficior/data-modifier-loader",
-      "version": "2.1.3",
+      "version": "2.1.5",
       "devDependencies": {
         "@adeficior/configs": "workspace:*",
         "@adeficior/data-modifier-core": "workspace:*",
@@ -492,7 +492,7 @@
 
     "@turbo/windows-arm64": ["@turbo/windows-arm64@2.10.8", "", { "os": "win32", "cpu": "arm64" }, "sha512-VN30vh3b3Czh2WzYHNTfF1FE0YMZ5aHsLO8dBMGHJewA6792wX6iJR8ZxlzFW6WdOu0gEAKIvlYhfyT81Wkm4Q=="],
 
-    "@types/bun": ["@types/bun@1.4.0", "", { "dependencies": { "bun-types": "1.4.0" } }, "sha512-K+lZULY23vRgK/CfTjFIV+tyifaNdSMlPh9j+6mQ/cLfpOznLyAuzgV/JQysyECpkBQLVMSyvjlr2fBUSA9wFQ=="],
+    "@types/bun": ["@types/bun@1.4.3", "", { "dependencies": { "bun-types": "1.4.3" } }, "sha512-N67Pqy8JXbAY/j0tNraS3V5mubGvc6rrrNDmDCtZLlFzccbUJPDb0tvgUBC5q4m8ybkP93Jcn1QB+RYQ6PvBhw=="],
 
     "@types/esrecurse": ["@types/esrecurse@4.3.1", "", {}, "sha512-xJBAbDifo5hpffDBuHl0Y8ywswbiAp/Wi7Y/GtAgSlZyIABppyurxVueOPE8LUQOxdlgi6Zqce7uoEpqNTeiUw=="],
 
@@ -560,7 +560,7 @@
 
     "brace-expansion": ["brace-expansion@5.0.9", "", { "dependencies": { "balanced-match": "^4.0.2" } }, "sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg=="],
 
-    "bun-types": ["bun-types@1.4.0", "", { "dependencies": { "@types/node": "*" } }, "sha512-iIKw23BspnQQYd3prITOBxeUsxBHnwzX6YJfGMuNOZzeNcMmVqzIIVGRm1l69ogaPQmb4wB6BN8mA5bE9YuC5Q=="],
+    "bun-types": ["bun-types@1.4.3", "", { "dependencies": { "@types/node": "*", "undici-types": "*" } }, "sha512-tinRJNGOmUN+tEAsn2y2e942n9JHRHR42iUYzDH75NmhJqVBokGSQkkfSFdNWwsANIdrK6ACH9t01M452YyTwg=="],
 
     "cac": ["cac@7.0.0", "", {}, "sha512-tixWYgm5ZoOD+3g6UTea91eow5z6AAHaho3g0V9CNSNb45gM8SmflpAc+GRd1InC4AqN/07Unrgp56Y94N9hJQ=="],
 
